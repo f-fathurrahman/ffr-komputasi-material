@@ -45,7 +45,7 @@ Medan listrik eksternal ini bersifat homogen dan bekerja pada arah sumbu $x$
 \begin{equation}
 \mathbf{E}(t) =
 \begin{cases} 
-E_{x} \cos(\omega t) \mathbf{u}_{x} & \mbox{untuk } t \geq 0\\
+\mathcal{E}_{x} \cos(\omega t) \mathbf{u}_{x} & \mbox{untuk } t \geq 0\\
 0 & \mbox{jika } t < 0
 \end{cases}
 \label{eq:medan_E_t}
@@ -93,12 +93,15 @@ Dapat diverifikasi bahwa
 dengan $i = 1s, 2s, \ldots, 2p_{z}$ adalah solusi dari Persamaan \eqref{eq:td_sch}
 untuk $t > 0$ ketika $V = 0$.
 Kombinasi linear fari fungsi-fungsi tersebut:
+%
 \begin{equation}
 \psi(\mathbf{r},t) =
 c_{1s}(t) \psi_{1s}(\mathbf{r}) \exp\left[-\frac{\imath}{\hbar} E_{1s}t\right]
 + \ldots +
 c_{2p_{z}}(t) \psi_{2p_{z}}(\mathbf{r}) \exp\left[-\frac{\imath}{\hbar} E_{2p_{z}}t\right]
+\label{eq:psi_komb_lin}
 \end{equation}
+%
 juga merupakan solusi dari Persamaan \eqref{eq:td_sch}.
 Perhatikan bahwa koefisien $c_{1s}, c_{2s}, \ldots, c_{2p_{z}}$ bergantung pada waktu.
 %
@@ -112,6 +115,26 @@ dapat digunakan untuk mendapatkan kondisi berikut:
 \left| c_{2p_{x}}(t) \right|^2 + \left| c_{2p_{y}}(t) \right|^2 +
 \left| c_{2p_{z}}(t) \right|^2
 \end{equation}
+%
+Kondisi ini berguna untuk mendapat gambaran intutif mengenai bentuk dari $\psi_(\mathbf{r},t)$.
+Sebagai contoh, apabila kita memiliki $\left|c_{1s}\right|^2 = 0.9$ dan 
+$\left|c_{2p_{x}}\right|^2 = 0.1$, maka kita dapat menebak bahwa fungsi gelombang adalah
+campuran dari 90\% $1s$ dan 10\% $2p_{x}$.
+
+Bentuk dan energi dari orbital atom hidrogen telah umum diketahui sehingga yang harus
+ditentukan dari Persamaan \eqref{eq:psi_komb_lin} adalah koefisien-koefisien
+yang bergantung waktu. Mereka dapat ditentukan dengan cara sebagai berikut.
+Pertama substitusi Persamaan \eqref{eq:psi_komb_lin} ke dalam Persamaan \eqref{eq:td_sch}.
+Kemudian kalikan kedua sisi persamaan yang dihasilkan dengan $\phi_{1s}(\mathbf{r})$
+dan lakukan integrasi terhadap variabel ruang. Dengan mengingat bahwa setiap orbital
+adalah keadaan eigen dari Hamiltonian $\hat{H}$ dan setiap orbital yang berbeda
+adalah ortogonal, untuk $t \geq 0$ dapat diperoleh:
+%
+\begin{equation}
+\imath\hbar\frac{\mathrm{d}c_{1s}}{\mathrm{d}t} =
+e\,\mathcal{E}_{x} x_{1s,1s}\cos(\omega t)\exp\left[\frac{i}{\hbar}(E_{1s})\right]
+\end{equation}
+
 
 \end{document}
 
