@@ -2,6 +2,8 @@
 *.swo
 *~
 
+TEMP_*
+
 _minted-*/
 
 ## Core latex/pdflatex auxiliary files:

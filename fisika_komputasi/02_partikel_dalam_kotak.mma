@@ -1,0 +1,109 @@
+Print[]
+
+(* Definisi yang diperlukan dari bab sebelumnya *)
+
+hamiltonian[V_] @ psi_ := -h^2/(2*m) D[psi,{x,2}] + V*psi
+schrodingerD[V_] @ psi_ := hamiltonian[V] @ psi - energy * psi
+
+
+(*
+Fungsi eigen
+*)
+phi[n_, x_] := norm[n] Sin[n Pi x/L]
+
+(* Fungsi tersebut adalah solusi dari persamaan Schrodinger jika *)
+
+eq = schrodingerD[0] @ phi[n,x] / phi[n,x] == 0 // ExpandAll
+eq // Print
+(* Operasi pembagian dengan phi[n,x] valid selama phi[n,x] bukan 0 *)
+
+(*
+Energy dapat dihitung dengan cara menyelesaikan persamaan di atas
+*)
+e[n_] = energy /. Solve[eq, energy][[1]]
+e[n] // Print
+
+(*
+Normalization constant is obtained by requiring that the probability
+of finding particles somewhere inside the box to be one.
+*)
+norm[n_] = norm[n] /.
+  Solve[
+    Integrate[ phi[n,x]^2, {x,0,L} ] == 1 /. Sin[m_Integer n Pi] -> 0,
+    norm[n]
+  ][[2]]  (* Pilih solusi dengan tanda positif *)
+
+norm[n] // Print
+
+
+(* Contoh numerik *)
+
+(* FIXME: Perlu implementasi metode shooting *)
+
+(*
+schrodingerD[0] @ phi[x] == 0 /. {h -> 1, m -> 2} // Print
+
+(* Kita masih perlu menentukan nilai dari energy *)
+trialEnergy = 1^2*Pi^2
+eq = { schrodingerD[0] @ phi[x] == 0,
+       phi[0] == 0, phi'[0] == 1 } /.
+       { h -> 1, m -> 1, energy -> trialEnergy }
+eq // Print
+
+sol = NDSolve[ eq, phi, {x,0,1.1} ] (* Gunakan nilai L yang sedikit lebih besar, yaitu 1.1 *)
+sol // Print
+
+
+(*
+g = Plot[
+        phi[x] /. sol, {x, 0, 1.1},
+        PlotRange -> Automatic,
+        AxesLabel -> {"x", "phi[x]"},
+        PlotLabel -> "Fungsi Eigen",
+        Ticks -> { {{0,0}, {0.25,0.25}, {0.5,0.5}, {0.75,0.75}, {1,1}}, (* xticks *)
+                   {{0,0}, {0.25,0.25}, {0.5,0.5}} },  (* yticks *)
+        Epilog -> { {Line[ { {1,0}, {1,2} } ] } }
+        ]
+*)
+
+g = Plot[
+        phi[x] /. sol, {x, 0, 1.0},
+        PlotRange -> {-0.15,0.15},
+        AxesLabel -> {"x", "phi[x]"},
+        PlotLabel -> "Fungsi Eigen",
+        Epilog -> { {Line[ { {1,-0.15}, {1,0.15} } ] } }
+        ]
+Export["GAMBAR_02_phi_x.pdf", g, "PDF"]
+*)
+
+(* Gelombang kotak *)
+
+psi[x_][nmax_] := Sum[ c[n] phi[n,x], {n,1,nmax} ]
+
+(* Tinjau ekspansi dari sebuah fungsi psi[x] yang bernilai konstan pada suatu
+interval pada L/4 <= x <= 3L/4 dan bernilai 0 pada nilai x yang lain *)
+c[n_] := Integrate[Sqrt[2/L] phi[n,x], {x,L/4,3L/4}] /. {L -> 1}
+
+Print["\nc[n] adalah"]
+c[n] // Print
+
+psi[x][1] // Print
+psi[x][2] // Print
+
+(*
+g = BarChart[
+        Table[c[n], {n,14}],
+        PlotRange -> {-0.5, 1}
+    ]
+Export["TEMP_02_bar.pdf", g, "PDF"]
+*)
+
+
+psiSeriesPlot[nmax_] :=
+  Plot[ 
+    Evaluate[ psi[x][nmax] /. L -> 1 // N ],
+    {x,0,1}]
+g = psiSeriesPlot[20]
+Export["TEMP_psiSeries.pdf", g, "PDF"]
+
+Exit[]
