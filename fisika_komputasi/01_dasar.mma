@@ -12,6 +12,11 @@ Print[Pi]
 (* Set jumlah digit yang ditampilkan *)
 Print[ N[Pi, 100] ]
 
+N[Pi,100] // TeXForm // Print
+
+Print["Pi dalam 20 digit"]
+Pi // N[#,20]& // Print
+
 (* Spasi dapat diinterpretasikan sebagai perkalian *)
 Print[ N[6 Pi^5, 18] ]  (* approksimasi rasio massa proton/elektron *)
 
