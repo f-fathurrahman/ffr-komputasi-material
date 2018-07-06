@@ -1,0 +1,116 @@
+(*
+Definisikan Hamiltonian untuk sebuah partikel dengan massa
+m yang bergerak pada sumbu x dalam suatu potential 1D.
+*)
+
+Print[]
+
+hamiltonian[V_] @ psi_ := -h^2/(2*m) D[psi,{x,2}] + V*psi
+
+(*
+Fungsi gelombang bidang
+*)
+f = E^(I*k*x)
+
+(*
+Operasikan Hamiltonian dengan energi potensial Vo ke fungsi f
+*)
+
+Print["\nOperasi Hamiltonian pada gelombang bidang"]
+hamiltonian[Vo] @ f // Collect[#, f]& // Print
+
+(*
+Tes linearitas dari operator Hamiltonian
+*)
+
+Print["\nTest linearitas dari Hamiltonian"]
+hamiltonian[V] @ (a*f[x] + b*g[x] ) ==
+  a*hamiltonian[V] @ f[x] + b*hamiltonian[V] @ g[x] // ExpandAll // Print
+
+
+(*
+Persamaan gerak
+*)
+Print["\nPersamaan gerak"]
+eom = I h D[psi[x,t],t] == hamiltonian[V] @ psi[x,t]
+eom // Print
+
+
+(*
+Operator momentum
+*)
+Print["\nOperator momentum"]
+p @ psi_ := -I h D[psi, x]
+p @ psi[x] // Print
+
+
+Print["\nEnergi kinetik"]
+eKin = 1/(2m) p @ p @ psi[x]
+eKin // Print
+
+(*
+Cek operasi Hamiltonian dengan potensial 0 pada psi[x]
+*)
+Print["\nCek energi kinetik untuk Hamiltonian dengan potensial 0"]
+hamiltonian[0] @ psi[x] == eKin // Print
+
+
+(*
+Gelombang bidang
+*)
+f = E^(I k x)
+
+epsilon = (h k)^2/(2m)
+Print["\nCek fungsi dan nilai eigen dari operator Hamiltonian partikel bebas"]
+hamiltonian[0] @ f == epsilon f // Print
+
+epsilon = h k
+Print["\nCek fungsi dan nilai eigen dari operator momentum partikel bebas"]
+p @ f == epsilon f // Print
+
+(*
+Operator energi kinetik
+*)
+f = Sin[k x]
+eKin = 1/(2m) p @ p @ f // Collect[#,f]& // Print
+
+f = Cos[k x]
+eKin = 1/(2m) p @ p @ f // Collect[#,f]& // Print
+
+(*
+Persamaan Schrodinger bebas waktu
+*)
+eq = hamiltonian[V] @ psi[x] == energy psi[x]
+Print["\nPersamaan Schrodinger bebas waktu"]
+eq // Print
+
+(* Pemisahan variabel *)
+psi[x_,t_] = E^(-I w t) psi[x]
+
+rhs = energy psi[x,t] /. energy -> h w
+eq = hamiltonian[V] @ psi[x,t] == rhs // Collect[#,E^(-I w t)]& // Print
+
+(*
+Operator Schrodinger
+*)
+schrodingerD[V_] @ psi_ := hamiltonian[V] @ psi - energy * psi
+
+(*
+Set menjadi sama dengan 0, kita peroleh persamaan Schrodinger
+*)
+Print["\nPersamaan Schrodinger"]
+eqSch = schrodingerD[V[x]] @ psi[x] == 0
+eqSch // Print
+
+
+(*
+Operator evolusi waktu (time evolution operator)
+*)
+"\nOperator evolusi waktu\n" // Print
+
+Clear[psi] (* dari definisi sebelumnya *)
+psi[x,t] == E^( -I hamiltonian[V] t / h ) @ psi[x,0] // Print
+
+
+Exit[]
+
