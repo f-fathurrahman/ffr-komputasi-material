@@ -45,7 +45,7 @@ Medan listrik eksternal ini bersifat homogen dan bekerja pada arah sumbu $x$
 \begin{equation}
 \mathbf{E}(t) =
 \begin{cases} 
-\mathcal{E}_{x} \cos(\omega t) \mathbf{u}_{x} & \mbox{untuk } t \geq 0\\
+\mathcal{E} \cos(\omega t) \mathbf{u}_{x} & \mbox{untuk } t \geq 0\\
 0 & \mbox{jika } t < 0
 \end{cases}
 \label{eq:medan_E_t}
@@ -130,11 +130,21 @@ dan lakukan integrasi terhadap variabel ruang. Dengan mengingat bahwa setiap orb
 adalah keadaan eigen dari Hamiltonian $\hat{H}$ dan setiap orbital yang berbeda
 adalah ortogonal, untuk $t \geq 0$ dapat diperoleh:
 %
+\begin{align}
+\imath\hbar\frac{\mathrm{d}c_{1s}}{\mathrm{d}t} & =
+e\,\mathcal{E}\,x_{1s,1s}\cos(\omega t)\exp\left[\frac{i}{\hbar}(E_{1s} - E_{1s})\right] \\
+& + e\,\mathcal{E}\,x_{1s,2s}\cos(\omega t)\exp\left[\frac{i}{\hbar}(E_{1s} - E_{2s})\right] \\
+& + e\,\mathcal{E}\,x_{1s,2p_{x}}\cos(\omega t)\exp\left[\frac{i}{\hbar}(E_{1s} - E_{2p_{x}})\right] \\
+& + e\,\mathcal{E}\,x_{1s,2p_{y}}\cos(\omega t)\exp\left[\frac{i}{\hbar}(E_{1s} - E_{2p_{y}})\right] \\
+& + e\,\mathcal{E}\,x_{1s,2p_{z}}\cos(\omega t)\exp\left[\frac{i}{\hbar}(E_{1s} - E_{2p_{z}})\right]
+\end{align}
+%
+dengan $x_{1s,1s}, x_{1s,2s}, \ldots, x_{1s,2p_{z}}$ adalah matriks element dari
+operator posisi $\hat{x}$:
 \begin{equation}
-\imath\hbar\frac{\mathrm{d}c_{1s}}{\mathrm{d}t} =
-e\,\mathcal{E}_{x} x_{1s,1s}\cos(\omega t)\exp\left[\frac{i}{\hbar}(E_{1s})\right]
+x_{i,j} = \int\mathrm{d}\mathbf{r}\,\phi_{i}(\mathbf{r})\,x\,\phi_{j}(\mathbf{r}),\hspace{1em}
+i,j = 1s, 2s, \ldots, 2p_{x}
 \end{equation}
-
 
 \end{document}
 
