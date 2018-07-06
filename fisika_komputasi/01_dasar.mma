@@ -1,0 +1,28 @@
+(* Aritmatika *)
+
+a = 32 + 33/587 - 134/44^3 - 12
+Print["a = ", a]
+
+(* Tampilkan nilai numerik *)
+Print["N[a] = ", N[a]]
+
+(* Konstanta pi *)
+Print[Pi]
+
+(* Set jumlah digit yang ditampilkan *)
+Print[ N[Pi, 100] ]
+
+(* Spasi dapat diinterpretasikan sebagai perkalian *)
+Print[ N[6 Pi^5, 18] ]  (* approksimasi rasio massa proton/elektron *)
+
+(* Aritmatika complex *)
+a = Sqrt[Pi + I]
+Print[ N[a,18] ]
+Print[ Abs[a] ]
+Print[ N[Abs[a]] ]
+
+(* Contoh penggunaan postfix *)
+a // N // Print
+
+Exit[]
+

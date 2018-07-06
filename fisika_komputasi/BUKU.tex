@@ -1,0 +1,30 @@
+\documentclass[a4paper,bahasa]{extbook}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{minted}
+\newminted{mathematica}{breaklines,fontsize=\footnotesize,texcomments=true}
+
+\usepackage{babel}
+
+\renewcommand{\imath}{\mathfrak{i}}
+\newcommand{\emath}{\mathrm{e}}
+
+\begin{document}
+
+
+\chapter{Dasar}
+
+\begin{mathematicacode}
+2 + 3
+3 + 1
+\end{mathematicacode}
+
+\inputminted{mathematica}{01_dasar.mma}
+
+
+\end{document}
