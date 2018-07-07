@@ -1,0 +1,11 @@
+Print[]
+
+g = Graphics3D[
+       {White, Sphere[{0.0,  0.760117, -0.470585},0.7],
+               Sphere[{0.0, -0.760117, -0.470585},0.7],
+        Red, Sphere[{0.0, 0.0, 0.117646}]},
+        Lighting->"Neutral", Boxed->False, ViewPoint->Right]
+
+Export["TEMP_H2O.pdf", g, "PDF"]
+
+Exit[]

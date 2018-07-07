@@ -1,0 +1,8 @@
+Print[]
+
+g = Graphics[
+       { EdgeForm[Black], LightGray, Table[Disk[{i,j},1/2],{i,3},{j,3}] }
+    ]
+Export["TEMP_disk.pdf", g, "PDF"]
+
+Exit[]
