@@ -1,0 +1,18 @@
+Print[]
+
+r1 = {-1.0, 0.0, 0.0}
+r2 = { 1.0, 0.0, 0.0}
+
+g1 = Graphics3D[ {Red, Sphere[r1, 0.3],
+                 Blue, Sphere[r2, 0.8]} ]
+
+Export["TEMP_spheres.pdf", g1, "PDF"]
+
+g2 = Graphics3D[ {Tube[ {r1, r2}, 0.1]} ]
+
+Export["TEMP_tube.pdf", g2, "PDF"]
+
+Export["TEMP_diatomic.pdf", Show[g1,g2], "PDF"]
+
+Exit[]
+
