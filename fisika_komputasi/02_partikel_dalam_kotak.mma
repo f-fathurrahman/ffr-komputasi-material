@@ -36,46 +36,6 @@ norm[n_] = norm[n] /.
 norm[n] // Print
 
 
-(* Contoh numerik *)
-
-(* FIXME: Perlu implementasi metode shooting *)
-
-(*
-schrodingerD[0] @ phi[x] == 0 /. {h -> 1, m -> 2} // Print
-
-(* Kita masih perlu menentukan nilai dari energy *)
-trialEnergy = 1^2*Pi^2
-eq = { schrodingerD[0] @ phi[x] == 0,
-       phi[0] == 0, phi'[0] == 1 } /.
-       { h -> 1, m -> 1, energy -> trialEnergy }
-eq // Print
-
-sol = NDSolve[ eq, phi, {x,0,1.1} ] (* Gunakan nilai L yang sedikit lebih besar, yaitu 1.1 *)
-sol // Print
-
-
-(*
-g = Plot[
-        phi[x] /. sol, {x, 0, 1.1},
-        PlotRange -> Automatic,
-        AxesLabel -> {"x", "phi[x]"},
-        PlotLabel -> "Fungsi Eigen",
-        Ticks -> { {{0,0}, {0.25,0.25}, {0.5,0.5}, {0.75,0.75}, {1,1}}, (* xticks *)
-                   {{0,0}, {0.25,0.25}, {0.5,0.5}} },  (* yticks *)
-        Epilog -> { {Line[ { {1,0}, {1,2} } ] } }
-        ]
-*)
-
-g = Plot[
-        phi[x] /. sol, {x, 0, 1.0},
-        PlotRange -> {-0.15,0.15},
-        AxesLabel -> {"x", "phi[x]"},
-        PlotLabel -> "Fungsi Eigen",
-        Epilog -> { {Line[ { {1,-0.15}, {1,0.15} } ] } }
-        ]
-Export["GAMBAR_02_phi_x.pdf", g, "PDF"]
-*)
-
 (* Gelombang kotak *)
 
 psi[x_][nmax_] := Sum[ c[n] phi[n,x], {n,1,nmax} ]

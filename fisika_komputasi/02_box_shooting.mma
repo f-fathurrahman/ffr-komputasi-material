@@ -1,0 +1,35 @@
+(* Beberapa definisi yang diperlukan *)
+
+hamiltonian[V_] @ psi_ := -h^2/(2*m) D[psi,{x,2}] + V*psi
+schrodingerD[V_] @ psi_ := hamiltonian[V] @ psi - energy * psi
+
+(* Contoh numerik *)
+
+(* FIXME: Perlu implementasi metode shooting *)
+
+(* Coba tampilkan dulu persamaan yang dihasilkan *)
+schrodingerD[0] @ phi[x] == 0 /. {h -> 1, m -> 1} // Print
+
+(* Kita masih perlu menentukan nilai dari energy *)
+trialEnergy = 3^2*Pi^2 * 0.5  (* analytic form: n^2*Pi^2/2 *)
+eq = { schrodingerD[0] @ phi[x] == 0,
+       phi[0] == 0, phi'[0] == 1 } /.
+       { h -> 1, m -> 1, energy -> trialEnergy }
+eq // Print
+
+sol = NDSolve[ eq, phi, {x,0,1.0},
+               InterpolationOrder -> All ]
+(* XXX: Bagaimana jika digunakan nilai L yang sedikit lebih besar, misalnya 1.1 *)
+sol // Print
+
+g = Plot[
+        phi[x] /. sol, {x, 0, 1.0},
+        PlotRange -> Automatic,
+        AxesLabel -> {"x", "phi[x]"},
+        PlotLabel -> "Fungsi Eigen"
+        ]
+
+Export["GAMBAR_02_phi_x.pdf", g, "PDF"]
+
+
+Exit[]
