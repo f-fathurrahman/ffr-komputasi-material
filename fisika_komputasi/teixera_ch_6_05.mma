@@ -1,0 +1,33 @@
+Print[]
+
+d = 1/Sqrt[3]
+
+Table[ { Cos[2*Pi*i/6] + 3,
+         Sin[2*Pi*i/6] + 3*Sqrt[3]/2,
+        -Sqrt[2/3] }, {i,0,5} ] // N // Print
+
+(* Lapisan bawah *)
+g = Graphics3D[
+      {Red, Sphere[ {3, 3*Sqrt[3]/2, -Sqrt[2/3] }, 1/2 ],
+       Gray,
+       Table[ Sphere[ { Cos[2*Pi*i/6] + 3,
+                        Sin[2*Pi*i/6] + 3*Sqrt[3]/2,
+                       -Sqrt[2/3] }, 1/2 ],
+              {i,0,5}] },
+       Lighting -> "Neutral", Boxed -> False
+    ]
+
+(* Lapisan atas, koordinat z berubah*)
+g2 = Graphics3D[
+      {Blue, Sphere[ {3, 3*Sqrt[3]/2, Sqrt[2/3] }, 1/2 ],
+       Gray,
+       Table[ Sphere[ { Cos[2*Pi*i/6] + 3,
+                        Sin[2*Pi*i/6] + 3*Sqrt[3]/2,
+                        Sqrt[2/3] }, 1/2 ],
+              {i,0,5}] },
+       Lighting -> "Neutral", Boxed -> False
+    ]
+
+Export["TEMP_hcp.pdf", Show[g,g2,ViewPoint->{10,10,10}], "PDF"]
+
+Exit[]
