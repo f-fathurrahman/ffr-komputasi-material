@@ -1,0 +1,57 @@
+\documentclass[a4paper,11pt]{extarticle}
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+
+%\usepackage{graphicx}
+
+\usepackage{fontspec}
+\setmonofont{FreeMono}
+
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{0.5em}
+
+\usepackage{textcomp}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+
+\usepackage{minted}
+\newminted{cpp}{breaklines,fontsize=\small}
+\newminted{gnuplot}{breaklines,fontsize=\small}
+\newminted{text}{breaklines,fontsize=\small}
+
+\definecolor{mintedbg}{rgb}{0.95,0.95,0.95}
+\usepackage{mdframed}
+
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=mintedbg]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+\title{Instalasi VASP 5.2}
+\author{Fadjar Fathurrahman}
+\date{2018}
+
+\begin{document}
+\maketitle
+
+Asumsi: instalasi akan dilakukan pada sistem operasi Ubuntu versi 16.04.
+
+\begin{itemize}
+\item GNU Fortran compiler
+\item BLAS dan LAPACK
+\item FFTW3
+\item OpenMPI
+\end{itemize}
+
+Direktori:
+\begin{itemize}
+\item \texttt{vasp.5.lib}
+\item \texttt{vasp.5.2}
+\end{itemize}
+
+Kompilasi \texttt{vasp.5.lib}:
+\begin{textcode}
+make -f makefile.linux_gfortran
+\end{textcode}
+
+\end{document}
