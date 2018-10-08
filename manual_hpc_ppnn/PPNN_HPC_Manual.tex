@@ -1,0 +1,91 @@
+\documentclass[a4paper,10pt,bahasa]{paper}
+
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{braket}
+
+\usepackage{minted}
+\newminted{julia}{breaklines}
+\newminted{text}{breaklines}
+
+\newcommand{\jlcode}[1]{\mintinline{julia}{#1}}
+
+\usepackage{babel}
+
+\begin{document}
+
+\title{PPNN ITB HPC Manual}
+\author{Fadjar Fathurrahman}
+\maketitle
+
+\tableofcontents
+
+\part{Quick Start}
+
+\section{Login ke HPC PPNN}
+
+Alamat IP publik dari headnode adalah 167.205.6.67.
+
+Anda dapat mengaksesnya melalui SSH jika telah mendapatkan username
+dari admin HPC PPNN
+
+\begin{textcode}
+ssh username@167.205.6.67
+\end{textcode}
+
+atau
+
+\begin{textcode}
+ssh -l username 167.205.6.67
+\end{textcode}
+
+Silakan menghubungi admin jika menemui kesulitan untuk login.
+
+\part{Tutorial}
+
+\section{Pengenalan \texttt{bash}}
+
+Pengenalan `bash`
+
+Sistem operasi pada HPC PPNN adalah Red Hat Linux.
+
+Perintah-perintah dasar
+
+ls
+
+mkdir
+
+Teks editor
+
+vim
+
+nano
+
+emacs
+
+File .bashrc
+
+Variabel-variabel penting
+
+PATH
+
+\verb|LD_LIBRARY_PATH|
+
+
+
+
+
+
+
+
+\end{document}
