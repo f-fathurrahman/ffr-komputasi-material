@@ -19,7 +19,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Manual PPNN HPC'
+project = 'PPNN HPC'
 copyright = '2018, Fadjar Fathurrahman'
 author = 'Fadjar Fathurrahman'
 
