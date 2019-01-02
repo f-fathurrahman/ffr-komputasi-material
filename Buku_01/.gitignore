@@ -1,0 +1,6 @@
+set_env.sh
+tmp
+LOG_*
+LOG*
+TEMP_*
+PWINPUT*
