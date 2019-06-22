@@ -1,4 +1,6 @@
-# Login ke HPC PPNN
+# Manual singkat
+
+## Login ke HPC PPNN
 
 Alamat IP publik dari headnode adalah 167.205.6.67.
 
@@ -17,7 +19,7 @@ ssh -l username 167.205.6.67
 
 Silakan menghubungi admin jika menemui kesulitan untuk login.
 
-# Submit job
+## Submit job
 
 Sistem HPC PPNN menggunakan PBS Pro sebagai job manager.
 
@@ -33,6 +35,13 @@ cd $PBS_O_WORKDIR
 BIN="/app/bin/vasp_5.2_intelmpi_ifort"
 mpirun -n 2 $BIN > LOG1
 ```
+
+Baris `#!/bin/bash` artinya kita akan menggunakan `bash` dalam script yang akan kita tulis.
+
+Baris `#PBS -q normal` berarti kita meminta untuk menggunakan kelas antrian `normal`.
+
+Baris `#PBS -l nodes=1:ppn=2` berarti kita meminta jumlah nodes adalah 1
+dan processor per node adalah 2.
 
 Contoh job Gaussian09:
 
