@@ -1,0 +1,46 @@
+None
+CIF2CELL 1.2.10
+2019-06-02 16:26
+Output for unknown compound
+CIF file exported from Chemical Abstracts.
+Database reference code: None.
+
+ BIBLIOGRAPHIC INFORMATION
+Wyckoff R W G, Crystal Structures 1, 7-83 (1963) 
+
+ INPUT CELL INFORMATION
+Symmetry information:
+Cubic crystal system.
+Space group number     : 225
+Hall symbol            : -F 4 2 3
+Hermann-Mauguin symbol : Fm3m
+
+Lattice parameters:
+          a           b           c 
+  3.6149600   3.6149600   3.6149600 
+      alpha        beta       gamma 
+ 90.0000000  90.0000000  90.0000000 
+Representative sites :
+Atom           a1          a2          a3 
+Cu      0.0000000   0.0000000   0.0000000
+
+ OUTPUT CELL INFORMATION
+Symmetry information:
+Cubic crystal system.
+Space group number     : 225
+Hall symbol            : -F 4 2 3
+Hermann-Mauguin symbol : Fm3m
+
+Bravais lattice vectors :
+  1.0000000   0.0000000   0.0000000 
+  0.0000000   1.0000000   0.0000000 
+  0.0000000   0.0000000   1.0000000 
+All sites, (lattice coordinates):
+Atom           a1          a2          a3 
+Cu      0.0000000   0.0000000   0.0000000
+Cu      0.5000000   0.0000000   0.5000000
+Cu      0.0000000   0.5000000   0.5000000
+Cu      0.5000000   0.5000000   0.0000000
+
+Unit cell volume  :  47.2400652 A^3
+Unit cell density :   5.3806869 u/A^3 =  60.2952833 g/cm^3

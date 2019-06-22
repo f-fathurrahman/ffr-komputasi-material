@@ -1,0 +1,42 @@
+ndtset 2
+
+# Dataset 1: SCF calculation
+occopt1 3
+tsmear1 0.001
+
+ngkpt1   15 15 15
+nshiftk1 1
+shiftk1  0.0 0.0 0.0
+
+prtden1  1
+toldfe1  1.0d-8
+
+# Dataset 2: the band structure
+iscf2    -2
+getden2  -1
+kptopt2  -3
+ndivk2   10 12 17
+kptbounds2  0.5  0.0  0.0 # L point
+            0.0  0.0  0.0 # Gamma point
+            0.0  0.5  0.5 # X point
+            1.0  1.0  1.0 # Gamma point in another cell.
+tolwfr2  1.0d-12
+enunit2  1             # Will output the eigenenergies in eV 
+
+
+# Common data
+
+acell    3*6.831284262456  
+
+rprim    0.000000000000000   0.500000000000000   0.500000000000000 
+         0.500000000000000   0.000000000000000   0.500000000000000 
+         0.500000000000000   0.500000000000000   0.000000000000000 
+       
+natom    1  
+ntypat   1  
+typat    1  
+znucl    29  
+xred     0.000000000000000   0.000000000000000   0.000000000000000 
+
+ecut 30.0
+nstep 100

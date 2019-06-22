@@ -1,0 +1,21 @@
+basis single
+
+lattice \
+10.0   0.0   0.0 \
+ 0.0  10.0   0.0 \
+ 0.0   0.0  10.0
+
+ion-species SG15/$ID_ONCV_PBE.upf
+elec-cutoff 30 120
+
+coords-type cartesian
+ion O   0.00 0.00  0.00  0  
+ion H   0.00 1.13 +1.45  1
+ion H   0.00 1.13 -1.45  1 
+
+electronic-minimize \
+    nIterations          100 \
+    energyDiffThreshold  1e-06
+
+dump-name TEMP.$VAR
+dump End Ecomponents ElecDensity

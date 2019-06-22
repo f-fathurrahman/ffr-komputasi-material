@@ -1,0 +1,102 @@
+\section{PW codes how to}
+
+\subsection{Running the code}
+
+\subsubsection{PWSCF}
+\begin{textcode}
+pw.x < PWINPUT > LOG1
+\end{textcodt}
+
+\begin{textcode}
+mpirun -n 4 pw.x < PWINPUT > LOG1
+\end{textcode}
+
+
+\subsubsection{ABINIT}
+
+\begin{textcode}
+abinit < FILES > LOG1
+\end{textcode}
+
+\begin{textcode}
+mpirun -n 4 abinit < FILES > LOG1
+\end{textcode}
+
+
+\subsubsection{JDFTX}
+
+\begin{textcode}
+jdftx -c 1 -i INPUT > LOG1
+\end{textcode}
+
+
+
+\subsection{Specifying unit cell}
+
+\subsubsection{PWSCF}
+
+\begin{textcode}
+&SYSTEM
+  ibrav = 0
+/
+\end{textcode}
+
+\begin{textcode}
+CELL_PARAMETERS bohr
+  -5.1315500000   0.0000000000   5.1315500000
+   0.0000000000   5.1315500000   5.1315500000
+  -5.1315500000   5.1315500000   0.0000000000
+\end{textcode}
+
+
+\subsubsection{ABINIT}
+
+\begin{textcode}
+acell 1.0 1.0 1.0
+rprim
+  -5.1315500000   0.0000000000   5.1315500000
+   0.0000000000   5.1315500000   5.1315500000
+  -5.1315500000   5.1315500000   0.0000000000
+\end{textcode}
+
+
+\subsubsection{JDFTX}
+
+Example:
+
+\begin{textcode}
+lattice \
+  3.61496   3.61496   0.00000 \
+  3.61496   0.00000   3.61496 \
+  0.00000   3.61496   3.61496 
+\end{textcode}
+
+The lattice matrix is arranged by column.
+
+The unit is bohr. We can use \verb|latt-scale| to use other units. For example:
+\begin{textcode}
+latt-scale 1 1 1
+\end{textcode}
+
+\subsection{Specifying metallic occupation}
+
+\subsubsection{PWSCF}
+
+
+
+\subsubsection{ABINIT}
+
+
+
+
+\subsubsection{JDFTX}
+
+\verb|elec-smearing <smearingType>=Cold|Fermi|Gauss <smearingWidth>|
+
+\begin{itemize}
+\item \verb|elec-smearing Fermi 0.001|
+\item \verb|elec-smearing Gauss 0.001|
+\item \verb|elec-smearing Cold 0.001|
+\end{itemize}
+
+\verb|smearingWidth| is given in Hartree.

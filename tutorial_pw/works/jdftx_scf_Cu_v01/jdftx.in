@@ -1,0 +1,19 @@
+lattice \
+  3.61496   3.61496   0.00000 \
+  3.61496   0.00000   3.61496 \
+  0.00000   3.61496   3.61496 
+
+coords-type Lattice
+ion Cu 0.00 0.00 0.00  0
+
+kpoint-folding 15 15 15
+
+ion-species SG15/$ID_ONCV_PBE.upf
+elec-cutoff 30 120
+
+#elec-smearing Fermi 0.001
+elec-smearing Cold 0.001
+
+electronic-minimize  \
+	nIterations          200 \
+	energyDiffThreshold  1e-06

@@ -1,0 +1,114 @@
+\documentclass[a4paper]{paper}
+
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=2.0cm,bmargin=2.0cm,lmargin=2.0cm,rmargin=2.0cm}
+
+%\usepackage{fontspec}
+%\setmonofont{DejaVu Sans Mono}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{minted}
+
+% For DejaVu Sans Mono, use smaller font size
+\newminted{fortran}{frame=lines,framesep=2mm,breaklines,fontsize=\footnotesize}
+\newminted{text}{breaklines,fontsize=\footnotesize}
+\newminted{julia}{breaklines,fontsize=\footnotesize}
+\newminted{bash}{breaklines,fontsize=\footnotesize}
+\newminted{c}{breaklines,fontsize=\footnotesize}
+\newminted{shell}{breaklines,fontsize=\footnotesize}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\title{A tutorial on practical density functional calculations using plane
+wave basis set}
+
+\author{Fadjar Fathurrahman}
+\maketitle
+
+\part{Basic Theory}
+
+\section{Introduction}
+
+This is a tutorial explaining basic density functional theory calculations
+for (mainly) condensed matter systems using plane wave basis set.
+
+Example equations:
+\[
+\int_{0}^{\infty}\frac{\alpha}{\beta}\mathrm{d}\Gamma
+\]
+
+\section{Atomic structure specification}
+
+We need to specify unit cell and basis (atomic positions within the unit cell)
+
+cif file
+
+xyz file
+
+cif2cell
+
+GUI tools: avogadro
+
+ASE
+
+
+assumption: the softwares are already installed in your systems.
+
+
+\part{Silicon crystal: total energy and electronic structure}
+
+A tutorial about input file
+
+\section{Using Quantum ESPRESSO}
+
+Using ONCV PBE pspot
+\begin{verbatim}
+$ grep ! LOG1 
+!    total energy              =     -15.71919101 Ry
+\end{verbatim}
+or  -7.859595505 Ha
+
+Using GTH pspot and VWN xc
+\begin{verbatim}
+$ grep ! LOG1 
+!    total energy              =     -15.82201747 Ry
+\end{verbatim}
+or -7.911008735 Ha
+
+
+
+\section{Using ABINIT}
+
+Using ONCV PBE pspot
+\begin{verbatim}
+$ grep Etotal LOG1
+    >>>>>>>>> Etotal= -8.43967410558013E+00
+\end{verbatim}
+
+Using GTH vwn pspot
+\begin{verbatim}
+$ grep Etotal LOG1
+    >>>>>>>>> Etotal= -7.91100879337138E+00
+\end{verbatim}
+
+\section{Using JDFTX}
+
+\begin{verbatim}
+jdftx -c 1 < INPUT
+\end{verbatim}
+
+
+\begin{verbatim}
+$ grep "Etot =" LOG1 
+     Etot =       -7.8595945951064721
+\end{verbatim}
+
+\input{PW_codes}
+
+
+\end{document}
