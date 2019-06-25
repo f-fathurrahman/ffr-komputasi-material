@@ -10,6 +10,7 @@ cache
 *.swo
 *~
 
+OLD*
 TEMP_*
 
 _minted-*/
