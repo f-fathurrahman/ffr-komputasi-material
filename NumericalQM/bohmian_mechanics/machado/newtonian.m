@@ -89,7 +89,10 @@ for i=1:nump
     %if(tmpr<pO(tmpi)) XX(i,1) = X(tmpi);break;end;
     %end;
     prob1 = 1/(nump+1)*i;
-    XX(i,1) = interpolate(X,cp0,prob1);
+    
+    %XX(i,1) = interpolate(X,cp0,prob1);
+    XX(i,1) = interp1(X,cp0,prob1);
+
     % tmpi=getindex(cpO,l/(nump+l)*i);
     % XX(i,l)=X(tmpi); %dont use X
     % use this instead
