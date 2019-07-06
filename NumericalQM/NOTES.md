@@ -7,3 +7,6 @@ MathJax.Hub.Config({
          }
 })
 
+
+Finite difference coefficients are taken from:
+http://web.media.mit.edu/~crtaylor/calculator.html
