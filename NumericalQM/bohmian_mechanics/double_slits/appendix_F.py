@@ -84,7 +84,7 @@ for index,y0 in enumerate(inits):
     plt.plot(x,y,color="black")
     plt.ylim(-13.0,13.0)
     print("Completed trajectory %d completed" % index)
-    print("Completed in %s seconds" % str(time.time() - start))
+    print("Elapsed time: %s seconds" % str(time.time() - start))
     filename = "TEMP_appendix_F_-" + format("%05d" % index) + ".png"
     plt.savefig(filename, dpi=150)
     print("Saved to %s" % filename)
