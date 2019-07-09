@@ -22,8 +22,6 @@ def trajectories(wave, del_wave, wave2, del_wave2, t, state):
     y, vel = state
     return np.imag(del_wave(y,t)/wave(y,t)) + 0.5*np.random.randn()*del_wave2(y,t)/wave2(y,t)
 
-
-
 start = time.time()
 
 Nparticles = 200
