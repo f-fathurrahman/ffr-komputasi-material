@@ -1,6 +1,8 @@
+using Printf
 using LinearAlgebra
 using SparseArrays
-using BenchmarkTools
+using IterativeSolvers
+using IncompleteLU
 
 include("init_FD1d_grid.jl")
 include("FD2dGrid.jl")
@@ -19,39 +21,33 @@ function pot_harmonic( fdgrid::FD2dGrid; ω=1.0 )
     return Vpot
 end
 
-function test_multiplication()
-    Nx = 80
-    Ny = 80
+function main()
+    Nx = 50
+    Ny = 50
     fdgrid = FD2dGrid( (-5.0,5.0), Nx, (-5.0,5.0), Ny )
 
-    println("Nx = ", Nx)
-    println("Ny = ", Ny)
+    ∇2 = build_nabla2_matrix( fdgrid, func_1d=build_D2_matrix_9pt )
 
-    ∇2 = build_nabla2_matrix( fdgrid )
+    prec = ilu(-0.5*∇2)
 
-    psi1 = rand( fdgrid.Nx, fdgrid.Ny )
-    psi2 = rand( fdgrid.Npoints )
+    Vpot = pot_harmonic( fdgrid )
+    
+    Ham = -0.5*∇2 + spdiagm( 0 => Vpot )
 
-    println("Using views:")
-    @btime begin
-       @views res1 = $∇2*$psi1[:]
+    # solve for 5 lowest (using `false`) eigenvalues
+    res = lobpcg( Ham, false, 5, P=prec )
+
+    println(fieldnames(typeof(res)))
+
+    println(res)
+    println(res.converged)
+    println("Eigenvalues:")
+    for i = 1:5
+        @printf("%3d %18.10f %18.10e\n", i, res.λ[i], res.residual_norms[i])
     end
-
-    println("Not using views:")
-    @btime begin
-       res1 = $∇2*$psi1[:]
-    end
-
-    println("Using one-dimensional array")
-    @btime begin
-       res2 = $∇2*$psi2
-    end
-
-
-
-    println("Pass here")
 end
-test_multiplication()
+
+main()
 
 
 
