@@ -1,0 +1,44 @@
+&CONTROL
+  calculation = 'scf'
+  restart_mode = 'from_scratch'
+  pseudo_dir = '/home/efefer/pseudo'
+  outdir = './tmp'
+  tprnfor = .true.
+/
+
+&SYSTEM
+  ibrav = 0
+  A = 5.07202
+  nat = 4
+  ntyp = 3
+  ecutwfc = 50.0
+  occupations = 'smearing'
+  smearing = 'mv'
+  degauss = 0.002
+/
+
+&ELECTRONS
+  diagonalization = 'ppcg'
+  electron_maxstep = 150
+  mixing_beta = 0.1
+/
+
+ATOMIC_SPECIES
+  Ni   58.69340  Ni_ONCV_PBE-1.0.upf
+   O   15.99900  O_ONCV_PBE-1.0.upf
+  Li    6.96750  Li_ONCV_PBE-1.0.upf
+
+ATOMIC_POSITIONS {crystal}
+Ni   0.000000000000000   0.000000000000000   0.000000000000000 
+ O   0.741937000000000   0.741937000000000   0.741937000000000 
+ O   0.258063000000000   0.258063000000000   0.258063000000000 
+Li   0.500000000000000   0.500000000000000   0.500000000000000 
+
+K_POINTS automatic
+5 5 5  0 0 0
+
+CELL_PARAMETERS {alat}
+  1.000000000000000   0.000000000000000   0.000000000000000 
+  0.836301242074196   0.548270218510140   0.000000000000000 
+  0.836301242074196   0.249697083586569   0.488110232379448 
+
