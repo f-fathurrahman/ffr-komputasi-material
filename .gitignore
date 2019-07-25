@@ -1,4 +1,6 @@
 tmp
+*.out*
+LOG_*
 
 .ipynb_checkpoints
 __pycache__

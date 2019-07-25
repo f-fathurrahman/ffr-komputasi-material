@@ -158,3 +158,6 @@ K_POINTS
 There are several notable difference with the input file
 as compared to the SCF input. The first one is that we have
 used `calculation = 'bands'`.
+
+
+[Brillouin zone data](https://wiki.fysik.dtu.dk/ase/ase/dft/kpoints.html#special-points-in-the-brillouin-zone).
