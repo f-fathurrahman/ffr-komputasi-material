@@ -1,0 +1,3 @@
+&BANDS
+  outdir = './tmp'
+/
