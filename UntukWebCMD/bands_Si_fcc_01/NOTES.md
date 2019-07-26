@@ -1,3 +1,5 @@
+Quantum ESPRESSO version used in this tutorial: 6.4
+
 Calculating band structure is one of typical task in electronic structure calculations.
 In this tutorial, I will describe how to calculate band structure of silicon crystal
 using density functional theory as implemented in PWSCF which is included in the
@@ -91,7 +93,7 @@ ATOMIC_POSITIONS crystal
 Si 0.00 0.00 0.00
 Si 0.25 0.25 0.25
 
-K_POINTS
+K_POINTS crystal
  60
 0.50000000 0.25000000 0.75000000 0.00000000
 0.50000000 0.28125000 0.71875000 0.15594042
@@ -158,6 +160,204 @@ K_POINTS
 There are several notable difference with the input file
 as compared to the SCF input. The first one is that we have
 used `calculation = 'bands'`.
+The next, and probably the most trickiest part, is to choose the k-point
+path. Usually, a band structure of a solid is plotted along the k-point
+path. This k-point path is made by connecting several high-symmetry points
+in the first Brilliouin zone. In the first example, I want to choose the k-point
+path which is similar to the one used in this Figure:
+[http://www.bandstructure.jp/Table/BAND/band_png/si_lda_5125.ps.png].
+
+In several DFT package, we can simply define k-point path by specifying the
+high-symmetry points and number of points to be sampled along each these
+points. However (as far as I know), PWSCF does not have this feature, so,
+we have to generate our k-point path by ourself. Fortunately, we can use
+ASE to help us to generate this k-point path. An example of the script
+I used to generate this k-point path is listed below.
+This script will generate k-points path along
+W-L-$\Gamma$-X-W-K.
+
+```
+from ase.dft.kpoints import *
+from ase.units import Bohr
+import sys
+
+# Any lattice parameter should work, the important ones are the
+# lattice vectors v1, v2, and v3. In this case we used the definition
+# of FCC lattice vectors used in PWSCF.
+alat = 10.20*Bohr
+v1 = [-1,0,1]
+v2 = [ 0,1,1]
+v3 = [-1,1,0]
+cell = 0.5*alat*np.transpose( np.array( [v1, v2, v3] ) )
 
 
-[Brillouin zone data](https://wiki.fysik.dtu.dk/ase/ase/dft/kpoints.html#special-points-in-the-brillouin-zone).
+# Number of total k-points in the path
+NKPT = 60
+# Use ase.dft module for obtaining k-points along high symmetry directions
+points = ibz_points["fcc"]
+W = points["W"]
+L = points["L"]
+G = points["Gamma"]
+X = points["X"]
+K = points["K"]
+kpts, x, Xkpt = get_bandpath([W, L, G, X, W, K], cell, npoints=NKPT)
+
+# Write kpts in the format understood by PWSCF
+# The weights of the k-points are not used, so they can take any value.
+# In this case we set them all to x[ik]
+sys.stdout.write("K_POINTS crystal\n")
+sys.stdout.write("%d\n" % NKPT)
+for ik in range(NKPT):
+    sys.stdout.write('%.8f %.8f %.8f %.8f\n' % (kpts[ik,0],kpts[ik,1],kpts[ik,2],x[ik]))
+```
+
+Now, we can run PWSCF code to calculate the band structure.
+```
+pw.x < PWINPUT_bands | tee LOG_bands
+```
+
+In the log file, you should see something similar to this:
+```
+     End of band structure calculation
+
+          k =-1.0000 0.5000 0.0000 (   360 PWs)   bands (ev):
+
+    -1.4205  -1.4205   2.2859   2.2859  10.4873  10.4873  11.2922  11.2922
+
+          k =-0.9375 0.5000 0.0625 (   348 PWs)   bands (ev):
+
+    -1.8314  -1.0316   2.0471   2.6556  10.1117  10.4752  11.3474  11.7794
+
+          k =-0.8750 0.5000 0.1250 (   342 PWs)   bands (ev):
+
+    -2.2236  -0.7384   2.0155   3.0987   9.7584  10.0893  11.9105  12.3847
+
+    ... // snipped
+```
+
+This is the data for the band structure that we want. You can use your
+favourite scripting language (or tools) to parse the log file and
+build the data needed to be plotted as band structure.
+However, if you don't want to do that we can use a utility program called
+`bands.x` (also included in the Quantum ESPRESSO) to collect the band structure
+data and produce an output which can be directly plotted. Quantum ESPRESSO
+also includes an utility program to plot the band structure, however, in this
+tutorial I will not use that and used Python to do the plotting.
+
+Before plotting the band structure, let's see how to use `bands.x` to collect
+the band structure data. We need an input file. Let's name this file as
+`bands.inp`. The content of this file is:
+```
+&BANDS
+  outdir = './tmp'
+/
+```
+You should adjust this to your previous input files (SCF and bands calculation).
+
+Run `bands.x` with the following command:
+```
+bands.x < bands.inp | tee LOG_pp_bands
+```
+There are various information (most related to symmetry) in the file `LOG_pp_bands`.
+You will notice that after we run `bands.x`, several new files will be produced.
+The file that we want to use is named `bands.out.gnu`.
+This file consists of two columns. The first column is the coordinate
+of k-points which is 'linearized'. The k-point coordinates in 3d dimension
+is mapped into distances in 1d. We don't need to fuss about the details about this
+in this case because it is already calculated by `bands.x` for us. 
+The second column contains the band energies in eV. The data between
+different bands are separated by one space.
+
+In the file `LOG_pp_bands` we need the coordinates of special k-points.
+This information is given in the following lines:
+```
+     high-symmetry point: -1.0000 0.5000 0.0000   x coordinate   0.0000
+     high-symmetry point: -0.5000 0.5000 0.5000   x coordinate   0.7071
+     high-symmetry point:  0.0000 0.0000 0.0000   x coordinate   1.5731
+     high-symmetry point: -1.0000 0.0000 0.0000   x coordinate   2.5731
+     high-symmetry point: -1.0000 0.5000 0.0000   x coordinate   3.0731
+     high-symmetry point: -0.7500 0.7500 0.0000   x coordinate   3.4267
+```
+This is the coordinate of high-symmetry points that we specified when
+we are generating the k-points path, i.e.:
+W-L-G-X-W-K.
+
+
+The script below can be used to plot the band structure data in the file
+`bands.out.gnu`.
+
+```
+import numpy as np
+import matplotlib.pyplot as plt
+
+NBANDS   = 8
+NKPOINTS = 60
+
+databands = np.loadtxt("bands.out.gnu_v1")
+
+Nocc = 4  # number of occupied bands
+PLOT_SAVE = "Si_bands_v1.pdf"
+FIGSIZE = (6, 8)
+
+# obtained from the output log of bands.x
+Xkpt = [0.0000, 0.7071, 1.5731, 2.5731, 3.0731, 3.4267]
+labelX = ["W", "L", r"$\Gamma$", "X", "W", "K"]
+
+ebands = np.zeros( (NKPOINTS, NBANDS) )
+kvec   = np.zeros( (NKPOINTS, NBANDS) )
+
+for ib in range(NBANDS):
+    idx1 = (ib)*NKPOINTS
+    idx2 = (ib+1)*NKPOINTS
+    ebands[:,ib] = databands[idx1:idx2,1]
+    kvec[:,ib]   = databands[idx1:idx2,0]
+
+Efermi = np.max( ebands[:,Nocc-1] )
+ebands[:,:] = ebands[:,:] - Efermi
+
+Emin = np.min(ebands)
+Emax = np.max(ebands)
+
+plt.figure(figsize=FIGSIZE)
+plt.clf()
+for ib in range(NBANDS):
+    plt.plot( kvec[:,ib], ebands[:,ib] )
+
+for p in Xkpt:
+    plt.plot([p, p], [Emin, Emax], "k-")
+plt.xticks(Xkpt, labelX)
+
+plt.plot([0, Xkpt[-1]], [0, 0], "k--")
+plt.ylim( Emin, Emax )
+plt.xlim( 0, Xkpt[-1] )
+
+plt.xlabel("k vector")
+plt.ylabel("Energy (eV)")
+plt.title("Band structure of Si")
+plt.savefig(PLOT_SAVE)
+```
+
+This the the result:
+<figure>
+  <img src="http://cmd.tf.itb.ac.id/wp-content/uploads/2019/07/Si_bands_v1.png"
+       width="100%" height="100%">
+</figure>
+
+As exercise you may want to repeat the procedure for different k-points path
+like in the following figures.
+
+<figure>
+  <img src="http://cmd.tf.itb.ac.id/wp-content/uploads/2019/07/Si_bands_v2.png"
+       width="100%" height="100%">
+</figure>
+
+
+<figure>
+  <img src="http://cmd.tf.itb.ac.id/wp-content/uploads/2019/07/Si_bands_v3.png"
+       width="100%" height="100%">
+</figure>
+
+
+For more information about k-points path you can read the following:
+
+[https://wiki.fysik.dtu.dk/ase/ase/dft/kpoints.html#special-points-in-the-brillouin-zone)].

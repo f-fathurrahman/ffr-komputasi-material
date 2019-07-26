@@ -37,12 +37,13 @@ for p in Xkpt:
 plt.xticks(Xkpt, labelX)
 
 plt.plot([0, Xkpt[-1]], [0, 0], "k--")
-plt.ylim( Emin, Emax )
+#plt.ylim( Emin, Emax )
+plt.ylim( Emin, 2.5 )
 plt.xlim( 0, Xkpt[-1] )
 
 plt.xlabel("k vector")
 plt.ylabel("Energy (eV)")
 plt.title("Band structure of Si")
 plt.savefig(PLOT_SAVE)
-
+plt.savefig("Si_bands_v3.png", dpi=200)
 
