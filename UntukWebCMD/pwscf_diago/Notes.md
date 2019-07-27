@@ -207,9 +207,9 @@ as compared to CG.
 Finally, let's check the total number SCF of iterations required
 to reach convergence:
 ```
-LOG_cg:     convergence has been achieved in  23 iterations
+LOG_cg   :     convergence has been achieved in  23 iterations
 LOG_david:     convergence has been achieved in  12 iterations
-LOG_ppcg:     convergence has been achieved in  12 iterations
+LOG_ppcg :     convergence has been achieved in  12 iterations
 ```
 
 SCF+Davidson and SCF+PPCG require the same number of iterations
@@ -248,8 +248,38 @@ a good convergence in eigenpairs usually will result in faster SCF convergence
 Because I still suspect the RAM requirement result from the previous
 test, I decided to use ONCV pseudopotential,
 which is a type of norm-conserving pseudopotential, instead of PAW.
-
+This is the change that I made in the input file:
+```
+ATOMIC_SPECIES
+  Ni   58.69340  Ni_ONCV_PBE-1.0.upf
+   O   15.99900  O_ONCV_PBE-1.0.upf
+  Li    6.96750  Li_ONCV_PBE-1.0.upf
 ```
 
+I have used 4 processors for all the data I presented below.
+
+Memory requirement:
+```
+LOG_cg   :     Estimated total dynamical RAM >      63.46 MB
+LOG_david:     Estimated total dynamical RAM >      67.46 MB
+LOG_ppcg :     Estimated total dynamical RAM >      63.46 MB
+```
+We can see that memory requirement of lower that Davidson and the same as CG.
+However, the overall timing of PPCG is the worst:
+```
+LOG_cg   :     PWSCF        :     42.20s CPU     44.31s WALL
+LOG_david:     PWSCF        :     30.39s CPU     31.60s WALL
+LOG_ppcg :     PWSCF        :   1m10.36s CPU   1m13.38s WALL
 ```
 
+Here is the required number of SCF iterations to converge
+```
+LOG_cg   :     convergence has been achieved in  13 iterations
+LOG_david:     convergence has been achieved in  12 iterations
+LOG_ppcg :     convergence has been achieved in  12 iterations
+```
+
+**Conclusion**
+
+It seems that PPCG is not yet a better method than Davidson diagonalization
+for the system size that I have covered here.
