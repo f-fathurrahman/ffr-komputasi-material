@@ -69,7 +69,7 @@ function calc_grad_evals( Ham, psi::Array{Float64,2} )
 end
 
 
-function diag_Emin_PCG!( Ham, X::Array{Float64,2};
+function diag_Emin_PCG!( Ham, X::Array{Float64,2}, prec;
                          tol=1e-5,
                          NiterMax=100,
                          verbose=false,
@@ -116,6 +116,9 @@ function diag_Emin_PCG!( Ham, X::Array{Float64,2};
         g = calc_grad_evals( Ham, X)
         #Kg = Kprec( Ham.ik, pw, g )
         Kg = copy(g)
+        for i in 1:Nstates
+            @views ldiv!(prec, Kg[:,i])
+        end
 
         if iter != 1
             if i_cg_beta == 1

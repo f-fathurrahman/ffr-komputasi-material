@@ -33,20 +33,21 @@ function main()
     Ny = 50
     fdgrid = FD2dGrid( (-5.0,5.0), Nx, (-5.0,5.0), Ny )
 
-    ∇2 = build_nabla2_matrix( fdgrid, func_1d=build_D2_matrix_9pt )
-
-    prec = ilu(-0.5*∇2)
+    ∇2 = build_nabla2_matrix( fdgrid, func_1d=build_D2_matrix_3pt )
 
     Vpot = pot_harmonic( fdgrid )
     
     Ham = -0.5*∇2 + spdiagm( 0 => Vpot )
 
+    #prec = ilu(-0.5*∇2)
+    prec = ilu(Ham)
+
     # solve for 5 lowest (using `false`) eigenvalues
     Nstates = 5
     Npoints = Nx*Ny
-    X = randn(Float64, Npoints, Nstates)
+    X = rand(Float64, Npoints, Nstates)
     ortho_sqrt!(X)
-    evals = diag_Emin_PCG!( Ham, X, verbose=true )
+    evals = diag_Emin_PCG!( Ham, X, prec, verbose=true )
 end
 
 main()
