@@ -7,3 +7,5 @@ function init_FD1d_grid( x_min::Float64, x_max::Float64, N::Int64 )
     end
     return x, h
 end
+
+init_FD1d_grid( X::Tuple{Float64,Float64}, N::Int64) = init_FD1d_grid( X[1], X[2], N )
