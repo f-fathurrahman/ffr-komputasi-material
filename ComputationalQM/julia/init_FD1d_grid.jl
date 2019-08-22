@@ -1,6 +1,4 @@
-function init_FD1d_grid( X::Tuple{Float64,Float64}, N::Int64 )
-    x_min = X[1]
-    x_max = X[2]
+function init_FD1d_grid( x_min::Float64, x_max::Float64, N::Int64 )
     L = x_max - x_min
     h = L/(N-1)
     x = zeros(Float64,N)
