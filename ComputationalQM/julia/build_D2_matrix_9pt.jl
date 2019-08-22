@@ -33,11 +33,17 @@ function build_D2_matrix_9pt( N::Int64, h::Float64 )
     mat[N-1,N-3] = -1008.0
     mat[N,N-3]   =   128.0
 
-    mat[N-1,N-1] = 8064.0
-    mat[N-1,N] = -1008.0
-    mat[N,N-1] = -1008.0
+    mat[N-2,N-2] = -14350.0
+    mat[N-2,N-1] =  8064.0
+    mat[N-2,N]   = -1008.0
+    mat[N-1,N-2] =  8064.0
+    mat[N,N-2]   = -1008.0
 
-    mat[N,N] = 8064.0
+    mat[N-1,N-1] = -14350.0
+    mat[N-1,N]   = 8064.0
+    mat[N,N-1]   = 8064.0
+
+    mat[N,N] = -14350.0
     
     return mat/(5040*h^2)
 end
