@@ -56,3 +56,9 @@ function FD3dGrid(
     return FD3dGrid(Npoints, Nx, Ny, Nz, hx, hy, hz, x, y, z, r, idx_ip2xyz, idx_xyz2ip)
     
 end
+
+function FD3dGrid( NN::Array{Int64,1}, AA::Array{Float64,1}, BB::Array{Float64,1} )
+    return FD3dGrid( (AA[1], BB[1]), NN[1],
+                     (AA[2], BB[2]), NN[2],
+                     (AA[3], BB[3]), NN[3] ) 
+end
