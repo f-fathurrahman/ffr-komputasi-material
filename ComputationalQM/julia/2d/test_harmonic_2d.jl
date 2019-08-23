@@ -26,7 +26,7 @@ function main()
     Ny = 50
     fdgrid = FD2dGrid( (-5.0,5.0), Nx, (-5.0,5.0), Ny )
 
-    ∇2 = build_nabla2_matrix( fdgrid, func_1d=build_D2_matrix_9pt )
+    ∇2 = build_nabla2_matrix( fdgrid, func_1d=build_D2_matrix_7pt )
 
     prec = ilu(-0.5*∇2)
 
@@ -36,6 +36,7 @@ function main()
 
     # solve for 5 lowest (using `false`) eigenvalues
     res = lobpcg( Ham, false, 5, P=prec )
+    #res = lobpcg( Ham, false, 5 )
 
     println(fieldnames(typeof(res)))
 
