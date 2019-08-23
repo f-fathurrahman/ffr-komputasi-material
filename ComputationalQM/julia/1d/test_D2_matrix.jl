@@ -10,13 +10,13 @@ function test_D2_3pt()
 end
 
 function test_D2_5pt()
-    D2 = build_D2_matrix_5pt(9, 1.0)
+    D2 = build_D2_matrix_5pt(9, sqrt(1.0/12.0))
     display(D2)
     println()
 end
 
 function test_D2_7pt()
-    D2 = build_D2_matrix_7pt(9, 1.0)
+    D2 = build_D2_matrix_7pt(9, sqrt(1.0/180.0))
     display(D2)
     println()
 end
