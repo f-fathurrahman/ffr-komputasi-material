@@ -55,6 +55,7 @@ function test_main( NN::Array{Int64} )
     #prec = ilu(Laplacian3d)
     #prec = ilu(Laplacian3d, τ = 0.001)
     mlprec = aspreconditioner(ruge_stuben(Laplacian3d))
+    #mlprec = aspreconditioner(smoothed_aggregation(Laplacian3d))
 
     @printf("Test norm charge: %18.10f\n", sum(rho)*deltaV)
     print("Solving Poisson equation:\n")
