@@ -3,6 +3,7 @@ using LinearAlgebra
 using SparseArrays
 using IterativeSolvers
 using IncompleteLU
+using AlgebraicMultigrid
 using Random
 
 include("FD3dGrid.jl")
@@ -39,8 +40,13 @@ function main()
     Ham = -0.5*∇2 + spdiagm( 0 => Vpot )
 
     # may choose between these two
+    println("Building preconditioner")
     #prec = ilu(-0.5*∇2)
-    prec = ilu(Ham) # this should result in faster convergence
+    #prec = ilu(Ham) # this should result in faster convergence
+    prec = aspreconditioner(ruge_stuben(Ham))
+    #prec = aspreconditioner(smoothed_aggregation(Ham))
+    #prec = aspreconditioner(smoothed_aggregation(-0.5*∇2))
+    println("Done building preconditioner")
 
     Nstates = 5
     Npoints = Nx*Ny*Nz
