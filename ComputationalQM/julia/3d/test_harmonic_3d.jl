@@ -9,6 +9,7 @@ using Random
 include("FD3dGrid.jl")
 include("build_nabla2_matrix.jl")
 include("../diag_Emin_PCG.jl")
+include("../diag_davidson.jl")
 include("../ortho_sqrt.jl")
 include("../supporting_functions.jl")
 
@@ -43,8 +44,8 @@ function main()
     println("Building preconditioner")
     #prec = ilu(-0.5*∇2)
     #prec = ilu(Ham) # this should result in faster convergence
-    prec = aspreconditioner(ruge_stuben(Ham))
-    #prec = aspreconditioner(smoothed_aggregation(Ham))
+    #prec = aspreconditioner(ruge_stuben(Ham))
+    prec = aspreconditioner(smoothed_aggregation(Ham))
     #prec = aspreconditioner(smoothed_aggregation(-0.5*∇2))
     println("Done building preconditioner")
 
@@ -52,7 +53,9 @@ function main()
     Npoints = Nx*Ny*Nz
     X = rand(Float64, Npoints, Nstates)
     ortho_sqrt!(X)
-    evals = diag_Emin_PCG!( Ham, X, prec, verbose=true )
+    
+    #evals = diag_Emin_PCG!( Ham, X, prec, verbose=true )
+    evals = diag_davidson!( Ham, X, prec, verbose=true )
 
     @printf("\n\nEigenvalues\n")
     for i in 1:Nstates
