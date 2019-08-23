@@ -137,7 +137,7 @@ function diag_Emin_PCG!( Ham, X::Array{Float64,2}, prec;
 
         d = -Kg + β * d_old
 
-        Xc = ortho_gram_schmidt( X + α_t*d )
+        Xc = ortho_sqrt( X + α_t*d )
         gt = calc_grad_evals( Ham, Xc )
 
         denum = real(sum(conj(g-gt).*d))
@@ -149,7 +149,7 @@ function diag_Emin_PCG!( Ham, X::Array{Float64,2}, prec;
 
         # Update wavefunction
         X = X + α*d
-        ortho_gram_schmidt!(X)
+        ortho_sqrt!(X)
 
         Hr = Symmetric( X' * ( Ham*X ) )
         evals = eigvals(Hr)
@@ -176,13 +176,13 @@ function diag_Emin_PCG!( Ham, X::Array{Float64,2}, prec;
             end
             break
         end
-        if diffE <= tol_ebands*Nstates
-            IS_CONVERGED = true
-            if verbose || verbose_last
-                @printf("Convergence is achieved based on tol_ebands*Nstates\n")
-            end
-            break
-        end
+        #if diffE <= tol_ebands*Nstates
+        #    IS_CONVERGED = true
+        #    if verbose || verbose_last
+        #        @printf("Convergence is achieved based on tol_ebands*Nstates\n")
+        #    end
+        #    break
+        #end
 
         g_old = copy(g)
         d_old = copy(d)
@@ -194,13 +194,10 @@ function diag_Emin_PCG!( Ham, X::Array{Float64,2}, prec;
         @printf("\nWARNING: diag_Emin_PCG is not converged after %d iterations\n", NiterMax)
     end
 
-    ortho_gram_schmidt!(X)
+    ortho_sqrt!(X)
     Hr = Symmetric( X' * (Ham*X) )
     evals, evecs = eigen(Hr)
-    # Sort
-    idx_sorted = sortperm(evals)
-    evals = evals[idx_sorted]
-    X[:,:] = X*evecs[:,idx_sorted]
+    X = X*evecs
 
     if verbose_last || verbose
         @printf("\nEigenvalues from diag_Emin_PCG:\n\n")
