@@ -5,14 +5,17 @@ using IterativeSolvers
 using IncompleteLU
 using Random
 
-include("init_FD1d_grid.jl")
+include("../1d/init_FD1d_grid.jl")
+include("../1d/build_D2_matrix_3pt.jl")
+include("../1d/build_D2_matrix_5pt.jl")
+include("../1d/build_D2_matrix_7pt.jl")
+include("../1d/build_D2_matrix_9pt.jl")
 include("FD2dGrid.jl")
-include("build_D2_matrix.jl")
 include("build_nabla2_matrix.jl")
-include("supporting_functions.jl")
-include("diag_Emin_PCG.jl")
-include("ortho_sqrt.jl")
-include("ortho_gram_schmidt.jl")
+include("../supporting_functions.jl")
+include("../diag_Emin_PCG.jl")
+include("../ortho_sqrt.jl")
+include("../ortho_gram_schmidt.jl")
 
 function pot_harmonic( fdgrid::FD2dGrid; ω=1.0 )
     Npoints = fdgrid.Npoints
@@ -39,15 +42,20 @@ function main()
     
     Ham = -0.5*∇2 + spdiagm( 0 => Vpot )
 
+    # may choose between these two
     #prec = ilu(-0.5*∇2)
-    prec = ilu(Ham)
+    prec = ilu(Ham) # this should result in faster convergence
 
-    # solve for 5 lowest (using `false`) eigenvalues
     Nstates = 5
     Npoints = Nx*Ny
     X = rand(Float64, Npoints, Nstates)
     ortho_sqrt!(X)
     evals = diag_Emin_PCG!( Ham, X, prec, verbose=true )
+
+    @printf("\n\nEigenvalues\n")
+    for i in 1:Nstates
+        @printf("%5d %18.10f\n", i, evals[i])
+    end
 end
 
 main()
