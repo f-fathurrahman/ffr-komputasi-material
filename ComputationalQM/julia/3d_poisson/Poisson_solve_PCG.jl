@@ -1,4 +1,4 @@
-function solve_poisson_pcg( Lmat::SparseMatrixCSC{Float64,Int64},
+function Poisson_solve_PCG( Lmat::SparseMatrixCSC{Float64,Int64},
                             prec,
                             rho::Array{Float64,1}, NiterMax::Int64;
                             verbose=false, TOL=5.e-10 )

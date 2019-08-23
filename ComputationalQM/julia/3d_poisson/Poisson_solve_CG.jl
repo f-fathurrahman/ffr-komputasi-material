@@ -1,4 +1,4 @@
-function solve_poisson_cg( Lmat::SparseMatrixCSC{Float64,Int64},
+function Poisson_solve_CG( Lmat::SparseMatrixCSC{Float64,Int64},
                            rho::Array{Float64,1}, NiterMax::Int64;
                            verbose=false, TOL=5.e-10 )
   #
@@ -32,7 +32,7 @@ function solve_poisson_cg( Lmat::SparseMatrixCSC{Float64,Int64},
     #
     if sqrt(rsnew) < TOL
       if verbose
-        @printf("Convergence achieved in solve_poison_cg: N, iter: %d %d\n", Npoints, iter)
+        @printf("Convergence achieved in Poisson_solve_CG: N, iter: %d %d\n", Npoints, iter)
       end
       break
     end

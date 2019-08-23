@@ -7,8 +7,8 @@ using AlgebraicMultigrid
 include("../3d/FD3dGrid.jl")
 include("../3d/build_nabla2_matrix.jl")
 include("../supporting_functions.jl")
-include("solve_poisson_cg.jl")
-include("solve_poisson_pcg.jl")
+include("Poisson_solve_CG.jl")
+include("Poisson_solve_PCG.jl")
 
 function test_main( NN::Array{Int64} )
     AA = [0.0, 0.0, 0.0]
@@ -54,15 +54,14 @@ function test_main( NN::Array{Int64} )
     println("Building preconditioner")
     #prec = ilu(Laplacian3d)
     #prec = ilu(Laplacian3d, τ = 0.001)
-    mlprec = aspreconditioner(ruge_stuben(Laplacian3d))
-    #mlprec = aspreconditioner(smoothed_aggregation(Laplacian3d))
+    prec = aspreconditioner(ruge_stuben(Laplacian3d))
+    #prec = aspreconditioner(smoothed_aggregation(Laplacian3d))
 
     @printf("Test norm charge: %18.10f\n", sum(rho)*deltaV)
     print("Solving Poisson equation:\n")
 
-    #phi = solve_poisson_cg( Laplacian3d, -4*pi*rho, 1000, verbose=true, TOL=1e-10 )
-    #phi = solve_poisson_pcg( Laplacian3d, prec, -4*pi*rho, 1000, verbose=true, TOL=1e-10 )
-    phi = solve_poisson_pcg( Laplacian3d, mlprec, -4*pi*rho, 1000, verbose=true, TOL=1e-10 )
+    #phi = Poisson_solve_CG( Laplacian3d, -4*pi*rho, 1000, verbose=true, TOL=1e-10 )
+    phi = Poisson_solve_PCG( Laplacian3d, prec, -4*pi*rho, 1000, verbose=true, TOL=1e-10 )
 
     # Calculation of Hartree energy
     Unum = 0.5*sum( rho .* phi ) * deltaV
