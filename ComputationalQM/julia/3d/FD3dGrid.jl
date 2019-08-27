@@ -39,9 +39,8 @@ function FD3dGrid(
     Npoints = Nx*Ny*Nz
     
     r = zeros(3,Npoints)
-    
-    Vol = ( x_domain[2] - x_domain[1] ) * ( y_domain[2] - y_domain[1] ) * ( z_domain[2] - z_domain[1] )
-    dVol = Vol/Npoints
+
+    dVol = hx*hy*hz
 
     idx_ip2xyz = zeros(Int64,3,Npoints)
     idx_xyz2ip = zeros(Int64,Nx,Ny,Nz)
