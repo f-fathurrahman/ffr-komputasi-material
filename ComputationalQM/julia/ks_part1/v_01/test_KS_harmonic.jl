@@ -32,6 +32,7 @@ function pot_harmonic( fdgrid::FD3dGrid; ω=1.0, center=[0.0, 0.0, 0.0] )
 end
 
 function main()
+
     Random.seed!(1234)
     
     AA = [0.0, 0.0, 0.0]
@@ -47,7 +48,7 @@ function main()
 
     Nbasis = prod(NN)
 
-    dVol = (BB[1] - AA[1]) * (BB[2] - AA[2]) * (BB[3] - AA[3]) / Nbasis
+    dVol = fdgrid.dVol
 
     Nstates = 4
     psi = rand(Float64,Nbasis,Nstates)
@@ -73,16 +74,17 @@ function main()
     for iterSCF in 1:NiterMax
         
         evals = diag_LOBPCG!( Ham, psi, Ham.precKin, verbose_last=false )
-        
+        psi = psi/sqrt(dVol)
+
         Rhoe_new = calc_rhoe( psi )
-        
+
         Rhoe = betamix*Rhoe_new + (1-betamix)*Rhoe
-        
+
         update!( Ham, Rhoe )
         
         Etot = sum( calc_energies( Ham, psi ) )
         
-        dRhoe = norm(Rhoe-Rhoe_new)
+        dRhoe = norm(Rhoe - Rhoe_new)
         dEtot = abs(Etot - Etot_old)
 
         @printf("%5d %18.10f %18.10e %18.10e\n", iterSCF, Etot, dEtot, dRhoe)

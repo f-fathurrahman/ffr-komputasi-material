@@ -15,10 +15,11 @@ function calc_E_kin( Ham, psi::Array{Float64,2} )
     Nstates = size(psi,2)
     E_kin = 0.0
     nabla2psi = zeros(Float64,Nbasis)
-    # Assumption: Focc = 1 for all states
+    dVol = Ham.fdgrid.dVol
+    # Assumption: Focc = 2 for all states
     for ist in 1:Nstates
         @views nabla2psi = -0.5*Ham.Laplacian*psi[:,ist]
-        E_kin = E_kin + dot( psi[:,ist], nabla2psi[:] )
+        E_kin = E_kin + 2.0*dot( psi[:,ist], nabla2psi[:] )*dVol
     end
     return E_kin
 end
