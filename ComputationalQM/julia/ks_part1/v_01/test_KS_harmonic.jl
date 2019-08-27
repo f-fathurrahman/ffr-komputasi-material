@@ -6,17 +6,17 @@ using IncompleteLU
 using AlgebraicMultigrid
 using Random
 
-include("../3d/FD3dGrid.jl")
-include("../3d/build_nabla2_matrix.jl")
-include("../diag_Emin_PCG.jl")
-include("../diag_davidson.jl")
-include("../diag_LOBPCG.jl")
-include("../ortho_sqrt.jl")
-include("../supporting_functions.jl")
-include("../3d_poisson/Poisson_solve_PCG.jl")
+include("../../3d/FD3dGrid.jl")
+include("../../3d/build_nabla2_matrix.jl")
+include("../../diag_Emin_PCG.jl")
+include("../../diag_davidson.jl")
+include("../../diag_LOBPCG.jl")
+include("../../ortho_sqrt.jl")
+include("../../supporting_functions.jl")
+include("../../3d_poisson/Poisson_solve_PCG.jl")
 include("calc_rhoe.jl")
 include("Hamiltonian.jl")
-include("LDA_VWN.jl")
+include("../LDA_VWN.jl")
 include("calc_energies.jl")
 
 function pot_harmonic( fdgrid::FD3dGrid; ω=1.0, center=[0.0, 0.0, 0.0] )

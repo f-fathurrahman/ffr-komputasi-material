@@ -18,7 +18,7 @@ function calc_E_kin( Ham, psi::Array{Float64,2} )
     # Assumption: Focc = 1 for all states
     for ist in 1:Nstates
         @views nabla2psi = -0.5*Ham.Laplacian*psi[:,ist]
-        E_kin = E_kin + dot( psi[:,ist], psi[:,ist] )
+        E_kin = E_kin + dot( psi[:,ist], nabla2psi[:] )
     end
     return E_kin
 end
