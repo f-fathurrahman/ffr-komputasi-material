@@ -9,6 +9,8 @@ struct FD3dGrid
     hx::Float64
     hy::Float64
     hz::Float64
+
+    dVol::Float64
     
     x::Array{Float64,1}
     y::Array{Float64,1}
@@ -38,6 +40,9 @@ function FD3dGrid(
     
     r = zeros(3,Npoints)
     
+    Vol = ( x_domain[2] - x_domain[1] ) * ( y_domain[2] - y_domain[1] ) * ( z_domain[2] - z_domain[1] )
+    dVol = Vol/Npoints
+
     idx_ip2xyz = zeros(Int64,3,Npoints)
     idx_xyz2ip = zeros(Int64,Nx,Ny,Nz)
 
@@ -53,7 +58,7 @@ function FD3dGrid(
         idx_xyz2ip[i,j,k] = ip
     end
     
-    return FD3dGrid(Npoints, Nx, Ny, Nz, hx, hy, hz, x, y, z, r, idx_ip2xyz, idx_xyz2ip)
+    return FD3dGrid(Npoints, Nx, Ny, Nz, hx, hy, hz, dVol, x, y, z, r, idx_ip2xyz, idx_xyz2ip)
     
 end
 
