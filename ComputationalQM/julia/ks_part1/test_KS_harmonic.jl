@@ -17,6 +17,7 @@ include("../3d_poisson/Poisson_solve_PCG.jl")
 include("calc_rhoe.jl")
 include("Hamiltonian.jl")
 include("LDA_VWN.jl")
+include("calc_energies.jl")
 
 function pot_harmonic( fdgrid::FD3dGrid; ω=1.0, center=[0.0, 0.0, 0.0] )
     Npoints = fdgrid.Npoints
@@ -64,20 +65,34 @@ function main()
     
     evals = zeros(Float64,Nstates)
     Etot_old = 0.0
-
+    dEtot = 0.0
     betamix = 0.5
-    
-    for i in 1:20
+    dRhoe = 0.0
+    NiterMax = 100
+
+    for iterSCF in 1:NiterMax
         
-        evals = diag_LOBPCG!( Ham, psi, Ham.precKin, verbose_last=true )
+        evals = diag_LOBPCG!( Ham, psi, Ham.precKin, verbose_last=false )
         
         Rhoe_new = calc_rhoe( psi )
         
         Rhoe = betamix*Rhoe_new + (1-betamix)*Rhoe
-
-        println("diff norm(Rhoe) = ", norm(Rhoe-Rhoe_new))
         
         update!( Ham, Rhoe )
+        
+        Etot = sum( calc_energies( Ham, psi ) )
+        
+        dRhoe = norm(Rhoe-Rhoe_new)
+        dEtot = abs(Etot - Etot_old)
+
+        @printf("%5d %18.10f %18.10e %18.10e\n", iterSCF, Etot, dEtot, dRhoe)
+
+        if dEtot < 1e-6
+            @printf("Convergence is achieved in %d iterations\n", iterSCF)
+            break
+        end
+
+        Etot_old = Etot
     end
 end
 
