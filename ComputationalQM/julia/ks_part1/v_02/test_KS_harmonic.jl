@@ -52,7 +52,7 @@ function main()
 
     my_pot_harmonic( fdgrid ) = pot_harmonic( fdgrid, ω=2, center=[0.0, 0.0, 0.0] )
 
-    Ham = Hamiltonian( fdgrid, my_pot_harmonic, func_1d=build_D2_matrix_5pt )
+    Ham = Hamiltonian( fdgrid, my_pot_harmonic, func_1d=build_D2_matrix_9pt )
 
     Nbasis = prod(NN)
 
