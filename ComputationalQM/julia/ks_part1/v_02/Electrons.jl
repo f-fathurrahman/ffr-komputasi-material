@@ -22,8 +22,14 @@ function Electrons( Nelectrons::Int64; Nstates_extra=0 )
 
     if !is_odd
         for i in 1:Nstates_occ
-            i
+           Focc[i] = 2.0 
         end
     else
-    for i in 1:Nstates_occ
+        for i in 1:Nstates_occ-1
+            Focc[1] = 2.0
+        end
+        Focc[Nstates_occ] = 1.0
+    end
+
+    return Electrons(Nelectrons, Nstates, Nstates_occ, Focc, energies)
 end
