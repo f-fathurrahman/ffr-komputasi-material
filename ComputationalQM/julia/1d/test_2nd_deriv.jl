@@ -14,7 +14,7 @@ function my_gaussian(x, α=1.0)
 end
 
 function d2_my_gaussian(x, α=1.0)
-    return -2*α*exp(-α*x^2) + 4*α^2 * x^2 * exp(-α*x^2)
+    return (-2*α + 4*α^2 * x^2) * exp(-α*x^2)
 end
 
 function main()
