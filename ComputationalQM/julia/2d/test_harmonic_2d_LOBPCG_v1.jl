@@ -6,7 +6,6 @@ using IncompleteLU
 
 include("init_FD1d_grid.jl")
 include("FD2dGrid.jl")
-include("build_D2_matrix.jl")
 include("build_nabla2_matrix.jl")
 include("supporting_functions.jl")
 

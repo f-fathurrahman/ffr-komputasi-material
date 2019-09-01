@@ -5,11 +5,6 @@ using IterativeSolvers
 using IncompleteLU
 using Random
 
-include("../1d/init_FD1d_grid.jl")
-include("../1d/build_D2_matrix_3pt.jl")
-include("../1d/build_D2_matrix_5pt.jl")
-include("../1d/build_D2_matrix_7pt.jl")
-include("../1d/build_D2_matrix_9pt.jl")
 include("FD2dGrid.jl")
 include("build_nabla2_matrix.jl")
 include("../supporting_functions.jl")

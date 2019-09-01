@@ -1,3 +1,8 @@
+include("../1d/build_D2_matrix_3pt.jl")
+include("../1d/build_D2_matrix_5pt.jl")
+include("../1d/build_D2_matrix_7pt.jl")
+include("../1d/build_D2_matrix_9pt.jl")
+
 function build_nabla2_matrix( fdgrid::FD2dGrid; func_1d=build_D2_matrix_3pt )
     Nx = fdgrid.Nx
     hx = fdgrid.hx
