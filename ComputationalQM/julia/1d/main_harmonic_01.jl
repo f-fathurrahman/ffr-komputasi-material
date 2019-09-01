@@ -31,6 +31,12 @@ function main()
         @printf("%5d %18.10f\n", i, evals[i])
     end
 
+    # normalize the first three eigenstates
+    for i in 1:3
+        ss = dot(evecs[:,i], evecs[:,i])*h
+        evecs[:,i] = evecs[:,i]/sqrt(ss)
+    end
+
     # Plot up to 3rd eigenstate
     f = @pgf Axis({ title="N="*string(N), height="10cm", width="15cm", xmajorgrids, ymajorgrids },
         PlotInc(Coordinates(x, evecs[:,1])),
