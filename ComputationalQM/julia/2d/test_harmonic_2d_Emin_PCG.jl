@@ -31,7 +31,7 @@ function main()
     Ny = 50
     fdgrid = FD2dGrid( (-5.0,5.0), Nx, (-5.0,5.0), Ny )
 
-    ∇2 = build_nabla2_matrix( fdgrid, func_1d=build_D2_matrix_3pt )
+    ∇2 = build_nabla2_matrix( fdgrid, func_1d=build_D2_matrix_9pt )
 
     Vpot = pot_harmonic( fdgrid )
     
