@@ -95,7 +95,7 @@ function diag_Emin_PCG!( Ham, X::Array{Float64,2}, prec;
         end
 
         # Update wavefunction
-        X = X + α*d
+        X[:,:] = X + α*d
         ortho_sqrt!(X)
 
         Hr = Symmetric( X' * ( Ham*X ) )
@@ -144,7 +144,7 @@ function diag_Emin_PCG!( Ham, X::Array{Float64,2}, prec;
     ortho_sqrt!(X)
     Hr = Symmetric( X' * (Ham*X) )
     evals, evecs = eigen(Hr)
-    X = X*evecs
+    X[:,:] = X*evecs
 
     if verbose_last || verbose
         @printf("\nEigenvalues from diag_Emin_PCG:\n\n")
