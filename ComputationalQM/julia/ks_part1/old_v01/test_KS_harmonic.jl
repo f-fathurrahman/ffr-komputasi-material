@@ -44,7 +44,7 @@ function main()
     # follow the potential used in Arias DFT++ tutorial
     my_pot_harmonic( fdgrid ) = pot_harmonic( fdgrid, ω=2, center=[3.0, 3.0, 3.0] )
 
-    Ham = Hamiltonian( fdgrid, my_pot_harmonic )
+    Ham = Hamiltonian( fdgrid, my_pot_harmonic, func_1d=build_D2_matrix_9pt )
 
     Nbasis = prod(NN)
 
