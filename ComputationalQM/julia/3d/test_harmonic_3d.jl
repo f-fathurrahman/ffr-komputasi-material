@@ -5,6 +5,7 @@ using IterativeSolvers
 using IncompleteLU
 using AlgebraicMultigrid
 using Random
+using Serialization
 
 include("FD3dGrid.jl")
 include("build_nabla2_matrix.jl")
@@ -51,7 +52,7 @@ function main()
     #prec = aspreconditioner(smoothed_aggregation(-0.5*∇2))
     println("Done building preconditioner")
 
-    Nstates = 5
+    Nstates = 10
     Npoints = Nx*Ny*Nz
     X = rand(Float64, Npoints, Nstates)
     ortho_sqrt!(X)
@@ -64,6 +65,9 @@ function main()
     for i in 1:Nstates
         @printf("%5d %18.10f\n", i, evals[i])
     end
+
+    serialize("wavefunc.data", X)
+
 end
 
 main()
