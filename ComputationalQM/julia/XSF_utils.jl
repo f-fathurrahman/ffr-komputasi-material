@@ -45,11 +45,11 @@ function write_xsf( filnam::String, LL::Array{Float64,2};
                     atsymbs=nothing, molecule=false )
 
     atpos = zeros(3,1)
-    atpos[1,1] = 0.5*LL[:,1]
-    atpos[2,1] = 0.5*LL[:,2]
-    atpos[3,1] = 0.5*LL[:,3]
+    atpos[1,1] = 0.5*norm(LL[:,1])
+    atpos[2,1] = 0.5*norm(LL[:,2])
+    atpos[3,1] = 0.5*norm(LL[:,3])
 
-    write_xsf( filname, LL, atpos )
+    write_xsf( filnam, LL, atpos )
 end
 
 function write_xsf_data3d_crystal(
