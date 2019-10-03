@@ -1,0 +1,73 @@
+\documentclass[a4paper,11pt]{extarticle}
+
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+
+\usepackage{amsmath} % load this before unicode-math
+\usepackage{amssymb}
+
+\usepackage{unicode-math}
+
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\setmathfont{TeX Gyre Termes Math}
+\setmonofont{DejaVu Sans Mono}
+
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{0.5em}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+
+\usepackage{minted}
+\newminted{python}{breaklines,fontsize=\scriptsize}
+\newminted{text}{breaklines,fontsize=\scriptsize}
+
+\newcommand{\txtinline}[1]{\mintinline[fontsize=\scriptsize]{text}{#1}}
+\newcommand{\pyinline}[1]{\mintinline[fontsize=\scriptsize]{python}{#1}}
+
+\definecolor{mintedbg}{rgb}{0.95,0.95,0.95}
+\usepackage{mdframed}
+
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=mintedbg]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+\begin{document}
+
+\title{
+Modul Praktikum \\
+Pengenalan \textsf{ASE} dan \textsf{GPAW}}
+\author{Fadjar Fathurrahman}
+\date{2019}
+\maketitle
+
+\section{Tujuan}
+
+
+\section{Perangkat lunak yang diperlukan}
+
+
+\section{Pengenalan \textsf{ASE}}
+
+\textsf{ASE} (Atomic Simulation Environment) adalah kumpulan modul dan \textit{script} Python untuk
+mempersiapkan, memanipulasi, menjalankan, menggambarkan (visualisasi) and menganalisis simulasi
+atomistik.
+
+Kita akan menggunakan \textsf{ASE} untuk membuat struktur atomistik.
+
+Beberapa kelas (tipe data) penting pada \textsf{ASE}: \pyinline{Atoms} dan \pyinline{Calculator}
+
+\begin{pythoncode}
+import ase
+
+atoms = bulk("Cu", "fcc")
+\end{pythoncode}
+
+Test math:
+\begin{equation}
+V(\mathbf{r}) = V_{Ha}(\mathbf{r}) + V_{xc}(\mathbf{r})
+\end{equation}
+
+
+\end{document}
