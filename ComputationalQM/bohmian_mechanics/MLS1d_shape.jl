@@ -109,25 +109,25 @@ end
 =#
 
 
-function MLS1d_shape( m, Nnodes, xi, Npoints, x, dmI, wtype, param )
+function MLS1d_shape( m_order, Nnodes, xi, Npoints, x, dmI, wtype, param )
 
-    wi   = zeros(Nnodes)  # Weight funciton
-    dwi  = zeros(Nnodes)
-    ddwi = zeros(Nnodes)
+    wi   = zeros(1,Nnodes)  # Weight funciton
+    dwi  = zeros(1,Nnodes)
+    ddwi = zeros(1,Nnodes)
 
     ϕ   = zeros(Npoints, Nnodes)
     dϕ  = zeros(Npoints, Nnodes)
     d2ϕ = zeros(Npoints, Nnodes)
 
 
-    p = zeros(Nnodes,m)
-    B = zeros(Nnodes,m)
-    DB = zeros(Nnodes,m)
-    DDB = zeros(Nnodes,m)
+    p   = zeros(m_order, Nnodes)
+    B   = zeros(m_order, Nnodes)
+    DB  = zeros(m_order, Nnodes)
+    DDB = zeros(m_order, Nnodes)
 
-    A   = zeros(m, m)
-    DA  = zeros(m, m)
-    DDA = zeros(m, m)
+    A   = zeros(m_order, m_order)
+    DA  = zeros(m_order, m_order)
+    DDA = zeros(m_order, m_order)
 
     # LOOP OVER ALL EVALUATION POINTS TO CALCULATE VALUE OF SHAPE FUNCTION Fi(X)
     for j in 1:Npoints
@@ -139,79 +139,71 @@ function MLS1d_shape( m, Nnodes, xi, Npoints, x, dmI, wtype, param )
         end
    
         # EVALUATE BASIS p, B MATRIX AND THEIR DERIVATIVES
-        if m == 1  # Shepard function
+        if m_order == 1  # Shepard function
         
-            p = ones(Nnodes)
-            p[:,1] = ones(Nnodes)
+            p[1,:] = ones(1,Nnodes)
             
             px   = [1]
             dpx  = [0]
             ddpx = [0]
-           
-            B[:,1]   = p .* wi
-            DB[:,1]  = p .* dwi
-            DDB[:,1] = p .* ddwi
         
-        elseif m == 2
+        elseif m_order == 2
 
-            p[:,1] = ones(Nnodes)
-            p[:,2] = xi[:]
-            #p = [ones(1, nnodes); xi]; 
+            p[1,:] = ones(1,Nnodes)
+            p[2,:] = xi[:]
             
             px   = [1, x[j]]
             dpx  = [0, 1]
             ddpx = [0, 0]
-          
-            B[:,1] = p[:,1] .* wi
-            B[:,2] = p[:,2] .* wi
             
-            DB[:,1] = p[:,1] .* dwi
-            DB[:,2] = p[:,2] .* dwi
+        elseif m_order == 3
 
-            DDB[:,1] = p[:,1] .* ddwi
-            DDB[:,2] = p[:,2] .* ddwi
-
-            println("Pass here 174")
+            p[1,:] = ones(1,Nnodes)
+            p[2,:] = xi[:]
+            p[3,:] = xi.^2
             
-
-        #=
-        elseif (m == 3)
-           p = [ones(1, nnodes); xi; xi.*xi]; 
-           px   = [1; x(j); x(j)*x(j)];
-           dpx  = [0; 1; 2*x(j)];
-           ddpx = [0; 0; 2];
-           
-           B    = p .* [wi; wi; wi];
-           DB   = p .* [dwi; dwi; dwi];
-           DDB  = p .* [ddwi; ddwi; ddwi];
+            px   = [ 1, x[j], x[j]^2 ]
+            dpx  = [ 0, 1, 2*x[j] ]
+            ddpx = [ 0, 0, 2 ]
+        
         else
-           error('Invalid order of basis.');
+           
+           error("Invalid order of basis")
+        
         end
 
-        =#
+        for i in 1:Nnodes
+            for m in 1:m_order
+                B[m,i] = p[m,i] * wi[i]
+                DB[m,i] = p[m,i] * dwi[i]
+                DDB[m,i] = p[m,i] * ddwi[i]
+            end
+        end
 
-        end # if
    
         # EVALUATE MATRICES A AND ITS DERIVATIVES
+        # reset
+        A[:,:]   .= 0.0
+        DA[:,:]  .= 0.0
+        DDA[:,:] .= 0.0
         for i in 1:Nnodes
-            pp = p[i,:] * p[i,:]'
-            A   .= A   .+ wi[i] * pp
-            DA  .= DA  .+ dwi[i] * pp
-            DDA .= DDA .+ ddwi[i] * pp
+            pp = p[:,i] * p[:,i]'
+            A[:,:]   .= A[:,:]   .+ wi[i] * pp
+            DA[:,:]  .= DA[:,:]  .+ dwi[i] * pp
+            DDA[:,:] .= DDA[:,:] .+ ddwi[i] * pp
         end
+
         AInv = inv(A)
-      
-        println("Pass here 204")
 
         rx  = AInv * px
-        #ϕ[j,:] = rx' * B   # shape function
-        ϕ[j,:] = rx .* B   # shape function
 
-        drx  = AInv * (dpx -DA * rx)
-        dϕ[j,:] = drx .* B + rx .* DB   # first order derivatives of shape function
+        ϕ[j,:] = rx' * B   # shape function
+
+        drx  = AInv * (dpx - DA * rx)
+        dϕ[j,:] = drx' * B + rx' * DB
    
         ddrx  = AInv * (ddpx - 2 * DA * drx - DDA * rx)
-        d2ϕ[j,:] = ddrx .* B + 2 * drx .* DB + rx .* DDB     # second order derivatives of shape function
+        d2ϕ[j,:] = ddrx' * B + 2 * drx' * DB + rx' * DDB     # second order derivatives of shape function
 
     end
 
