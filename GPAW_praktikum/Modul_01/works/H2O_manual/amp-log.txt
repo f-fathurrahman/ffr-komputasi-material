@@ -1,0 +1,3045 @@
+
+   oo      o       o   oooooo
+  o  o     oo     oo   o     o
+ o    o    o o   o o   o     o
+o      o   o  o o  o   o     o
+oooooooo   o   o   o   oooooo
+o      o   o       o   o
+o      o   o       o   o
+o      o   o       o   o
+
+Amp: Atomistic Machine-learning Package
+Developed by Andrew Peterson, Alireza Khorshidi, and others,
+Brown University.
+PI Website: http://brown.edu/go/catalyst
+Official repository: http://bitbucket.org/andrewpeterson/amp
+Official documentation: http://amp.readthedocs.io/
+Citation:
+  Alireza Khorshidi & Andrew A. Peterson,
+  Computer Physics Communications 207: 310-324 (2016).
+  http://doi.org/10.1016/j.cpc.2016.05.010
+======================================================================
+User: efefer
+Hostname: mariya0704
+Date: 2019-10-04T14:29:57 (2019-10-04T07:29:57 UTC)
+Architecture: x86_64
+PID: 12497
+Amp version: 0.7.0-beta
+Amp directory: /home/efefer/miniconda3/lib/python3.7/site-packages/amp
+ Last commit: unknown hash
+ Last commit date: unknown date
+Python: v3.7.3: /home/efefer/miniconda3/bin/python
+ASE v3.18.0: /home/efefer/miniconda3/lib/python3.7/site-packages/ase-3.18.0-py3.7.egg/ase
+NumPy v1.15.4: /home/efefer/miniconda3/lib/python3.7/site-packages/numpy
+SciPy v1.2.1: /home/efefer/miniconda3/lib/python3.7/site-packages/scipy
+ZMQ/PyZMQ v4.3.1/v18.1.0: /home/efefer/miniconda3/lib/python3.7/site-packages/zmq
+pxssh: Not available from pxssh.
+pxssh (via pexpect v4.7.0): /home/efefer/miniconda3/lib/python3.7/site-packages/pexpect/pxssh.py
+======================================================================
+No queuing system detected; single machine assumed.
+Parallel configuration determined from environment for <single machine>:
+  localhost: 12
+
+Amp training started. 2019-10-04T14:29:57
+
+Descriptor: Gaussian
+  (<amp.descriptor.gaussian.Gaussian object at 0x7f24f60967b8>)
+Model: NeuralNetwork
+  (<amp.model.neuralnetwork.NeuralNetwork object at 0x7f24f6096710>)
+Attempting to read images from file geoopt_LCAO.traj.
+Hashing images...
+ 14 unique images after hashing.
+...hashing completed. 0.0 min.
+
+Descriptor
+==========
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+Finding unique set of elements in training data.
+2 unique elements included: H, O
+No symmetry functions supplied; creating defaults.
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 0 total images, 0 of which are needed.
+ 14 new calculations needed.
+ Parallel processing.
+ Established server at mariya0704:34501.
+ Establishing worker sessions.
+ Starting local connections.
+  Session 0 (localhost): b'Log and error written to /tmp/tmp1iijnmr1.stderr'
+  Session 1 (localhost): b'Log and error written to /tmp/tmpk8egkhhp.stderr'
+  Session 2 (localhost): b'Log and error written to /tmp/tmpjkek6f3i.stderr'
+  Session 3 (localhost): b'Log and error written to /tmp/tmp2nem_ui4.stderr'
+  Session 4 (localhost): b'Log and error written to /tmp/tmpc4kq886j.stderr'
+  Session 5 (localhost): b'Log and error written to /tmp/tmppu5e_e6m.stderr'
+  Session 6 (localhost): b'Log and error written to /tmp/tmpl87vt0_f.stderr'
+  Session 7 (localhost): b'Log and error written to /tmp/tmpghn237sp.stderr'
+  Session 8 (localhost): b'Log and error written to /tmp/tmpgztog7dv.stderr'
+  Session 9 (localhost): b'Log and error written to /tmp/tmprzg9qihm.stderr'
+  Session 10 (localhost): b'Log and error written to /tmp/tmpwmscd6uh.stderr'
+  Session 11 (localhost): b'Log and error written to /tmp/tmpy22j5t7v.stderr'
+ Parallel calculations starting...
+  Process 8 returned 1 results.
+  Process 2 returned 1 results.
+  Process 7 returned 1 results.
+  Process 9 returned 1 results.
+  Process 6 returned 1 results.
+  Process 4 returned 1 results.
+  Process 5 returned 1 results.
+  Process 10 returned 1 results.
+  Process 1 returned 2 results.
+  Process 11 returned 1 results.
+  Process 3 returned 1 results.
+  Process 0 returned 2 results.
+  14 new results.
+ ...parallel calculations finished. 0.0 min.
+ Adding new results to database.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 0 total images, 0 of which are needed.
+ 14 new calculations needed.
+ Parallel processing.
+ Established server at mariya0704:37811.
+ Establishing worker sessions.
+ Starting local connections.
+  Session 0 (localhost): b'Log and error written to /tmp/tmp4yq5uc0k.stderr'
+  Session 1 (localhost): b'Log and error written to /tmp/tmpwp6ec9c8.stderr'
+  Session 2 (localhost): b'Log and error written to /tmp/tmp06tl_nby.stderr'
+  Session 3 (localhost): b'Log and error written to /tmp/tmp1jsng545.stderr'
+  Session 4 (localhost): b'Log and error written to /tmp/tmprkqjq5ka.stderr'
+  Session 5 (localhost): b'Log and error written to /tmp/tmpxgkelcu4.stderr'
+  Session 6 (localhost): b'Log and error written to /tmp/tmp_s9you1k.stderr'
+  Session 7 (localhost): b'Log and error written to /tmp/tmpb6x8gtvo.stderr'
+  Session 8 (localhost): b'Log and error written to /tmp/tmpp99cy0qp.stderr'
+  Session 9 (localhost): b'Log and error written to /tmp/tmpnbwd85jb.stderr'
+  Session 10 (localhost): b'Log and error written to /tmp/tmp77x04rnb.stderr'
+  Session 11 (localhost): b'Log and error written to /tmp/tmpk9k81ehe.stderr'
+ Parallel calculations starting...
+  Process 5 returned 1 results.
+  Process 2 returned 1 results.
+  Process 10 returned 1 results.
+  Process 4 returned 1 results.
+  Process 1 returned 2 results.
+  Process 3 returned 1 results.
+  Process 0 returned 2 results.
+  Process 8 returned 1 results.
+  Process 7 returned 1 results.
+  Process 6 returned 1 results.
+  Process 9 returned 1 results.
+  Process 11 returned 1 results.
+  14 new results.
+ ...parallel calculations finished. 0.0 min.
+ Adding new results to database.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 0 total images, 0 of which are needed.
+ 14 new calculations needed.
+ Parallel processing.
+ Established server at mariya0704:45041.
+ Establishing worker sessions.
+ Starting local connections.
+  Session 0 (localhost): b'Log and error written to /tmp/tmp9jrlk72j.stderr'
+  Session 1 (localhost): b'Log and error written to /tmp/tmp8uxob0ic.stderr'
+  Session 2 (localhost): b'Log and error written to /tmp/tmpd5xebmi_.stderr'
+  Session 3 (localhost): b'Log and error written to /tmp/tmp6kcxook_.stderr'
+  Session 4 (localhost): b'Log and error written to /tmp/tmpko8ny570.stderr'
+  Session 5 (localhost): b'Log and error written to /tmp/tmpmmebz6xm.stderr'
+  Session 6 (localhost): b'Log and error written to /tmp/tmp40tc_sw2.stderr'
+  Session 7 (localhost): b'Log and error written to /tmp/tmp8ch4dzjt.stderr'
+  Session 8 (localhost): b'Log and error written to /tmp/tmpl3662htu.stderr'
+  Session 9 (localhost): b'Log and error written to /tmp/tmp_6akab2s.stderr'
+  Session 10 (localhost): b'Log and error written to /tmp/tmp8gi3fuxi.stderr'
+  Session 11 (localhost): b'Log and error written to /tmp/tmp4k0co1mf.stderr'
+ Parallel calculations starting...
+  Process 3 returned 1 results.
+  Process 4 returned 1 results.
+  Process 7 returned 1 results.
+  Process 9 returned 1 results.
+  Process 11 returned 1 results.
+  Process 10 returned 1 results.
+  Process 8 returned 1 results.
+  Process 1 returned 2 results.
+  Process 0 returned 2 results.
+  Process 5 returned 1 results.
+  Process 6 returned 1 results.
+  Process 2 returned 1 results.
+  14 new results.
+ ...parallel calculations finished. 0.0 min.
+ Adding new results to database.
+...fingerprint derivatives calculated. 0.0 min.
+
+Model fitting
+=============
+Regression in atom-centered mode.
+Calculating new fingerprint range; this range is part of the model.
+Hidden-layer structure:
+  O: (10, 10, 10)
+  H: (10, 10, 10)
+Initializing with random weights.
+Initializing with random scalings.
+Starting parameter optimization.
+ Optimizer: <function minimize at 0x7f24e79029d8>
+ Optimizer kwargs: {'method': 'BFGS', 'options': {'gtol': 1e-15}, 'jac': True, 'args': (True,)}
+ Parallel processing.
+ Established server at mariya0704:43947.
+ Established publisher at mariya0704:35571.
+ Establishing worker sessions.
+ Starting local connections.
+  Session 0 (localhost): b'Log and stderr written to /tmp/tmpfn8wxsb2.stderr'
+  Session 1 (localhost): b'Log and stderr written to /tmp/tmpq5htd050.stderr'
+  Session 2 (localhost): b'Log and stderr written to /tmp/tmp1fzfzv7x.stderr'
+  Session 3 (localhost): b'Log and stderr written to /tmp/tmp3ru1yb5u.stderr'
+  Session 4 (localhost): b'Log and stderr written to /tmp/tmp72iosnhn.stderr'
+  Session 5 (localhost): b'Log and stderr written to /tmp/tmplkn6wzif.stderr'
+  Session 6 (localhost): b'Log and stderr written to /tmp/tmp8nch0345.stderr'
+  Session 7 (localhost): b'Log and stderr written to /tmp/tmpptn3i754.stderr'
+  Session 8 (localhost): b'Log and stderr written to /tmp/tmp2d8pxrag.stderr'
+  Session 9 (localhost): b'Log and stderr written to /tmp/tmpsxqrf5zc.stderr'
+  Session 10 (localhost): b'Log and stderr written to /tmp/tmpx5w4cniz.stderr'
+  Session 11 (localhost): b'Log and stderr written to /tmp/tmpticuk3a_.stderr'
+ Loss function convergence criteria:
+  energy_rmse: 0.02
+  energy_maxresid: None
+  force_rmse: 0.03
+  force_maxresid: None
+ Loss function set-up:
+  energy_coefficient: 1.0
+  force_coefficient: 0.04
+  overfit: 0.0
+
+
+                                                          Energy                     Force
+ Step                Time   Loss (SSD)   EnergyRMSE     MaxResid    ForceRMSE     MaxResid
+===== =================== ============ ============ ============ ============ ============
+    1 2019-10-04T14:30:07   1.1344e+01 5.9750e-01 - 8.0388e-01 C 3.3664e+00 - 8.8022e+00 C
+    2 2019-10-04T14:30:07   1.1344e+01 5.9750e-01 - 8.0388e-01 C 3.3664e+00 - 8.8022e+00 C
+    3 2019-10-04T14:30:07   3.7103e+00 2.3157e-01 - 5.7143e-01 C 2.2989e+00 - 5.4266e+00 C
+    4 2019-10-04T14:30:07   2.4682e+00 2.7579e-01 - 4.7008e-01 C 1.5830e+00 - 4.7530e+00 C
+    5 2019-10-04T14:30:07   4.1952e+00 1.1699e-01 - 2.3295e-01 C 2.6738e+00 - 1.1194e+01 C
+    6 2019-10-04T14:30:07   2.0754e+00 1.9024e-01 - 3.9318e-01 C 1.6737e+00 - 5.5990e+00 C
+    7 2019-10-04T14:30:07   1.6323e+00 1.6615e-01 - 3.8538e-01 C 1.4915e+00 - 4.7626e+00 C
+    8 2019-10-04T14:30:07   1.0158e+00 1.3995e-01 - 2.8738e-01 C 1.1508e+00 - 3.8934e+00 C
+    9 2019-10-04T14:30:07   3.6907e-01 1.0241e-01 - 1.6650e-01 C 6.2997e-01 - 2.4893e+00 C
+   10 2019-10-04T14:30:07   2.5230e+00 1.2479e-01 - 2.2707e-01 C 2.0288e+00 - 6.8349e+00 C
+   11 2019-10-04T14:30:07   2.5162e-01 7.1280e-02 - 1.2651e-01 C 5.6771e-01 - 1.7086e+00 C
+   12 2019-10-04T14:30:07   3.9454e-01 8.2350e-02 - 1.2801e-01 C 7.3143e-01 - 2.2132e+00 C
+   13 2019-10-04T14:30:07   2.1137e-01 6.1550e-02 - 1.1363e-01 C 5.3173e-01 - 1.8216e+00 C
+   14 2019-10-04T14:30:07   1.5249e-01 4.9302e-02 - 1.0044e-01 C 4.5993e-01 - 1.4074e+00 C
+   15 2019-10-04T14:30:07   1.3457e-01 4.1427e-02 - 9.0678e-02 C 4.4430e-01 - 1.1386e+00 C
+   16 2019-10-04T14:30:07   1.0440e-01 3.3141e-02 - 7.3582e-02 C 3.9871e-01 - 1.1442e+00 C
+   17 2019-10-04T14:30:07   6.2605e-02 1.8240e-02 C 3.2633e-02 C 3.2168e-01 - 1.0363e+00 C
+   18 2019-10-04T14:30:08   1.7813e-01 3.8164e-02 - 8.0070e-02 C 5.3072e-01 - 1.4397e+00 C
+   19 2019-10-04T14:30:08   5.1085e-02 1.2728e-02 C 2.3728e-02 C 2.9525e-01 - 9.9378e-01 C
+   20 2019-10-04T14:30:08   3.7203e-02 8.4139e-03 C 1.7288e-02 C 2.5429e-01 - 8.3576e-01 C
+   21 2019-10-04T14:30:08   3.7591e-02 1.2483e-02 C 2.2951e-02 C 2.5146e-01 - 6.9431e-01 C
+   22 2019-10-04T14:30:08   3.2247e-02 8.6366e-03 C 1.4199e-02 C 2.3605e-01 - 7.3608e-01 C
+   23 2019-10-04T14:30:08   2.6901e-02 7.0201e-03 C 1.1990e-02 C 2.1635e-01 - 7.5241e-01 C
+   24 2019-10-04T14:30:08   2.3079e-02 6.2631e-03 C 1.4714e-02 C 2.0058e-01 - 7.0786e-01 C
+   25 2019-10-04T14:30:08   1.9634e-02 3.7728e-03 C 7.0206e-03 C 1.8629e-01 - 7.1406e-01 C
+   26 2019-10-04T14:30:08   1.7970e-02 8.9251e-03 C 1.1841e-02 C 1.7349e-01 - 6.3827e-01 C
+   27 2019-10-04T14:30:08   1.6367e-02 6.9480e-03 C 1.3769e-02 C 1.6739e-01 - 6.1691e-01 C
+   28 2019-10-04T14:30:08   1.5588e-02 4.3062e-03 C 7.8088e-03 C 1.6545e-01 - 6.4045e-01 C
+   29 2019-10-04T14:30:08   1.4369e-02 3.4306e-03 C 5.3799e-03 C 1.5926e-01 - 6.3689e-01 C
+   30 2019-10-04T14:30:08   1.2579e-02 2.7028e-03 C 5.5806e-03 C 1.4926e-01 - 5.8542e-01 C
+   31 2019-10-04T14:30:08   1.0859e-02 4.2010e-03 C 8.0567e-03 C 1.3766e-01 - 5.2377e-01 C
+   32 2019-10-04T14:30:08   9.3399e-03 5.4519e-03 C 8.1427e-03 C 1.2623e-01 - 4.7828e-01 C
+   33 2019-10-04T14:30:08   8.5736e-03 3.6968e-03 C 7.0191e-03 C 1.2235e-01 - 4.4393e-01 C
+   34 2019-10-04T14:30:08   7.6417e-03 2.5580e-03 C 6.1619e-03 C 1.1611e-01 - 4.5928e-01 C
+   35 2019-10-04T14:30:09   7.0377e-03 1.8156e-03 C 4.0108e-03 C 1.1174e-01 - 4.6562e-01 C
+   36 2019-10-04T14:30:09   6.4215e-03 1.4625e-03 C 2.7129e-03 C 1.0683e-01 - 4.6915e-01 C
+   37 2019-10-04T14:30:09   5.5386e-03 2.2026e-03 C 4.4646e-03 C 9.8838e-02 - 4.1060e-01 C
+   38 2019-10-04T14:30:09   4.4629e-03 3.2736e-03 C 6.2344e-03 C 8.7759e-02 - 2.7544e-01 C
+   39 2019-10-04T14:30:09   3.7685e-03 3.5552e-03 C 8.3724e-03 C 8.0084e-02 - 2.3093e-01 C
+   40 2019-10-04T14:30:09   3.4111e-03 3.6755e-03 C 7.4013e-03 C 7.5851e-02 - 2.4755e-01 C
+   41 2019-10-04T14:30:09   3.0272e-03 1.9192e-03 C 4.3100e-03 C 7.2895e-02 - 2.5114e-01 C
+   42 2019-10-04T14:30:09   2.7034e-03 2.0450e-03 C 5.0255e-03 C 6.8724e-02 - 2.4459e-01 C
+   43 2019-10-04T14:30:09   2.5103e-03 2.3434e-03 C 6.3051e-03 C 6.5920e-02 - 2.2773e-01 C
+   44 2019-10-04T14:30:09   2.2543e-03 2.6178e-03 C 6.7436e-03 C 6.2083e-02 - 2.1496e-01 C
+   45 2019-10-04T14:30:09   2.1359e-03 2.6038e-03 C 6.3380e-03 C 6.0370e-02 - 2.0259e-01 C
+   46 2019-10-04T14:30:09   2.0411e-03 2.7327e-03 C 6.2878e-03 C 5.8806e-02 - 2.0440e-01 C
+   47 2019-10-04T14:30:09   1.8773e-03 2.5806e-03 C 6.1645e-03 C 5.6444e-02 - 1.9970e-01 C
+   48 2019-10-04T14:30:09   1.5963e-03 2.4712e-03 C 6.0293e-03 C 5.1941e-02 - 1.9008e-01 C
+   49 2019-10-04T14:30:09   1.2344e-03 2.2424e-03 C 5.6964e-03 C 4.5592e-02 - 1.6554e-01 C
+   50 2019-10-04T14:30:09   1.0599e-03 2.1371e-03 C 5.2603e-03 C 4.2172e-02 - 1.5798e-01 C
+   51 2019-10-04T14:30:10   9.0903e-04 2.1609e-03 C 5.2251e-03 C 3.8814e-02 - 1.4640e-01 C
+   52 2019-10-04T14:30:10   8.0375e-04 2.3387e-03 C 5.4033e-03 C 3.6035e-02 - 1.4461e-01 C
+   53 2019-10-04T14:30:10   7.1839e-04 2.4667e-03 C 5.7205e-03 C 3.3626e-02 - 1.3818e-01 C
+   54 2019-10-04T14:30:10   6.5725e-04 2.8246e-03 C 7.6196e-03 C 3.1212e-02 - 1.3684e-01 C
+   55 2019-10-04T14:30:10   6.0100e-04 2.7560e-03 C 7.1857e-03 C 2.9721e-02 C 1.2922e-01 C
+...optimization successful. 0.1 min.
+Amp successfully trained. Saving current parameters.
+Parameters saved in file "amp.amp".
+This file can be opened with `calc = Amp.load('amp.amp')`
+
+   oo      o       o   oooooo
+  o  o     oo     oo   o     o
+ o    o    o o   o o   o     o
+o      o   o  o o  o   o     o
+oooooooo   o   o   o   oooooo
+o      o   o       o   o
+o      o   o       o   o
+o      o   o       o   o
+
+Amp: Atomistic Machine-learning Package
+Developed by Andrew Peterson, Alireza Khorshidi, and others,
+Brown University.
+PI Website: http://brown.edu/go/catalyst
+Official repository: http://bitbucket.org/andrewpeterson/amp
+Official documentation: http://amp.readthedocs.io/
+Citation:
+  Alireza Khorshidi & Andrew A. Peterson,
+  Computer Physics Communications 207: 310-324 (2016).
+  http://doi.org/10.1016/j.cpc.2016.05.010
+======================================================================
+User: efefer
+Hostname: mariya0704
+Date: 2019-10-04T14:30:56 (2019-10-04T07:30:56 UTC)
+Architecture: x86_64
+PID: 12705
+Amp version: 0.7.0-beta
+Amp directory: /home/efefer/miniconda3/lib/python3.7/site-packages/amp
+ Last commit: unknown hash
+ Last commit date: unknown date
+Python: v3.7.3: /home/efefer/miniconda3/bin/python
+ASE v3.18.0: /home/efefer/miniconda3/lib/python3.7/site-packages/ase-3.18.0-py3.7.egg/ase
+NumPy v1.15.4: /home/efefer/miniconda3/lib/python3.7/site-packages/numpy
+SciPy v1.2.1: /home/efefer/miniconda3/lib/python3.7/site-packages/scipy
+ZMQ/PyZMQ v4.3.1/v18.1.0: /home/efefer/miniconda3/lib/python3.7/site-packages/zmq
+pxssh: Not available from pxssh.
+pxssh (via pexpect v4.7.0): /home/efefer/miniconda3/lib/python3.7/site-packages/pexpect/pxssh.py
+======================================================================
+No queuing system detected; single machine assumed.
+Parallel configuration determined from environment for <single machine>:
+  localhost: 12
+Loaded file: amp.amp
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 14 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 14 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 14 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 14 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 14 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 14 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 14 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 14 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 15 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 15 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 15 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 15 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 15 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 16 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 16 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 16 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 16 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 16 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 17 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 17 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 17 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 17 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 17 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 18 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 18 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 18 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 18 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 18 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 19 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 19 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 19 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 19 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 19 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 20 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 20 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 20 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 20 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 20 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 21 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 21 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 21 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 21 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 21 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 22 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 22 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 22 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 22 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 22 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 23 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 23 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 23 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 23 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 23 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 24 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 24 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 24 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 24 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 24 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 25 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 25 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 25 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 25 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 25 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 26 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 26 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 26 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 26 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 26 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 27 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 27 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 27 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 27 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 27 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 28 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 28 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 28 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 28 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 28 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 29 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 29 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 29 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 29 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 29 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 30 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 30 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 30 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 30 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 30 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 31 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 31 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 31 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 31 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 31 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 32 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 32 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 32 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 32 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 32 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 33 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 33 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
+Calculation requested.
+Calculating forces...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 33 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 33 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprints calculated. 0.0 min.
+Calculating fingerprint derivatives...
+ Data stored in file amp-fingerprint-primes.
+ File exists with 33 total images, 0 of which are needed.
+ 1 new calculations needed.
+ Calculated 1 new images.
+...fingerprint derivatives calculated. 0.0 min.
+...forces calculated. 0.0 min.
+Calculation requested.
+Calculating potential energy...
+Cutoff function: <Cosine cutoff with Rc=6.500 from amp.descriptor.cutoffs>
+2 unique elements included: H, O
+Number of symmetry functions for each element:
+  H: 20
+  O: 20
+H feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+O feature vector functions:
+ 0: G2, H, eta = 0.049999999999999996
+ 1: G2, O, eta = 0.049999999999999996
+ 2: G2, H, eta = 0.2320794416806389
+ 3: G2, O, eta = 0.2320794416806389
+ 4: G2, H, eta = 1.0772173450159415
+ 5: G2, O, eta = 1.0772173450159415
+ 6: G2, H, eta = 5.000000000000001
+ 7: G2, O, eta = 5.000000000000001
+ 8: G4, (H, H), eta=0.005, gamma=1.0, zeta=1.0
+ 9: G4, (H, O), eta=0.005, gamma=1.0, zeta=1.0
+ 10: G4, (O, O), eta=0.005, gamma=1.0, zeta=1.0
+ 11: G4, (H, H), eta=0.005, gamma=-1.0, zeta=1.0
+ 12: G4, (H, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 13: G4, (O, O), eta=0.005, gamma=-1.0, zeta=1.0
+ 14: G4, (H, H), eta=0.005, gamma=1.0, zeta=4.0
+ 15: G4, (H, O), eta=0.005, gamma=1.0, zeta=4.0
+ 16: G4, (O, O), eta=0.005, gamma=1.0, zeta=4.0
+ 17: G4, (H, H), eta=0.005, gamma=-1.0, zeta=4.0
+ 18: G4, (H, O), eta=0.005, gamma=-1.0, zeta=4.0
+ 19: G4, (O, O), eta=0.005, gamma=-1.0, zeta=4.0
+Calculating neighborlists...
+ Data stored in file amp-neighborlists.
+ File exists with 34 total images, 1 of which are needed.
+ 0 new calculations needed.
+...neighborlists calculated. 0.0 min.
+Fingerprinting images...
+ Data stored in file amp-fingerprints.
+ File exists with 34 total images, 1 of which are needed.
+ 0 new calculations needed.
+...fingerprints calculated. 0.0 min.
+...potential energy calculated. 0.0 min.
