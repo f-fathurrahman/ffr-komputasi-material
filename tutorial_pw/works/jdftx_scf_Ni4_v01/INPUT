@@ -1,0 +1,24 @@
+lattice \
+30.61356324  0.          0.         \
+ 0.         30.61356324  0.         \
+ 0.          0.         27.40102882
+
+coords-type cartesian
+ion Ni 13.22808288 13.22808288 13.60602811 0
+ion Ni 17.38548036 13.22808288 14.17294594 0
+ion Ni 13.22808288 17.38548036 13.22808288 0
+ion Ni 17.38548036 17.38548036 13.98397333 0
+
+ion-species GBRV/$ID_pbesol.uspp
+elec-cutoff 20 100
+
+elec-ex-corr gga-PBE
+elec-smearing Fermi 0.01
+
+spintype z-spin                  #Allow up/dn spins (non-relativistic)
+elec-initial-magnetization 3 no  #Initial guess, no = don't constrain
+
+#core-overlap-check none
+
+#ionic-minimize \
+#nIterations 100

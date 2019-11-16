@@ -1,0 +1,22 @@
+lattice body-centered Cubic 5.42
+
+ion-species GBRV/$ID_pbesol.uspp
+
+elec-ex-corr gga-PBEsol
+
+elec-cutoff 20 100
+ion Fe  0 0 0  0
+
+dump-name totalE.$VAR
+dump End ElecDensity
+
+density-of-states Total
+
+kpoint-folding 12 12 12
+
+elec-smearing Fermi 0.01
+
+#electronic-SCF
+
+spintype z-spin                  #Allow up/dn spins (non-relativistic)
+elec-initial-magnetization 3 no  #Initial guess, no = don't constrain
