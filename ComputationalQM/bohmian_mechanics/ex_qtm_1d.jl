@@ -72,7 +72,7 @@ function main()
     # Mass in a.u.
     m = 1.0  # electron
 
-    Np = 10
+    Np = 100
 
     x, R, C, ρ, vx, delv, phase = initial_conditions( Np, x0, β, m, E0, xmin=-0.1, xmax=0.1 )
 
