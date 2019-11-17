@@ -36,7 +36,8 @@ def ydot(t, y):
          2*I*sigma_0**2*t*v_x - t**2*v_x*cmath.exp(2*Y*y/(2*sigma_0**2 + I*t)) - \
          t**2*v_x - y*cmath.exp(2*Y*y/(2*sigma_0**2 + I*t)) - y)/(2*sigma_0**2*cmath.exp(2*Y*y/(2*sigma_0**2 + I*t)) + \
          2*sigma_0**2 + I*t*cmath.exp(2*Y*y/(2*sigma_0**2 + I*t)) + I*t)
-    return np.imag(yy)
+    #return np.imag(yy) + np.sign( np.random.randn() )
+    return np.imag(yy) + 0.5*np.random.randn()
 
 def xdot():
     return v_x
