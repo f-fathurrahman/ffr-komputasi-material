@@ -9,8 +9,9 @@ def wavefunction(slit_distance, slit_width, st, velx, N, x, y, t):
 
 def calc_psi(slit_distance, slit_width, st, velx, N, x, y, t):
     return wavefunction(slit_distance, slit_width, st, velx, N, x, y, t) + \
-    wavefunction(slit_distance, slit_width, st, velx, N, x, -y, t)
+           wavefunction(slit_distance, slit_width, st, velx, N, x, -y, t)
 
+# x is t
 def rk4(wave, del_wave, x, h, y, f):
     k1 = h * f(wave, del_wave, x, y)
     k2 = h * f(wave, del_wave, x + 0.5*h, y + 0.5*k1)
@@ -49,7 +50,10 @@ tf = 2.0
 
 PSI = calc_psi(slit_distance, slit_width, st, velx, N, x, y, t)
 
-print(PSI)
+sympy.pprint(PSI)
+sympy.pprint(PSI.diff(y))
+
+exit()
 
 wave = sympy.lambdify([y,t], PSI,"numpy")
 del_wave = sympy.lambdify([y,t], PSI.diff(y),"numpy")
