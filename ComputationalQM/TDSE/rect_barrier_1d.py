@@ -5,10 +5,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import matplotlib.style
-matplotlib.style.use("dark_background")
+matplotlib.style.use("seaborn")
 
 # Grid points
-Nx = 1600 
+Nx = 1600
 
 # Evolution step
 dt = 0.0001
@@ -90,9 +90,13 @@ steps_image = int(tmax/dt/images)
 Nsteps = steps_image*images + 1
 idx_image = 1
 
+# potential operator
+V = eval_V(x, 0, psi)
+
+V_bohmian = np.imag( np.gradient(psi,x)/psi )
 
 # Main computational loop
-for j in range(Nsteps):        # propagation loop
+for j in range(Nsteps):
     
     print("step = ", j)
     
@@ -101,23 +105,32 @@ for j in range(Nsteps):        # propagation loop
         #plt.clf()
         #plt.plot(x, np.abs(psi)**2, label="Psi0^2")
         #plt.plot(x, border, label="border")
+        #plt.plot(x, V, label="V")
         #plt.ylim([0.0, 2.0])
         #plt.grid()
         #plt.legend()
         #plt.savefig("IMG_amp_psi0_{:08d}.png".format(idx_image), dpi=150)
         #
+        #plt.clf()
+        #plt.plot(x, d_psi_real, label="Re")
+        #plt.plot(x, d_psi_imag, label="Im")
+        #plt.plot(x, V, label="V")        
+        #plt.ylim([-10.0, 10.0])
+        #plt.grid()
+        #plt.legend()
+        #plt.savefig("IMG_d_psi_{:08d}.png".format(idx_image), dpi=150)
+        #
         plt.clf()
-        plt.plot(x, d_psi_real, label="Re")
-        plt.plot(x, d_psi_imag, label="Im")
-        plt.ylim([-10.0, 10.0])
+        plt.plot(x, V_bohmian, label="V bohmian")
+        plt.ylim([-25.0, 250.0])
         plt.grid()
         plt.legend()
-        plt.savefig("IMG_d_psi_{:08d}.png".format(idx_image), dpi=150)
+        plt.savefig("IMG_V_bohmian_{:08d}.png".format(idx_image), dpi=150)        
         #
         idx_image = idx_image + 1
 
 
-    V = eval_V(x, j*dt, psi)            # potential operator
+    V[:] = eval_V(x, j*dt, psi)            # potential operator
     psi *= np.exp(-1.j*dt*V)            # potential phase
     psi = np.fft.fft(psi)            # 1D Fourier transform
     psi *=linear_phase                # linear phase from the Laplacian term
@@ -125,3 +138,5 @@ for j in range(Nsteps):        # propagation loop
     
     d_psi_real[:] = np.gradient(np.real(psi), x)
     d_psi_imag[:] = np.gradient(np.imag(psi), x)
+    
+    V_bohmian = np.imag( np.gradient(psi,x)/psi )
