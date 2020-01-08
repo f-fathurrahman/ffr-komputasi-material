@@ -3,6 +3,7 @@
 tmp
 *.out*
 LOG_*
+IMG_*
 
 .ipynb_checkpoints
 __pycache__

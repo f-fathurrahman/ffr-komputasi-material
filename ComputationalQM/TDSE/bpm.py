@@ -38,7 +38,7 @@ psi = my.psi_0(x,y)                     # loads initial condition
 
 
 L = build.L(my.Nx,my.Ny,my.xmax,my.ymax)        # Laplacian in Fourier space
-linear_phase = np.fft.fftshift(np.exp(1.j*L*my.dt/2))                # linear phase in Fourier space (including point swap)
+linear_phase = np.fft.fftshift(np.exp(1.j*L*my.dt/2)) # linear phase in Fourier space (including point swap)
 border = build.absorb(x,y,my.xmax,my.ymax,my.dt,my.absorb_coeff)    # Absorbing shell at the border of the computational window
 
 savepsi=np.zeros((my.Nx,my.images+1))     # Creates a vector to save the data of |psi|^2 for the final plot

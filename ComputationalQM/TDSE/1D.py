@@ -5,33 +5,22 @@ from matplotlib import cm
 import shutil
 import platform
 
-
-def grid(Nx,Ny,xmax,ymax):
-    x = np.linspace(-xmax, xmax-2*xmax/Nx, Nx)     # x variable
-    y = 0                 # not used, but a value must be given
-    return x,y;
-
 # Builds the Laplacian in Fourier space
-
-def L(Nx,Ny,xmax,ymax):
+def build_Laplacian_fourier(Nx, xmax):
     kx = np.linspace(-Nx/4/xmax, Nx/4/xmax-1/2/xmax, Nx)     # x variable
     return (2*np.pi*1.j*kx)**2 
 
 # Introduces an absorbing shell at the border of the computational window
-
-def absorb(x,y,xmax,ymax,dt,absorb_coeff):
+def absorb(x, xmax, dt, absorb_coeff):
     wx = xmax/20
     return np.exp(-absorb_coeff*(2-np.tanh((x+xmax)/wx)+np.tanh((x-xmax)/wx))*dt);
 
 # Saves the data of abs(psi)**2 at different values of t
-
-def savepsi(Ny,psi):
-    
+def savepsi2(psi):
     return abs(psi)**2
 
 # Defines graphic output: |psi|^2 is depicted
-
-def output(x,y,psi,n,t,folder,output_choice,fixmaximum):
+def output(x, psi, n, t, folder, output_choice, fixmaximum):
     # Number of figure
     if (output_choice==2) or (output_choice==3):
         num =str(int(n))
@@ -82,8 +71,6 @@ def final_output(folder,x,Deltat,psi,savepsi,output_choice,images,fixmaximum):
     figtx = plt.figure("Evolution of |psi(x)|^2")              # figure
     plt.clf()                # clears the figure
     figtx.set_size_inches(8,6)
-
-
 
     # Generates the plot
     toplot=savepsi
