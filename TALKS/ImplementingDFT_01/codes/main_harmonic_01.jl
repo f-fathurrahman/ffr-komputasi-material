@@ -1,7 +1,10 @@
 using Printf
 using LinearAlgebra
-using PGFPlotsX
 using LaTeXStrings
+
+import PyPlot
+const plt = PyPlot
+plt.rc("text", usetex=true)
 
 include("init_FD1d_grid.jl")
 include("build_D2_matrix_3pt.jl")
@@ -38,15 +41,13 @@ function main()
     end
 
     # Plot up to 3rd eigenstate
-    f = @pgf Axis({ title="N="*string(N), height="10cm", width="15cm", xmajorgrids, ymajorgrids },
-        PlotInc(Coordinates(x, evecs[:,1])),
-        LegendEntry("1st eigenstate"),
-        PlotInc(Coordinates(x, evecs[:,2])),
-        LegendEntry("2nd eigenstate"),
-        PlotInc(Coordinates(x, evecs[:,3])),
-        LegendEntry("3rd eigenstate"),
-    )
-    pgfsave("IMG_main_harmonic_01_"*string(N)*".pdf", f)
+    plot_title = "N="*string(N)
+    plt.plot(x, evecs[:,1], label="1st eigenstate", marker="o")
+    plt.plot(x, evecs[:,2], label="2nd eigenstate", marker="o")
+    plt.plot(x, evecs[:,3], label="3rd eigenstate", marker="o")
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig("IMG_main_harmonic_01_"*string(N)*".pdf")
 end
 
 main()

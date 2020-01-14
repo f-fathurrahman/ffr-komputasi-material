@@ -1,6 +1,10 @@
 using Printf
-using PGFPlotsX
 using LaTeXStrings
+
+import PyPlot
+const plt = PyPlot
+
+plt.rc("text", usetex=true)
 
 include("init_FD1d_grid.jl")
 include("build_D2_matrix_3pt.jl")
@@ -28,17 +32,17 @@ function main(N::Int64)
     d2_fx_3pt = D2*fx
 
     plot_title = latexstring("\$N = $N\$")
-    f = @pgf Axis({ title=plot_title, height="10cm", width="15cm", xmajorgrids, ymajorgrids },
-        PlotInc(Coordinates(x, fx)),
-        LegendEntry(L"Sampled $f(x)$"),
-        PlotInc({mark="none"}, Coordinates(x_dense, fx_dense)),
-        LegendEntry(L"f(x)"),
-        PlotInc({mark="none"}, Coordinates(x_dense, d2_fx_dense)),
-        LegendEntry(L"f''(x)"),
-        PlotInc(Coordinates(x, d2_fx_3pt)),
-        LegendEntry(L"Approx $f''(x)$"),        
-    )
-    pgfsave("IMG_gaussian_"*string(N)*".pdf", f)
+    
+    plt.clf()
+    plt.plot(x, fx, marker="o", label=L"Sampled $f(x)$")
+    plt.plot(x_dense, fx_dense, label=L"f(x)")
+    plt.plot(x, d2_fx_3pt, marker="o", label=L"Approx $f''(x)$")
+    plt.plot(x_dense, d2_fx_dense, label=L"f''(x)")
+    plt.legend()
+    plt.grid()
+    plt.title(plot_title)
+    plt.savefig("IMG_gaussian_"*string(N)*".pdf")
+
 end
 
 main(15)

@@ -1,7 +1,9 @@
 using Printf
-
-using PGFPlotsX
 using LaTeXStrings
+
+import PyPlot
+const plt = PyPlot
+plt.rc("text", usetex=true)
 
 include("init_FD1d_grid.jl")
 include("build_D2_matrix_3pt.jl")
@@ -24,21 +26,11 @@ function main()
     x, h = init_FD1d_grid( A, B, N )
     fx = my_gaussian.(x)
 
+    # To emulate continuous function
     Ndense = 200
     x_dense = range(A, stop=B, length=Ndense)
     fx_dense = my_gaussian.(x_dense)
     d2_fx_dense = d2_my_gaussian.(x_dense)
-
-    plot_title = latexstring("\$N = $N\$")
-    f = @pgf Axis({ title=plot_title, height="10cm", width="15cm", xmajorgrids, ymajorgrids },
-        PlotInc(Coordinates(x, fx)),
-        LegendEntry(L"Sampled $f(x)$"),
-        PlotInc({mark="none"}, Coordinates(x_dense, fx_dense)),
-        LegendEntry(L"f(x)"),
-        PlotInc({mark="none"}, Coordinates(x_dense, d2_fx_dense)),
-        LegendEntry(L"f''(x)"),
-    )
-    pgfsave("TEMP_my_gaussian_"*string(N)*".pdf", f)
 
     d2_fx = d2_my_gaussian.(x)
 
@@ -55,33 +47,29 @@ function main()
     d2_fx_9pt = D2_9pt*fx
 
     plot_title = latexstring("Analytic vs Finite Difference: \$N = $N\$")
-    f = @pgf Axis({ title=plot_title, height="10cm", width="15cm", xmajorgrids, ymajorgrids },
-        PlotInc(Coordinates(x, d2_fx_3pt)),
-        LegendEntry("FD-3pt"),
-        PlotInc(Coordinates(x, d2_fx_5pt)),
-        LegendEntry("FD-5pt"),
-        PlotInc(Coordinates(x, d2_fx_7pt)),
-        LegendEntry("FD-7pt"),
-        PlotInc(Coordinates(x, d2_fx_9pt)),
-        LegendEntry("FD-9pt"),
-        PlotInc(Coordinates(x, d2_fx)),
-        LegendEntry("analytic"),
-    )
-    pgfsave("TEMP_d2_my_gaussian_"*string(N)*".pdf", f)
+    plt.clf()
+    plt.plot(x, d2_fx_3pt, label="FD-3pt", marker="o")
+    plt.plot(x, d2_fx_5pt, label="FD-5pt", marker="o")
+    plt.plot(x, d2_fx_7pt, label="FD-7pt", marker="o")
+    plt.plot(x, d2_fx_9pt, label="FD-9pt", marker="o")
+    plt.plot(x, d2_fx, label="analytic")
+    plt.legend()
+    plt.title(plot_title)
+    plt.tight_layout()
+    plt.savefig("IMG_compare_d2_gaussian_"*string(N)*".pdf")
 
 
     plot_title = latexstring("Finite Difference - Analytic: \$N = $N\$")
-    f = @pgf Axis({ title=plot_title, height="10cm", width="15cm", xmajorgrids, ymajorgrids },
-        PlotInc(Coordinates(x, d2_fx_3pt - d2_fx)),
-        LegendEntry("FD-3pt"),
-        PlotInc(Coordinates(x, d2_fx_5pt - d2_fx)),
-        LegendEntry("FD-5pt"),
-        PlotInc(Coordinates(x, d2_fx_7pt - d2_fx)),
-        LegendEntry("FD-7pt"),
-        PlotInc(Coordinates(x, d2_fx_9pt - d2_fx)),
-        LegendEntry("FD-9pt"),
-    )
-    pgfsave("TEMP_d2_my_gaussian_diff_"*string(N)*".pdf", f)
+    plt.clf()
+    plt.plot(x, d2_fx_3pt - d2_fx, label="FD-3pt", marker="o")
+    plt.plot(x, d2_fx_5pt - d2_fx, label="FD-5pt", marker="o")
+    plt.plot(x, d2_fx_7pt - d2_fx, label="FD-7pt", marker="o")
+    plt.plot(x, d2_fx_9pt - d2_fx, label="FD-9pt", marker="o")
+    plt.legend()
+    plt.title(plot_title)
+    plt.tight_layout()
+    plt.savefig("IMG_compare_d2_gaussian_error_"*string(N)*".pdf")
+
 
     @printf("N = %d\n", N)
     @printf("h = %f\n", h)
