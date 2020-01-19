@@ -5,12 +5,10 @@ using IterativeSolvers
 using IncompleteLU
 using Random
 
-include("FD2dGrid.jl")
-include("build_nabla2_matrix.jl")
-include("../supporting_functions.jl")
-include("../diag_Emin_PCG.jl")
-include("../ortho_sqrt.jl")
-include("../ortho_gram_schmidt.jl")
+import PyPlot
+const plt = PyPlot
+
+include("INC_sch_2d.jl")
 
 function pot_poeschl_teller( fdgrid::FD2dGrid )
     Npoints = fdgrid.Npoints
