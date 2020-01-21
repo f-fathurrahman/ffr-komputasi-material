@@ -1,4 +1,4 @@
-include("../1d/init_FD1d_grid.jl")
+include("../FD1d/init_FD1d_grid.jl")
 
 struct FD3dGrid
     Npoints::Int64

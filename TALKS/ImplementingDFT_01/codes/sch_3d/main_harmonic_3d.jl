@@ -7,13 +7,7 @@ using AlgebraicMultigrid
 using Random
 using Serialization
 
-include("FD3dGrid.jl")
-include("build_nabla2_matrix.jl")
-include("../diag_Emin_PCG.jl")
-include("../diag_davidson.jl")
-include("../diag_LOBPCG.jl")
-include("../ortho_sqrt.jl")
-include("../supporting_functions.jl")
+include("INC_sch_3d.jl")
 
 function pot_harmonic( fdgrid::FD3dGrid; ω=1.0 )
     Npoints = fdgrid.Npoints
