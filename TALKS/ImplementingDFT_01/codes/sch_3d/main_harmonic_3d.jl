@@ -30,7 +30,7 @@ function main()
     Nz = 50
     fdgrid = FD3dGrid( (-5.0,5.0), Nx, (-5.0,5.0), Ny, (-5.0,5.0), Nz )
 
-    ∇2 = build_nabla2_matrix( fdgrid, func_1d=build_D2_matrix_5pt )
+    ∇2 = build_nabla2_matrix( fdgrid, func_1d=build_D2_matrix_9pt )
 
     Vpot = pot_harmonic( fdgrid )
     
@@ -60,7 +60,7 @@ function main()
         @printf("%5d %18.10f\n", i, evals[i])
     end
 
-    serialize("wavefunc.data", X)
+    #serialize("wavefunc.data", X)
 
 end
 
