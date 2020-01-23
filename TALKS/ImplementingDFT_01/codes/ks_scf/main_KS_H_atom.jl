@@ -36,7 +36,7 @@ function main()
 
     AA = -8.0*ones(3)
     BB =  8.0*ones(3)
-    NN = [50, 50, 50]
+    NN = [65, 65, 65]
 
     fdgrid = FD3dGrid( NN, AA, BB )
 
@@ -46,7 +46,7 @@ function main()
     println("dVol = ", fdgrid.dVol)
     println(fdgrid.hx*fdgrid.hy*fdgrid.hz)
 
-    my_pot_local( fdgrid ) = pot_Hps_HGH(fdgrid, zeros(3))
+    my_pot_local( fdgrid ) = pot_Hps_HGH(fdgrid, 1e-9*ones(3))
 
     Nstates = 1
     Nelectrons = 1
@@ -82,7 +82,7 @@ function main()
 
     for iterSCF in 1:NiterMax
 
-        evals = diag_LOBPCG!( Ham, psi, Ham.precKin, verbose_last=true )
+        evals = diag_LOBPCG!( Ham, psi, Ham.precKin, verbose_last=false )
         #evals = diag_Emin_PCG!( Ham, psi, Ham.precKin, verbose_last=false )
 
         #psi = psi*sqrt(dVol) # for diag_davidson
@@ -121,5 +121,4 @@ function main()
 
 end
 
-@time main()
 @time main()
