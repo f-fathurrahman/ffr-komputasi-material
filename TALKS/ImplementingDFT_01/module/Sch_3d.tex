@@ -1,0 +1,62 @@
+\section{Schroedinger equation in 3d}
+
+The 3d case of Schroedinger equation is a straightforward extension of the 2d case.
+The Schroedinger equation thus reads:
+\begin{equation}
+\left[ -\frac{1}{2}\nabla^2 + V(x,y,z) \right] \psi(x,y,z) = E\,\psi(x,y,z)
+\label{eq:sch_3d}
+\end{equation}
+%
+where $\nabla^2$ is the Laplacian operator:
+\begin{equation}
+\nabla^2 = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2} + \frac{\partial^2}{\partial z^2}
+\end{equation}
+
+We begin by defining a struct called \txtinline{FD3dGrid} which is a
+straightforward generalization of \txtinline{FD2dGrid}. The implementation of this
+struct can be found in the file \txtinline{FD3d/FD3dGrid.jl}.
+
+The Lagrangian operator in 3d also can be implemented by straightforward extension
+of 2d case.
+\begin{juliacode}
+const ⊗ = kron
+
+function build_nabla2_matrix( fdgrid::FD3dGrid; func_1d=build_D2_matrix_3pt )
+
+    D2x = func_1d(fdgrid.Nx, fdgrid.hx)
+    D2y = func_1d(fdgrid.Ny, fdgrid.hy)
+    D2z = func_1d(fdgrid.Nz, fdgrid.hz)
+
+    IIx = speye(fdgrid.Nx)
+    IIy = speye(fdgrid.Ny)
+    IIz = speye(fdgrid.Nz)
+
+    ∇² = D2x⊗IIy⊗IIz + IIx⊗D2y⊗IIz + IIx⊗IIy⊗D2z 
+
+    return ∇²
+end
+\end{juliacode}
+
+The main difference is that we have used the symbol \txtinline{⊗} in place
+of \txtinline{kron} function to make our code simpler.
+
+We hope that at this point you will have no difficulties to create your own
+3d Schroedinger equation solver.
+
+Analytic solution for energy:
+\begin{equation}
+E_{n_{x} + n_{y} + n_{z}} = \hbar \omega \left( n_{x} + n_{y} + n_{z} + \frac{3}{2} \right)
+\end{equation}
+
+Degeneracies:
+\begin{equation}
+g_{n} = \frac{(n + 1)(n + 2)}{2}
+\end{equation}
+
+\begin{textcode}
+n = n_x + n_y + n_z
+
+n = 0: (1)(2)/2 = 1
+n = 1: (2)(3)/2 = 3
+n = 2: (3)(4)/2 = 6
+\end{textcode}

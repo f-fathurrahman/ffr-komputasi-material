@@ -29,10 +29,17 @@
 
 \newmintedfile[juliafile]{julia}{breaklines,fontsize=\small}
 
+\definecolor{mintedbg}{rgb}{0.90,0.90,0.90}
+\usepackage{mdframed}
+
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=mintedbg]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
 \begin{document}
 
-\title{Implementing Density Functional Theory using Finite Difference Method}
-\author{Fadjar Fathurrahman}
+\title{TF4062: Implementing Density Functional Theory using Finite Difference Method}
+\author{Iwan Prasetyo \\
+Fadjar Fathurrahman}
 \date{}
 \maketitle
 
@@ -43,6 +50,7 @@
 
 \input{Sch_2d}
 
+\input{Sch_3d}
 
 
 \appendix
