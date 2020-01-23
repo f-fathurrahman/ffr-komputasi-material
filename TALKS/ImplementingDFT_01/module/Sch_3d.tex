@@ -61,7 +61,7 @@ n = 1: (2)(3)/2 = 3
 n = 2: (3)(4)/2 = 6
 \end{textcode}
 
-\subsection{Hydrogen atom}
+\subsection{Hydrogen atom and an introduction to pseudopotential}
 
 Until now, we only have considered simple potentials such as harmonic potential. Now we will
 move on and consider more realistic potentials which is used in practical electronic calculations.
@@ -111,8 +111,51 @@ evals = diag_LOBPCG!( Ham, X, prec, verbose=true )
 
 For the grid size of $N_{x}=N_{y}=N_{z}=50$ and using 9-point finite-difference approximation
 to the second derivative operator in 1d we obtain the eigenvalue of -0.4900670759 Ha which
-is not too bad if compared with the exact value of -0.5 Ha.
+is not too bad if compared with the exact value of -0.5 Ha. We can try to increase the grid
+size until we can get satisfactory result.
 
+Note that there is a caveat when we are trying to use the Coulombic potential. This potential
+is diverget at $r=0$, so care must be taken such that this divergence is not encountered in
+our potential. We have tried to achieve this by using choosing the numbers
+$N_{x}$, $N_{y}$, and $N_{z}$ to be even numbers. This way, we have avoiding encountering
+divergence in the calculation of Coulomb potential.
+
+In the many electronic structure calculations, it is sometime convenient to replace the
+Coulomb potential with another potential which is smoother which we
+will refer to as a \textbf{pseudopotential}. Not all smooth
+potentials can do the job. The smooth potential should satisfy several requirements.
+One of the most important requirement is that the smooth potential should have similar
+scattering properties as the original Coulomb potential that it replaces.
+This means that the potential should have posses similar eigenvalues as the
+original Coulomb potential. Usually we don't try to reproduce all eigenvalue spectrum but only
+the eigenvalues which belongs to the valence electrons. The valence electrons are
+responsible for most chemically and physically important properties so this is an
+acceptable approximation for most cases.
+
+The theory and algorithms for constructing pseudopotentials are beyond the scope of
+this article.
+Most pseudopotentials are non-local by construction and this can make our program rather
+complicated.
+In this article we focus on the so-called local pseudopotential. Practically, local
+pseudopotentials pose no additional difficulties as the potentials that we have
+considered so far. As an example of a pseudopotential, we will consider the following
+local pseudopotential for hydrogen atom:
+\begin{equation}
+V_{\mathrm{H,ps}}(r) = -\frac{Z_{\mathrm{val}}}{r}
+\mathrm{erf}\left( \frac{\bar{r}}{\sqrt{2}} \right) +
+\exp\left( -\frac{1}{2}\bar{r}^2 \right)
+\left( C_{1} + C_{2}\bar{r}^2 \right)
+\end{equation}
+where $\bar{r}=r/r_{\mathrm{loc}}$ and with the parameters $r_{loc}=0.2$, 
+$Z_{\mathrm{val}}=1$, $C_{1}=-4.0663326$, and $C_{2}=0.6678322$.
+
+\begin{figure}[H]
+{\centering
+\includegraphics[scale=0.5]{../codes/sch_3d/IMG_H_Coulomb_vs_pspot.pdf}
+\par}
+\end{figure}
+
+The code
 \begin{juliacode}
 function pot_Hps_HGH( fdgrid::FD3dGrid; r0=(0.0, 0.0, 0.0) )
     Npoints = fdgrid.Npoints
