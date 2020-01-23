@@ -53,9 +53,9 @@ function main()
 
     Random.seed!(1234)
 
-    Nx = 54
-    Ny = 54
-    Nz = 54
+    Nx = 50
+    Ny = 50
+    Nz = 50
     fdgrid = FD3dGrid( (-5.0,5.0), Nx, (-5.0,5.0), Ny, (-5.0,5.0), Nz )
 
     ∇2 = build_nabla2_matrix( fdgrid, func_1d=build_D2_matrix_9pt )
