@@ -15,8 +15,8 @@ function build_nabla2_matrix( fdgrid::FD3dGrid; func_1d=build_D2_matrix_3pt )
     IIy = speye(fdgrid.Ny)
     IIz = speye(fdgrid.Nz)
 
-    ∇2 = D2x⊗IIy⊗IIz + IIx⊗D2y⊗IIz + IIx⊗IIy⊗D2z 
+    ∇² = D2x⊗IIy⊗IIz + IIx⊗D2y⊗IIz + IIx⊗IIy⊗D2z 
 
-    return ∇2
+    return ∇²
 
 end
