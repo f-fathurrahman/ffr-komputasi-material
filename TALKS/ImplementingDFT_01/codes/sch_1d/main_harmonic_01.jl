@@ -29,8 +29,11 @@ function main()
     # We will show the 5 lowest eigenvalues
     Nstates = 5
     @printf("Eigenvalues\n")
+    ω = 1.0
+    hbar = 1.0
     for i in 1:Nstates
-        @printf("%5d %18.10f\n", i, evals[i])
+        E_ana = (2*i - 1)*ω*hbar/2
+        @printf("%5d %18.10f %18.10f %18.10e\n", i, evals[i], E_ana, abs(evals[i]-E_ana))
     end
 
     # normalize the first three eigenstates
