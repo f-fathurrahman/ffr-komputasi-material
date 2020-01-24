@@ -24,12 +24,12 @@ def ydot(t, y):
 def xdot():
     return v_x
 
-def rk4(x, h, y, f):
-    k1 = h * f(x, y)
-    k2 = h * f(x + 0.5*h, y + 0.5*k1)
-    k3 = h * f(x + 0.5*h, y + 0.5*k2)
-    k4 = h * f(x + h, y + k3)
-    return x + h, y + (k1 + 2*(k2 + k3) + k4)/6.0
+def rk4(t, h, y, f):
+    k1 = h * f(t, y)
+    k2 = h * f(t + 0.5*h, y + 0.5*k1)
+    k3 = h * f(t + 0.5*h, y + 0.5*k2)
+    k4 = h * f(t + h, y + k3)
+    return t + h, y + (k1 + 2*(k2 + k3) + k4)/6.0
 
 def trajectories(t, state):
     y, vel = state
@@ -37,6 +37,9 @@ def trajectories(t, state):
 
 inits = np.array([x for x in np.random.uniform(-1.5, 1.5, Nparticles*2)
     if x < -0.5 or x > 0.5][:Nparticles])
+
+# Formalnya: generate or sampling from P(x) = |psi(x)|^2
+
 
 #print(inits)
 

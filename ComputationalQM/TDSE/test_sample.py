@@ -67,6 +67,23 @@ def save_psi2(psi):
 
 
 
+from scipy.stats import rv_continuous
+
+class PDF_psi0_gen(rv_continuous):
+
+    def _pdf(self, x):
+        return abs (psi_0(x) )**2
+
+initial_gen = PDF_psi0_gen(name="initial")
+x = initial_gen.rvs(size=1000)
+
+plt.clf()
+plt.hist(x, bins=30)
+plt.savefig("IMG_initial_distrib.png", dpi=150)
+
+
+
+"""
 # builds spatial grid
 x = init_grid(Nx, xmax)
 
@@ -102,14 +119,14 @@ for j in range(Nsteps):
     
     # Generates image output
     if j % steps_image == 0:
-        plt.clf()
-        plt.plot(x, np.abs(psi)**2, label="Psi0^2")
-        plt.plot(x, border, label="border")
-        plt.plot(x, V, label="V")
-        plt.ylim([0.0, 2.0])
-        plt.grid()
-        plt.legend()
-        plt.savefig("IMG_amp_psi0_{:08d}.png".format(idx_image), dpi=150)
+        #plt.clf()
+        #plt.plot(x, np.abs(psi)**2, label="Psi0^2")
+        #plt.plot(x, border, label="border")
+        #plt.plot(x, V, label="V")
+        #plt.ylim([0.0, 2.0])
+        #plt.grid()
+        #plt.legend()
+        #plt.savefig("IMG_amp_psi0_{:08d}.png".format(idx_image), dpi=150)
         #
         #plt.clf()
         #plt.plot(x, d_psi_real, label="Re")
@@ -139,4 +156,5 @@ for j in range(Nsteps):
     d_psi_real[:] = np.gradient(np.real(psi), x)
     d_psi_imag[:] = np.gradient(np.imag(psi), x)
     
-    V_bohmian = np.imag( np.gradient(psi,x)/psi )
+    V_bohmian = np.imag( np.gradient(psi,x)/psi )  # need interpolant in case r0 is not exactly on the grid points
+"""
