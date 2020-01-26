@@ -1,11 +1,30 @@
 \section{Poisson equation}
 
-Poisson equation:
+In this section we will discuss a second equation that is important
+in solving Kohn-Sham equation, namely the Poisson equation. In the
+context of solving Kohn-Sham equation, Poisson equation is used to
+calculate classical electrostatic potential due to some electronic
+charge density.
+The Poisson equation that we will solve have the following form:
 \begin{equation}
 \nabla^2 V_{\mathrm{Ha}}(\mathbf{r}) = -4\pi\rho(\mathbf{r})
+\label{eq:poisson_3d}
 \end{equation}
+where $\rho(\mathbf{r})$ is the electronic density. Using finite
+difference discretization for the operator $\nabla^2$ we end up with
+the following linear equation:
+\begin{equation}
+\mathbb{L} \mathbf{V} = \mathbf{f}
+\label{eq:linear_eq_poisson}
+\end{equation}
+where $\mathbb{L}$ is the matrix representation of the Laplacian operator
+$\mathbf{f}$ is the discrete representation of the right hand side of the equation
+\ref{eq:poisson_3d}, and the unknown $\mathbf{V}$ is the discrete representation of
+the Hartree potential.
 
-Solving linear equation, using (preconditioned) conjugate gradient.
+
+There exist several methods for solving the linear equation \ref{eq:linear_eq_poisson}.
+We will use the so-called conjugate gradient method for solving this equation.
 
 The algorithm is described in \txtinline{Poisson_solve_PCG.jl}
 
