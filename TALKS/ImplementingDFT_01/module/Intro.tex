@@ -105,15 +105,15 @@ the electron density $\rho(\mathbf{r})$ to build the Hamiltonian. The electron d
 itself must be calculated from $\{\psi_{i}(\mathbf{r})\}$ which are not known (the quantities
 we want to solve for). The usual algorithm to solve the Kohn-Sham equations is the following:
 \begin{itemize}
-\item (\textbf{STEP 1}): start from a guess density $\rho^{0}(\mathbf{r})$
+\item (\textbf{STEP 1}): start from a guess input density $\rho^{\mathrm{in}}(\mathbf{r})$
 \item (\textbf{STEP 2}): calculate the Hamiltonian defined in \eqref{eq:KS_hamiltonian}
 \item (\textbf{STEP 3}): solve the eigenvalue equations in \eqref{eq:KS_equations} to obtain the eigenpairs
   $\{\epsilon_{i}\}$, $\{\psi_{i}(\mathbf{r})\}$
-\item (\textbf{STEP 4}): calculate new electron density $\rho^{0}(\mathbf{r})$
+\item (\textbf{STEP 4}): calculate the output electron density $\rho^{\mathrm{out}}(\mathbf{r})$
   from $\{\psi_{i}(\mathbf{r})\}$
   that are obtained from the previous step.
-\item (\textbf{STEP 5}) Check whether the difference between $\rho^{0}(\mathbf{r})$
-  and $\rho^{1}(\mathbf{r})$ is small.
+\item (\textbf{STEP 5}) Check whether the difference between $\rho^{\mathrm{in}}(\mathbf{r})$
+  and $\rho^{\mathrm{out}}(\mathbf{r})$ is small.
   If the difference is still above a chosen threshold then back to \textbf{STEP 1}.
   If the difference is already small the stop the algorithm.
 \end{itemize}

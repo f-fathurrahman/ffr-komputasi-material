@@ -1,3 +1,86 @@
 \section{Kohn-Sham calculations}
 
 Using XC
+
+Introduction of module:
+
+Electrons type:
+\begin{juliacode}
+mutable struct Electrons
+    Nelectrons::Int64
+    Nstates::Int64
+    Nstates_occ::Int64
+    Focc::Array{Float64,1}
+    energies::Array{Float64,1}
+end
+\end{juliacode}
+
+\begin{juliacode}
+function Electrons( Nelectrons::Int64; Nstates_extra=0 )
+    is_odd = (Nelectrons%2 == 1)
+    Nstates_occ = round(Int64, Nelectrons/2)
+    if is_odd
+        Nstates_occ = Nstates_occ + 1
+    end
+    Nstates = Nstates_occ + Nstates_extra
+    Focc = zeros(Float64,Nstates)
+    energies = zeros(Float64,Nstates)
+    if !is_odd
+        for i in 1:Nstates_occ
+           Focc[i] = 2.0 
+        end
+    else
+        for i in 1:Nstates_occ-1
+            Focc[1] = 2.0
+        end
+        Focc[Nstates_occ] = 1.0
+    end
+    return Electrons(Nelectrons, Nstates, Nstates_occ, Focc, energies)
+end
+\end{juliacode}
+
+Example use of Electrons:
+
+New Hamiltonian:
+\begin{juliacode}
+mutable struct Hamiltonian
+    fdgrid::FD3dGrid
+    Laplacian::SparseMatrixCSC{Float64,Int64}
+    V_Ps_loc::Vector{Float64}
+    V_Hartree::Vector{Float64}
+    V_XC::Vector{Float64}
+    electrons::Electrons
+    rhoe::Vector{Float64}
+    precKin
+    precLaplacian
+    energies::Energies
+end
+\end{juliacode}
+
+
+
+
+Update the potential:
+\begin{juliacode}
+function update!( Ham::Hamiltonian, Rhoe::Vector{Float64} )
+    Ham.rhoe = Rhoe
+    Ham.V_Hartree = Poisson_solve_PCG( Ham.Laplacian, Ham.precLaplacian, -4*pi*Rhoe, 1000, verbose=false, TOL=1e-10 )
+    Ham.V_XC = excVWN( Rhoe ) + Rhoe .* excpVWN( Rhoe )
+    return
+end
+\end{juliacode}
+
+Application of Hamiltonian
+\begin{juliacode}
+import Base: *
+function *( Ham::Hamiltonian, psi::Matrix{Float64} )
+    Nbasis = size(psi,1)
+    Nstates = size(psi,2)
+    Hpsi = zeros(Float64,Nbasis,Nstates)
+    Hpsi = -0.5*Ham.Laplacian * psi
+    for ist in 1:Nstates, ip in 1:Nbasis
+        Hpsi[ip,ist] = Hpsi[ip,ist] + ( Ham.V_Ps_loc[ip] + Ham.V_Hartree[ip] + Ham.V_XC[ip] ) * psi[ip,ist]
+    end
+    return Hpsi
+end
+\end{juliacode}
