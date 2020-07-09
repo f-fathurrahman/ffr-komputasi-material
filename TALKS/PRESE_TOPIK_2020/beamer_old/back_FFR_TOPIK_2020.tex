@@ -1,0 +1,261 @@
+\documentclass[english,9pt]{beamer}
+
+\usepackage{amsmath} % load this before unicode-math
+\usepackage{amssymb}
+%\usepackage{unicode-math}
+
+\usepackage{fontspec}
+\setmonofont{DejaVu Sans Mono}
+%\setmathfont{STIXMath}
+%\setmathfont{TeX Gyre Termes Math}
+
+\usefonttheme[onlymath]{serif}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+\setbeamersize{text margin left=5pt, text margin right=5pt}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{braket}
+
+\usepackage{minted}
+\newminted{julia}{breaklines,fontsize=\scriptsize,texcomments=true}
+\newminted{python}{breaklines,fontsize=\scriptsize,texcomments=true}
+\newminted{bash}{breaklines,fontsize=\scriptsize,texcomments=true}
+\newminted{text}{breaklines,fontsize=\scriptsize,texcomments=true}
+
+\newcommand{\txtinline}[1]{\mintinline[fontsize=\scriptsize]{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline[fontsize=\scriptsize]{julia}{#1}}
+
+\definecolor{mintedbg}{rgb}{0.95,0.95,0.95}
+\usepackage{mdframed}
+
+%\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=mintedbg]}
+%\AfterEndEnvironment{minted}{\end{mdframed}}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+\makeatletter
+
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ % (ERT) argument for the TOC
+ \AtBeginDocument{%
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+
+\makeatother
+
+\usepackage{babel}
+
+\begin{document}
+
+
+\title{Introduction to Research Topics}
+\subtitle{Ongoing and Planned}
+\author{Fadjar Fathurrahman}
+\institute{
+Engineering Physics Department \\
+Research Center for Nanoscience and Nanotechnology \\
+Institut Teknologi Bandung
+}
+\date{}
+
+
+\frame{\titlepage}
+
+
+\begin{frame}
+\frametitle{Overview}
+
+\begin{itemize}
+\item Solving Kohn-Sham problem
+  \begin{itemize}
+  \item PWDFT.jl, parallelization, etc
+  \item Real-space based basis: finite-difference, Lagrange basis, adaptive grid, ...
+  \item FLAPW
+  \item Spectral finite element method
+  \end{itemize}
+\item Machine-learning related
+\item Faster calculation: DFTB
+\item Density functional perturbation theory, phonons, response functions
+\item Time-dependent density functional theory
+\item Kinetic Monte Carlo for surface reactions
+\item CFD + phase field nanomaterials formation (nucleation theory, combining Navier+Stokes and Allen-Cahn equations, reaction-diffusion equations for material science), shape control of nanomaterials
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{TOPIC: Solving Kohn-Sham problem}
+
+\begin{itemize}
+\item We are trying to find what are really computed behind the software packages such
+ as Quantum ESPRESSO, VASP, ABINIT, Gaussian, etc.
+\item We are trying to implement (write codes) that solve the Kohn-Sham problem.
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{The Kohn-Sham energy functional}
+
+Total energy:
+\begin{eqnarray}
+E\left[\{\psi_{i}(\mathbf{r})\}\right] =
+-\frac{1}{2} \int \psi_{i}(\mathbf{r}) \nabla^{2} \psi_{i}(\mathbf{r})\,\mathrm{d}\mathbf{r} +
+\int \rho(\mathbf{r}) V_{\mathrm{ext}}(\mathbf{r})\,\mathrm{d}\mathbf{r} + \\
+\frac{1}{2}\int
+\frac{\rho(\mathbf{r}) \rho(\mathbf{r}')}{\left|\mathbf{r}-\mathbf{r}'\right|}\,
+\mathrm{d}\mathbf{r}\,\mathrm{d}\mathbf{r}' + E_{\mathrm{xc}}\left[\rho(\mathbf{r})\right]
+\end{eqnarray}
+
+Electron density
+\begin{equation}
+\rho(\mathbf{r}) = \sum_{i} f_{i}\, \psi_{i}^{*}(\mathbf{r}) \psi_{i}(\mathbf{r})
+\end{equation}
+
+External potential:
+\begin{equation}
+V_{\mathrm{ext}}(\mathbf{r}) = \sum_{I} \frac{Z_{I}}{\left|\mathbf{r} - \mathbf{R}_{I}\right|}
+\end{equation}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Kohn-Sham equation}
+
+\begin{equation}
+\hat{H}_{\mathrm{KS}}\,\psi_{i}(\mathbf{r}) = \epsilon_{i}\,\psi_{i}(\mathbf{r})
+\end{equation}
+
+\begin{equation}
+\hat{H}_{\mathrm{KS}} = -\frac{1}{2}\nabla^{2} + V_{\mathrm{ext}}(\mathbf{r}) +
+V_{\mathrm{Ha}}(\mathbf{r}) + V_{\mathrm{xc}}(\mathbf{r})
+\end{equation}
+
+\begin{equation}
+V_{\mathrm{Ha}}(\mathbf{r}) = \int
+\frac{\rho(\mathbf{r})}{\mathbf{r} - \mathbf{r}'}\,\mathrm{d}\mathbf{r}'
+\end{equation}
+
+\begin{equation}
+\nabla^2 V_{\mathrm{Ha}}(\mathbf{r}) = -4\pi\rho(\mathbf{r})
+\end{equation}
+
+\begin{equation}
+V_{\mathrm{xc}}(\mathbf{r}) = \frac{\delta E[\rho(\mathbf{r})]}{\delta \rho(\mathbf{r})}
+\end{equation}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Various ways to "discretize" Kohn-Sham problem}
+
+\begin{itemize}
+\item Local basis set: GTO (Gaussian program, NWCHEM, ORCA, CP2K, etc),
+  ETO and numerical basis (fhi-aims, SIESTA, OPENMX, etc),
+  muffin-tin orbitals (LMTO, RPSt, ..)
+\item Plane wave basis (QE, VASP, ABINIT, JDFTx, etc)
+\item Real-space based: finite-difference (Octopus, GPAW, PARSEC), finite-element (HelFEM, )
+\item Mixed and augmented basis set: FLAPW (Wien2k, ELK, exciting, fleur),
+  PW + AO (Tombo)
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[plain]
+
+\includegraphics[scale=1.0]{images/page4.pdf}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{PWDFT.jl}
+
+\begin{itemize}
+\item One of my many attempts to implement a Kohn-Sham DFT solver
+(other attempts can be found in 
+{\footnotesize\url{https://github.com/f-fathurrahman}}).
+\item Using plane wave basis set and pseudopotentials (currently only GTH pseudopotentials
+are supported)
+\item LDA VWN + GGA PBE
+\item SCF (with density or potential mixing) and direct-minimization (for semiconductor)
+\item Force calculation is implemented but not tested yet
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Topics related to improving PWDFT.jl}
+
+There are many topics:
+
+\begin{itemize}
+\item Documentation, testing, code clean up, visualization
+\item Adding and testing new Kohn-Sham solvers: Chebyshev-filtered
+subspace iteration, direct-minimization for metals, new mixing schemes
+\item Parallelization: multithreading, MPI and GPU (using CUDA)
+\item Implementing geometry optimization and molecular dynamics
+\item Implement calculation of stress tensor
+\item New physics: implement exact-exchange, meta GGA functionals, and vdW-DF
+\item Implement USPP and PAW
+\end{itemize}
+
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Machine learning related}
+
+Goals: replacing time-consuming quantum mechanical calculation with faster calculation
+via learning from training data.
+
+\begin{itemize}
+\item force-field related
+\item lsl
+\end{itemize}
+
+Neural-networkw
+
+Kernel regression
+
+Most of the tools are in rapid development.
+
+Strongly recommended to write or implement your own tools.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{General tips + workflows}
+
+read softwares (need Fortran (both modern and F77), C/C++, Python, MATLAB, ...)
+
+learn how they work
+
+think + read books + how to improve
+
+rewrite them using your own language, add features ...
+
+\end{frame}
+
+
+
+
+\end{document}
+

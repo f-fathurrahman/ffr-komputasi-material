@@ -72,25 +72,33 @@ Institut Teknologi Bandung
 \begin{frame}
 \frametitle{Overview}
 
-\begin{itemize}
-\item Solving Kohn-Sham equations
-  \begin{itemize}
-  \item PWDFT.jl, parallelization, etc
-  \item Real-space based basis: finite-difference, Lagrange basis, adaptive grid, ...
-  \item FLAPW
-  \item Spectral finite element method
-  \end{itemize}
-\item DFTB
-\item Implementing exact-exchange and vdW-DF in PWDFT.jl
-\item Density functional perturbation theory, phonons, response functions
-\item TDDFT
-\item Machine-learning related
-\item Kinetic Monte Carlo for surface reactions
-\item CFD + phase field nanomaterials formation (nucleation theory, combining Navier+Stokes and Allen-Cahn equations, reaction-diffusion equations for material science), shape control of nanomaterials
-\end{itemize}
+The problem
+
+My current research
+
+General aspects
+
+programming:
+
+Topics for students:
+
 
 \end{frame}
 
+
+\begin{frame}
+\frametitle{The problem: Solving Kohn-Sham problems}
+
+What is it? 
+
+Where 
+\begin{itemize}
+\item We are trying to find what are really computed behind the software packages such
+ as Quantum ESPRESSO, VASP, ABINIT, Gaussian, etc.
+\item We are trying to implement (write codes) that solve the Kohn-Sham problem.
+\end{itemize}
+
+\end{frame}
 
 
 \begin{frame}
@@ -152,12 +160,14 @@ V_{\mathrm{xc}}(\mathbf{r}) = \frac{\delta E[\rho(\mathbf{r})]}{\delta \rho(\mat
 \frametitle{Various ways to "discretize" Kohn-Sham problem}
 
 \begin{itemize}
-\item Local basis set: Gaussian, Slater type and numerical
-\item Plane wave basis:
-\item Real-space based: finite-difference, finite-element
-\item Mixed and augmented basis set: FLAPW, PW + AO (Tombo)
+\item Local basis set: GTO (Gaussian program, NWCHEM, ORCA, CP2K, etc),
+  ETO and numerical basis (fhi-aims, SIESTA, OPENMX, etc),
+  muffin-tin orbitals (LMTO, RPSt, ..)
+\item Plane wave basis (QE, VASP, ABINIT, JDFTx, etc)
+\item Real-space based: finite-difference (Octopus, GPAW, PARSEC), finite-element (HelFEM, )
+\item Mixed and augmented basis set: FLAPW (Wien2k, ELK, exciting, fleur),
+  PW + AO (Tombo)
 \end{itemize}
-
 
 \end{frame}
 
@@ -170,11 +180,61 @@ V_{\mathrm{xc}}(\mathbf{r}) = \frac{\delta E[\rho(\mathbf{r})]}{\delta \rho(\mat
 
 
 \begin{frame}
+\frametitle{PWDFT.jl}
+
+\begin{itemize}
+\item One of my many attempts to implement a Kohn-Sham DFT solver
+(other attempts can be found in 
+{\footnotesize\url{https://github.com/f-fathurrahman}}).
+\item Using plane wave basis set and pseudopotentials (currently only GTH pseudopotentials
+are supported)
+\item LDA VWN + GGA PBE
+\item SCF (with density or potential mixing) and direct-minimization (for semiconductor)
+\item Force calculation is implemented but not tested yet
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Topics related to improving PWDFT.jl}
+
+There are many topics:
+
+\begin{itemize}
+\item Documentation, testing, code clean up, visualization
+\item Adding and testing new Kohn-Sham solvers: Chebyshev-filtered
+subspace iteration, direct-minimization for metals, new mixing schemes
+\item Parallelization: multithreading, MPI and GPU (using CUDA)
+\item Implementing geometry optimization and molecular dynamics
+\item Implement calculation of stress tensor
+\item New physics: implement exact-exchange, meta GGA functionals, and vdW-DF
+\item Implement USPP and PAW
+\end{itemize}
+
+
+\end{frame}
+
+
+
+\begin{frame}
 \frametitle{Machine learning related}
 
-Goals: faster calculation
+Goals: replacing time-consuming quantum mechanical calculation with faster calculation
+via learning from training data.
 
-force-field
+\begin{itemize}
+\item force-field related
+\item lsl
+\end{itemize}
+
+Neural-networkw
+
+Kernel regression
+
+Most of the tools are in rapid development.
+
+Strongly recommended to write or implement your own tools.
 
 \end{frame}
 
