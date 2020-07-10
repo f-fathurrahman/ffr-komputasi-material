@@ -1,9 +1,7 @@
-@import url(http://fonts.googleapis.com/css?family=Libre+Baskerville|Racing+Sans+One|Satisfy);
-
 body {
-    font-size: 200%;
+    font-size: 100%;
     text-align: justify;
-    font-family: Libre Baskerville;
+    font-family: 'Fira Sans';
 }
 
 img {
@@ -18,7 +16,7 @@ p {
 }
 
 em {
-    font-size: 100%;
+    font-size: 130%;
 }
 
 strong {
@@ -33,7 +31,7 @@ h1, h2, h3, h4 {
 }
 
 ul {
-    list-style-position: inside;
+    list-style-position: outside;
 }
 
 li {
@@ -51,29 +49,16 @@ a {
     color: black;
 }
 
-#ThreeD H1 {
-    font-family: Racing Sans One;
-    font-size: 300%;
-}
-
-#thequestion p {
-    font-family: Racing Sans One;
-}
-
-
 .step {
     position: relative;
     display: block;
 
-    width: 1500px;
+    width: 1300px;
     height: 900px;
-    margin: 20px auto;
-    padding: 40px 60px;
+    margin: 0px auto;
+    padding: 0px 0px;
 
-    text-shadow: 0 2px 2px rgba(0, 10, 0, .5);
-
-    font-family: 'Open Sans', Arial, sans-serif;
-    font-size: 30px;
-    letter-spacing: -1px;
-
+    font-family: 'Fira Sans', Arial, sans-serif;
+    font-size: 35px;
+    border-color: blue;
 }
