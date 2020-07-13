@@ -6,6 +6,23 @@
 :data-z: r45
 
 .. raw:: html
+
+    <table style="width: 100%; height: 50%">
+    <tr>
+    <td><img src="images/HKD.jpg" alt="HKD" height=250></td>
+    <td><img src="images/MKA.jpg" alt="MKA" height=250></td>
+    <td><img src="images/AGS.jpg" alt="AGS" height=250></td>
+    </tr>
+    <tr>
+    <td><img src="images/HM.jpeg" alt="HM" height=250></td>
+    <td><img src="images/FF.jpeg" alt="FF" height=250></td>
+    <td><img src="images/GN.jpeg" alt="GN" height=250></td>
+    </tr>
+    </table>
+
+
+
+.. raw:: html
     
     <iframe
     src="https://en.wikipedia.org/wiki/List_of_quantum_chemistry_and_solid-state_physics_software"

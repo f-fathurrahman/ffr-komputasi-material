@@ -4,6 +4,8 @@
 
 ----
 
+CMD Lab Meeting, 12 July 2020
+
 Introduction to Research Topics (2020)
 ======================================
 
@@ -12,31 +14,30 @@ Solving Kohn-Sham Problem
 
 Fadjar Fathurrahman
 
+.. raw:: html
+
+   <br>
+   <br>
+
+Overview:
+
+- What it is
+
+- What have been done
+
+- What are going to be done
+
 ----
 
 :data-x: -800
 :data-y: -800
 :data-scale: 0.1
 
-Overview
-========
-
-- What is it
-
-- Various approach to solve Kohn-Sham equation
-
-- What are going to be done
-
-----
-
-:data-x: r200
-:data-y: r0
-:data-scale: 0.1
-
 Density functional theory
 =========================
 
-KS equation arises in the density functional theory (DFT) of electronic structure of materials.
+Kohn-Sham problem or more specifically, Kohn-Sham equation arises
+in the density functional theory (DFT) of electronic structure of materials.
 It is now commonly used as a foundation to explore various
 properties of materials.
 
@@ -55,6 +56,11 @@ Many concrete examples by Dr. Haris and Dr. Ganes.
 
 
 ----
+
+:data-x: r200
+:data-y: r0
+:data-scale: 0.1
+
 
 Kohn-Sham energy functional
 ===========================
@@ -109,6 +115,17 @@ Using DFT in research
 
 Nowadays we can solve the Kohn-Sham by using many software packages.
 
+Extensive list of software packages can be found in
+Wikipedia page:
+
+.. raw:: html
+    
+    <iframe
+    src="https://en.wikipedia.org/wiki/List_of_quantum_chemistry_and_solid-state_physics_software"
+    height="250" width="1200">
+    </iframe>
+
+
 We need to learn the softwares:
 
 - learn the tutorials and do the tutorials
@@ -120,8 +137,8 @@ We need to learn the softwares:
 
 ----
 
-Common research steps in CMD
-============================
+Common research steps
+=====================
 
 **STEP 1** Choose the system
 
@@ -130,9 +147,9 @@ or of global importance. (energy, health, environment, etc)
 
 **STEP 2** Model and calculate
 
-Choose a software and learn how to use the software to calculate the
-properties we want to investigate. Create models of the system and calculate
-the properties we want to learn.
+Create models of the system and calculate
+the properties we want to learn. Choose a software and learn how to use the
+software to calculate the properties. 
 
 **STEP 3** Analyze the results.
 
@@ -146,6 +163,20 @@ we want.
 
 ----
 
+Advantages
+==========
+
+- No need to pay attention on the nitty-gritty details of solving the Kohn-Sham equations.
+  No need to invent the wheel.
+
+- Directly calculate the properties we are interested in.
+
+- Focus on the physics or chemistry of materials
+
+- Faster to get the results (and get the publications done)
+
+----
+
 Problems
 ========
 
@@ -156,17 +187,22 @@ Problems
   There is a chance that there are already similar calculations being done with
   bigger size and more sophisticated methods.
 
+- Need to wait or rely on the "software developers" for new developments.
+
 - There is "disconnects" between the equations that we read in the books
   and the softwares. We are not really sure what are actually calculated.
   We rely on the softwares to deliver the results that we want.
 
+- Need to implement specialized/custom post-processing (if not available)
+
 ----
 
-My researches
-=============
+My research
+===========
 
-My current researches are centered around implementing and exploring
-various approaches to solve KS equation, i.e. I choose to write my own KSDFT solver.
+My current research is centered around implementing and exploring
+various approaches to solve KS equation, i.e. I choose to write
+my own KSDFT solver from scratch.
 
 Motivation:
 
@@ -176,7 +212,7 @@ Motivation:
 
 - Avoid big atomistic systems (reducing the load of computing facilities in ITB)
 
-- Education: any details of solving KS problem are not well described in literatures, especially
+- Education: many details of solving KS problem are not well described in literatures, especially
   in terms of the actual code.
 
 ----
@@ -191,11 +227,15 @@ Some consequences
 - Need to learn and implement many numerical algorithms. Some of them are quite
   advanced, such as nonlinear optimization and iterative diagonalization.
 
-- Need more time investment. Deal with bugs in the codes
+- Need more time investment. Deal with bugs in the codes ...
 
-- Limited to small systems.
+- Limited features. Lack of man power.
 
 - More difficult to publish papers.
+
+
+However I choose to do it anyway to catch up with other researchers.
+
 
 ----
 
@@ -210,20 +250,27 @@ Several ongoing and planned
 
 - Spectral finite element: (planned)
 
+- Discontinuous Galerkin finite element: (planned)
+
+
+
 ----
 
-About the inhouse softwares
-===========================
+The inhouse softwares
+=====================
 
 About PWDFT.jl (https://github.com/f-fathurrahman/PWDFT.jl):
 
 - Based on plane wave basis set and pseudopotentials.
 - Similar to Quantum ESPRESSO, ABINIT, VASP, etc.
 - Written in Julia programming language.
+- The method is standard in solid solid state physics. Useful for comparison
+  with other methods.
 
 About ffr-LFDFT (https://github.com/f-fathurrahman/ffr-LFDFT):
 
-- Based on Lagrange functions (LF)
+- Based on Lagrange functions (LF). Shares many similarities with finite difference method.
+- Historically, I developed this before writing PWDFT.jl
 - Not many similar programs yet ...
 - Written in Fortran language
 
@@ -233,7 +280,9 @@ About ffr-LFDFT (https://github.com/f-fathurrahman/ffr-LFDFT):
 Some topics in PWDFT.jl
 =======================
 
-- Development of geometry optimization and molecular dynamics methods
+There are a lot of things that can be done:
+
+- Implementation of geometry optimization and molecular dynamics methods
 
 - Improvement of Kohn-Sham solvers:
 
@@ -241,11 +290,20 @@ Some topics in PWDFT.jl
 
   - Direct minimization for metallic systems
 
-- Advanced XC functionals: meta-GGA, SCAN, vdw-DF, etc.
-
-- Exact-exchange calculations
+- Advanced XC functionals: exact-exchange (EXX), meta-GGA, SCAN, vdw-DF,
+  double hybrids, etc.
 
 - Parallelization: threads, MPI, and GPU (with CUDA)
+
+- Extension to USPP and PAW
+
+
+I recommend development of molecular dynamics and geometry optimization.
+Forces are already there, you only need to implement the integration of
+equation of motion (Born-Oppenheimer and/or Car-Parrinello).
+
+
+
 
 ----
 
@@ -255,20 +313,44 @@ Some topics in real-space methods
 - Porting from Fortran to Julia (a book is being written, a draft is available for those who are
   interested).
 
-- Similar to PWDFT.jl
+- The method (finite difference) is more intuitive than plane wave basis.
 
-- TDDFT
+- For better parallel scaling, real-space methods are very promising compared to more traditional
+  approach such as PW or APW.
+
+- Futher development is mostly similar to PWDFT.jl:
+
+  - Parallelization: MPI via PETSc and SLEPc.
+
+- A simple implementation for time-dependent density functional theory
+  is being worked on.
+
+
 
 ----
 
 More about PWDFT.jl
 ===================
 
-Not a program
+- Implemented not as a program but more like a toolbox (MATLAB) or library package (Python).
 
-like toolbox (MATLAB) or library/package (Python)
+- No need for input file, learn the API (application programming interface)
 
-No need for input file, learn the API (application programming interface)
+- Present features:
+  
+  - Plane wave with norm-conserving pseudopotentials (Goedecker-Teter-Huter)
+  - KS solvers: SCF with density or potential mixing and direct minimization
+    (for non-metallic systems)
+  - LDA VWN and GGA PBE functionals
+  - k-points sampling
+  - spin-polarized systems
+  - force calculation
+
+- All quantities are directly accessible: Kohn-Sham orbitals, electron density, potentials.
+  No need for special post-processing step codes to obtain them.
+
+- Notable missing features: stress tensor calculation and parallelization
+
 
 ----
 
@@ -300,35 +382,71 @@ Example
 Julia programming language
 ==========================
 
-Hello I am efefer again.
+- A rather new programming language, first announced in 2012.
 
-.. code:: julia
-    :class: hidden
+- Developed by: Jeff Bezanson, Alan Edelman, Stefan Karpinski and Viral B. Shah.
 
-    using PyPlot
-    α = β + 2
+- The libraries are not as extensive as Python yet, but it is improving.
+
+.. image:: images/julia-language-developers-mit-00_0.png
+    :height: 426px
+    :width: 644px
+
+http://news.mit.edu/2018/julia-language-co-creators-win-james-wilkinson-prize-numerical-software-1226
 
 ----
 
-Testing Raw HTML
-================
+Additional Topics
+=================
+
+Machine learning related (very hot topics right now, many research groups are developing):
+
+- Development of neural network potential for atomistic systems (software: AMP).
+  It will be used for molecular dynamics.
+
+- Gaussian process regression for surface reactions (software: Catlearn). Vieri is
+  doing it now.
+
+I encourage you to (re)write the software rather than using it directly:
+
+- They are mostly being developed recently.
+
+- Not yet robust. Many bugs.
+
+- Codes, algorithms, procedures (computational protocols) are very important,
+  not just the result. Reproducibility is also very important.
+
+----
+
+General strategy that you can adopt
+===================================
+
+Learn the package.
+
+Read original literatures, study the equations and their
+physical meaning.
+
+Find the parts of the code that are most interested.
+
+Refactor the code.
+
+Rewrite the software using you own style. 
+
+Find bugs, simplify, and improve
+
+
+----
+
+:data-x: 2000
+:data-y: 0
+:data-scale: 1.0
 
 .. raw:: html
 
-    <strong>This is efefer</strong>
-
-Canvas example
+    <h1 style="text-align: center;">Thank you for your attention</h1>
 
 .. raw:: html
 
-    <p style="text-align: center;">
-    <canvas id="myCanvas" width="200" height="200" style="border:1px solid #000000;">
-    </canvas>
-    </p>
-    <script>
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    ctx.beginPath();
-    ctx.arc(95, 50, 60, 0, 2*Math.PI);
-    ctx.stroke(); 
-    </script>
+    <img src="images/questions_cat.jpg" alt="Cat Questions" style="height: 50%">
+
+    
