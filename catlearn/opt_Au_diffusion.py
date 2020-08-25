@@ -24,3 +24,7 @@ geoopt = MyBFGS(slab, trajectory="initial.traj")
 #geoopt = MyFIRE(slab, trajectory="initial.traj")
 geoopt.run(fmax=0.01)
 
+print("Optimized positions: ")
+print(slab.get_positions())
+
+

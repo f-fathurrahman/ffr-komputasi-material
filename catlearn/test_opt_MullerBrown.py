@@ -19,8 +19,11 @@ print("Forces           = ", atoms.get_forces())
 
 print("Optimization\n")
 print("Initial positions: ", atoms.get_positions())
-#geoopt = MyBFGS(atoms, trajectory='geoopt.traj')
+
+geoopt = MyBFGS(atoms, trajectory='geoopt.traj')
 #geoopt = MyMDMin(atoms, trajectory='geoopt.traj')
-geoopt = MyFIRE(atoms, trajectory='geoopt.traj', force_consistent=False)
+#geoopt = MyFIRE(atoms, trajectory='geoopt.traj', force_consistent=False)
+
+#geoopt.max_steps = 1 # Set number of max_steps manually
 geoopt.run(fmax=0.01)
 print("Optimized positions: ", atoms.get_positions())

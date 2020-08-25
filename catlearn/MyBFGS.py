@@ -105,7 +105,6 @@ class MyBFGS(MyOptimizer):
             self.H = np.eye(3 * len(self.atoms)) * 70.0
             return
         dr = r - r0
-
         if np.abs(dr).max() < 1e-7:
             # Same configuration again (maybe a restart):
             return
