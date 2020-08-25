@@ -85,6 +85,7 @@ class MyBFGS(MyOptimizer):
         self.r0 = r.flat.copy()
         self.f0 = f.copy()
         self.dump((self.H, self.r0, self.f0, self.maxstep))
+        print("MyBFGS: end of step")
 
     def determine_step(self, dr, steplengths):
         """Determine step to take according to maxstep
@@ -96,7 +97,7 @@ class MyBFGS(MyOptimizer):
         maxsteplength = np.max(steplengths)
         if maxsteplength >= self.maxstep:
             dr *= self.maxstep / maxsteplength
-
+        print("MyBFGS: end of determine_step")
         return dr
 
     def update(self, r, f, r0, f0):
@@ -114,9 +115,11 @@ class MyBFGS(MyOptimizer):
         dg = np.dot(self.H, dr)
         b = np.dot(dr, dg)
         self.H -= np.outer(df, df) / a + np.outer(dg, dg) / b
+        print("MyBFGS: end of update")
 
     def replay_trajectory(self, traj):
         """Initialize hessian from old trajectory."""
+        print("MyBFGS: replay_trajectory()")
         if isinstance(traj, basestring):
             from ase.io.trajectory import Trajectory
             traj = Trajectory(traj, 'r')

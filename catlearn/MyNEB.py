@@ -121,6 +121,7 @@ class MyNEB:
         self.energies = None  # ndarray of shape (nimages,)
 
     def interpolate(self, method='linear', mic=False):
+        print("MyNEB: interpolate()")
         if self.remove_rotation_and_translation:
             minimize_rotation_and_translation(self.images[0], self.images[-1])
 
@@ -131,6 +132,7 @@ class MyNEB:
 
     def idpp_interpolate(self, traj='idpp.traj', log='idpp.log', fmax=0.1,
                          optimizer=MDMin, mic=False, steps=100):
+        print("MyNEB: idpp_interpolate")
         d1 = self.images[0].get_all_distances(mic=mic)
         d2 = self.images[-1].get_all_distances(mic=mic)
         d = (d2 - d1) / (self.nimages - 1)
@@ -151,8 +153,11 @@ class MyNEB:
         opt.run(fmax=fmax, steps=steps)
         for image, calc in zip(self.images, old):
             image.calc = calc
+        print("MyNEB: end of idpp_interpolate")
+
 
     def get_positions(self):
+        print("MyNEB: get_positions()")
         positions = np.empty(((self.nimages - 2) * self.natoms, 3))
         n1 = 0
         for image in self.images[1:-1]:
@@ -162,6 +167,7 @@ class MyNEB:
         return positions
 
     def set_positions(self, positions):
+        print("MyNEB: set_positions()")
         n1 = 0
         for i, image in enumerate(self.images[1:-1]):
             if self.dynamic_relaxation:
@@ -184,6 +190,7 @@ class MyNEB:
                 n1 = n2
 
     def get_fmax_all(self, images):
+        print("MyNEB: get_fmax_all()")
         n = self.natoms
         f_i = self.get_forces()
         fmax_images = []
@@ -195,6 +202,8 @@ class MyNEB:
 
     def get_forces(self):
         """Evaluate and return the forces."""
+
+        print("MyNEB: get_forces()")
         images = self.images
 
         calculators = [image.calc for image in images
@@ -220,43 +229,10 @@ class MyNEB:
             energies[0] = images[0].get_potential_energy()
             energies[-1] = images[-1].get_potential_energy()
 
-        if not self.parallel:
-            # Do all images - one at a time:
-            for i in range(1, self.nimages - 1):
-                energies[i] = images[i].get_potential_energy()
-                forces[i - 1] = images[i].get_forces()
-        elif self.world.size == 1:
-            def run(image, energies, forces):
-                energies[:] = image.get_potential_energy()
-                forces[:] = image.get_forces()
-            threads = [threading.Thread(target=run,
-                                        args=(images[i],
-                                              energies[i:i + 1],
-                                              forces[i - 1:i]))
-                       for i in range(1, self.nimages - 1)]
-            for thread in threads:
-                thread.start()
-            for thread in threads:
-                thread.join()
-        else:
-            # Parallelize over images:
-            i = self.world.rank * (self.nimages - 2) // self.world.size + 1
-            try:
-                energies[i] = images[i].get_potential_energy()
-                forces[i - 1] = images[i].get_forces()
-            except Exception:
-                # Make sure other images also fail:
-                error = self.world.sum(1.0)
-                raise
-            else:
-                error = self.world.sum(0.0)
-                if error:
-                    raise RuntimeError('Parallel NEB failed!')
-
-            for i in range(1, self.nimages - 1):
-                root = (i - 1) * self.world.size // (self.nimages - 2)
-                self.world.broadcast(energies[i:i + 1], root)
-                self.world.broadcast(forces[i - 1], root)
+        # Do all images - one at a time:
+        for i in range(1, self.nimages - 1):
+            energies[i] = images[i].get_potential_energy()
+            forces[i - 1] = images[i].get_forces()
 
         # Save for later use in iterimages:
         self.energies = energies
@@ -372,6 +348,7 @@ class MyNEB:
                         pass
                     else:
                         forces[k, :, :] = np.zeros((1, self.natoms, 3))
+        print("MyNEB: end of get_forces()")
         return forces.reshape((-1, 3))
 
     def get_potential_energy(self, force_consistent=False):
@@ -415,6 +392,7 @@ class MyIDPP(Calculator):
     implemented_properties = ['energy', 'forces']
 
     def __init__(self, target, mic):
+        print("MyIDPP is called")
         Calculator.__init__(self)
         self.target = target
         self.mic = mic
@@ -443,140 +421,6 @@ class MyIDPP(Calculator):
         f = -2 * ((dd * (1 - 2 * dd / d) / d**5)[..., np.newaxis] * D).sum(0)
         self.results = {'energy': e, 'forces': f}
 
-
-class MySingleCalculatorNEB(MyNEB):
-    def __init__(self, images, k=0.1, climb=False):
-        if isinstance(images, basestring):
-            # this is a filename
-            images = read(images)
-
-        NEB.__init__(self, images, k, climb, False)
-        self.calculators = [None] * self.nimages
-        self.energies_ok = False
-        self.first = True
-
-    def interpolate(self, initial=0, final=-1, mic=False):
-        """Interpolate linearly between initial and final images."""
-        if final < 0:
-            final = self.nimages + final
-        n = final - initial
-        pos1 = self.images[initial].get_positions()
-        pos2 = self.images[final].get_positions()
-        dist = (pos2 - pos1)
-        if mic:
-            cell = self.images[initial].get_cell()
-            assert((cell == self.images[final].get_cell()).all())
-            pbc = self.images[initial].get_pbc()
-            assert((pbc == self.images[final].get_pbc()).all())
-            dist, D_len = find_mic(dist, cell, pbc)
-        dist /= n
-        for i in range(1, n):
-            self.images[initial + i].set_positions(pos1 + i * dist)
-
-    def refine(self, steps=1, begin=0, end=-1, mic=False):
-        """Refine the NEB trajectory."""
-        if end < 0:
-            end = self.nimages + end
-        j = begin
-        n = end - begin
-        for i in range(n):
-            for k in range(steps):
-                self.images.insert(j + 1, self.images[j].copy())
-                self.calculators.insert(j + 1, None)
-            self.k[j:j + 1] = [self.k[j] * (steps + 1)] * (steps + 1)
-            self.nimages = len(self.images)
-            self.interpolate(j, j + steps + 1, mic=mic)
-            j += steps + 1
-
-    def set_positions(self, positions):
-        # new positions -> new forces
-        if self.energies_ok:
-            # restore calculators
-            self.set_calculators(self.calculators[1:-1])
-        NEB.set_positions(self, positions)
-
-    def get_calculators(self):
-        """Return the original calculators."""
-        calculators = []
-        for i, image in enumerate(self.images):
-            if self.calculators[i] is None:
-                calculators.append(image.get_calculator())
-            else:
-                calculators.append(self.calculators[i])
-        return calculators
-
-    def set_calculators(self, calculators):
-        """Set new calculators to the images."""
-        self.energies_ok = False
-        self.first = True
-
-        if not isinstance(calculators, list):
-            calculators = [calculators] * self.nimages
-
-        n = len(calculators)
-        if n == self.nimages:
-            for i in range(self.nimages):
-                self.images[i].set_calculator(calculators[i])
-        elif n == self.nimages - 2:
-            for i in range(1, self.nimages - 1):
-                self.images[i].set_calculator(calculators[i - 1])
-        else:
-            raise RuntimeError(
-                'len(calculators)=%d does not fit to len(images)=%d'
-                % (n, self.nimages))
-
-    def get_energies_and_forces(self):
-        """Evaluate energies and forces and hide the calculators"""
-        if self.energies_ok:
-            return
-
-        self.emax = -1.e32
-
-        def calculate_and_hide(i):
-            image = self.images[i]
-            calc = image.get_calculator()
-            if self.calculators[i] is None:
-                self.calculators[i] = calc
-            if calc is not None:
-                if not isinstance(calc, SinglePointCalculator):
-                    self.images[i].set_calculator(
-                        SinglePointCalculator(
-                            image,
-                            energy=image.get_potential_energy(
-                                apply_constraint=False),
-                            forces=image.get_forces(apply_constraint=False)))
-                self.emax = min(self.emax, image.get_potential_energy())
-
-        if self.first:
-            calculate_and_hide(0)
-
-        # Do all images - one at a time:
-        for i in range(1, self.nimages - 1):
-            calculate_and_hide(i)
-
-        if self.first:
-            calculate_and_hide(-1)
-            self.first = False
-
-        self.energies_ok = True
-
-    def get_forces(self):
-        self.get_energies_and_forces()
-        return NEB.get_forces(self)
-
-    def n(self):
-        return self.nimages
-
-    def write(self, filename):
-        from ase.io.trajectory import Trajectory
-        traj = Trajectory(filename, 'w', self)
-        traj.write()
-        traj.close()
-
-    def __add__(self, other):
-        for image in other:
-            self.images.append(image)
-        return self
 
 
 def fit0(E, F, R, cell=None, pbc=None):
