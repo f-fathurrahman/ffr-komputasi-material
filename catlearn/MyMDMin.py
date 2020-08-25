@@ -1,9 +1,7 @@
 import numpy as np
+from MyOptimizer import MyOptimizer
 
-from ase.optimize.optimize import Optimizer
-
-
-class MyMDMin(Optimizer):
+class MyMDMin(MyOptimizer):
     def __init__(self, atoms, restart=None, logfile='-', trajectory=None,
                  dt=None, master=None):
         """Parameters:
@@ -30,7 +28,7 @@ class MyMDMin(Optimizer):
             Defaults to None, which causes only rank 0 to save files.  If
             set to true,  this rank will save files.
         """
-        Optimizer.__init__(self, atoms, restart, logfile, trajectory, master)
+        MyOptimizer.__init__(self, atoms, restart, logfile, trajectory, master)
 
         if dt is not None:
             self.dt = dt
