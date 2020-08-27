@@ -126,7 +126,36 @@ function read_forces!(calc::JDFTxCalculator, forces::Array{Float64})
     close(f)
 end
 
+# Modify energy and forces in atoms
+function compute!(
+    calc::JDFTxCalculator, atoms::Atoms
+)
+
+    prefix_dir = calc.prefix_dir
+    input_file = calc.input_file
+
+    if calc.clean_dir
+        run(`rm -rfv $prefix_dir`)
+    end
+    
+    write_jdftx(calc, atoms)
+
+    Ncore = calc.Ncore
+    output_file = calc.output_file
+    # Relative path is assumed. It is not tested for absolute path.
+    cd("./$prefix_dir")
+    run(pipeline(`jdftx-1.6.0 -c $Ncore -i $input_file`, stdout="$output_file"))
+    cd("../")
+
+    atoms.energy = read_energy(calc)
+    read_forces!(calc, atoms.forces)
+
+    return
+end
+
+
 # return energy, overwrite forces
+# DEPRECATE THIS?
 function compute!(
     calc::JDFTxCalculator, atoms::Atoms, forces::Array{Float64,2}
 )
