@@ -26,6 +26,8 @@ def prepare_Au_on_Al_slab():
     mask = [atom.tag > 1 for atom in atoms]
     atoms.set_constraint(FixAtoms(mask=mask))
     #
+    #atoms.write("STRUCT.xsf")
+    #
     return atoms
 
 

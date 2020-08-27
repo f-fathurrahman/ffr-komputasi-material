@@ -143,9 +143,9 @@ function compute!(
     Ncore = calc.Ncore
     output_file = calc.output_file
     # assume relative path
-    #cd("./$prefix_dir")
-    #run(pipeline(`jdftx-1.6.0 -c $Ncore -i $input_file`, stdout="$output_file"))
-    #cd("../")
+    cd("./$prefix_dir")
+    run(pipeline(`jdftx-1.6.0 -c $Ncore -i $input_file`, stdout="$output_file"))
+    cd("../")
     # need to change this?, use pwd to save the original directory
     # not needed right now as we assume relative path
     
