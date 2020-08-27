@@ -1,3 +1,5 @@
+rundir_*
+
 *.gpw
 *.traj
 tmp
