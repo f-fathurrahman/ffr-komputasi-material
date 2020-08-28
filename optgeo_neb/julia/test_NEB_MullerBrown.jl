@@ -1,4 +1,5 @@
 using Printf
+using LinearAlgebra
 
 import PyPlot
 const plt = PyPlot
@@ -8,8 +9,10 @@ include("Atoms.jl")
 include("MullerBrown.jl")
 include("NEB.jl")
 
-function plot_MullerBrown( images::Vector{Atoms}; filsave="IMG_MullerBrown_path.pdf" )
-    mb = MullerBrown()
+function plot_MullerBrown(
+    mb::MullerBrown, images::Vector{Atoms};
+    filsave="IMG_MullerBrown_path.pdf"
+)
     Nx = 200
     Ny = 200
     xgrid = range(-1.7, stop=1.0, length=Nx)
@@ -60,7 +63,15 @@ end
 function main()
     images = create_images()
     neb = NEBCalculator(images)
-    plot_MullerBrown(neb.images)
+
+    mb = MullerBrown()
+
+    plot_MullerBrown(mb, neb.images)
+
+    setup_initial_final!(mb, neb)
+
+    compute!(mb, neb)
+
     println("Pass here")
 end
 

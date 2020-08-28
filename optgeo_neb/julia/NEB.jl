@@ -1,10 +1,11 @@
 mutable struct NEBCalculator
     images::Vector{Atoms}
+    k::Vector{Float64} # spring constant    
     Nimages::Int64
     Natoms::Int64
     pbc::Tuple{Bool,Bool,Bool}
     energies::Vector{Float64}
-    real_forces::Vector{Matrix{Float64}}
+    neb_forces::Array{Float64,3}
 end
 
 function NEBCalculator(images::Vector{Atoms})
@@ -21,13 +22,12 @@ function NEBCalculator(images::Vector{Atoms})
     end
     #
     energies = zeros(Float64,Nimages)
-    real_forces = Vector{Matrix{Float64}}(undef,Nimages)
-    for i in 1:Nimages
-        real_forces[i] = zeros(Float64,3,Natoms)
-    end
+    neb_forces = zeros(Float64,3,Natoms,Nimages-2)
+    #
+    k = 0.1*ones(Nimages-1)
     #
     interpolate!(images)
-    return NEBCalculator(images, Nimages, Natoms, pbc, energies, real_forces)
+    return NEBCalculator(images, k, Nimages, Natoms, pbc, energies, neb_forces)
 end
 
 # Linear interpolation
@@ -41,6 +41,52 @@ function interpolate!( images::Vector{Atoms} )
     #
     for i in 2:Nimages
         images[i].positions[:] = pos1[:] + (i-1)*d[:]
+    end
+    return
+end
+
+function setup_initial_final!(calc, neb::NEBCalculator)
+    calc_energy_forces!(calc, neb.images[1])
+    calc_energy_forces!(calc, neb.images[end])
+    return
+end
+
+function compute!(calc, neb::NEBCalculator)
+    
+    # forces = zeros(3,Natoms,Nimages-2)
+    
+    forces = neb.neb_forces
+    Nimages = neb.Nimages
+    images = neb.images
+    energies = neb.energies
+    k = neb.k
+
+    for i in 2:Nimages-1
+        calc_energy_forces!(calc, images[i])
+        # copy results
+        energies[i] = images[i].energy
+        forces[:,:,i-1] = images[i].forces[:,:]
+        println("energy = ", energies[i])
+        println("forces = ", forces[:,:,i-1])
+    end
+
+    t1 = images[2].positions - images[1].positions
+    nt1 = norm(t1)
+
+    for i in 2:Nimages-1
+        t2 = images[i+1].positions - images[i].positions
+        nt2 = norm(t2)
+        tangent = t1 + t2
+        tt = dot(tangent, tangent)
+        #
+        @views f = forces[:,:,i-1]
+        ft = dot(f, tangent)
+        f = f - ft / tt * tangent
+        f = f - dot(t1*k[i-1] - t2*k[i], tangent) / tt * tangent
+        #
+        t1 = t2
+        nt1 = nt2
+        println("forces = ", forces[:,:,i-1])
     end
     return
 end
