@@ -49,7 +49,7 @@ function calc_energy_forces!(mb::MullerBrown, x, y, forces::Array{Float64,2})
 
     forces[1] = -Fx/100.0
     forces[2] = -Fy/100.0
-    forces[3] = -Fz/100.0
+    forces[3] = 0.0
 
     return energy
 end
