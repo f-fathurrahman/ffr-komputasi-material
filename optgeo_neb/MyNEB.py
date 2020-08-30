@@ -72,9 +72,9 @@ class MyNEB:
             * eb: Paper III full spring force implementation
         """
 
-        print()
-        print("Calling MyNEB")
-        print()
+        #print()
+        #print("Calling MyNEB")
+        #print()
 
         self.images = images
         self.climb = climb
@@ -121,7 +121,7 @@ class MyNEB:
         self.energies = None  # ndarray of shape (nimages,)
 
     def interpolate(self, method='linear', mic=False):
-        print("MyNEB: interpolate()")
+        #print("MyNEB: interpolate()")
         if self.remove_rotation_and_translation:
             minimize_rotation_and_translation(self.images[0], self.images[-1])
 
@@ -132,7 +132,7 @@ class MyNEB:
 
     def idpp_interpolate(self, traj='idpp.traj', log='idpp.log', fmax=0.1,
                          optimizer=MDMin, mic=False, steps=100):
-        print("MyNEB: idpp_interpolate")
+        #print("MyNEB: idpp_interpolate")
         d1 = self.images[0].get_all_distances(mic=mic)
         d2 = self.images[-1].get_all_distances(mic=mic)
         d = (d2 - d1) / (self.nimages - 1)
@@ -153,11 +153,11 @@ class MyNEB:
         opt.run(fmax=fmax, steps=steps)
         for image, calc in zip(self.images, old):
             image.calc = calc
-        print("MyNEB: end of idpp_interpolate")
+        #print("MyNEB: end of idpp_interpolate")
 
 
     def get_positions(self):
-        print("MyNEB: get_positions()")
+        #print("MyNEB: get_positions()")
         positions = np.empty(((self.nimages - 2) * self.natoms, 3))
         n1 = 0
         for image in self.images[1:-1]:
@@ -167,7 +167,7 @@ class MyNEB:
         return positions
 
     def set_positions(self, positions):
-        print("MyNEB: set_positions()")
+        #print("MyNEB: set_positions()")
         n1 = 0
         for i, image in enumerate(self.images[1:-1]):
             if self.dynamic_relaxation:
@@ -190,7 +190,7 @@ class MyNEB:
                 n1 = n2
 
     def get_fmax_all(self, images):
-        print("MyNEB: get_fmax_all()")
+        #print("MyNEB: get_fmax_all()")
         n = self.natoms
         f_i = self.get_forces()
         fmax_images = []
@@ -203,7 +203,10 @@ class MyNEB:
     def get_forces(self):
         """Evaluate and return the forces."""
 
-        print("MyNEB: get_forces()")
+        print()
+        print("Enter MyNEB: get_forces()")
+        print()
+
         images = self.images
 
         calculators = [image.calc for image in images
@@ -241,6 +244,9 @@ class MyNEB:
 
         self.imax = 1 + np.argsort(energies[1:-1])[-1]
         self.emax = energies[self.imax]
+
+        print("imax = ", self.imax + 1)
+        print("emax = ", self.emax)
 
         t1 = find_mic(images[1].get_positions() -
                       images[0].get_positions(),
@@ -327,6 +333,10 @@ class MyNEB:
                 f -= np.vdot(t1 * self.k[i - 1] -
                              t2 * self.k[i], tangent) / tt * tangent
 
+            print("image = ", i + 1)
+            print("tangent = ", tangent)
+            print("f = ", f)
+
             t1 = t2
             nt1 = nt2
 
@@ -348,7 +358,9 @@ class MyNEB:
                         pass
                     else:
                         forces[k, :, :] = np.zeros((1, self.natoms, 3))
+        print()
         print("MyNEB: end of get_forces()")
+        print()
         return forces.reshape((-1, 3))
 
     def get_potential_energy(self, force_consistent=False):
@@ -392,7 +404,7 @@ class MyIDPP(Calculator):
     implemented_properties = ['energy', 'forces']
 
     def __init__(self, target, mic):
-        print("MyIDPP is called")
+        #print("MyIDPP is called")
         Calculator.__init__(self)
         self.target = target
         self.mic = mic

@@ -10,7 +10,7 @@ from MyBFGS import MyBFGS
 
 ase_calculator = MullerBrown()
 
-n_images = 12
+n_images = 5
 
 # Run test_MullerBrown.py to produce these files
 initial_ase = ase.io.read("initial_optimized.traj")
@@ -24,28 +24,24 @@ for i in range(1, n_images-1):
     images_ase.append(image_ase)
 images_ase.append(final_ase)
 
-neb_ase = MyNEB(images_ase, climb=True, method="aseneb") # other methods are not working
+#neb_ase = MyNEB(images_ase, climb=True, method="aseneb") # other methods are not working
+neb_ase = MyNEB(images_ase, climb=False, method="aseneb") # other methods are not working
 #neb_ase.interpolate(method="idpp")
 neb_ase.interpolate(method="linear") # default
 
-print("Initial potential energy = ", neb_ase.get_potential_energy())
-print("Initial forces")
-print(neb_ase.get_forces())
-
+#print("Initial potential energy = ", neb_ase.get_potential_energy())
+#print("Initial forces")
+#print(neb_ase.get_forces())
 #print(dir(neb_ase))
-for i,image in enumerate(neb_ase.images):
-    print("%3d %18.10f" % (i, image.get_potential_energy()))
-
-#qn_ase = MDMin(neb_ase, trajectory="neb_ase.traj")
-#qn_ase.run(fmax=0.05)
-#print("\nSummary of the results: \n")
-#atoms_ase = ase.io.read("neb_ase.traj", ":")
-#n_eval_ase = int(len(atoms_ase) - 2 * (len(atoms_ase)/n_images))
-#print("Number of function evaluations CI-NEB implemented in ASE:", n_eval_ase)
-
-#bfgs_ase = BFGS(neb_ase, trajectory="neb_ase_bfgs.traj")
+#print("Initial potential energy")
+#for i,image in enumerate(neb_ase.images):
+#    r = image.get_positions()
+#    x = r[0,0]
+#    y = r[0,1]
+#    print("%3d r=[%18.10f,%18.10f] E=%18.10f" % (i+1, x, y, image.get_potential_energy()))
 
 bfgs_ase = MyBFGS(neb_ase, trajectory="neb_ase_bfgs.traj")
+bfgs_ase.max_steps = 1
 bfgs_ase.run(fmax=0.05)
 print("\nSummary of the results: \n")
 atoms_ase = ase.io.read("neb_ase_bfgs.traj", ":")
@@ -57,4 +53,13 @@ print("Number of function evaluations CI-NEB implemented in ASE:", n_eval_ase)
 #print(neb_ase.get_forces())
 
 for i,image in enumerate(neb_ase.images):
-    print("%3d %18.10f" % (i, image.get_potential_energy()))
+    print("%3d %18.10f" % (i+1, image.get_potential_energy()))
+
+# Using MDMin
+
+#qn_ase = MDMin(neb_ase, trajectory="neb_ase.traj")
+#qn_ase.run(fmax=0.05)
+#print("\nSummary of the results: \n")
+#atoms_ase = ase.io.read("neb_ase.traj", ":")
+#n_eval_ase = int(len(atoms_ase) - 2 * (len(atoms_ase)/n_images))
+#print("Number of function evaluations CI-NEB implemented in ASE:", n_eval_ase)

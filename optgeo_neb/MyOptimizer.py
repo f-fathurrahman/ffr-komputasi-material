@@ -98,22 +98,22 @@ class MyOptimizer(MyDynamics):
         return MyDynamics.run(self)
 
     def converged(self, forces=None):
-        print("MyOptimizer: converged?")
+        #print("MyOptimizer: converged?")
         """Did the optimization converge?"""
         if forces is None:
-            print("MyOptimizer: Calculating forces (again?)")
+            #print("MyOptimizer: Calculating forces (again?)")
             forces = self.atoms.get_forces()
         if hasattr(self.atoms, "get_curvature"):
             return (forces ** 2).sum(
                 axis=1
             ).max() < self.fmax ** 2 and self.atoms.get_curvature() < 0.0
-        print("MyOptimizer: end of converged?")
+        #print("MyOptimizer: end of converged?")
         return (forces ** 2).sum(axis=1).max() < self.fmax ** 2
 
     def log(self, forces=None):
-        print("MyOptimizer: log")
+        #print("MyOptimizer: log")
         if forces is None:
-            print("MyOptimizer: calculating force (again?)")
+            #print("MyOptimizer: calculating force (again?)")
             forces = self.atoms.get_forces()
         fmax = sqrt((forces ** 2).sum(axis=1).max())
         e = self.atoms.get_potential_energy(
@@ -137,7 +137,7 @@ class MyOptimizer(MyDynamics):
             self.logfile.write(msg)
 
             self.logfile.flush()
-        print("MyOptimizer: end of log")
+        #print("MyOptimizer: end of log")
 
     def dump(self, data):
         if world.rank == 0 and self.restart is not None:

@@ -115,7 +115,7 @@ class MyDynamics:
         >>> for _ in opt2:
         >>>     opt1.run()
         """
-        print("MyDynamics: irun")
+        #print("MyDynamics: irun")
         # compute inital structure and log the first step
         self.atoms.get_forces()
 
@@ -141,7 +141,7 @@ class MyDynamics:
             self.log()
             self.call_observers()
 
-        print("MyDynamics: end of irun")
+        #print("MyDynamics: end of irun")
 
         # finally check if algorithm was converged
         yield self.converged()

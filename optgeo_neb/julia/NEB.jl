@@ -48,45 +48,80 @@ end
 function setup_initial_final!(calc, neb::NEBCalculator)
     calc_energy_forces!(calc, neb.images[1])
     calc_energy_forces!(calc, neb.images[end])
+    neb.energies[1] = neb.images[1].energy
+    neb.energies[end] = neb.images[end].energy
     return
 end
 
 function compute!(calc, neb::NEBCalculator)
     
-    # forces = zeros(3,Natoms,Nimages-2)
-    
+    println()
+    println("Enter NEB compute!")
+    println()
+
     forces = neb.neb_forces
     Nimages = neb.Nimages
     images = neb.images
     energies = neb.energies
     k = neb.k
 
+    climb = false
+
     for i in 2:Nimages-1
         calc_energy_forces!(calc, images[i])
         # copy results
         energies[i] = images[i].energy
         forces[:,:,i-1] = images[i].forces[:,:]
-        println("energy = ", energies[i])
-        println("forces = ", forces[:,:,i-1])
     end
 
     t1 = images[2].positions - images[1].positions
     nt1 = norm(t1)
 
+    imax = sortperm(energies)[end]
+    emax = energies[imax]
+
+    println("imax = ", imax)
+    println("emax = ", emax)
+
     for i in 2:Nimages-1
         t2 = images[i+1].positions - images[i].positions
         nt2 = norm(t2)
-        tangent = t1 + t2
+        if i < imax
+            tangent = t2
+        elseif i > imax
+            tangent = t1
+        else
+            tangent = t1 + t2
+        end
         tt = dot(tangent, tangent)
         #
         @views f = forces[:,:,i-1]
         ft = dot(f, tangent)
-        f = f - ft / tt * tangent
-        f = f - dot(t1*k[i-1] - t2*k[i], tangent) / tt * tangent
-        #
+        if (i == imax) && climb
+            f[:] = f - 2 * ft / tt * tangent
+        else
+            f[:] = f - ft / tt * tangent
+            f[:] = f - dot(t1*k[i-1] - t2*k[i], tangent) / tt * tangent
+        end
+        println("image = ", i)
+        println("tangent = ", tangent)
+        println("f = ", f)
+        #println("forces = ", forces[:,:,i-1])
         t1 = t2
         nt1 = nt2
-        println("forces = ", forces[:,:,i-1])
     end
+    println()
+    println("End of NEB compute!")
+    println()
     return
+end
+
+function get_moving_positions(neb)
+    Natoms = neb.Natoms
+    Nimages = neb.Nimages
+    r = zeros(3,Natoms,Nimages-2)
+    for i in 2:Nimages-1
+        r[:,:,i-1] = neb.images[i].positions[:,:]
+    end
+    return r
 end

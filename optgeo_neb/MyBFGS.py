@@ -39,9 +39,9 @@ class MyBFGS(MyOptimizer):
             set to true,  this rank will save files.
         """
 
-        print()
-        print("Initializing MyBFGS")
-        print("===================")
+        #print()
+        #print("Initializing MyBFGS")
+        #print("===================")
 
         if maxstep > 1.0:
             warnings.warn('You are using a much too large value for '
@@ -51,24 +51,24 @@ class MyBFGS(MyOptimizer):
         MyOptimizer.__init__(self, atoms, restart, logfile, trajectory, master)
 
     def todict(self):
-        print("MyBFGS: todict")
+        #print("MyBFGS: todict")
         d = MyOptimizer.todict(self)
         if hasattr(self, 'maxstep'):
             d.update(maxstep=self.maxstep)
         return d
 
     def initialize(self):
-        print("MyBFGS: initialize")
+        #print("MyBFGS: initialize")
         self.H = None
         self.r0 = None
         self.f0 = None
 
     def read(self):
-        print("MyBFGS: read")
+        #print("MyBFGS: read")
         self.H, self.r0, self.f0, self.maxstep = self.load()
 
     def step(self, f=None):
-        print("MyBFGS: step")
+        #print("MyBFGS: step")
         atoms = self.atoms
 
         if f is None:
@@ -78,14 +78,17 @@ class MyBFGS(MyOptimizer):
         f = f.reshape(-1)
         self.update(r.flat, f, self.r0, self.f0)
         omega, V = eigh(self.H)
+        print("omega = ", omega)
         dr = np.dot(V, np.dot(f, V) / np.fabs(omega)).reshape((-1, 3))
+        print("dr = ", dr)
         steplengths = (dr**2).sum(1)**0.5
+        print("MyBFGS: steplengths = ", steplengths)
         dr = self.determine_step(dr, steplengths)
         atoms.set_positions(r + dr)
         self.r0 = r.flat.copy()
         self.f0 = f.copy()
         self.dump((self.H, self.r0, self.f0, self.maxstep))
-        print("MyBFGS: end of step")
+        #print("MyBFGS: end of step")
 
     def determine_step(self, dr, steplengths):
         """Determine step to take according to maxstep
@@ -93,15 +96,15 @@ class MyBFGS(MyOptimizer):
         Normalize all steps as the largest step. This way
         we still move along the eigendirection.
         """
-        print("MyBFGS: determine_step")
+        #print("MyBFGS: determine_step")
         maxsteplength = np.max(steplengths)
         if maxsteplength >= self.maxstep:
             dr *= self.maxstep / maxsteplength
-        print("MyBFGS: end of determine_step")
+        #print("MyBFGS: end of determine_step")
         return dr
 
     def update(self, r, f, r0, f0):
-        print("MyBFGS: update")
+        #print("MyBFGS: update")
         if self.H is None:
             self.H = np.eye(3 * len(self.atoms)) * 70.0
             return
@@ -115,11 +118,11 @@ class MyBFGS(MyOptimizer):
         dg = np.dot(self.H, dr)
         b = np.dot(dr, dg)
         self.H -= np.outer(df, df) / a + np.outer(dg, dg) / b
-        print("MyBFGS: end of update")
+        #print("MyBFGS: end of update")
 
     def replay_trajectory(self, traj):
         """Initialize hessian from old trajectory."""
-        print("MyBFGS: replay_trajectory()")
+        #print("MyBFGS: replay_trajectory()")
         if isinstance(traj, basestring):
             from ase.io.trajectory import Trajectory
             traj = Trajectory(traj, 'r')
