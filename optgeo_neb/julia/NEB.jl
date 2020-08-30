@@ -103,9 +103,12 @@ function compute!(calc, neb::NEBCalculator)
             f[:] = f - ft / tt * tangent
             f[:] = f - dot(t1*k[i-1] - t2*k[i], tangent) / tt * tangent
         end
-        println("image = ", i)
-        println("tangent = ", tangent)
-        println("f = ", f)
+        tx = tangent[1,1]
+        ty = tangent[2,1]
+        fx = f[1,1]
+        fy = f[2,1]
+        @printf("image = %3d tangent = %18.10f %18.10f\n", i, tx, ty)
+        @printf("            forces  = %18.10f %18.10f\n", fx, fy)
         #println("forces = ", forces[:,:,i-1])
         t1 = t2
         nt1 = nt2

@@ -68,7 +68,7 @@ class MyBFGS(MyOptimizer):
         self.H, self.r0, self.f0, self.maxstep = self.load()
 
     def step(self, f=None):
-        #print("MyBFGS: step")
+        print("MyBFGS: step")
         atoms = self.atoms
 
         if f is None:

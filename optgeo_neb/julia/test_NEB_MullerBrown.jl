@@ -80,7 +80,7 @@ function update_hessian(H_old, r, f, r0, f0)
 end
 
 function main()
-    images = create_images(Nimages=5)
+    images = create_images(Nimages=10)
     neb = NEBCalculator(images)
     Nimages = neb.Nimages
     Natoms = 1
@@ -100,11 +100,7 @@ function main()
         @printf("%3d r=[%18.10f,%18.10f] E=%18.10f\n", i, x, y, images[i].energy)
     end
 
-    #energy = atoms.energy
     forces = neb.neb_forces
-    #println("Energy = ", energy)
-    #println("Initial forces = ")
-    #display(forces); println()
     
     MAXSTEP = 0.04 # !! in angstrom
 
@@ -112,15 +108,13 @@ function main()
     f = vec(copy(forces))
     r = vec(copy(get_moving_positions(neb)))
 
-    # Not needed ? Variables inside loops are different
-    #r0 = zeros(3,Natoms,Nimages-2)
-    #f0 = zeros(3,Natoms,Nimages-2)
-
     H = initial_hessian(3*Natoms*(Nimages-2))
+
+    # Calculate fmax (FIXME: check against ASE implementation)
     ff = reshape(forces, (3,Natoms*(Nimages-2)))
     fmax = sqrt( maximum(sum(ff.^2, dims=1)) )
 
-    NiterMax = 2
+    NiterMax = 40
     for iter = 1:NiterMax
 
         #println("Hessian = ")
@@ -140,7 +134,7 @@ function main()
             dr = dr * MAXSTEP / maxsteplength
         end
 
-        # ?
+        # Before update positions,copy old values
         r0 = copy(r)
         f0 = copy(f)
         H_old = copy(H)
@@ -165,28 +159,18 @@ function main()
 
         #@printf("\nIter = %3d, Etot = %18.10f, fmax=%18.10f\n", iter, energy, fmax)
         @printf("\nIter = %3d, fmax=%18.10f\n", iter, fmax)
-        #println("Forces = ")
-        #display(forces'); println()
-        #println("dr = ")
-        #display(reshape(dr,(3,Natoms))'); println()
-        #println("r  =")
-        #display(atoms.positions'); println()
 
         compute!(mb, neb)
-        #for i in 1:Nimages
-        #    @printf("%3d %18.10f\n", i, images[i].energy)
-        #end
-        #energy = atoms.energy
         forces[:] = neb.neb_forces[:]
-
+        # Evaluate convergence
         ff = reshape(forces, (3,Natoms*(Nimages-2)))
         fmax = sqrt( maximum(sum(ff.^2, dims=1)) )
         if fmax < 0.05
             println("BFGS is converged")
+            @printf("\nIter = %3d, fmax=%18.10f\n", iter+1, fmax)
             break
         end
-
-        f = vec(copy(forces))
+        f = vec(copy(forces)) # linear index
         H = update_hessian( H_old, r, f, r0, f0 )
     end
 

@@ -333,9 +333,12 @@ class MyNEB:
                 f -= np.vdot(t1 * self.k[i - 1] -
                              t2 * self.k[i], tangent) / tt * tangent
 
-            print("image = ", i + 1)
-            print("tangent = ", tangent)
-            print("f = ", f)
+            tx = tangent[0,0]
+            ty = tangent[0,1]
+            fx = forces[i - 1][0,0]
+            fy = forces[i - 1][0,1]
+            print("image = %3d tangent = %18.10f %18.10f" % ((i + 1), tx, ty))
+            print("            forces  = %18.10f %18.10f" % (fx, fy))
 
             t1 = t2
             nt1 = nt2

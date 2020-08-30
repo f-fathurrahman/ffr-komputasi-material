@@ -10,7 +10,7 @@ from MyBFGS import MyBFGS
 
 ase_calculator = MullerBrown()
 
-n_images = 5
+n_images = 10
 
 # Run test_MullerBrown.py to produce these files
 initial_ase = ase.io.read("initial_optimized.traj")
@@ -41,7 +41,7 @@ neb_ase.interpolate(method="linear") # default
 #    print("%3d r=[%18.10f,%18.10f] E=%18.10f" % (i+1, x, y, image.get_potential_energy()))
 
 bfgs_ase = MyBFGS(neb_ase, trajectory="neb_ase_bfgs.traj")
-bfgs_ase.max_steps = 1
+#bfgs_ase.max_steps = 2
 bfgs_ase.run(fmax=0.05)
 print("\nSummary of the results: \n")
 atoms_ase = ase.io.read("neb_ase_bfgs.traj", ":")
