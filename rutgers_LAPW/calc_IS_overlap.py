@@ -2,7 +2,7 @@ import numpy as np
 from math import pi, sqrt
 from scipy import special
 
-def calc_interstitial_overlap(Km, RMuffinTin, Vol):
+def calc_IS_overlap(Km, RMuffinTin, Vol):
     """ Overlap in the interstitials can be calculated outside the k-loop
     
         Please see Eq.46 on page 26 for the quantity O_{K'K}^I

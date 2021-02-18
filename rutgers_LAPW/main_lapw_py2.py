@@ -4,7 +4,7 @@ from scipy import interpolate
 from FccLattice import *
 from excor import ExchangeCorrelation
 from calc_atom_charge import *
-from calc_interstitial_overlap import *
+from calc_IS_overlap import *
 from solve_scheq import *
 from my_utilities import calc_rs
 from solve_eigensystem import *
@@ -82,7 +82,7 @@ R0[0]=1e-10
 R = R0[::-1]
     
 # Interstital overlap does not change through iterations
-Olap_I = calc_interstitial_overlap(fcc.Km, RMuffinTin, fcc.Volume)
+Olap_I = calc_IS_overlap(fcc.Km, RMuffinTin, fcc.Volume)
 
 # We interpolate atomic charge on the new mesh within Muffin-Tin sphere
 TotRho = interpolate.splev(R0, AtomRhoSpline)
