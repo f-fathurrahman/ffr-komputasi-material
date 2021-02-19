@@ -6,7 +6,7 @@ from my_utilities import extrapolate
 from Numerov import Numerov
 from solve_scheq import CRHS
 
-def calc_atom_chgden(states, R, Veff, Z):
+def calc_rhoe_atom(states, R, Veff, Z):
     "Computes electron charge density, given the bound states and Z"
     rho = np.zeros(len(R), dtype=float)
     N = 0

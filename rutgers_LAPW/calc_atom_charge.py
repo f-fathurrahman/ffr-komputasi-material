@@ -1,7 +1,7 @@
 import numpy as np
 from excor import ExchangeCorrelation
 from find_core_states import *
-from calc_atom_chgden import *
+from calc_rhoe_atom import *
 from atom_cmpb import *
 from solve_poisson import *
 from my_utilities import calc_rs
@@ -30,17 +30,14 @@ def calc_atom_charge(Z, core, mix=0.3, RmaxAtom=10., Natom=3001, precision=1e-5,
    Etot_old = 0
    
    # Finds bound states
-   (coreRho, coreE, coreZ, states) = find_core_states(catm, Ra, Veff, Z)
+   coreRho, coreE, coreZ, states = find_core_states(catm, Ra, Veff, Z)
    
    # Sorts them according to energy
-   #print("states before sort = ", states)
    states.sort(atom_cmpb)
-   #print("states after sort = ", states)
-
 
    # Computes charge
-   (rho, Ebs) = calc_atom_chgden(states, Ra, Veff, Z)
-   rho=rho[::-1]
+   (rho, Ebs) = calc_rhoe_atom(states, Ra, Veff, Z)
+   rho = rho[::-1]
 
    for itt in range(Nitt):
 
@@ -61,7 +58,7 @@ def calc_atom_charge(Z, core, mix=0.3, RmaxAtom=10., Natom=3001, precision=1e-5,
        # Sorts them according to energy
        states.sort(atom_cmpb)
        # Computes charge
-       (nrho, Ebs) = calc_atom_chgden(states, Ra, Veff, Z)
+       (nrho, Ebs) = calc_rhoe_atom(states, Ra, Veff, Z)
 
        # Total energy
        pot = (ExcVxc*R0**2-0.5*UHartree*R0)*nrho[::-1]*4*pi

@@ -54,4 +54,4 @@ def find_core_states(core, R, Veff, Z, fraction=4.):
         print('%f,' % state[2],)
     print(']')
     
-    return (coreRho[::-1], coreE, coreZ, states)
+    return coreRho[::-1], coreE, coreZ, states

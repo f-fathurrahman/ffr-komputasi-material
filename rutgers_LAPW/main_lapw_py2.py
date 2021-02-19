@@ -56,6 +56,8 @@ print("Z core=", Zcor, " and Zval=", Zval)
 
 # Creates atomic charge to have a good starting point
 (Atom_R0, Atom_rho) = calc_atom_charge(Z, core, 0.3)
+print("Pass here 59"); exit()
+
 AtomRhoSpline = interpolate.splrep(Atom_R0, Atom_rho, s=0)
 
 # Exchange correlations class; WVN seems to be the best
@@ -67,14 +69,17 @@ fcc = FccLattice(LatConst)                  # Information about lattice
 RMuffinTin = fcc.RMuffinTin()               # Muffin-Tin radius choosen such that spheres touch
 VMT = 4*pi*RMuffinTin**3/3.                 # Volume of MT
 Vinter = fcc.Volume-VMT                     # Volume of the interstitial region
-print("Muffin-Tin radius =", RMuffinTin)
-print("Volume of the MT sphere    =", VMT)
-print("Volume of the unit cell    =", fcc.Volume)
-print("Volume of the interstitial =", Vinter)
+print("Muffin-Tin radius = %18.10f" % RMuffinTin)
+print("Volume of the MT sphere    = %18.10f" % VMT)
+print("Volume of the unit cell    = %18.10f" % fcc.Volume)
+print("Volume of the interstitial = %18.10f" % Vinter)
 fcc.GenerateReciprocalVectors(4, CutOffK)
 # Reciprocal bravais lattice is builded, K points taken into account only for |K|<CutOff
 fcc.ChoosePointsInFBZ(nkp,0)
 # Chooses the path in the 1BZ or the k-points in the irreducible 1BZ
+
+print("Pass here 79")
+exit()
 
 # Radial mesh --  only linear mesh can be used in connection to Numerov algorithm.
 R0 = np.linspace(0, RMuffinTin, N)
