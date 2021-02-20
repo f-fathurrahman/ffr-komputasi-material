@@ -40,7 +40,7 @@ def integ_scheq_numerov(Ex, l, R, Veff):
     rhs = CRHS(Ex, l, R, Veff)
     h = (R[-1]-R[0])/(len(R)-1.)
     u = Numerov(rhs, h, R[0]*exp(-R[0]), R[1]*exp(-R[1]))
-    extraplt = u[-2]*(2+h**2*rhs[-2])-u[-3]
+    extraplt = u[-2]*(2+h**2*rhs[-2])-u[-3] # not used?
     return u[-1]
 
 # Setting the arguments manually
