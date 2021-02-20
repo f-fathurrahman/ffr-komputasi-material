@@ -21,7 +21,7 @@ def find_core_states(core, R, Veff, Z, fraction=4.):
 
     states=[]
     for l in range(len(core)):
-        n=0                           # number of states found
+        n = 0                           # number of states found
         E = -0.5*Z*Z/(l+1)**2-3.      # here we starts to look for zero
         dE = abs(E)/fraction          # the length of the first step 
         decrease = abs(E)/(abs(E)-dE) # the step will decrease to zero. Check the formula!
@@ -48,10 +48,10 @@ def find_core_states(core, R, Veff, Z, fraction=4.):
 
     print('   Found core states for (n,l)=[',)
     for state in states:
-        print('(%d,%d)' % state[:2],)
+        print('(%2d,%2d)' % state[:2],)
     print('] E=[',)
     for state in states:
-        print('%f,' % state[2],)
+        print('%18.10f,' % state[2],)
     print(']')
     
     return coreRho[::-1], coreE, coreZ, states
