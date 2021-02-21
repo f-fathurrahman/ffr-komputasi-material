@@ -37,7 +37,7 @@ for k_n in k_nums:
     eq1num = eq1.subs(dict_num)
     print(eq1num)
     sols = np.array( list(roots(eq1num).keys()) ) # use roots instead of solve
-    sols = sols[sols > 0]
+    sols = sols[sols >= 0]
     Nelems = len(sols)
     for i in range(Nelems):
         plt.plot([k_n], sols[i], marker="o", color="b", markersize=0.5)
