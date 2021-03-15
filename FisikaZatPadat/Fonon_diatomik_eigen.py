@@ -7,20 +7,22 @@ m1, m2 = symbols("m1 m2", real=True, positive=True)
 κ1, κ2 = symbols("kappa1 kappa2", real=True, positive=True)
 ω = symbols("omega", real=True)
 
-M = Matrix([
-    [2*((κ1 + κ2) - κ2*cos(k*a)) - m1*ω**2, -κ1*(1 + cos(k*a) - I*sin(k*a))],
-    [-κ1*(1 + cos(k*a) + I*sin(k*a)), 2*((κ1 + κ2) - κ2*cos(k*a)) - m2*ω**2]
+
+dynMat = Matrix([
+    [(κ1 + κ2)/m1, (-κ2 - κ1*(cos(k*a) + I*sin(k*a)))/m1 ],
+    [(-κ2 - κ1*(cos(k*a) - I*sin(k*a)))/m2 , (κ1 + κ2)/m2]
 ])
 
-eq1 = M.det()
 dict_num = {
     m1: 1.0,
-    m2: 1.0 + 1e-6, # to reduce numerical problems for double roots
+    m2: 1.0,
     κ1: 1.0,
-    κ2: 1.0,
+    κ2: 2.1,
     k: 0.0,
     a: 1.0
 }
+dynMat_num = dynMat.subs(dict_num)
+pprint(dynMat_num)
 
 
 import numpy as np
@@ -31,19 +33,17 @@ k_nums = np.linspace(-np.pi, np.pi, NkPlot)
 plt.clf()
 for k_n in k_nums:
     dict_num[k] = k_n
-    print(dict_num)
-    eq1num = eq1.subs(dict_num)
-    print(eq1num)
-    sols = roots(eq1num) # use roots instead of solve
+    dynMat_num = dynMat.subs(dict_num)
+    res = dynMat_num.eigenvects()
     solsn = []
-    for x in sols.keys():
-        solsn.append(re(x))
+    for x in res:
+        solsn.append(re(x[0]))
     sols = np.array(solsn)
     sols = sols[sols >= 0]
     Nelems = len(sols)
     for i in range(Nelems):
-        plt.plot([k_n], sols[i], marker="o", color="b", markersize=0.5)
+        plt.plot([k_n], sqrt(sols[i]), marker="o", color="b", markersize=0.5)
     print("done k_n = ", k_n)
 
 plt.grid(True)
-plt.savefig("IMG_Simon_10_4_v1.pdf")
+plt.savefig("IMG_fonon_eigen.pdf")
