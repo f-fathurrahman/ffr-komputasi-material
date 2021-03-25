@@ -1,3 +1,4 @@
+from __future__ import print_function
 import numpy as np
 from scipy import interpolate
 
@@ -24,11 +25,11 @@ YELLOW = '\033[33;1m'
 
 ###################################
 # Start input parameters
-Z = 29                     # Number of electrons in the atom
+Z = 29                    # Number of electrons in the atom
 LatConst = 6.8219117     # Lattic constant
-core = [3,2,0]  # 1s,2s,3s, 1p,2p, no-d
+core = [3,2,0]   # 1s,2s,3s, 1p,2p, no-d
 
-nkp = 6                  # Number of k-points in 1BZ: (nkp x nkp x nkp)
+nkp = 6  # Number of k-points in 1BZ: (nkp x nkp x nkp)
 
 #### Core states ##############
 #### Linearization energies ###
@@ -56,7 +57,8 @@ print("Z core=", Zcor, " and Zval=", Zval)
 
 # Creates atomic charge to have a good starting point
 (Atom_R0, Atom_rho) = calc_atom_charge(Z, core, 0.3)
-print("Pass here 59"); exit()
+print("Pass here 59")
+#exit()
 
 AtomRhoSpline = interpolate.splrep(Atom_R0, Atom_rho, s=0)
 
@@ -79,7 +81,7 @@ fcc.ChoosePointsInFBZ(nkp,0)
 # Chooses the path in the 1BZ or the k-points in the irreducible 1BZ
 
 print("Pass here 79")
-exit()
+#exit()
 
 # Radial mesh --  only linear mesh can be used in connection to Numerov algorithm.
 R0 = np.linspace(0, RMuffinTin, N)
@@ -97,7 +99,7 @@ for itt in range(Nitt):  # self-consistent loop
     print('%d) Preparing potential' % itt)
     UHartree = solve_poisson(Z, R0, TotRho)
     # Adding exchange-correlation part
-    Vxc = [XC.Vx(rsi)+XC.Vc(rsi) for rsi in calc_rs(TotRho)]
+    Vxc = [ XC.Vx(rsi) + XC.Vc(rsi) for rsi in calc_rs(TotRho) ]
     #
     nVeff = (UHartree - Z)/R0 + Vxc
     zeroMT = nVeff[-1]  # New MT zero

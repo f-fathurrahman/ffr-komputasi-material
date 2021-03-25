@@ -1,3 +1,4 @@
+from __future__ import print_function
 import numpy as np
 from math import exp, pi
 import scipy
@@ -19,6 +20,14 @@ def find_core_states(core, R, Veff, Z, fraction=4.):
     coreE = 0
     coreZ = 0
 
+    NiterShootMax = 1000
+
+    print("core = ", core)
+    print("R[0] = ", R[0])
+    print("R[1] = ", R[1])
+    h = (R[-1]-R[0])/(len(R)-1.)
+    print("h = ", h)
+    #exit()
     states=[]
     print("in find_core_states: Z = ", Z)
     for l in range(len(core)):
@@ -28,10 +37,16 @@ def find_core_states(core, R, Veff, Z, fraction=4.):
         dE = abs(E)/fraction          # the length of the first step 
         decrease = abs(E)/(abs(E)-dE) # the step will decrease to zero. Check the formula!
         v0 = root(E, l, R, Veff)      # starting value
+        iterShoot = 0
         while E<0 and n<core[l]:      # we need ncore[l] bound states
+            if iterShoot >= NiterShootMax:
+                print("shooting method is not converged for n=%d, l=%d" % (n,l))
+                print("last E = ", E)
+                break
             E += dE
             v1 = root(E, l, R, Veff)
-            if v1*v0<0:
+            if v1*v0 < 0 :
+                # root solving
                 Energy = scipy.optimize.brentq(root, E-dE, E, args=(l, R, Veff))
                 # Density
                 rhs = CRHS(Energy, l, R, Veff)
@@ -40,13 +55,16 @@ def find_core_states(core, R, Veff, Z, fraction=4.):
                 norm = abs(scipy.integrate.simps(drho, R ))
                 drho *= 1./(norm*4*pi*R**2)
                 
-                coreRho += drho * (2*(2*l+1.))
-                coreE   += Energy*(2*(2*l+1.))
+                coreRho += drho * ( 2*(2*l + 1.0) )
+                coreE   += Energy*( 2*(2*l + 1.0) )
                 coreZ   += 2*(2*l+1)
                 states.append( (n,l,Energy) )
-                n += 1
-            dE/=decrease
+                n = n + 1
+            dE /= decrease
             v0 = v1
+            iterShoot = iterShoot + 1
+        print("Exiting while loop: last E = ", E, " n = ", n)
+
 
     print('   Found core states for (n,l)=[',)
     for state in states:

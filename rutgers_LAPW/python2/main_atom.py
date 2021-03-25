@@ -1,3 +1,4 @@
+from __future__ import print_function
 import numpy as np
 import matplotlib.pyplot as plt
 from math import exp, pi
@@ -15,12 +16,21 @@ Z = 29
 # Core specification
 core = [3,2,0]  # 1s,2s,3s, 1p,2p, no-d
 
+print("Z           = %d" % Z)
+print("core config = ", core)
+
 XC = ExchangeCorrelation(3)
 
 # Radial mesh, equally spaced
 R0 = np.linspace(1e-10, RmaxAtom, Nratom) 
+for ir in range(5):
+    print("%d %18.10f" % (ir, R0[ir]))
+
 # Inverse radial mesh (inverted in sequence)
 Ra = R0[::-1]
+for ir in range(5):
+    print("%d %18.10f" % (ir, Ra[ir]))
+
 
 Veff = -np.ones(len(Ra), dtype=float)/Ra
 
@@ -45,8 +55,8 @@ def integ_scheq_numerov(Ex, l, R, Veff):
 
 # Setting the arguments manually
 core = catm
-R = Ra
-Veff = Veff
+R = Ra  # reversed
+Veff = Veff # reversed
 Z = Z
 
 fraction = 4.0
@@ -55,7 +65,6 @@ coreE = 0
 coreZ = 0
 
 states = []
-print("core = ", core)
 for l in range(len(core)):
     print("l = ", l)
     n = 0                         # number of states found
@@ -82,6 +91,7 @@ for l in range(len(core)):
             n += 1
         dE /= decrease
         v0 = v1
+    print("Exiting while loop: E = ", E, " n = ", n)
 
 print('   Found core states for (n,l)=[',)
 for state in states:

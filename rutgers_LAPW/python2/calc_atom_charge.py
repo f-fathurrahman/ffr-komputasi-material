@@ -30,6 +30,7 @@ def calc_atom_charge(Z, core, mix=0.3, RmaxAtom=10., Natom=3001, precision=1e-5,
     Etot_old = 0
    
     # Finds bound states
+    catm = core
     coreRho, coreE, coreZ, states = find_core_states(catm, Ra, Veff, Z)
     
     #exit()
@@ -58,10 +59,11 @@ def calc_atom_charge(Z, core, mix=0.3, RmaxAtom=10., Natom=3001, precision=1e-5,
         # Finds bound states
         (coreRho, coreE, coreZ, states) = find_core_states(catm, Ra, Veff, Z)
 
-        if itt == 1: exit()  # ffr
+        #if itt == 1: exit()  # ffr
 
         # Sorts them according to energy
         states.sort(atom_cmpb)
+
         # Computes charge
         (nrho, Ebs) = calc_rhoe_atom(states, Ra, Veff, Z)
 

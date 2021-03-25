@@ -11,10 +11,10 @@ function main()
     RmaxAtom = 10.0
     rgrid = collect(range(1e-5, stop=RmaxAtom, length=Nrgrid))
     
-    Veff = -1.0./rgrid
+    Veff = -2.0./rgrid
     rhs = zeros(Float64,Nrgrid)
 
-    E = -0.5
+    E = -1.0
     l = 0
     rhs_scheq!(E, l, rgrid, Veff, rhs)
 

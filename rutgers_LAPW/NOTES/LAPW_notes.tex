@@ -1,0 +1,83 @@
+\documentclass[b5paper,11pt,english]{article} % screen setting
+\usepackage[b5paper]{geometry}
+
+%\documentclass[b5paper,11pt,bahasa]{article} % screen setting
+%\usepackage[b5paper]{geometry}
+
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+%\usepackage{cmbright}
+%\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage[libertine]{newtxmath}
+\usepackage[no-math]{fontspec}
+
+\setmainfont{Linux Libertine O}
+
+\setmonofont{JuliaMono-Regular}
+
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{minted}
+
+\newminted{julia}{breaklines,fontsize=\scriptsize}
+\newminted{python}{breaklines,fontsize=\scriptsize}
+
+\newminted{bash}{breaklines,fontsize=\scriptsize}
+\newminted{text}{breaklines,fontsize=\scriptsize}
+
+\newcommand{\txtinline}[1]{\mintinline[breaklines,fontsize=\scriptsize]{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline[breaklines,fontsize=\scriptsize]{julia}{#1}}
+\newcommand{\pyinline}[1]{\mintinline[breaklines,fontsize=\scriptsize]{python}{#1}}
+
+\newmintedfile[juliafile]{julia}{breaklines,fontsize=\scriptsize}
+\newmintedfile[pythonfile]{python}{breaklines,fontsize=\scriptsize}
+% f-o-otnotesize
+
+\usepackage{mdframed}
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{appendix}
+
+\newcommand{\highlighteq}[1]{\colorbox{blue!25}{$\displaystyle#1$}}
+\newcommand{\highlight}[1]{\colorbox{red!25}{#1}}
+
+\definecolor{mintedbg}{rgb}{0.95,0.95,0.95}
+\BeforeBeginEnvironment{minted}{
+    \begin{mdframed}[backgroundcolor=mintedbg,%
+        topline=false,bottomline=false,%
+        leftline=false,rightline=false]
+}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+% -------------------------
+\begin{document}
+
+\title{%
+LAPW Notes
+}
+\author{}
+\date{}
+\maketitle
+
+Numerov integration:
+
+
+\begin{juliacode}
+f(x) = x + 2
+\end{juliacode}
+
+\end{document}
