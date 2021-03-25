@@ -22,23 +22,16 @@ def find_core_states(core, R, Veff, Z, fraction=4.):
 
     NiterShootMax = 1000
 
-    print("core = ", core)
-    print("R[0] = ", R[0])
-    print("R[1] = ", R[1])
     h = (R[-1]-R[0])/(len(R)-1.)
-    print("h = ", h)
-    #exit()
-    states=[]
-    print("in find_core_states: Z = ", Z)
+    states = []
     for l in range(len(core)):
-        print("in find_core_states l = ", l)
         n = 0                           # number of states found
         E = -0.5*Z*Z/(l+1)**2-3.      # here we starts to look for zero
         dE = abs(E)/fraction          # the length of the first step 
         decrease = abs(E)/(abs(E)-dE) # the step will decrease to zero. Check the formula!
         v0 = root(E, l, R, Veff)      # starting value
         iterShoot = 0
-        while E<0 and n<core[l]:      # we need ncore[l] bound states
+        while E < 0 and n < core[l]:      # we need ncore[l] bound states
             if iterShoot >= NiterShootMax:
                 print("shooting method is not converged for n=%d, l=%d" % (n,l))
                 print("last E = ", E)
