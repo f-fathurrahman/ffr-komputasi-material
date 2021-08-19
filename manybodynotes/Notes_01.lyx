@@ -1,0 +1,478 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{babel}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language american
+\language_package default
+\inputencoding iso8859-15
+\fontencoding T1
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family sfdefault
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 2
+\use_package amssymb 2
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip smallskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Time independent Hamiltonian 
+\begin_inset Formula $H$
+\end_inset
+
+, temperature 
+\begin_inset Formula $T$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+operator 
+\begin_inset Formula $A(c,c^{\dagger})$
+\end_inset
+
+ represented in terms of fermion or boson annihilation operator 
+\begin_inset Formula $c$
+\end_inset
+
+ and creation operators 
+\begin_inset Formula $c^{\dagger}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Define a modified Heisenber picture operator:
+\begin_inset Formula 
+\[
+A(t)=e^{\mathrm{i}\bar{H}t/\hbar}Ae^{-\mathrm{i}\bar{H}t/\hbar}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\begin_inset Formula 
+\[
+\bar{H}=H-\mu N
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Consider any two operator 
+\begin_inset Formula $A$
+\end_inset
+
+ and 
+\begin_inset Formula $B$
+\end_inset
+
+, we define real-time causal or time-ordered correlation function
+\begin_inset Formula 
+\[
+C_{AB}^{T}(t,t')=-\mathrm{i}\left\langle \hat{T}A(t)B(t')\right\rangle 
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Grand canonical ensemble average:
+\begin_inset Formula 
+\[
+\left\langle \cdots\right\rangle =Z_{G}^{-1}\mathrm{Tr}\left[e^{-\beta\bar{H}}\cdots\right]
+\]
+
+\end_inset
+
+
+\begin_inset Formula $\beta=1/kT$
+\end_inset
+
+, 
+\begin_inset Formula $Z_{G}=\mathrm{Tr}\left[e^{-\beta\bar{H}}\right]$
+\end_inset
+
+ is the grand canonical partition function.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\hat{T}$
+\end_inset
+
+ is time ordering operator, acting on a product of operator, 
+\begin_inset Formula $\hat{T}$
+\end_inset
+
+ orders them in increasing time order from right to left, and, in the process,
+ introduces a minus sign every time two fermion operators are interchanged.
+\begin_inset Formula 
+\[
+\hat{T}A(t)B(t')=\begin{cases}
+A(t)B(t') & t>t'\\
+\pm B(t')A(t) & t'>t
+\end{cases}
+\]
+
+\end_inset
+
+The lower (upper) sign refers to the case when 
+\begin_inset Formula $A$
+\end_inset
+
+ and 
+\begin_inset Formula $B$
+\end_inset
+
+ are fermion (boson) operators.
+\end_layout
+
+\begin_layout Standard
+Note that the operator 
+\begin_inset Formula $A(c,c^{\dagger})$
+\end_inset
+
+ is bosonic if 
+\begin_inset Formula $c$
+\end_inset
+
+ and 
+\begin_inset Formula $c^{\dagger}$
+\end_inset
+
+ are boson operators or if it is of even order in 
+\begin_inset Formula $c$
+\end_inset
+
+ and 
+\begin_inset Formula $c^{\dagger}$
+\end_inset
+
+.
+ If 
+\begin_inset Formula $c$
+\end_inset
+
+ and 
+\begin_inset Formula $c^{\dagger}$
+\end_inset
+
+ are fermion operators, an operator such as 
+\begin_inset Formula $c^{\dagger}c$
+\end_inset
+
+ is considered a boson operator.
+\end_layout
+
+\begin_layout Standard
+Retarded correlation function, for fermion operators:
+\begin_inset Formula 
+\[
+C_{AB}^{R}(t,t')=-\mathrm{i}\theta(t-t')\left\langle \left\{ A(t),B(t')\right\} \right\rangle 
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\left\{ A,B\right\} =AB+BA$
+\end_inset
+
+ is the anticommutator of 
+\begin_inset Formula $A$
+\end_inset
+
+ and 
+\begin_inset Formula $B$
+\end_inset
+
+, 
+\begin_inset Formula $\theta(t-t')$
+\end_inset
+
+ is the step function
+\begin_inset Formula 
+\[
+\theta(t-t')=\begin{cases}
+0 & t<t'\\
+1 & t>t'
+\end{cases}
+\]
+
+\end_inset
+
+
+\begin_inset Formula $C_{AB}^{R}(t,t)$
+\end_inset
+
+ is nonzero only if 
+\begin_inset Formula $t>t'$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+For the case when 
+\begin_inset Formula $A$
+\end_inset
+
+ and 
+\begin_inset Formula $B$
+\end_inset
+
+ are bosonic operators:
+\begin_inset Formula 
+\[
+C_{AB}^{R}(t,t')=-\mathrm{i}\theta(t-t')\left\langle \left[A(t),B(t')\right]\right\rangle 
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left[A,B\right]=AB-BA$
+\end_inset
+
+ is the commutator of 
+\begin_inset Formula $A$
+\end_inset
+
+ and 
+\begin_inset Formula $B$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+We can combine boths cases:
+\begin_inset Formula 
+\[
+C_{AB}^{R}(t,t')=-\mathrm{i}\theta(t-t')\left\langle \left[A(t),B(t')\right]_{\mp}\right\rangle 
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Advanced correlation function, which is nonvanishing only if 
+\begin_inset Formula $t<t'$
+\end_inset
+
+ as follows:
+\begin_inset Formula 
+\[
+C_{AB}^{A}(t,t')=+\mathrm{i}\theta(t'-t)\left\langle \left[A(t),B(t')\right]_{\mp}\right\rangle 
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Correlation function, without label
+\begin_inset Formula 
+\[
+C_{AB}(t,t')=\left\langle A(t)B(t')\right\rangle 
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Time-dependence:
+\end_layout
+
+\begin_layout Standard
+A general property of correlation functions is that, if the Hamiltonian
+ is time-independent, they depend on 
+\begin_inset Formula $t-t'$
+\end_inset
+
+ and not on 
+\begin_inset Formula $t$
+\end_inset
+
+ and 
+\begin_inset Formula $t'$
+\end_inset
+
+ independently.
+\end_layout
+
+\begin_layout Standard
+Proof for retarded correlation function
+\begin_inset Formula 
+\[
+C_{AB}^{R}=-\mathrm{i}\theta(t-t')Z_{G}^{-1}\left\{ \mathrm{Tr}\left[e^{-\beta\bar{H}}\ e^{\mathrm{i}\bar{H}t/\hbar}\ A\ e^{-\mathrm{i}\bar{H}(t-t')/\hbar}\ B\ e^{-\mathrm{i}\bar{H}t'/\hbar}\right]\mp\mathrm{Tr}\left[e^{-\beta\bar{H}}\,e^{\mathrm{i}\bar{H}t'/\hbar}\,B\ e^{-\mathrm{i}\bar{H}(t-t')/\hbar}\ A\ e^{-\mathrm{i}\bar{H}t'/\hbar}\right]\right\} 
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using invariance of trace under cyclic permutations:
+\begin_inset Formula 
+\[
+\mathrm{Tr}\left[AB\cdots CD\right]=\mathrm{Tr}\left[DAB\cdots C\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and 
+\begin_inset Formula $e^{-\mathrm{i}\bar{H}t/\hbar}$
+\end_inset
+
+ commutes with 
+\begin_inset Formula $e^{-\beta\bar{H}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+C_{AB}^{R}=-\mathrm{i}\theta(t-t')Z_{G}^{-1}\left\{ \mathrm{Tr}\left[e^{-\beta\bar{H}}\ e^{\mathrm{i}\bar{H}(t-t')/\hbar}\ A\ e^{-\mathrm{i}\bar{H}(t-t')/\hbar}\ B\right]\mp\mathrm{Tr}\left[e^{-\beta\bar{H}}\,e^{-\mathrm{i}\bar{H(}t-t')/\hbar}\,B\ e^{\mathrm{i}\bar{H}(t-t')/\hbar}\ A\right]\right\} 
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+s
+\end_layout
+
+\begin_layout Standard
+s
+\end_layout
+
+\begin_layout Standard
+s
+\end_layout
+
+\begin_layout Standard
+s
+\end_layout
+
+\begin_layout Standard
+s
+\end_layout
+
+\begin_layout Standard
+s
+\end_layout
+
+\begin_layout Standard
+s
+\end_layout
+
+\begin_layout Standard
+s
+\end_layout
+
+\begin_layout Standard
+s
+\end_layout
+
+\begin_layout Standard
+s
+\end_layout
+
+\end_body
+\end_document
