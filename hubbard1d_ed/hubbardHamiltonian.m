@@ -55,7 +55,7 @@ function [ totalHamiltonian, kineticHamiltonian, potentialHamiltonian] = ...
       % figure out which site is the one to its left (periodic boundary condition)
       leftShiftedIndex = mod(n-2,noOfSites) + 1;
        
-      if upSector(leftShiftedIndex)~= 1
+      if upSector(leftShiftedIndex) ~= 1
         % perform the shift:
         leftShiftResult(n)=0;           
         leftShiftResult(leftShiftedIndex)=1;
@@ -159,12 +159,12 @@ function [ totalHamiltonian, kineticHamiltonian, potentialHamiltonian] = ...
       end
       
       % right shift:
-      rightShiftResult=dnSector;
-      rightShiftedIndex=mod( p,noOfSites)+1;     
+      rightShiftResult = dnSector;
+      rightShiftedIndex = mod(p,noOfSites)+1;  
        
-      if dnSector(rightShiftedIndex)~= 1
+      if dnSector(rightShiftedIndex) ~= 1
         % perform the shift:
-        rightShiftResult(p)=0;           
+        rightShiftResult(p) = 0;
         rightShiftResult(rightShiftedIndex)=1;
            
         % figure out where in the basis this shifted state is

@@ -12,22 +12,22 @@
        
 function index = binaraysearchasc(x,sval)
 
-index=[];
-from=1;
-to=length(x);
-
-while from<=to
+  index = [];
+  from = 1;
+  to = length(x);
+  
+  while from <= to
     mid = round((from + to)/2);    
-    diff = x(mid)-sval;
-    if diff==0
-        index=mid;
-        return
-    elseif diff<0   % x(mid) < sval
-        from=mid+1;
+    diffx = x(mid) - sval;
+    if diffx == 0
+      index = mid;
+      return
+    elseif diffx < 0   % x(mid) < sval
+      from = mid+1;
     else              % x(mid) > sval
-        to=mid-1;			
+      to = mid-1;			
     end
-end
+  end
 
 % % --------------------------------------------
 % % Example code for Testing
@@ -41,5 +41,3 @@ end
 % % % Author: Dr. Murtaza Khan
 % % % Email : drkhanmurtaza@gmail.com
 % % % --------------------------------
-
-

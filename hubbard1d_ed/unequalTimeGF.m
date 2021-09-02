@@ -7,7 +7,6 @@ function [ spinUpGreenFunction, spinDnGreenFunction ] = ...
   tic;
 
   do_it = (noOfUp < noOfSites) && (noOfDn < noOfSites);
-  fprintf('do_it = %d\n', do_it);
   if ~do_it
     error('Error: cannot apply creation operator when number of electrons = number of sites');
   end
@@ -44,7 +43,7 @@ function [ spinUpGreenFunction, spinDnGreenFunction ] = ...
   clearvars secondHamiltonian expmSecondHamiltonian;
     
   %% SPIN DOWN:
-  sizeSpacePlusOne=nchoosek(noOfSites,noOfUp)*nchoosek(noOfSites,noOfDn+1);  
+  sizeSpacePlusOne = nchoosek(noOfSites,noOfUp)*nchoosek(noOfSites,noOfDn+1);  
   % the Hamiltonian in expanded space:
   expmSecondHamiltonian = expm( -tau * speye(sizeSpacePlusOne) * ...
                                    hubbardHamiltonian( t, U, noOfSites, noOfUp, noOfDn+1 ));
@@ -71,10 +70,5 @@ function [ spinUpGreenFunction, spinDnGreenFunction ] = ...
   elapsed_time = toc;
 
   fprintf('Elapsed time = %f\n', elapsed_time)
-
-  %save(savedFileName,'-append','noOfSites','noOfUp','noOfDn','U','tau','t','time');
-  %disp('saved noOfSites, noOfUp, noOfDn, U, tau, t, time');
-  %save(savedFileName, '-append','spinUpGreenFunction', 'spinDnGreenFunction');
-  %disp('saved spinUpGreenFunction, spinDnGreenFunction');
 
 end

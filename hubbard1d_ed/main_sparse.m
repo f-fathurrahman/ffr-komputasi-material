@@ -12,7 +12,7 @@ t = 1.2; % The hopping amplitude between nearest-neighbor sites in the x directi
 
 tau = 0.0;
 
-maxNumCompThreads(2)
+%maxNumCompThreads(2);
 
 [ exactUp, exactDn ] = unequalTimeGF( t, U, tau, Lx, N_up, N_dn );
 
