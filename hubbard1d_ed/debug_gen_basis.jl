@@ -1,3 +1,8 @@
+function dec2binstr_padded(i, NBitMax)
+    bitStr = string(i,base=2)
+    Npad = NBitMax - length(bitStr)
+    return "0"^(Npad) * bitStr
+end
 
 function main()
     Nsites = 4
@@ -34,7 +39,8 @@ function main()
 
     combinedBases = zeros(Int64,NupdnTotal,2)
     i = 0
-    for iup in 1:NupTotal, idn in 1:NdnTotal  # This is
+    # XXX This is the convention for the double-loop, may consider another choices
+    for iup in 1:NupTotal, idn in 1:NdnTotal
         i = i + 1
         combinedBases[i,1] = upStates[iup]
         combinedBases[i,2] = dnStates[idn]
