@@ -11,20 +11,20 @@ function main()
     RmaxAtom = 10.0
     rgrid = collect(range(1e-5, stop=RmaxAtom, length=Nrgrid))
     
-    Veff = -2.0./rgrid
+    Veff = -1.0./rgrid
     rhs = zeros(Float64,Nrgrid)
 
-    E = -1.0
+    E = -0.5
     l = 0
     rhs_scheq!(E, l, rgrid, Veff, rhs)
 
-    #for ir in 1:4
-    #    @printf("%5d %18.10f %18.10e %18.10e\n", ir, rgrid[ir], Veff[ir], rhs[ir])
-    #end
-    #ir = Nrgrid-1
-    #@printf("%5d %18.10f %18.10e %18.10e\n", ir, rgrid[ir], Veff[ir], rhs[ir])
-    #ir = Nrgrid
-    #@printf("%5d %18.10f %18.10e %18.10e\n", ir, rgrid[ir], Veff[ir], rhs[ir])
+    for ir in 1:4
+        @printf("%5d %18.10f %18.10e %18.10e\n", ir, rgrid[ir], Veff[ir], rhs[ir])
+    end
+    ir = Nrgrid-1
+    @printf("%5d %18.10f %18.10e %18.10e\n", ir, rgrid[ir], Veff[ir], rhs[ir])
+    ir = Nrgrid
+    @printf("%5d %18.10f %18.10e %18.10e\n", ir, rgrid[ir], Veff[ir], rhs[ir])
 
     u = zeros(Float64, Nrgrid)
     h = rgrid[2] - rgrid[1]

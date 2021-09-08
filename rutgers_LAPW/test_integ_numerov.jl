@@ -15,16 +15,16 @@ function main()
     l = 1
     rhs_scheq!(E, l, rgrid, Veff, rhs)
 
-    #for ir in 1:4
-    #    @printf("%5d %18.10f %18.10e %18.10e\n", ir, rgrid[ir], Veff[ir], rhs[ir])
-    #end
-    #ir = Nrgrid-1
-    #@printf("%5d %18.10f %18.10e %18.10e\n", ir, rgrid[ir], Veff[ir], rhs[ir])
-    #ir = Nrgrid
-    #@printf("%5d %18.10f %18.10e %18.10e\n", ir, rgrid[ir], Veff[ir], rhs[ir])
+    for ir in 1:4
+        @printf("%5d %18.10f %18.10e %18.10e\n", ir, rgrid[ir], Veff[ir], rhs[ir])
+    end
+    ir = Nrgrid-1
+    @printf("%5d %18.10f %18.10e %18.10e\n", ir, rgrid[ir], Veff[ir], rhs[ir])
+    ir = Nrgrid
+    @printf("%5d %18.10f %18.10e %18.10e\n", ir, rgrid[ir], Veff[ir], rhs[ir])
 
     u = zeros(Float64, Nrgrid)
-    h = (rgrid[end] - rgrid[1])/(Nrgrid - 1)
+    h = rgrid[2] - rgrid[1]
     f1 = rgrid[1]*exp(-rgrid[1])
     f2 = rgrid[2]*exp(-rgrid[2])
     #
