@@ -36,7 +36,7 @@ DFT, requires a long time for the calculation to finish.
 
 Competition from other researchers:
 
-There is disconnects between the equations that you read in the books
+There are disconnects between the equations that you read in the books
 and 
 
 --------------
