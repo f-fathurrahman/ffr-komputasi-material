@@ -24,8 +24,8 @@ for i in range(1, n_images-1):
     images_ase.append(image_ase)
 images_ase.append(final_ase)
 
-#neb_ase = MyNEB(images_ase, climb=True, method="aseneb") # other methods are not working
-neb_ase = MyNEB(images_ase, climb=False, method="aseneb") # other methods are not working
+neb_ase = MyNEB(images_ase, climb=True, method="aseneb") # other methods are not working
+#neb_ase = MyNEB(images_ase, climb=False, method="aseneb") # other methods are not working
 #neb_ase.interpolate(method="idpp")
 neb_ase.interpolate(method="linear") # default
 
