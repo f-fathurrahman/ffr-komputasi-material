@@ -73,11 +73,60 @@ LAPW Notes
 \date{}
 \maketitle
 
-Numerov integration:
+Radial Schroedinger equation:
+\begin{equation}
+\left[ -\frac{1}{2}
+\frac{\mathrm{d}^2}{\mathrm{d}r^2} +
+\frac{l(l+1)}{2r^2} + V_{\mathrm{KS}}(r) - \epsilon_{nl}
+\right] u_{nl}(r) = 0
+\end{equation}
+
+Numerov integration
+\begin{equation}
+x''(t) = f(t) x(t) + u(t)
+\end{equation}
 
 
-\begin{juliacode}
-f(x) = x + 2
-\end{juliacode}
+\begin{equation}
+x(h) + x(-h) = 2x(0) + h^2\left[ f(0)x(0) + u(0) \right] +
+\frac{2}{4!}h^4 x^{(4)}(0) + \mathcal{O}(h^6)
+\end{equation}
+For $\mathcal{O}(h^4)$ algorithm, we can neglect $x^{(4)}$ term and get
+the following:
+\begin{equation}
+x_{i+1} - 2x_{i} + x_{i+1} = h^2 ( f_{i} x_{i} + u_{i} )
+\end{equation}
+
+From the differential equation we can get:
+\begin{equation}
+x^{(4)} = \frac{\mathrm{d}^2 x''(t)}{\mathrm{d}t^2} =
+\frac{\mathrm{d}^2}{\mathrm{d}t^2} ( f(t) x(t) + u(t) ) 
+\end{equation}
+which can be approximated by:
+\begin{equation}
+x^{(4)} \approx \frac{f_{i+1} x_{i+1} + u_{i+1} - 2f_{i} x_{i} - 2u_{i} + f_{i-1}x_{i-1} + u_{i-1}}{h^2}
+\end{equation}
+Using this we can write:
+\begin{align}
+x_{i+1} - 2x_{i} + x_{i-1} = & h^2 \left( f_{i}x_{i} + u_{i} \right) + \\
+& \frac{h^2}{12} \left( f_{i+1}x_{i+1} + u_{i+1} - 2f_{i}x_{i} - 2u_{i} +
+f_{i-1}x_{i-1} + u_{i-1}
+\right)
+\end{align}
+Using $w_{i} = x_{i}\left( 1 - \frac{h^2}{12}f_{i} \right) - \frac{h^2}{12}u_{i}$
+we have the following scheme:
+\begin{equation}
+w_{i+1} - 2w_{i} + w_{i-1} = h^2 \left( f_{i} x_{i} + u_{i} \right) + 
+\mathcal{O}(h^6)
+\end{equation}
+
+One needs to solve Schroedinger equation for the bound states $\epsilon_{nl}$.
+We start solving Schroedinger equation far from the nucleus to avoid errors due to
+possible oscillations of $u_{nl}(v)$ close to nucleus.
+A good starting guess comes from the solution of hydrogen atom:
+\begin{align}
+u(R_{\mathrm{max}}) = R_{\mathrm{max}}e^{-ZR_{\mathrm{max}}}
+\end{align}
+
 
 \end{document}
