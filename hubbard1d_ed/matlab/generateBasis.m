@@ -23,7 +23,7 @@ function [ combinedBasis, TOTAL_ALL_STATES, ...
   combinedBasis(:,2) = reshape(repmat(upStates', TOTAL_DN_STATES, 1), TOTAL_ALL_STATES, []);
   combinedBasis(:,1) = 1:TOTAL_ALL_STATES;
 
-  disp('combinedBasis = ')
-  disp(combinedBasis)
+  %disp('combinedBasis = ')
+  %disp(combinedBasis)
 
 end
