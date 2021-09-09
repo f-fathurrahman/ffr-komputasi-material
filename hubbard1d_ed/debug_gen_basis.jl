@@ -1,52 +1,15 @@
-function dec2binstr_padded(i, NBitMax)
-    bitStr = string(i,base=2)
-    Npad = NBitMax - length(bitStr)
-    return "0"^(Npad) * bitStr
-end
+include("dec2binstr_padded.jl")
+include("gen_basis.jl")
 
 function main()
     Nsites = 4
     Nup = 3
     Ndn = 2
-
-    NupTotal = binomial(Nsites,Nup)
-    NdnTotal = binomial(Nsites,Ndn)
-    NupdnTotal = NupTotal * NdnTotal
-
-    upStates = Int64[]
-    for i in 0:(2^Nsites-1)
-        bitStr = string(i, base=2) # convert to binary string
-        n_one = count( ==('1'), bitStr ) # count occurence of one
-        if n_one == Nup
-            #println("bitStr = ", bitStr)
-            #println("n_one = ", n_one, " i = ", i)
-            push!(upStates, i)
-        end
-    end
+    upStates, dnStates, combinedBases = gen_basis(Nsites, Nup, Ndn)
     println("upStates = ", upStates)
-
-    dnStates = Int64[]
-    for i in 0:(2^Nsites-1)
-        bitStr = string(i, base=2)
-        n_one = count( ==('1'), bitStr ) # count occurence of one
-        if n_one == Ndn
-            #println("bitStr = ", bitStr)
-            #println("n_one = ", n_one, " i = ", i)
-            push!(dnStates, i)
-        end
-    end
     println("dnStates = ", dnStates)
-
-    combinedBases = zeros(Int64,NupdnTotal,2)
-    i = 0
-    # XXX This is the convention for the double-loop, may consider another choices
-    for iup in 1:NupTotal, idn in 1:NdnTotal
-        i = i + 1
-        combinedBases[i,1] = upStates[iup]
-        combinedBases[i,2] = dnStates[idn]
-    end
+    println("combinedBases = ")
     display(combinedBases); println()
-
 end
 
 main()
