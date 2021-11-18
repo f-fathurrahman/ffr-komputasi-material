@@ -24,7 +24,7 @@ dE = E(2)-E(1);
 
 % Lorentzian Density of states per eV
 D = (g/(2*pi))./((E.^2) + ((g/2)^2));
-D = D./(dE*sum(D));%Normalizing to one
+D = D./(dE*sum(D)); % Normalizing to one
 
 %Bias
 IV = 101;
@@ -32,28 +32,30 @@ VV = linspace(0,1,IV);
 for iV=1:IV
     Vg = 0;
     Vd = VV(iV);
-    %Vd=0;Vg=VV(iV);
+    %Vd=0; 
+    %Vg=VV(iV);
     mu1 = mu;
     mu2 = mu1-Vd;
     UL = -(alphag*Vg)-(alphad*Vd);
-    U = 0;%Self-consistent field
+    U = 0; %Self-consistent field
     dU = 1;
     while dU > 1e-6
-        f1 = 1./(1+exp((E+ep+UL+U-mu1)./kT));
-        f2 = 1./(1+exp((E+ep+UL+U-mu2)./kT));
-        N(iV)=dE*sum(D.*((f1.*g1/g) + (f2.*g2/g)));
-        Unew= U 0*N(iV);
+        f1 = 1./(1 + exp((E+ep+UL+U-mu1)./kT));
+        f2 = 1./(1 + exp((E+ep+UL+U-mu2)./kT));
+        N(iV) = dE*sum(D.*((f1.*g1/g) + (f2.*g2/g)));
+        Unew = U0*N(iV);
         dU = abs(U-Unew);
-        U = U+0.1*(Unew-U);
+        U = U + 0.1*(Unew-U);
     end
     I(iV) = dE*I0*(sum(D.*(f1-f2)))*(g1*g2/g);
 end
+
 hold on
-h=plot(VV,N,  b  );
-%h=plot(VV,I,  b  );
-set(h,  linewidth  ,[2.0])
-set(gca,  Fontsize  ,[25])
-xlabel(  Voltage ( V ) --->  )
-%ylabel(  Current ( A ) --->  )
-ylabel(  Number of electrons --->  )
+h = plot(VV, N, 'b');
+%h = plot(VV, I, 'b' );
+xlabel('Voltage (V)')
+%ylabel('Current (A)')
+ylabel('Number of electrons')
+set(h, 'linewidth' ,[2.0])
+set(gca, 'Fontsize' ,[25])
 grid on

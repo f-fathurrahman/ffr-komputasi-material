@@ -50,30 +50,30 @@ ns = N0/(L*W*1e4); %/cmˆ2
 IV = 61;
 VV = linspace(0,0.6,IV);
 for iV=1:IV
-  Vg = 0.5;
-  Vd = VV(iV);
-  %Vd=0.5;Vg=VV(iV);
-  mu1 = mu;
-  mu2 = mu1 - Vd;
-  UL = -(alphag*Vg)-(alphad*Vd);
-  U = 0; %Self-consistent field
-  dU = 1;
-  while dU > 1e-6
-    f1 = 1./(1+exp((E+UL+U+ep-mu1)./kT));
-    f2 = 1./(1+exp((E+UL+U+ep-mu2)./kT));
-    N(iV) = dE*sum(D.*((f1.*g1/g)+(f2.*g2/g)));
-    Unew = U0*(N(iV)-N0);
-    dU = abs(U-Unew);
-    U = U + 0.1*(Unew-U);
-  end
-  I(iV) = dE*I0*(sum(D.*(f1-f2)))*g1*g2/g;
+    Vg = 0.5;
+    Vd = VV(iV);
+    %Vd=0.5;Vg=VV(iV);
+    mu1 = mu;
+    mu2 = mu1 - Vd;
+    UL = -(alphag*Vg)-(alphad*Vd);
+    U = 0; %Self-consistent field
+    dU = 1;
+    while dU > 1e-6
+        f1 = 1./(1+exp((E+UL+U+ep-mu1)./kT));
+        f2 = 1./(1+exp((E+UL+U+ep-mu2)./kT));
+        N(iV) = dE*sum(D.*((f1.*g1/g)+(f2.*g2/g)));
+        Unew = U0*(N(iV)-N0);
+        dU = abs(U-Unew);
+        U = U + 0.1*(Unew-U);
+    end
+    I(iV) = dE*I0*(sum(D.*(f1-f2)))*g1*g2/g;
 end
 
 
 hold on
-h = plot(VV,I, 'b' );
+h = plot(VV,I, 'b');
 set(h, 'linewidth', [2.0])
-%set(gca, 'Fontsize', [12])
-xlabel('Voltage (V) --->')
-ylabel('Current (A) --->')
+set(gca, 'Fontsize', [12])
+xlabel('Voltage (V)')
+ylabel('Current (A)')
 grid on
