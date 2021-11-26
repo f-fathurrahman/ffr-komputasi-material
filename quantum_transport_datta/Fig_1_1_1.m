@@ -1,5 +1,7 @@
 clear all
-%Constants (all MKS, except energy which is in eV)
+close all
+
+% Constants (all MKS, except energy which is in eV)
 hbar = 1.055e-34;
 q = 1.602e-19;
 eps0 = 8.854E-12;
