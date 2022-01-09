@@ -318,7 +318,9 @@ class ActiveCalculator(Calculator):
             self.to_ase = False
         if _atoms is not None and self.process_group is not None:
             atoms.attach_process_group(self.process_group)
+        
         Calculator.calculate(self, atoms, properties, system_changes)
+
         dat1 = self.size[0]
         self.atoms.update(posgrad=True, cellgrad=True,
                           forced=True, dont_save_grads=True, **uargs)
@@ -339,6 +341,7 @@ class ActiveCalculator(Calculator):
         self.deltas = None
         self.covlog = ''
         if self.active and not self.veto():
+
             pre = self.results.copy()
             m, n = self.update(**self._update_args)
             if n > 0 or m > 0:
@@ -734,18 +737,22 @@ class ActiveCalculator(Calculator):
         self.model.optimize_model_parameters(noise_f=self.noise_f)
 
     def update(self, inducing=True, data=True):
+        #
         self.updated = False
         self.get_ready()
         self.blind = False
         m = self.update_inducing() if inducing else 0
         try_real = self.blind or type(self._calc) == SinglePointCalculator
         update_data = (m > 0 and data) or not inducing
+        #
         if update_data and not inducing:  # for include_tape
             update_data = self.get_covloss().max() > self.ediff
+        #
         if update_data:
             n = self.update_data(try_fake=not try_real, internal=True)
         else:
             n = 0
+        #
         if m > 0 or n > 0:
             # TODO: if threshold is reached -> downsizes every time! fix this!
             ch1, ch2 = self.model.downsize(

@@ -11,12 +11,19 @@ import torch
 torch.set_default_tensor_type(torch.DoubleTensor)
 
 # random cluster generation
-ngold = 20
-min_dist = 2.5
-positions = generate_random_cluster(ngold, min_dist)
-atoms = Atoms(numbers=ngold*[79], positions=positions)
-atoms.center(vacuum=5.)
-atoms.pbc = True
+#ngold = 20
+#min_dist = 2.5
+#positions = generate_random_cluster(ngold, min_dist)
+#atoms = Atoms(numbers=ngold*[79], positions=positions)
+#atoms.center(vacuum=5.)
+#atoms.pbc = True
+#atoms.write('INITIAL.xyz', format='extxyz')
+
+import ase.io
+atoms = ase.io.read("INITIAL.xyz")
+print(atoms.pbc)
+print(atoms.positions)
+#exit()
 
 
 # Ab initio calculator; for now we just use EMT instead of vasp
@@ -26,19 +33,28 @@ abinitio = EMT()
 
 # ML calculator
 active_kwargs = {'calculator': abinitio,
-                 'ediff': 1.0*kcal_mol,  # decrease for more accuracy but lower speed
-                 'fdiff': 1.0*kcal_mol,  # decrease for more accuracy but lower speed
-                 'kernel_kw': {'cutoff': 6., 'lmax': 3, 'nmax': 3},
+                 'ediff': 0.5*kcal_mol,  # decrease for more accuracy but lower speed
+                 'fdiff': 0.5*kcal_mol,  # decrease for more accuracy but lower speed
+                  'kernel_kw': {'cutoff': 6., 'lmax': 3, 'nmax': 3},
                  # 'kernel_kw': {'cutoff': 6., 'lmax': 3, 'nmax': 3, 'species': [79]}, # <- faster
                  # 'veto': {'forces': 8.}  # for vetoing ML updates for very high energy structures
                  }
 calc = ActiveCalculator(**active_kwargs)
 atoms.calc = calc
 
+#atoms.calc = abinitio
+
+
 # relax
 maxforce = 0.01
 dyn = LBFGS(atoms, trajectory='relax.traj')
 dyn.run(fmax=maxforce)
+
+atoms.write('optimized.xyz', format='extxyz')
+
+
+
+
 # For history dependent algorithms such as LBFGS, if ML
 # updates becomes problematic, dyn.run can be replaced by:
 #

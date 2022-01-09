@@ -383,7 +383,7 @@ class GaussianProcessPotential(Module):
         return self.state
 
     def to_file(self, file, flag='', mode='w'):
-        from theforce.util.util import one_liner
+        from util_util import one_liner
         with open(file, mode) as f:
             f.write('\n#flag: {}\n'.format(flag))
             f.write(one_liner(self.state))
@@ -989,22 +989,28 @@ class PosteriorPotential(Module):
         self.gp.cahced = cached
 
     @if_master
-    def to_folder(self, folder, info=None, overwrite=True, supress_warnings=True, pickle_data=False,
+    def to_folder(self, folder, info=None,
+                  overwrite=True, supress_warnings=True, pickle_data=False,
                   to_traj=False):
         if pickle_data and self.data.is_distributed:
             raise NotImplementedError(
                 'trying to pickle data which is distributed! call gathere_() first!')
         if not overwrite:
             folder = safe_dirname(folder)
+        
         mkdir_p(folder)
+        
         with open(os.path.join(folder, 'cutoff'), 'w') as file:
             file.write('{}\n'.format(self.cutoff))
+        
         if to_traj:  # not necessary, data will be pickled as self._raw_data
             self.data.to_traj(os.path.join(folder, 'data.traj'))
             self.X.to_traj(os.path.join(folder, 'inducing.traj'))
+
         self.gp.to_file(os.path.join(folder, 'gp'))
-        self.save(os.path.join(folder, 'model'),
-                  supress_warnings=supress_warnings)
+
+        self.save( os.path.join(folder, 'model'), supress_warnings=supress_warnings )
+
         # pickles (inducing are pickled with model)
         if pickle_data:
             with warnings.catch_warnings():
