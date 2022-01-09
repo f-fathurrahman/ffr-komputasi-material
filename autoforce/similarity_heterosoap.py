@@ -146,11 +146,11 @@ class HeterogeneousSoapKernel(SimilarityKernel):
 
 
 def test_grad():
-    from theforce.descriptor.atoms import namethem
-    from theforce.descriptor.cutoff import PolyCut
-    from theforce.regression.kernel import Positive, DotProd, Normed
-    from theforce.regression.stationary import RBF
-    from theforce.descriptor.atoms import TorchAtoms, AtomsData
+    from descriptor_atoms import namethem
+    from descriptor_cutoff import PolyCut
+    from regression_kernel import Positive, DotProd, Normed
+    from regression_stationary import RBF
+    from descriptor_atoms import TorchAtoms, AtomsData
     import numpy as np
     torch.set_default_tensor_type(torch.DoubleTensor)
 
@@ -216,8 +216,8 @@ def test_grad():
 
 
 def example():
-    from theforce.regression.kernel import Positive, DotProd, Mul, Add, Pow
-    from theforce.descriptor.cutoff import PolyCut
+    from regression_kernel import Positive, DotProd, Mul, Add, Pow
+    from descriptor_cutoff import PolyCut
     kern = (Positive(1.0, requires_grad=True) *
             (DotProd() + Positive(0.01, requires_grad=True))**0.1)
     soap = HeterogeneousSoapKernel(kern, 10, (18, 10), 2, 2, PolyCut(3.0))

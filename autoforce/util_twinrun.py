@@ -15,7 +15,7 @@ if __name__ == '__main__':
     args, unknown = parser.parse_known_args()
 
     # calc command
-    calc = f'python -m theforce.calculator.calc_server -ip {args.ip} -port {args.port}'
+    calc = f'python -m calculator_calc_server -ip {args.ip} -port {args.port}'
 
     # mpirun pyscript command
     if args.mpiprocs is not None:

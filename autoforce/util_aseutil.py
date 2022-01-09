@@ -1,5 +1,5 @@
 # +
-from theforce.analysis.statsutil import moving_average
+from analysis_statsutil import moving_average
 from ase.calculators.singlepoint import SinglePointCalculator
 from ase.md import velocitydistribution as vd
 from ase.io import read, Trajectory

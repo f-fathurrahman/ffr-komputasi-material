@@ -1,6 +1,6 @@
 # +
 import torch
-from theforce.util.tensors import nan_to_num
+from util_tensors import nan_to_num
 from mendeleev.fetch import fetch_table
 
 

@@ -209,11 +209,11 @@ class PairKernel(DistanceKernel):
 
 
 def test():
-    from theforce.descriptor.atoms import namethem
-    from theforce.descriptor.cutoff import PolyCut
-    from theforce.regression.kernel import Positive, DotProd, Normed
-    from theforce.regression.stationary import RBF
-    from theforce.descriptor.atoms import TorchAtoms, AtomsData
+    from descriptor_atoms import namethem
+    from descriptor_cutoff import PolyCut
+    from regression_kernel import Positive, DotProd, Normed
+    from regression_stationary import RBF
+    from descriptor_atoms import TorchAtoms, AtomsData
     import numpy as np
     torch.set_default_tensor_type(torch.DoubleTensor)
 
@@ -277,9 +277,9 @@ def test():
 
 def example():
     from torch import tensor
-    from theforce.regression.stationary import RBF
-    from theforce.descriptor.cutoff import PolyCut
-    from theforce.descriptor.radial import Product, ParamedRepulsiveCore
+    from regression_stationary import RBF
+    from descriptor_cutoff import PolyCut
+    from descriptor_radial import Product, ParamedRepulsiveCore
 
     factor = Product(PolyCut(1.0), ParamedRepulsiveCore())
     kern = PairKernel(RBF(), 1, 1, factor=factor)

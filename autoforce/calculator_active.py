@@ -67,7 +67,7 @@ class FilterDeltas(Filter):
 
 
 kcal_mol = 0.043
-inf = float('inf')
+inf = np.float64('inf')
 
 
 class ActiveCalculator(Calculator):
@@ -265,7 +265,7 @@ class ActiveCalculator(Calculator):
         self.updated = False
         self._update_args = {}
         self._veto = {} if veto is None else veto
-        self.include_params = {'fmax': float('inf')}
+        self.include_params = {'fmax': np.float64('inf')}
         if include_params:
             self.include_params.update(include_params)
         self.tune_for_md = True
@@ -353,7 +353,7 @@ class ActiveCalculator(Calculator):
             if self.size[0] == dat1:
                 self.distrib.unload(atoms)
         else:
-            covloss_max = float(self.get_covloss().max())
+            covloss_max = np.float64(self.get_covloss().max())
             self.covlog = f'{covloss_max}'
             if covloss_max > self.ediff:
                 tmp = self.atoms.as_ase()
@@ -422,7 +422,7 @@ class ActiveCalculator(Calculator):
             self.results['energy'] += energy.detach().numpy()
             self.results['forces'] += forces.detach().numpy()
             self.results['stress'] += stress.flat[[0, 4, 8, 5, 2, 1]]
-        return float(energy)
+        return np.float64(energy)
 
     def zero(self):
         self.results['energy'] = 0.
@@ -608,7 +608,7 @@ class ActiveCalculator(Calculator):
             if z in self.model._vscale:
                 vscale.append(self.model._vscale[z])
             else:
-                vscale.append(float('inf'))
+                vscale.append(np.float64('inf'))
         vscale = torch.tensor(vscale).sqrt()
         return beta*vscale
 
@@ -689,7 +689,7 @@ class ActiveCalculator(Calculator):
                 self.log(f'kernel diag mean: {self.model.kern_diag_mean}')
             if self.blind:
                 self.log('model may be blind -> go robust')
-        self.covlog = f'{float(beta[q[0]])}'
+        self.covlog = f'{np.float64(beta[q[0]])}'
         return added
 
     def update_data(self, try_fake=True, internal=False):
@@ -764,7 +764,7 @@ class ActiveCalculator(Calculator):
             if self.ioptim == 1:
                 self.optimize()
             self.log('fit error (mean,mae): E: {:.2g} {:.2g}   F: {:.2g} {:.2g}   R2: {:.4g}'.format(
-                *(float(v) for v in self.model._stats)))
+                *(np.float64(v) for v in self.model._stats)))
             if self.rank == 0:
                 self.log(f'noise: {self.model.scaled_noise}')
                 self.log(f'mean: {self.model.mean}')
@@ -809,7 +809,7 @@ class ActiveCalculator(Calculator):
                 self.log('added lone indus: {}/{} -> size: {} {}'.format(
                     *added_lce, *self.size))
                 self.log('fit error (mean,mae): E: {:.2g} {:.2g}   F: {:.2g} {:.2g}   R2: {:.4g}'.format(
-                    *(float(v) for v in self.model._stats)))
+                    *(np.float64(v) for v in self.model._stats)))
 
         #
         added_lce = [0, 0]
@@ -868,7 +868,7 @@ class ActiveCalculator(Calculator):
     def log_cov(self, *args):
         if self.logfile and self.rank == 0 and False:
             with open('cov.log', 'a') as f:
-                f.write(' '.join([str(float(arg)) for arg in args])+'\n')
+                f.write(' '.join([str(np.float64(arg)) for arg in args])+'\n')
 
     def log_settings(self):
         settings = ['ediff', 'ediff_tot', 'fdiff']
@@ -953,36 +953,36 @@ def parse_logfile(file='active.log', window=(None, None)):
         elapsed += [(step, ts)]
 
         try:
-            energies += [(step, float(split[1]))]
-            temperatures += [(step, float(split[2]))]
-            covloss += [(step, float(split[3]))]
+            energies += [(step, np.float64(split[1]))]
+            temperatures += [(step, np.float64(split[2]))]
+            covloss += [(step, np.float64(split[3]))]
         except:
             pass
 
         if 'meta:' in split:
-            meta += [(step, float(split[split.index('meta:')+1]))]
+            meta += [(step, np.float64(split[split.index('meta:')+1]))]
 
         if 'exact energy' in line:
-            exact_energies += [(step, float(split[3]))]
+            exact_energies += [(step, np.float64(split[3]))]
 
         if 'testing energy' in line:
-            test_energies += [(step, float(split[3]))]
+            test_energies += [(step, np.float64(split[3]))]
 
         if 'added indu' in line:
             sf = float(split[split.index('details:') + 1])
             indu += [(step, sf)]
 
         if 'errors (pre)' in line:
-            errors += [(step, [float(v) for v in split[4:10:2]])]
+            errors += [(step, [np.float64(v) for v in split[4:10:2]])]
 
         if 'errors (test)' in line:
-            test_errors += [(step, [float(v) for v in split[4:10:2]])]
+            test_errors += [(step, [np.float64(v) for v in split[4:10:2]])]
 
         if 'fit' in line:
-            fit += [(step, [float(split[k]) for k in [-7, -6, -4, -3, -1]])]
+            fit += [(step, [np.float64(split[k]) for k in [-7, -6, -4, -3, -1]])]
 
         if 'DF' in line:
-            DF += [(step, float(split[2]), int(split[4]))]
+            DF += [(step, np.float64(split[2]), int(split[4]))]
 
     return energies, exact_energies, test_energies, temperatures, \
         covloss, meta, indu, fit, elapsed, settings, test_errors, DF

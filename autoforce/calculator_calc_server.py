@@ -1,9 +1,9 @@
 # +
 import sys
 from ase.io import read
-from theforce.util.server import Server
+from util_server import Server
 import warnings
-from theforce.util.util import date
+from util_util import date
 import importlib
 
 
@@ -88,7 +88,7 @@ def calculate(file, calc):
 
 if __name__ == '__main__':
     import argparse
-    from theforce.util.ssh import clear_port
+    from util_ssh import clear_port
 
     parser = argparse.ArgumentParser(
         description='Starts a calculation server.')

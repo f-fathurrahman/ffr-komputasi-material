@@ -92,11 +92,11 @@ def test_SeSoapKernel():
 
 
 def test_SubSeSoapKernel():
-    from theforce.descriptor.atoms import namethem
-    from theforce.descriptor.cutoff import PolyCut
-    from theforce.regression.kernel import Positive, DotProd, Normed
-    from theforce.regression.stationary import RBF
-    from theforce.descriptor.atoms import TorchAtoms, AtomsData
+    from descriptor_atoms import namethem
+    from descriptor_cutoff import PolyCut
+    from regression_kernel import Positive, DotProd, Normed
+    from regression_stationary import RBF
+    from descriptor_atoms import TorchAtoms, AtomsData
     import numpy as np
 
     soap = SubSeSoapKernel(2, 2, 4, PolyCut(3.0), 10, (18, 10))

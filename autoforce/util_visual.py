@@ -2,7 +2,7 @@
 import pylab as plt
 import nglview
 from ase.io import read
-from theforce.util.util import timestamp, iterable
+from util_util import timestamp, iterable
 import re
 from torch import tensor
 
