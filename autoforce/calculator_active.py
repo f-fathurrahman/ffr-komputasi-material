@@ -1,5 +1,5 @@
-# +
-from regression_gppotential import PosteriorPotential, PosteriorPotentialFromFolder
+from PosteriorPotential import PosteriorPotential, PosteriorPotentialFromFolder
+
 from descriptor_atoms import TorchAtoms, AtomsData, LocalsData, Distributer
 from similarity_sesoap import SeSoapKernel, SubSeSoapKernel
 from descriptor_sesoap import DefaultRadii

@@ -1,6 +1,6 @@
 # +
-from theforce.regression.algebra import sparser_projection
-from theforce.regression.gppotential import PosteriorPotentialFromFolder
+from regression_algebra import sparser_projection
+from regression_gppotential import PosteriorPotentialFromFolder
 import os
 
 
