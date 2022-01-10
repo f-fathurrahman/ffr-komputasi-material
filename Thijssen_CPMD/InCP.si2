@@ -1,0 +1,19 @@
+.FALSE.                Only calculates orbitals with non-moving ions
+10.0                   Boxlength
+10.0                   E_cutoff
+800                    mu
+0.3                    TimeStep Optimisation
+0.3                    TimeStep CarPar
+1.D-10                 Optimized if energydifference in two seq. steps < value
+5000                   MaxIter
+0.9                    RedFac
+1                      Number of different ions
+2                      Number of Ions
+14 28.0855 3.505 2.5 2.5 Ions: type mass and coordinates
+14 28.0855 0.0 2.5 2.5	
+8                      Number of electrons
+4                      Number of orbitals
+2                      Occupancies
+2
+2
+2
