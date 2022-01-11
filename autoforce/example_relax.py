@@ -37,22 +37,22 @@ abinitio = EMT()
 # ML calculator
 active_kwargs = {
     'calculator': abinitio,
-    'ediff': 1.0*kcal_mol,  # decrease for more accuracy but lower speed
-    'fdiff': 1.0*kcal_mol,  # decrease for more accuracy but lower speed
-     'kernel_kw': {'cutoff': 6., 'lmax': 3, 'nmax': 3},
+    'ediff': 0.1*kcal_mol,  # decrease for more accuracy but lower speed
+    'fdiff': 0.1*kcal_mol,  # decrease for more accuracy but lower speed
+     'kernel_kw': {'cutoff': 6.5, 'lmax': 3, 'nmax': 3},
     # 'kernel_kw': {'cutoff': 6., 'lmax': 3, 'nmax': 3, 'species': [79]}, # <- faster
     # 'veto': {'forces': 8.}  # for vetoing ML updates for very high energy structures
 }
 calc = ActiveCalculator(**active_kwargs)
-#atoms.calc = calc
+atoms.calc = calc
 
-atoms.calc = abinitio # Using EAM
+#atoms.calc = abinitio # Using EAM
 
 
 # relax
 maxforce = 0.01
-#dyn = LBFGS(atoms, trajectory='relax.traj')
-dyn = BFGS(atoms, trajectory='relax.traj')
+dyn = LBFGS(atoms, trajectory='relax.traj')
+#dyn = BFGS(atoms, trajectory='relax.traj')
 #dyn.run(fmax=maxforce, steps=10)
 dyn.run(fmax=maxforce)
 
