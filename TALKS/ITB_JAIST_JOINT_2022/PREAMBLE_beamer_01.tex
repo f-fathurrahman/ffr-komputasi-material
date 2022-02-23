@@ -1,0 +1,52 @@
+\documentclass[english,10pt,aspectratio=169]{beamer}
+
+\usepackage{amsmath} % load this before unicode-math
+\usepackage{amssymb}
+%\usepackage{unicode-math}
+
+\usepackage{fontspec}
+\setmonofont{JuliaMono}
+
+\usefonttheme[onlymath]{serif}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+%\setbeamersize{text margin left=5pt, text margin right=5pt}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{braket}
+\usepackage{mhchem}
+
+\usepackage{minted}
+\newminted{julia}{breaklines,fontsize=\scriptsize,texcomments=true}
+\newminted{python}{breaklines,fontsize=\scriptsize,texcomments=true}
+\newminted{bash}{breaklines,fontsize=\scriptsize,texcomments=true}
+\newminted{text}{breaklines,fontsize=\scriptsize,texcomments=true}
+
+\newcommand{\txtinline}[1]{\mintinline[fontsize=\scriptsize]{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline[fontsize=\scriptsize]{julia}{#1}}
+
+\definecolor{mintedbg}{rgb}{0.95,0.95,0.95}
+\usepackage{mdframed}
+
+%\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=mintedbg]}
+%\AfterEndEnvironment{minted}{\end{mdframed}}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+\makeatletter
+
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ % (ERT) argument for the TOC
+ \AtBeginDocument{%
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+
+\makeatother
+
+\usepackage{babel}
