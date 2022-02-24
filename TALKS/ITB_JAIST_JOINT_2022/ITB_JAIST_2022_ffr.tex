@@ -15,21 +15,24 @@ Institut Teknologi Bandung
 \frame{\titlepage}
 
 
-\begin{frame}
+\begin{frame}[fragile]
 \frametitle{Some background information}
 
 My first exposure to first-principles calculations (around 2008-2010):
 \begin{itemize}
 \item ABINIT, CPMD, Quantum Espresso, PyQuante, ELK, ...
 \item Asian CMD Workshop
+\item Learning Linux environment
+  \begin{itemize}
+  \item Using compilers, \txtinline{configure}, \txtinline{make}, \txtinline{make install}
+  \item Linking to libraries: BLAS, LAPACK
+  \end{itemize}
 \end{itemize}
 
-Linux environment: configure, make, make install
-Linking to libraries: BLAS, LAPACK
+I use Quantum Espresso for my bachelor thesis.
 
-Learn DFT by using the softwares to do the calculations ...
-
-I am still learning by now
+%Learn DFT by using the softwares to do the calculations.
+%I am still learning by now
 
 \end{frame}
 
@@ -46,16 +49,16 @@ I am still learning by now
   \end{itemize}
 \item Using C programming language and Octave (a MATLAB clone)
 \item Plane wave basis set and DFT++ formalism
-\item radial atomic problem, H atom $\ce{H2}$ molecule in a box, Ge crystal (8 atoms in a
-cubic unit cell, local pseudopotential), quantum dot (with harmonic potential confinement)
+\item Problems:
+  \begin{itemize}
+  \item radial atomic problem
+  \item quantum dot (with harmonic potential confinement)
+  \item H atom $\ce{H2}$ molecule in a box
+  \item Ge crystal (8 atoms in a cubic unit cell, local pseudopotential)
+  \end{itemize}
+\item Only local pseudopotentials (available only to some elements), no $\mathbf{k}$-points
+\item DFT++ formalism is not widely adopted in the literature
 \end{itemize}
-
-\end{frame}
-
-
-\begin{frame}
-
-Motivation:
 
 \end{frame}
 
@@ -63,12 +66,21 @@ Motivation:
 \begin{frame}
 \frametitle{First try: plane wave pseudopotential code (2010-2012)}
 
-During my master thesis, I decided to write my own density functional theory
-based on plane wave and pseudopotential:
-
-{\footnotesize\url{https://github.com/f-fathurrahman/ffr-pspw-dft-c}}
-
-FHI98md
+\begin{itemize}
+\item During my master thesis, I decided to write my own density functional theory
+based on plane wave and pseudopotential (parallelized on GPU using CUDA):
+{\footnotesize\url{https://github.com/f-fathurrahman/ffr-pspw-dft-c}} \\
+WARNING: Not maintained anymore.
+\item Motivation:
+  \begin{itemize}
+  \item Only requires a laptop (two core, 1 GB memory)
+  \item What are actually calculated by the DFT packages?
+  \item Learn by doing: how DFT or Kohn-Sham equations are solved (beyond described in
+  textbooks or research papers)
+  \item Sometimes pseudocode is not enough
+  \end{itemize}
+\item Based on \txtinline{FHI98md} code (originally written in Fortran 77 with  F90 extension).
+\end{itemize}
 
 \end{frame}
 
@@ -86,26 +98,88 @@ Programming languages used:
     
 Static languages: Fortran, C/C++
 
-Dynamic languages: Python and MATLAB
+Dynamic languages: Python, MATLAB
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Second try (2015-2018)}
+
+Mostly using Fortran:
+\begin{itemize}
+\item {\footnotesize\url{https://github.com/f-fathurrahman/ffr-LFDFT}} (Lagrange basis functions)
+\item {\footnotesize\url{https://github.com/f-fathurrahman/ffr-PWDFT}} (plane wave basis functions)
+\end{itemize}
+
+Not in active development
 
 \end{frame}
 
 
 
 \begin{frame}
-\frametitle{Julia programming language}
+\frametitle{Latest try (2015-now): PWDFT.jl}
 
-A rather new programming language (2012)
+{\footnotesize\url{https://github.com/f-fathurrahman/PWDFT.jl}}
 
-The syntax is familiar to MATLAB or Python users
+{\footnotesize\url{https://doi.org/10.1016/j.cpc.2020.107372}} (still 0 citation)
 
-Built-in support for multidimensional array and linear algebra
-(like MATLAB and Fortran)
-
-Loop is fast! No need for vectorization (as in other ecosystems or
-programming languages like MATLAB, Python (Numpy), R)
+{\centering
+\includegraphics[width=\textwidth]{images/PWDFT_github.png}
+\par}
 
 \end{frame}
+
+
+\begin{frame}
+\frametitle{Some features}
+
+{\centering
+\includegraphics[width=0.20\textwidth]{images/julia_logo_v1.pdf}
+\par}
+
+\begin{itemize}
+\item Implemented in Julia programming language {\footnotesize \url{https://julialang.org/}}
+\item Plane wave basis and norm-conserving pseudopotentials (mostly with
+Goedecker-Teter-Hutter pseudopotentials, ONCV)
+\item $\mathbf{k}$-points sampling
+\item Currently only periodic boundary condition
+\item total energy and atomic forces
+\item LDA (VWN), GGA (PBE), and metaGGA (SCAN) via Libxc
+\item Does not require specific input file format, we write a Julia
+script instead
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Julia programming language}
+
+Some pros:
+\begin{itemize}
+\item A rather new programming language (2009, announced 2012), first developed by
+Jeff Bezanson, Stefan Karpinski, Viral B. Shah, and Alan Edelman.
+\item The syntax is familiar to MATLAB or Python users
+\item Built-in support for multidimensional array and linear algebra
+(like MATLAB and Fortran)
+\item Loop is fast, no need for vectorization (as in other ecosystems or
+programming languages like MATLAB, Python (Numpy), or R)
+\end{itemize}
+
+Some cons:
+\begin{itemize}
+\item Large runtime (LLVM, OS specific functions, garbage collectors, ...)
+\item Compilation time (e.g. time-to-first-plot problem)
+\item No straighforward way to produce single executable file
+\item Smaller community (compared to Python, MATLAB, R, etc)
+\end{itemize}
+
+
+\end{frame}
+
+
 
 
 \begin{frame}
@@ -121,6 +195,35 @@ for molecular and crystalline systems.
 DFT softwares.
 
 \end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Example: hydrogen molecule in a box}
+
+{\centering
+\includegraphics[width=0.20\textwidth]{images/H2.png}
+\par}
+
+\begin{juliacode}
+using PWDFT # activate PWDFT package
+
+# Initialize an H2 molecule in cubic box (simple cubic lattice)
+# The coordinates are read from
+atoms = Atoms( xyz_file="H2.xyz",
+               LatVecs=gen_lattice_sc(16.0) )
+
+pspfiles = ["H-q1.gth"] # pseudopotential parameters
+
+ecutwfc = 15.0 # cutoff energy for wave function expansion
+
+# initialize Hamiltonian
+Ham = Hamiltonian( atoms, pspfiles, ecutwfc )
+
+# solve the Kohn-Sham problem (using SCF algorithm)
+KS_solve_SCF!( Ham )
+\end{juliacode}
+
+\end{frame}
+
 
 
 %--------------------------------------------------------------
@@ -160,6 +263,27 @@ DFT softwares.
 {\footnotesize
 \url{https://plu.mx/plum/a/twitter?doi=10.1016/j.cpc.2020.107372}
 }
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Many things are still to be done}
+
+\begin{itemize}
+\item documentation, unit testing, 
+\item maintenance, bug fixes, 
+\item implement new features:
+  \begin{itemize}
+  \item performance improvement
+  \item ultrasoft and PAW
+  \item parallelization
+  \item on-the-fly atomistic machine learning potential generation
+  \item machine-learning-fitted exchange correlation potential
+  \item Export KS orbitals to QMC (?), write a simple QMC code (?)
+  \item ...
+  \end{itemize}
+\end{itemize}
 
 \end{frame}
 
