@@ -2,6 +2,9 @@ ORIG_*
 rundir_*
 STRUCT.xsf
 
+*.so
+*.db
+
 *.gpw
 *.traj
 tmp
