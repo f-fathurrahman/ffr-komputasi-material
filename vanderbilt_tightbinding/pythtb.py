@@ -14,66 +14,7 @@ import copy # for deepcopying
 
 
 class TightBindingModel(object):
-    r"""
-    This is the main class of the PythTB package which contains all
-    information for the tight-binding model.
 
-    :param dim_k: Dimensionality of reciprocal space, i.e., specifies how
-      many directions are considered to be periodic.
-
-    :param dim_r: Dimensionality of real space, i.e., specifies how many
-      real space lattice vectors there are and how many coordinates are
-      needed to specify the orbital coordinates.
-    .. note:: Parameter *dim_r* can be larger than *dim_k*! For example,
-      a polymer is a three-dimensional molecule (one needs three
-      coordinates to specify orbital positions), but it is periodic
-      along only one direction. For a polymer, therefore, we should
-      have *dim_k* equal to 1 and *dim_r* equal to 3. See similar example
-      here: :ref:`trestle-example`.
-
-    :param lat: Array containing lattice vectors in Cartesian
-      coordinates (in arbitrary units). In example the below, the first
-      lattice vector has coordinates [1.0,0.5] while the second
-      one has coordinates [0.0,2.0].  By default, lattice vectors
-      are an identity matrix.
-
-    :param orb: Array containing reduced coordinates of all
-      tight-binding orbitals. In the example below, the first
-      orbital is defined with reduced coordinates [0.2,0.3]. Its
-      Cartesian coordinates are therefore 0.2 times the first
-      lattice vector plus 0.3 times the second lattice vector.
-      If *orb* is an integer code will assume that there are these many
-      orbitals all at the origin of the unit cell.  By default
-      the code will assume a single orbital at the origin.
-
-    :param per: This is an optional parameter giving a list of lattice
-      vectors which are considered to be periodic. In the example below,
-      only the vector [0.0,2.0] is considered to be periodic (since
-      per=[1]). By default, all lattice vectors are assumed to be
-      periodic. If dim_k is smaller than dim_r, then by default the first
-      dim_k vectors are considered to be periodic.
-
-    :param nspin: Number of explicit spin components assumed for each
-      orbital in *orb*. Allowed values of *nspin* are *1* and *2*. If
-      *nspin* is 1 then the model is spinless, if *nspin* is 2 then it
-      is explicitly a spinfull model and each orbital is assumed to
-      have two spin components. Default value of this parameter is
-      *1*.  Of course one can make spinfull calculation even with
-      *nspin* set to 1, but then the user must keep track of which
-      orbital corresponds to which spin component.
-
-    Example usage::
-
-       # Creates model that is two-dimensional in real space but only
-       # one-dimensional in reciprocal space. Second lattice vector is
-       # chosen to be periodic (since per=[1]). Three orbital
-       # coordinates are specified.       
-       tb = TightBindingModel(1, 2,
-                   lat=[[1.0, 0.5], [0.0, 2.0]],
-                   orb=[[0.2, 0.3], [0.1, 0.1], [0.2, 0.2]],
-                   per=[1])
-
-    """
 
     def __init__(self,dim_k,dim_r,lat=None,orb=None,per=None,nspin=1):
 
@@ -151,7 +92,7 @@ class TightBindingModel(object):
             if len(self._orb.shape) != 2:
                 raise Exception("\n\nWrong orb array rank")
             #
-            self._norb=self._orb.shape[0] # number of orbitals
+            self._norb = self._orb.shape[0] # number of orbitals
             #
             if self._orb.shape[1] != dim_r:
                 raise Exception("\n\nWrong orb array dimensions")
@@ -181,121 +122,83 @@ class TightBindingModel(object):
 
         # by default, assume model did not come from w90 object and that
         # position operator is diagonal
-        self._assume_position_operator_diagonal=True
+        self._assume_position_operator_diagonal = True
 
+        #
         # compute number of electronic states at each k-point
-        self._nsta=self._norb*self._nspin
+        #
+        self._nsta = self._norb*self._nspin
+        print("Number of states at each k-point: %d" % self._nsta)
         
+        #
         # Initialize onsite energies to zero
-        if self._nspin==1:
-            self._site_energies=np.zeros((self._norb),dtype=float)
-        elif self._nspin==2:
-            self._site_energies=np.zeros((self._norb,2,2),dtype=complex)
+        #
+        if self._nspin == 1:
+            self._site_energies = np.zeros((self._norb),dtype=float)
+        elif self._nspin ==2 :
+            self._site_energies = np.zeros((self._norb,2,2),dtype=complex)
+        
         # remember which onsite energies user has specified
-        self._site_energies_specified=np.zeros(self._norb,dtype=bool)
-        self._site_energies_specified[:]=False
+        self._site_energies_specified = np.zeros(self._norb, dtype=bool)
+        self._site_energies_specified[:] = False
         
         # Initialize hoppings to empty list
-        self._hoppings=[]
+        self._hoppings = []
 
         # The onsite energies and hoppings are not specified
         # when creating a 'TightBindingModel' object.  They are speficied
         # subsequently by separate function calls defined below.
 
-    def set_onsite(self,onsite_en,ind_i=None,mode="set"):
-        r"""        
-        Defines on-site energies for tight-binding orbitals. One can
-        either set energy for one tight-binding orbital, or all at
-        once.
 
-        .. warning:: In previous version of PythTB this function was
-          called *set_sites*. For backwards compatibility one can still
-          use that name but that feature will be removed in future
-          releases.
 
-        :param onsite_en: Either a list of on-site energies (in
-          arbitrary units) for each orbital, or a single on-site
-          energy (in this case *ind_i* parameter must be given). In
-          the case when *nspin* is *1* (spinless) then each on-site
-          energy is a single number.  If *nspin* is *2* then on-site
-          energy can be given either as a single number, or as an
-          array of four numbers, or 2x2 matrix. If a single number is
-          given, it is interpreted as on-site energy for both up and
-          down spin component. If an array of four numbers is given,
-          these are the coefficients of I, sigma_x, sigma_y, and
-          sigma_z (that is, the 2x2 identity and the three Pauli spin
-          matrices) respectively. Finally, full 2x2 matrix can be
-          given as well. If this function is never called, on-site
-          energy is assumed to be zero.
-
-        :param ind_i: Index of tight-binding orbital whose on-site
-          energy you wish to change. This parameter should be
-          specified only when *onsite_en* is a single number (not a
-          list).
-          
-        :param mode: Similar to parameter *mode* in function set_hop*. 
-          Speficies way in which parameter *onsite_en* is
-          used. It can either set value of on-site energy from scratch,
-          reset it, or add to it.
-
-          * "set" -- Default value. On-site energy is set to value of
-            *onsite_en* parameter. One can use "set" on each
-            tight-binding orbital only once.
-
-          * "reset" -- Specifies on-site energy to given value. This
-            function can be called multiple times for the same
-            orbital(s).
-
-          * "add" -- Adds to the previous value of on-site
-            energy. This function can be called multiple times for the
-            same orbital(s).
-
-        Example usage::
-
-          # Defines on-site energy of first orbital to be 0.0,
-          # second 1.0, and third 2.0
-          tb.set_onsite([0.0, 1.0, 2.0])
-          # Increases value of on-site energy for second orbital
-          tb.set_onsite(100.0, 1, mode="add")
-          # Changes on-site energy of second orbital to zero
-          tb.set_onsite(0.0, 1, mode="reset")
-          # Sets all three on-site energies at once
-          tb.set_onsite([2.0, 3.0, 4.0], mode="reset")
-
-        """
-        if ind_i==None:
-            if (len(onsite_en)!=self._norb):
+    def set_onsite(self, onsite_en, ind_i=None, mode="set"):
+        
+        if ind_i == None:
+            if len(onsite_en) != self._norb:
                 raise Exception("\n\nWrong number of site energies")
+
         # make sure ind_i is not out of scope
-        if ind_i!=None:
-            if ind_i<0 or ind_i>=self._norb:
+        if ind_i != None:
+            if (ind_i < 0) or (ind_i >= self._norb):
                 raise Exception("\n\nIndex ind_i out of scope.")
+
+        #
         # make sure that onsite terms are real/hermitian
-        if ind_i!=None:
-            to_check=[onsite_en]
+        #
+        if ind_i != None:
+            to_check = [onsite_en]
         else:
-            to_check=onsite_en
+            to_check = onsite_en
+        #
         for ons in to_check:
-            if np.array(ons).shape==():
+            #
+            if np.array(ons).shape == (): # Empty tuple
                 if np.abs(np.array(ons)-np.array(ons).conjugate())>1.0E-8:
                     raise Exception("\n\nOnsite energy should not have imaginary part!")
-            elif np.array(ons).shape==(4,):
-                if np.max(np.abs(np.array(ons)-np.array(ons).conjugate()))>1.0E-8:
+            #
+            elif np.array(ons).shape == (4,):
+                if np.max(np.abs(np.array(ons)-np.array(ons).conjugate())) > 1.0E-8:
                     raise Exception("\n\nOnsite energy or Zeeman field should not have imaginary part!")
-            elif np.array(ons).shape==(2,2):
-                if np.max(np.abs(np.array(ons)-np.array(ons).T.conjugate()))>1.0E-8:
+            #
+            elif np.array(ons).shape == (2,2):
+                if np.max(np.abs(np.array(ons)-np.array(ons).T.conjugate())) > 1.0E-8:
                     raise Exception("\n\nOnsite matrix should be Hermitian!")
+        
+        #
         # specifying onsite energies from scratch, can be called only once
-        if mode.lower()=="set":
+        #
+        if mode.lower() == "set":
             # specifying only one site at a time
-            if ind_i!=None:
+            if ind_i != None:
                 # make sure we specify things only once
-                if self._site_energies_specified[ind_i]==True:
+                if self._site_energies_specified[ind_i]:
                     raise Exception("\n\nOnsite energy for this site was already specified! Use mode=\"reset\" or mode=\"add\".")
                 else:
-                    self._site_energies[ind_i]=self._val_to_block(onsite_en)
+                    self._site_energies[ind_i] = self._val_to_block(onsite_en)
                     self._site_energies_specified[ind_i]=True
+            #
             # specifying all sites at once
+            #
             else:
                 # make sure we specify things only once
                 if True in self._site_energies_specified[ind_i]:
@@ -304,177 +207,84 @@ class TightBindingModel(object):
                     for i in range(self._norb):
                         self._site_energies[i]=self._val_to_block(onsite_en[i])
                     self._site_energies_specified[:]=True
+        #
         # reset values of onsite terms, without adding to previous value
-        elif mode.lower()=="reset":
+        #
+        elif mode.lower() == "reset":
             # specifying only one site at a time
             if ind_i!=None:
-                self._site_energies[ind_i]=self._val_to_block(onsite_en)
-                self._site_energies_specified[ind_i]=True
+                self._site_energies[ind_i] = self._val_to_block(onsite_en)
+                self._site_energies_specified[ind_i] = True
             # specifying all sites at once
             else:
                 for i in range(self._norb):
-                    self._site_energies[i]=self._val_to_block(onsite_en[i])
-                self._site_energies_specified[:]=True
+                    self._site_energies[i] = self._val_to_block(onsite_en[i])
+                self._site_energies_specified[:] = True
+        #
         # add to previous value
-        elif mode.lower()=="add":
+        #
+        elif mode.lower() == "add":
             # specifying only one site at a time
-            if ind_i!=None:
-                self._site_energies[ind_i]+=self._val_to_block(onsite_en)
-                self._site_energies_specified[ind_i]=True
+            if ind_i != None:
+                self._site_energies[ind_i] += self._val_to_block(onsite_en)
+                self._site_energies_specified[ind_i] = True
             # specifying all sites at once
             else:
                 for i in range(self._norb):
-                    self._site_energies[i]+=self._val_to_block(onsite_en[i])
-                self._site_energies_specified[:]=True
+                    self._site_energies[i] += self._val_to_block(onsite_en[i])
+                self._site_energies_specified[:] = True
         else:
             raise Exception("\n\nWrong value of mode parameter")
-        
-    def set_hop(self,hop_amp,ind_i,ind_j,ind_R=None,mode="set",allow_conjugate_pair=False):
-        r"""
-        
-        Defines hopping parameters between tight-binding orbitals. In
-        the notation used in section 3.1 equation 3.6 of
-        :download:`notes on tight-binding formalism
-        <misc/pythtb-formalism.pdf>` this function specifies the
-        following object
 
-        .. math::
 
-          H_{ij}({\bf R})= \langle \phi_{{\bf 0} i}  \vert H  \vert \phi_{{\bf R},j} \rangle
-
-        Where :math:`\langle \phi_{{\bf 0} i} \vert` is i-th
-        tight-binding orbital in the home unit cell and
-        :math:`\vert \phi_{{\bf R},j} \rangle` is j-th tight-binding orbital in
-        unit cell shifted by lattice vector :math:`{\bf R}`. :math:`H`
-        is the Hamiltonian.
-
-        (Strictly speaking, this term specifies hopping amplitude
-        for hopping from site *j+R* to site *i*, not vice-versa.)
-
-        Hopping in the opposite direction is automatically included by
-        the code since
-
-        .. math::
-
-          H_{ji}(-{\bf R})= \left[ H_{ij}({\bf R}) \right]^{*}
-
-        .. warning::
-
-           There is no need to specify hoppings in both :math:`i
-           \rightarrow j+R` direction and opposite :math:`j
-           \rightarrow i-R` direction since that is done
-           automatically. If you want to specifiy hoppings in both
-           directions, see description of parameter
-           *allow_conjugate_pair*.
-
-        .. warning:: In previous version of PythTB this function was
-          called *add_hop*. For backwards compatibility one can still
-          use that name but that feature will be removed in future
-          releases.
-
-        :param hop_amp: Hopping amplitude; can be real or complex
-          number, equals :math:`H_{ij}({\bf R})`. If *nspin* is *2*
-          then hopping amplitude can be given either as a single
-          number, or as an array of four numbers, or as 2x2 matrix. If
-          a single number is given, it is interpreted as hopping
-          amplitude for both up and down spin component.  If an array
-          of four numbers is given, these are the coefficients of I,
-          sigma_x, sigma_y, and sigma_z (that is, the 2x2 identity and
-          the three Pauli spin matrices) respectively. Finally, full
-          2x2 matrix can be given as well.
-
-        :param ind_i: Index of bra orbital from the bracket :math:`\langle
-          \phi_{{\bf 0} i} \vert H \vert \phi_{{\bf R},j} \rangle`. This
-          orbital is assumed to be in the home unit cell.
-
-        :param ind_j: Index of ket orbital from the bracket :math:`\langle
-          \phi_{{\bf 0} i} \vert H \vert \phi_{{\bf R},j} \rangle`. This
-          orbital does not have to be in the home unit cell; its unit cell
-          position is determined by parameter *ind_R*.
-
-        :param ind_R: Specifies, in reduced coordinates, the shift of
-          the ket orbital. The number of coordinates must equal the
-          dimensionality in real space (*dim_r* parameter) for consistency,
-          but only the periodic directions of ind_R will be considered. If
-          reciprocal space is zero-dimensional (as in a molecule),
-          this parameter does not need to be specified.
-
-        :param mode: Similar to parameter *mode* in function *set_onsite*. 
-          Speficies way in which parameter *hop_amp* is
-          used. It can either set value of hopping term from scratch,
-          reset it, or add to it.
-
-          * "set" -- Default value. Hopping term is set to value of
-            *hop_amp* parameter. One can use "set" for each triplet of
-            *ind_i*, *ind_j*, *ind_R* only once.
-
-          * "reset" -- Specifies on-site energy to given value. This
-            function can be called multiple times for the same triplet
-            *ind_i*, *ind_j*, *ind_R*.
-
-          * "add" -- Adds to the previous value of hopping term This
-            function can be called multiple times for the same triplet
-            *ind_i*, *ind_j*, *ind_R*.
-
-          If *set_hop* was ever called with *allow_conjugate_pair* set
-          to True, then it is possible that user has specified both
-          :math:`i \rightarrow j+R` and conjugate pair :math:`j
-          \rightarrow i-R`.  In this case, "set", "reset", and "add"
-          parameters will treat triplet *ind_i*, *ind_j*, *ind_R* and
-          conjugate triplet *ind_j*, *ind_i*, *-ind_R* as distinct.
-
-        :param allow_conjugate_pair: Default value is *False*. If set
-          to *True* code will allow user to specify hopping
-          :math:`i \rightarrow j+R` even if conjugate-pair hopping
-          :math:`j \rightarrow i-R` has been
-          specified. If both terms are specified, code will
-          still count each term two times.
-          
-        Example usage::
-
-          # Specifies complex hopping amplitude between first orbital in home
-          # unit cell and third orbital in neigbouring unit cell.
-          tb.set_hop(0.3+0.4j, 0, 2, [0, 1])
-          # change value of this hopping
-          tb.set_hop(0.1+0.2j, 0, 2, [0, 1], mode="reset")
-          # add to previous value (after this function call below,
-          # hopping term amplitude is 100.1+0.2j)
-          tb.set_hop(100.0, 0, 2, [0, 1], mode="add")
-
-        """
+    def set_hop(self, hop_amp, ind_i, ind_j, ind_R=None, mode="set", allow_conjugate_pair=False):
         #
-        if self._dim_k!=0 and (ind_R is None):
+        if (self._dim_k != 0) and (ind_R is None):
             raise Exception("\n\nNeed to specify ind_R!")
+        
+        #
         # if necessary convert from integer to array
-        if self._dim_k==1 and type(ind_R).__name__=='int':
-            tmpR=np.zeros(self._dim_r,dtype=int)
-            tmpR[self._per]=ind_R
-            ind_R=tmpR
+        #
+        if (self._dim_k == 1) and (type(ind_R).__name__ == 'int'):
+            tmpR = np.zeros(self._dim_r, dtype=int)
+            tmpR[self._per] = ind_R
+            ind_R = tmpR
+        
+        #
         # check length of ind_R
-        if self._dim_k!=0:
-            if len(ind_R)!=self._dim_r:
+        #
+        if self._dim_k != 0:
+            if len(ind_R) != self._dim_r:
                 raise Exception("\n\nLength of input ind_R vector must equal dim_r! Even if dim_k<dim_r.")
+        
+        #
         # make sure ind_i and ind_j are not out of scope
-        if ind_i<0 or ind_i>=self._norb:
+        #
+        if (ind_i < 0) or (ind_i >= self._norb):
             raise Exception("\n\nIndex ind_i out of scope.")
-        if ind_j<0 or ind_j>=self._norb:
+        if (ind_j < 0) or (ind_j >= self._norb):
             raise Exception("\n\nIndex ind_j out of scope.")        
+
+        #
         # do not allow onsite hoppings to be specified here because then they
         # will be double-counted
-        if self._dim_k==0:
-            if ind_i==ind_j:
+        #
+        if self._dim_k == 0:
+            if ind_i == ind_j:
                 raise Exception("\n\nDo not use set_hop for onsite terms. Use set_onsite instead!")
         else:
-            if ind_i==ind_j:
-                all_zer=True
+            if ind_i == ind_j:
+                all_zer = True
                 for k in self._per:
-                    if int(ind_R[k])!=0:
-                        all_zer=False
-                if all_zer==True:
+                    if int(ind_R[k]) != 0:
+                        all_zer = False
+                if all_zer == True:
                     raise Exception("\n\nDo not use set_hop for onsite terms. Use set_onsite instead!")
+        
         #
         # make sure that if <i|H|j+R> is specified that <j|H|i-R> is not!
-        if allow_conjugate_pair==False:
+        #
+        if allow_conjugate_pair == False:
             for h in self._hoppings:
                 if ind_i==h[2] and ind_j==h[1]:
                     if self._dim_k==0:
@@ -497,50 +307,59 @@ consistency, specify all hoppings for a given bond in the same
 direction.  (Or, alternatively, see the documentation on the
 'allow_conjugate_pair' flag.)
 """)
+        
         # convert to 2by2 matrix if needed
-        hop_use=self._val_to_block(hop_amp)
+        hop_use = self._val_to_block(hop_amp)
+
         # hopping term parameters to be stored
-        if self._dim_k==0:
-            new_hop=[hop_use,int(ind_i),int(ind_j)]
+        if self._dim_k == 0:
+            new_hop = [hop_use, int(ind_i), int(ind_j)]
         else:
-            new_hop=[hop_use,int(ind_i),int(ind_j),np.array(ind_R)]
+            new_hop = [hop_use, int(ind_i), int(ind_j), np.array(ind_R)]
+        
         #
         # see if there is a hopping term with same i,j,R
         use_index=None
         for iih,h in enumerate(self._hoppings):
             # check if the same
-            same_ijR=False 
-            if ind_i==h[1] and ind_j==h[2]:
-                if self._dim_k==0:
-                    same_ijR=True
+            same_ijR = False 
+            if ind_i == h[1] and ind_j == h[2]:
+                if self._dim_k == 0:
+                    same_ijR = True
                 else:
-                    if False not in (np.array(ind_R)[self._per]==np.array(h[3])[self._per]):
-                        same_ijR=True
+                    if False not in (np.array(ind_R)[self._per] == np.array(h[3])[self._per]):
+                        same_ijR = True
             # if they are the same then store index of site at which they are the same
-            if same_ijR==True:
-                use_index=iih
+            if same_ijR == True:
+                use_index = iih
+
         #
         # specifying hopping terms from scratch, can be called only once
-        if mode.lower()=="set":
+        #
+        if mode.lower() == "set":
             # make sure we specify things only once
-            if use_index!=None:
+            if use_index != None:
                 raise Exception("\n\nHopping energy for this site was already specified! Use mode=\"reset\" or mode=\"add\".")
             else:
                 self._hoppings.append(new_hop)
+        
         # reset value of hopping term, without adding to previous value
-        elif mode.lower()=="reset":
-            if use_index!=None:
-                self._hoppings[use_index]=new_hop
+        elif mode.lower() == "reset":
+            if use_index != None:
+                self._hoppings[use_index] = new_hop
             else:
                 self._hoppings.append(new_hop)
+        
         # add to previous value
-        elif mode.lower()=="add":
-            if use_index!=None:
-                self._hoppings[use_index][0]+=new_hop[0]
+        elif mode.lower() == "add":
+            if use_index != None:
+                self._hoppings[use_index][0] += new_hop[0]
             else:
                 self._hoppings.append(new_hop)
         else:
             raise Exception("\n\nWrong value of mode parameter")
+
+
 
     def _val_to_block(self,val):
         """If nspin=2 then returns a 2 by 2 matrix from the input
@@ -550,33 +369,33 @@ direction.  (Or, alternatively, see the documentation on the
         other three are Zeeman field direction. If given a 2 by 2
         matrix, just return it.  If nspin=1 then just returns val."""
         # spinless case
-        if self._nspin==1:
+        if self._nspin == 1:
             return val
         # spinfull case
-        elif self._nspin==2:
+        elif self._nspin == 2:
             # matrix to return
-            ret=np.zeros((2,2),dtype=complex)
+            ret = np.zeros((2,2),dtype=complex)
             # 
-            use_val=np.array(val)
+            use_val = np.array(val)
             # only one number is given
-            if use_val.shape==():
-                ret[0,0]+=use_val
-                ret[1,1]+=use_val
+            if use_val.shape == ():
+                ret[0,0] += use_val
+                ret[1,1] += use_val
             # if four numbers are given
             elif use_val.shape==(4,):
                 # diagonal
-                ret[0,0]+=use_val[0]
-                ret[1,1]+=use_val[0]
+                ret[0,0] += use_val[0]
+                ret[1,1] += use_val[0]
                 # sigma_x
-                ret[0,1]+=use_val[1]
-                ret[1,0]+=use_val[1]                # sigma_y
-                ret[0,1]+=use_val[2]*(-1.0j)
-                ret[1,0]+=use_val[2]*( 1.0j)
+                ret[0,1] += use_val[1]
+                ret[1,0] += use_val[1]                # sigma_y
+                ret[0,1] += use_val[2]*(-1.0j)
+                ret[1,0] += use_val[2]*( 1.0j)
                 # sigma_z
-                ret[0,0]+=use_val[3]
-                ret[1,1]+=use_val[3]*(-1.0)        
+                ret[0,0] += use_val[3]
+                ret[1,1] += use_val[3]*(-1.0)        
             # if 2 by 2 matrix is given
-            elif use_val.shape==(2,2):
+            elif use_val.shape == (2,2):
                 return use_val
             else:
                 raise Exception(\
@@ -585,7 +404,10 @@ Wrong format of the on-site or hopping term. Must be single number, or
 in the case of a spinfull model can be array of four numbers or 2x2
 matrix.""")            
             return ret        
-        
+
+
+
+
     def display(self):
         r"""
         Prints on the screen some information about this tight-binding
@@ -660,88 +482,8 @@ matrix.""")
 
         print()
 
+
     def visualize(self,dir_first,dir_second=None,eig_dr=None,draw_hoppings=True,ph_color="black"):
-        r"""
-
-        Rudimentary function for visualizing tight-binding model geometry,
-        hopping between tight-binding orbitals, and electron eigenstates.
-
-        If eigenvector is not drawn, then orbitals in home cell are drawn
-        as red circles, and those in neighboring cells are drawn with
-        different shade of red. Hopping term directions are drawn with
-        green lines connecting two orbitals. Origin of unit cell is
-        indicated with blue dot, while real space unit vectors are drawn
-        with blue lines.
-
-        If eigenvector is drawn, then electron eigenstate on each orbital
-        is drawn with a circle whose size is proportional to wavefunction
-        amplitude while its color depends on the phase. There are various
-        coloring schemes for the phase factor; see more details under
-        *ph_color* parameter. If eigenvector is drawn and coloring scheme
-        is "red-blue" or "wheel", all other elements of the picture are
-        drawn in gray or black.
-
-        :param dir_first: First index of Cartesian coordinates used for
-          plotting.
-
-        :param dir_second: Second index of Cartesian coordinates used for
-          plotting. For example if dir_first=0 and dir_second=2, and
-          Cartesian coordinates of some orbital is [2.0,4.0,6.0] then it
-          will be drawn at coordinate [2.0,6.0]. If dimensionality of real
-          space (*dim_r*) is zero or one then dir_second should not be
-          specified.
-
-        :param eig_dr: Optional parameter specifying eigenstate to
-          plot. If specified, this should be one-dimensional array of
-          complex numbers specifying wavefunction at each orbital in
-          the tight-binding basis. If not specified, eigenstate is not
-          drawn.
-
-        :param draw_hoppings: Optional parameter specifying whether to
-          draw all allowed hopping terms in the tight-binding
-          model. Default value is True.
-
-        :param ph_color: Optional parameter determining the way
-          eigenvector phase factors are translated into color. Default
-          value is "black". Convention of the wavefunction phase is as
-          in convention 1 in section 3.1 of :download:`notes on
-          tight-binding formalism  <misc/pythtb-formalism.pdf>`.  In
-          other words, these wavefunction phases are in correspondence
-          with cell-periodic functions :math:`u_{n {\bf k}} ({\bf r})`
-          not :math:`\Psi_{n {\bf k}} ({\bf r})`.
-
-          * "black" -- phase of eigenvectors are ignored and wavefunction
-            is always colored in black.
-
-          * "red-blue" -- zero phase is drawn red, while phases or pi or
-            -pi are drawn blue. Phases in between are interpolated between
-            red and blue. Some phase information is lost in this coloring
-            becase phase of +phi and -phi have same color.
-
-          * "wheel" -- each phase is given unique color. In steps of pi/3
-            starting from 0, colors are assigned (in increasing hue) as:
-            red, yellow, green, cyan, blue, magenta, red.
-
-        :returns:
-          * **fig** -- Figure object from matplotlib.pyplot module
-            that can be used to save the figure in PDF, EPS or similar
-            format, for example using fig.savefig("name.pdf") command.
-          * **ax** -- Axes object from matplotlib.pyplot module that can be
-            used to tweak the plot, for example by adding a plot title
-            ax.set_title("Title goes here").
-
-        Example usage::
-
-          # Draws x-y projection of tight-binding model
-          # tweaks figure and saves it as a PDF.
-          (fig, ax) = tb.visualize(0, 1)
-          ax.set_title("Title goes here")
-          fig.savefig("model.pdf")
-
-        See also these examples: :ref:`edge-example`,
-        :ref:`visualize-example`.
-
-        """
 
         # check the format of eig_dr
         if not (eig_dr is None):
@@ -898,6 +640,8 @@ matrix.""")
         "Returns lattice vectors in format [vector,coordinate]."
         return self._lat.copy()
 
+
+
     def _gen_ham(self,k_input=None):
         """Generate Hamiltonian for a certain k-point,
         K-point is given in reduced coordinates!"""
@@ -951,6 +695,8 @@ matrix.""")
                 ham[j,:,i,:]+=amp.T.conjugate()
         return ham
 
+
+
     def _sol_ham(self,ham,eig_vectors=False):
         """Solves Hamiltonian and returns eigenvectors, eigenvalues"""
         # reshape matrix first
@@ -979,86 +725,10 @@ matrix.""")
                 eig=eig.reshape((self._nsta,self._norb,2))
             return (eval,eig)
 
+
+
     def solve_all(self,k_list=None,eig_vectors=False):
-        r"""
-        Solves for eigenvalues and (optionally) eigenvectors of the
-        tight-binding model on a given one-dimensional list of k-vectors.
 
-        .. note::
-
-           Eigenvectors (wavefunctions) returned by this
-           function and used throughout the code are exclusively given
-           in convention 1 as described in section 3.1 of
-           :download:`notes on tight-binding formalism
-           <misc/pythtb-formalism.pdf>`.  In other words, they
-           are in correspondence with cell-periodic functions
-           :math:`u_{n {\bf k}} ({\bf r})` not
-           :math:`\Psi_{n {\bf k}} ({\bf r})`.
-
-        .. note::
-
-           In some cases class :class:`pythtb.wf_array` provides a more
-           elegant way to deal with eigensolutions on a regular mesh of
-           k-vectors.
-
-        :param k_list: One-dimensional array of k-vectors. Each k-vector
-          is given in reduced coordinates of the reciprocal space unit
-          cell. For example, for real space unit cell vectors [1.0,0.0]
-          and [0.0,2.0] and associated reciprocal space unit vectors
-          [2.0*pi,0.0] and [0.0,pi], k-vector with reduced coordinates
-          [0.25,0.25] corresponds to k-vector [0.5*pi,0.25*pi].
-          Dimensionality of each vector must equal to the number of
-          periodic directions (i.e. dimensionality of reciprocal space,
-          *dim_k*).
-          This parameter shouldn't be specified for system with
-          zero-dimensional k-space (*dim_k* =0).
-
-        :param eig_vectors: Optional boolean parameter, specifying whether
-          eigenvectors should be returned. If *eig_vectors* is True, then
-          both eigenvalues and eigenvectors are returned, otherwise only
-          eigenvalues are returned.
-
-        :returns:
-          * **eval** -- Two dimensional array of eigenvalues for
-            all bands for all kpoints. Format is eval[band,kpoint] where
-            first index (band) corresponds to the electron band in
-            question and second index (kpoint) corresponds to the k-point
-            as listed in the input parameter *k_list*. Eigenvalues are
-            sorted from smallest to largest at each k-point seperately.
-
-            In the case when reciprocal space is zero-dimensional (as in a
-            molecule) kpoint index is dropped and *eval* is of the format
-            eval[band].
-
-          * **evec** -- Three dimensional array of eigenvectors for
-            all bands and all kpoints. If *nspin* equals 1 the format
-            of *evec* is evec[band,kpoint,orbital] where "band" is the
-            electron band in question, "kpoint" is index of k-vector
-            as given in input parameter *k_list*. Finally, "orbital"
-            refers to the tight-binding orbital basis function.
-            Ordering of bands is the same as in *eval*.  
-            
-            Eigenvectors evec[n,k,j] correspond to :math:`C^{n {\bf
-            k}}_{j}` from section 3.1 equation 3.5 and 3.7 of the
-            :download:`notes on tight-binding formalism
-            <misc/pythtb-formalism.pdf>`.
-
-            In the case when reciprocal space is zero-dimensional (as in a
-            molecule) kpoint index is dropped and *evec* is of the format
-            evec[band,orbital].
-
-            In the spinfull calculation (*nspin* equals 2) evec has
-            additional component evec[...,spin] corresponding to the
-            spin component of the wavefunction.
-
-        Example usage::
-
-          # Returns eigenvalues for three k-vectors
-          eval = tb.solve_all([[0.0, 0.0], [0.0, 0.2], [0.0, 0.5]])
-          # Returns eigenvalues and eigenvectors for two k-vectors
-          (eval, evec) = tb.solve_all([[0.0, 0.0], [0.0, 0.2]], eig_vectors=True)
-
-        """
         # if not 0-dim case
         if not (k_list is None):
             nkp=len(k_list) # number of k points
@@ -1528,7 +1198,7 @@ matrix.""")
 
     def _shift_to_home(self):
         """Shifts all orbital positions to the home unit cell. After
-        this function is called all reduced coordiantes of orbitals
+        this function is called all reduced coordinates of orbitals
         will be between 0 and 1. It may be useful to call this
         function after using make_supercell."""
         
@@ -1697,147 +1367,91 @@ matrix.""")
 
         return k_vec
 
+
+
     def k_path(self,kpts,nk,report=True):
-        r"""
-    
-        Interpolates a path in reciprocal space between specified
-        k-points.  In 2D or 3D the k-path can consist of several
-        straight segments connecting high-symmetry points ("nodes"),
-        and the results can be used to plot the bands along this path.
-        
-        The interpolated path that is returned contains as
-        equidistant k-points as possible.
-    
-        :param kpts: Array of k-vectors in reciprocal space between
-          which interpolated path should be constructed. These
-          k-vectors must be given in reduced coordinates.  As a
-          special case, in 1D k-space kpts may be a string:
-    
-          * *"full"*  -- Implies  *[ 0.0, 0.5, 1.0]*  (full BZ)
-          * *"fullc"* -- Implies  *[-0.5, 0.0, 0.5]*  (full BZ, centered)
-          * *"half"*  -- Implies  *[ 0.0, 0.5]*  (half BZ)
-    
-        :param nk: Total number of k-points to be used in making the plot.
-        
-        :param report: Optional parameter specifying whether printout
-          is desired (default is True).
-
-        :returns:
-
-          * **k_vec** -- Array of (nearly) equidistant interpolated
-            k-points. The distance between the points is calculated in
-            the Cartesian frame, however coordinates themselves are
-            given in dimensionless reduced coordinates!  This is done
-            so that this array can be directly passed to function
-            :func:`pythtb.TightBindingModel.solve_all`.
-
-          * **k_dist** -- Array giving accumulated k-distance to each
-            k-point in the path.  Unlike array *k_vec* this one has
-            dimensions! (Units are defined here so that for an
-            one-dimensional crystal with lattice constant equal to for
-            example *10* the length of the Brillouin zone would equal
-            *1/10=0.1*.  In other words factors of :math:`2\pi` are
-            absorbed into *k*.) This array can be used to plot path in
-            the k-space so that the distances between the k-points in
-            the plot are exact.
-
-          * **k_node** -- Array giving accumulated k-distance to each
-            node on the path in Cartesian coordinates.  This array is
-            typically used to plot nodes (typically special points) on
-            the path in k-space.
-    
-        Example usage::
-    
-          # Construct a path connecting four nodal points in k-space
-          # Path will contain 401 k-points, roughly equally spaced
-          path = [[0.0, 0.0], [0.0, 0.5], [0.5, 0.5], [0.0, 0.0]]
-          (k_vec,k_dist,k_node) = my_model.k_path(path,401)
-          # solve for eigenvalues on that path
-          evals = tb.solve_all(k_vec)
-          # then use evals, k_dist, and k_node to plot bandstructure
-          # (see examples)
-        
-        """
     
         # processing of special cases for kpts
-        if kpts=='full':
+        if kpts == 'full':
             # full Brillouin zone for 1D case
-            k_list=np.array([[0.],[0.5],[1.]])
-        elif kpts=='fullc':
+            k_list = np.array([ [0.0], [0.5], [1.0] ])
+        elif kpts == 'fullc':
             # centered full Brillouin zone for 1D case
-            k_list=np.array([[-0.5],[0.],[0.5]])
-        elif kpts=='half':
+            k_list = np.array([ [-0.5], [0.], [0.5] ])
+        elif kpts == 'half':
             # half Brillouin zone for 1D case
-            k_list=np.array([[0.],[0.5]])
+            k_list = np.array([ [0.], [0.5] ])
         else:
-            k_list=np.array(kpts)
+            k_list = np.array(kpts)
     
         # in 1D case if path is specified as a vector, convert it to an (n,1) array
-        if len(k_list.shape)==1 and self._dim_k==1:
+        if (len(k_list.shape) == 1) and (self._dim_k == 1):
             k_list=np.array([k_list]).T
 
         # make sure that k-points in the path have correct dimension
-        if k_list.shape[1]!=self._dim_k:
+        if k_list.shape[1] != self._dim_k:
             print('input k-space dimension is',k_list.shape[1])
             print('k-space dimension taken from model is',self._dim_k)
             raise Exception("\n\nk-space dimensions do not match")
 
         # must have more k-points in the path than number of nodes
-        if nk<k_list.shape[0]:
+        if nk < k_list.shape[0]:
             raise Exception("\n\nMust have more points in the path than number of nodes.")
 
         # number of nodes
-        n_nodes=k_list.shape[0]
+        n_nodes = k_list.shape[0]
     
         # extract the lattice vectors from the TB model
-        lat_per=np.copy(self._lat)
+        lat_per = np.copy(self._lat)
+        
         # choose only those that correspond to periodic directions
-        lat_per=lat_per[self._per]    
+        lat_per = lat_per[self._per]    
+        
         # compute k_space metric tensor
         k_metric = np.linalg.inv(np.dot(lat_per,lat_per.T))
 
         # Find distances between nodes and set k_node, which is
         # accumulated distance since the start of the path
         #  initialize array k_node
-        k_node=np.zeros(n_nodes,dtype=float)
+        k_node = np.zeros(n_nodes,dtype=float)
         for n in range(1,n_nodes):
-            dk = k_list[n]-k_list[n-1]
+            dk = k_list[n] - k_list[n-1]
             dklen = np.sqrt(np.dot(dk,np.dot(k_metric,dk)))
-            k_node[n]=k_node[n-1]+dklen
+            k_node[n] = k_node[n-1] + dklen
     
         # Find indices of nodes in interpolated list
-        node_index=[0]
+        node_index = [0]
         for n in range(1,n_nodes-1):
-            frac=k_node[n]/k_node[-1]
+            frac = k_node[n]/k_node[-1]
             node_index.append(int(round(frac*(nk-1))))
         node_index.append(nk-1)
     
         # initialize two arrays temporarily with zeros
         #   array giving accumulated k-distance to each k-point
-        k_dist=np.zeros(nk,dtype=float)
+        k_dist = np.zeros(nk,dtype=float)
         #   array listing the interpolated k-points    
-        k_vec=np.zeros((nk,self._dim_k),dtype=float)
+        k_vec = np.zeros((nk,self._dim_k),dtype=float)
     
         # go over all kpoints
-        k_vec[0]=k_list[0]
+        k_vec[0] = k_list[0]
         for n in range(1,n_nodes):
-            n_i=node_index[n-1]
-            n_f=node_index[n]
-            kd_i=k_node[n-1]
-            kd_f=k_node[n]
-            k_i=k_list[n-1]
-            k_f=k_list[n]
+            n_i = node_index[n-1]
+            n_f = node_index[n]
+            kd_i = k_node[n-1]
+            kd_f = k_node[n]
+            k_i = k_list[n-1]
+            k_f = k_list[n]
             for j in range(n_i,n_f+1):
-                frac=float(j-n_i)/float(n_f-n_i)
-                k_dist[j]=kd_i+frac*(kd_f-kd_i)
-                k_vec[j]=k_i+frac*(k_f-k_i)
+                frac = float(j-n_i)/float(n_f-n_i)
+                k_dist[j] = kd_i + frac*(kd_f-kd_i)
+                k_vec[j] = k_i + frac*(k_f-k_i)
     
-        if report==True:
+        if report == True:
             if self._dim_k==1:
                 print(' Path in 1D BZ defined by nodes at '+str(k_list.flatten()))
             else:
                 print('----- k_path report begin ----------')
-                original=np.get_printoptions()
+                original = np.get_printoptions()
                 np.set_printoptions(precision=5)
                 print('real-space lattice vectors\n', lat_per)
                 print('k-space metric tensor\n', k_metric)
@@ -2117,9 +1731,11 @@ matrix.""")
 
 # keeping old name for backwards compatibility
 # will be removed in future
-TightBindingModel.set_sites=TightBindingModel.set_onsite
-TightBindingModel.add_hop=TightBindingModel.set_hop
+TightBindingModel.set_sites = TightBindingModel.set_onsite
+TightBindingModel.add_hop = TightBindingModel.set_hop
 tbmodel=TightBindingModel
+
+
 
 class wf_array(object):
     r"""

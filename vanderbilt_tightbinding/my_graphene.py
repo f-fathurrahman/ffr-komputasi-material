@@ -17,8 +17,6 @@ orb = [
 # make two dimensional tight-binding graphene model
 graphene = TightBindingModel(2, 2, lat, orb)
 
-
-"""
 # set model parameters
 delta = 0.0
 t = -1.0
@@ -36,14 +34,19 @@ graphene.display()
     
 # generate list of k-points following a segmented path in the BZ
 # list of nodes (high-symmetry points) that will be connected
-path=[[0.,0.],[2./3.,1./3.],[.5,.5],[0.,0.]]
+path = [
+  [0.0, 0.0],
+  [2/3, 1/3],
+  [0.5, 0.5],
+  [0.0, 0.0]
+]
 # labels of the nodes
-label=(r'$\Gamma $',r'$K$', r'$M$', r'$\Gamma $')
+label = (r'$\Gamma $', r'$K$', r'$M$', r'$\Gamma $')
 # total number of interpolated k-points along the path
-nk=121
+nk = 121
 
 # call function k_path to construct the actual path
-(k_vec,k_dist,k_node)=graphene.k_path(path,nk)
+(k_vec, k_dist, k_node) = graphene.k_path(path,nk)
 # inputs:
 #   path, nk: see above
 #   graphene: the pythtb model
@@ -52,6 +55,7 @@ nk=121
 #   k_dist: horizontal axis position of each k-point in the list
 #   k_node: horizontal axis position of each original node
 
+"""
 print('---------------------------------------')
 print('starting calculation')
 print('---------------------------------------')
@@ -87,3 +91,4 @@ fig.savefig("IMG_graphene.pdf")
 
 print('Done.\n')
 """
+
