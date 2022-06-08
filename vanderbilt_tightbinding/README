@@ -1,0 +1,21 @@
+# PythTB python tight binding module.
+# August 25th, 2017
+__version__='1.7.2'
+
+# Copyright 2010, 2012, 2016, 2017 by Sinisa Coh and David Vanderbilt
+#
+# This file is part of PythTB.  PythTB is free software: you can
+# redistribute it and/or modify it under the terms of the GNU General
+# Public License as published by the Free Software Foundation, either
+# version 3 of the License, or (at your option) any later version.
+#
+# PythTB is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+# License for more details.
+#
+# A copy of the GNU General Public License should be available
+# alongside this source in a file named gpl-3.0.txt.  If not,
+# see <http://www.gnu.org/licenses/>.
+#
+# PythTB is availabe at http://www.physics.rutgers.edu/pythtb/
