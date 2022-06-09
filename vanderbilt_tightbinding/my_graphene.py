@@ -55,7 +55,7 @@ nk = 121
 #   k_dist: horizontal axis position of each k-point in the list
 #   k_node: horizontal axis position of each original node
 
-"""
+
 print('---------------------------------------')
 print('starting calculation')
 print('---------------------------------------')
@@ -90,5 +90,5 @@ fig.tight_layout()
 fig.savefig("IMG_graphene.pdf")
 
 print('Done.\n')
-"""
+
 

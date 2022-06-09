@@ -697,33 +697,39 @@ matrix.""")
 
 
 
-    def _sol_ham(self,ham,eig_vectors=False):
+    def _sol_ham(self, ham, eig_vectors=False):
         """Solves Hamiltonian and returns eigenvectors, eigenvalues"""
+        #
         # reshape matrix first
-        if self._nspin==1:
-            ham_use=ham
-        elif self._nspin==2:
-            ham_use=ham.reshape((2*self._norb,2*self._norb))
+        #
+        if self._nspin == 1:
+            ham_use = ham
+        elif self._nspin == 2:
+            ham_use = ham.reshape((2*self._norb, 2*self._norb))
+        #
         # check that matrix is hermitian
+        #
         if np.max(ham_use-ham_use.T.conj())>1.0E-9:
             raise Exception("\n\nHamiltonian matrix is not hermitian?!")
-        #solve matrix
+        #
+        # solve matrix
+        #
         if eig_vectors==False: # only find eigenvalues
-            eval=np.linalg.eigvalsh(ham_use)
+            evals = np.linalg.eigvalsh(ham_use)
             # sort eigenvalues and convert to real numbers
-            eval=_nicefy_eig(eval)
-            return np.array(eval,dtype=float)
+            evals = _nicefy_eig(evals)
+            return np.array(evals, dtype=float)
         else: # find eigenvalues and eigenvectors
-            (eval,eig)=np.linalg.eigh(ham_use)
+            (evals,eig) = np.linalg.eigh(ham_use)
             # transpose matrix eig since otherwise it is confusing
             # now eig[i,:] is eigenvector for eval[i]-th eigenvalue
-            eig=eig.T
+            eig = eig.T
             # sort evectors, eigenvalues and convert to real numbers
-            (eval,eig)=_nicefy_eig(eval,eig)
+            (evals, eig) = _nicefy_eig(eval,eig)
             # reshape eigenvectors if doing a spinfull calculation
-            if self._nspin==2:
-                eig=eig.reshape((self._nsta,self._norb,2))
-            return (eval,eig)
+            if self._nspin == 2:
+                eig = eig.reshape((self._nsta,self._norb,2))
+            return (evals,eig)
 
 
 
@@ -775,7 +781,9 @@ matrix.""")
                 # indices of eval are [band] and of evec are [band,orbital,spin]
                 return (eval,evec)
 
-    def solve_one(self,k_point=None,eig_vectors=False):
+
+
+    def solve_one(self, k_point=None, eig_vectors=False):
         r"""
 
         Similar to :func:`pythtb.TightBindingModel.solve_all` but solves tight-binding
@@ -784,20 +792,22 @@ matrix.""")
         """
         # if not 0-dim case
         if not (k_point is None):
-            if eig_vectors==False:
-                eval=self.solve_all([k_point],eig_vectors=eig_vectors)
+            if eig_vectors == False:
+                evals = self.solve_all([k_point], eig_vectors=eig_vectors)
                 # indices of eval are [band]
-                return eval[:,0]
+                return evals[:,0]
             else:
-                (eval,evec)=self.solve_all([k_point],eig_vectors=eig_vectors)
+                (evals, evec) = self.solve_all([k_point], eig_vectors=eig_vectors)
                 # indices of eval are [band] for evec are [band,orbital,spin]
-                if self._nspin==1:
-                    return (eval[:,0],evec[:,0,:])
-                elif self._nspin==2:
-                    return (eval[:,0],evec[:,0,:,:])
+                if self._nspin == 1:
+                    return (evals[:,0],evec[:,0,:])
+                elif self._nspin == 2:
+                    return (evals[:,0],evec[:,0,:,:])
         else:
             # do the same as solve_all
             return self.solve_all(eig_vectors=eig_vectors)
+
+
 
     def cut_piece(self,num,fin_dir,glue_edgs=False):
         r"""
@@ -926,6 +936,8 @@ matrix.""")
                         fin_model.set_hop(amp,hi,hj,ind_R,mode="add",allow_conjugate_pair=True)
 
         return fin_model
+
+    
 
     def reduce_dim(self,remove_k,value_k):
         r"""
@@ -1386,7 +1398,7 @@ matrix.""")
     
         # in 1D case if path is specified as a vector, convert it to an (n,1) array
         if (len(k_list.shape) == 1) and (self._dim_k == 1):
-            k_list=np.array([k_list]).T
+            k_list = np.array([k_list]).T
 
         # make sure that k-points in the path have correct dimension
         if k_list.shape[1] != self._dim_k:
@@ -1428,9 +1440,9 @@ matrix.""")
     
         # initialize two arrays temporarily with zeros
         #   array giving accumulated k-distance to each k-point
-        k_dist = np.zeros(nk,dtype=float)
+        k_dist = np.zeros(nk, dtype=float)
         #   array listing the interpolated k-points    
-        k_vec = np.zeros((nk,self._dim_k),dtype=float)
+        k_vec = np.zeros((nk, self._dim_k), dtype=float)
     
         # go over all kpoints
         k_vec[0] = k_list[0]
@@ -1476,11 +1488,14 @@ matrix.""")
 
         return (k_vec,k_dist,k_node)
 
+
     def ignore_position_operator_offdiagonal(self):
         """Call to this function enables one to approximately compute
         Berry-like objects from tight-binding models that were
         obtained from Wannier90."""  
         self._assume_position_operator_diagonal=True
+
+
 
     def position_matrix(self, evec, dir):
         r"""
@@ -1562,6 +1577,8 @@ matrix.""")
             raise Exception("\n\n Position matrix is not hermitian?!")
 
         return pos_mat
+
+
 
     def position_expectation(self,evec,dir):
         r""" 
