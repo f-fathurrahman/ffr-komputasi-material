@@ -485,3 +485,166 @@ See also these examples: :ref:`edge-example`, :ref:`visualize-example`.
 
 
 
+TightBinding.position_matrix()
+------------------------------
+
+def position_matrix(self, evec, dir)
+
+Returns matrix elements of the position operator along
+direction *dir* for eigenvectors *evec* at a single k-point.
+Position operator is defined in reduced coordinates.
+
+The returned object :math:`X` is
+
+.. math::
+
+  X_{m n {\bf k}}^{\alpha} = \langle u_{m {\bf k}} \vert
+  r^{\alpha} \vert u_{n {\bf k}} \rangle
+
+Here :math:`r^{\alpha}` is the position operator along direction
+:math:`\alpha` that is selected by *dir*.
+
+:param evec: Eigenvectors for which we are computing matrix
+  elements of the position operator.  The shape of this array
+  is evec[band,orbital] if *nspin* equals 1 and
+  evec[band,orbital,spin] if *nspin* equals 2.
+
+:param dir: Direction along which we are computing the center.
+  This integer must not be one of the periodic directions
+  since position operator matrix element in that case is not
+  well defined.
+
+:returns:
+  * **pos_mat** -- Position operator matrix :math:`X_{m n}` as defined 
+    above. This is a square matrix with size determined by number of bands
+    given in *evec* input array.  First index of *pos_mat* corresponds to
+    bra vector (*m*) and second index to ket (*n*).
+
+Example usage::
+
+  # diagonalizes Hamiltonian at some k-points
+  (evals, evecs) = my_model.solve_all(k_vec,eig_vectors=True)
+  # computes position operator matrix elements for 3-rd kpoint 
+  # and bottom five bands along first coordinate
+  pos_mat = my_model.position_matrix(evecs[:5,2], 0)
+
+See also this example: :ref:`haldane_hwf-example`,
+
+
+TightBinding.position_expectation
+---------------------------------
+
+position_expectation(self,evec,dir)
+
+Returns diagonal matrix elements of the position operator.
+These elements :math:`X_{n n}` can be interpreted as an
+average position of n-th Bloch state *evec[n]* along
+direction *dir*.  Generally speaking these centers are *not*
+hybrid Wannier function centers (which are instead
+returned by :func:`pythtb.TightBindingModel.position_hwf`).
+        
+See function :func:`pythtb.TightBindingModel.position_matrix` for
+definition of matrix :math:`X`.
+
+:param evec: Eigenvectors for which we are computing matrix
+  elements of the position operator.  The shape of this array
+  is evec[band,orbital] if *nspin* equals 1 and
+  evec[band,orbital,spin] if *nspin* equals 2.
+
+:param dir: Direction along which we are computing matrix
+  elements.  This integer must not be one of the periodic
+  directions since position operator matrix element in that
+  case is not well defined.
+
+:returns:
+  * **pos_exp** -- Diagonal elements of the position operator matrix :math:`X`.
+    Length of this vector is determined by number of bands given in *evec* input 
+    array.
+
+Example usage::
+
+  # diagonalizes Hamiltonian at some k-points
+  (evals, evecs) = my_model.solve_all(k_vec,eig_vectors=True)
+  # computes average position for 3-rd kpoint 
+  # and bottom five bands along first coordinate
+  pos_exp = my_model.position_expectation(evecs[:5,2], 0)
+
+See also this example: :ref:`haldane_hwf-example`.
+
+
+
+TightBinding.position_hwf
+-------------------------
+
+position_hwf(self,evec,dir,hwf_evec=False,basis="orbital")
+
+Returns eigenvalues and optionally eigenvectors of the
+position operator matrix :math:`X` in either Bloch or orbital
+basis.  These eigenvectors can be interpreted as linear
+combinations of Bloch states *evec* that have minimal extent (or
+spread :math:`\Omega` in the sense of maximally localized
+Wannier functions) along direction *dir*. The eigenvalues are
+average positions of these localized states. 
+
+Note that these eigenvectors are not maximally localized
+Wannier functions in the usual sense because they are
+localized only along one direction.  They are also not the
+average positions of the Bloch states *evec*, which are
+instead computed by :func:`pythtb.TightBindingModel.position_expectation`.
+
+See function :func:`pythtb.TightBindingModel.position_matrix` for
+the definition of the matrix :math:`X`.
+
+See also Fig. 3 in Phys. Rev. Lett. 102, 107603 (2009) for a
+discussion of the hybrid Wannier function centers in the
+context of a Chern insulator.
+
+:param evec: Eigenvectors for which we are computing matrix
+  elements of the position operator.  The shape of this array
+  is evec[band,orbital] if *nspin* equals 1 and
+  evec[band,orbital,spin] if *nspin* equals 2.
+
+:param dir: Direction along which we are computing matrix
+  elements.  This integer must not be one of the periodic
+  directions since position operator matrix element in that
+  case is not well defined.
+
+:param hwf_evec: Optional boolean variable.  If set to *True* 
+  this function will return not only eigenvalues but also 
+  eigenvectors of :math:`X`. Default value is *False*.
+
+:param basis: Optional parameter. If basis="bloch" then hybrid
+  Wannier function *hwf_evec* is written in the Bloch basis.  I.e. 
+  hwf[i,j] correspond to the weight of j-th Bloch state from *evec*
+  in the i-th hybrid Wannier function.  If basis="orbital" and nspin=1 then
+  hwf[i,orb] correspond to the weight of orb-th orbital in the i-th 
+  hybrid Wannier function.  If basis="orbital" and nspin=2 then
+  hwf[i,orb,spin] correspond to the weight of orb-th orbital, spin-th
+  spin component in the i-th hybrid Wannier function.  Default value
+  is "orbital".
+
+:returns:
+  * **hwfc** -- Eigenvalues of the position operator matrix :math:`X`
+    (also called hybrid Wannier function centers).
+    Length of this vector equals number of bands given in *evec* input 
+    array.  Hybrid Wannier function centers are ordered in ascending order.
+    Note that in general *n*-th hwfc does not correspond to *n*-th electronic
+    state *evec*.
+
+  * **hwf** -- Eigenvectors of the position operator matrix :math:`X`.
+    (also called hybrid Wannier functions).  These are returned only if
+    parameter *hwf_evec* is set to *True*.
+    The shape of this array is [h,x] or [h,x,s] depending on value of *basis*
+    and *nspin*.  If *basis* is "bloch" then x refers to indices of 
+    Bloch states *evec*.  If *basis* is "orbital" then *x* (or *x* and *s*)
+    correspond to orbital index (or orbital and spin index if *nspin* is 2).
+
+Example usage::
+
+  # diagonalizes Hamiltonian at some k-points
+  (evals, evecs) = my_model.solve_all(k_vec,eig_vectors=True)
+  # computes hybrid Wannier centers (and functions) for 3-rd kpoint 
+  # and bottom five bands along first coordinate
+  (hwfc, hwf) = my_model.position_hwf(evecs[:5,2], 0, hwf_evec=True, basis="orbital")
+
+See also this example: :ref:`haldane_hwf-example`,
