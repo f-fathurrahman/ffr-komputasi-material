@@ -1,0 +1,7 @@
+Needs["Combinatorica`"]
+
+res = Permute[ {a,b,c}, {{2,3,1}, {3,2,1}} ]
+
+Print["res = ", res]
+
+Exit[]

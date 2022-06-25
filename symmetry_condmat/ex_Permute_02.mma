@@ -1,0 +1,32 @@
+(* <<DiscreteMath`Combinatorica` *)
+Needs["Combinatorica`"]
+
+p1 = Permutations[3]
+Print[p1]
+
+p2 = Permute[{A,B,C}, Permutations[3]]
+Print[p2]
+
+MyPermutationQ[e_List] := (Sort[e] === Range[Length[e]])
+
+res1 = PermutationQ[ p1[[1]] ]
+Print[res1]
+
+res2 = PermutationQ[ Permutations[4][[2]] ]
+Print[res2]
+
+res3 = MyPermutationQ[ p1[[2]] ]
+Print[res3]
+
+Print[Sort[p1]]
+
+(* res = ToCycle[ { {1,2,3,4}, {1,4,3,2} } ] *)
+(* Print[res] *)
+
+res = PermutationCycles[{2, 5, 3, 6, 1, 8, 7, 9, 4, 10}]
+Print[res]
+
+p = MinimumChangePermutations[{1,2,3}]
+Print[p]
+
+Exit[]

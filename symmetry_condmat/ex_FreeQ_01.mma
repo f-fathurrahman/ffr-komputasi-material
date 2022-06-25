@@ -1,0 +1,7 @@
+res = FreeQ[ {1, 2, 4, 1, 0}, 0 ]
+Print[res]
+
+res = FreeQ[ {1, 2, 4, 1, 0}, 7 ]
+Print[res]
+
+Exit[]
