@@ -1,4 +1,4 @@
-.false.                Only calculates orbitals with non-moving ions
+.true.                Only calculates orbitals with non-moving ions
 10.0                   Boxlength
 10.0                   E_cutoff
 800                    mu

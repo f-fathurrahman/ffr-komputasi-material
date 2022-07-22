@@ -1,11 +1,19 @@
+!-----------------------------
 SUBROUTINE fill_static_grids()
-  use globals
+!-----------------------------
+  use globals, only: GridSize, Gmin2Grid, G2Grid, GridPos, GridIndex, &
+                     Gmax, GGrid
+  implicit none
   ! In this subroutine the grids are defined that are independent on the
   ! position of the Ions
   ! G2 stands for G squared, Gmin2 for 1/G Squared
   INTEGER          :: I, J, K, Ind
   INTEGER          :: II, JJ, KK
   real(8) :: G2
+
+  ! Function
+  real(8) :: G2_Short
+
   Ind = 0
     
   GGrid = 0
@@ -18,7 +26,7 @@ SUBROUTINE fill_static_grids()
         II = I-INT((2.D0*I)/GridSize)*GridSize
         JJ = J-INT((2.D0*J)/GridSize)*GridSize
         KK = K-INT((2.D0*K)/GridSize)*GridSize
-        IF (G2<4*GMax**2) THEN
+        IF( G2 < 4*GMax**2 ) THEN
           GGrid(:,I,J,K)=(/II,JJ,KK/)
         ELSE
           GGrid(:,I,J,K) = (/0, 0, 0/)

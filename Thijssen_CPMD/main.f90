@@ -1,7 +1,7 @@
 PROGRAM CarPar
 
   CALL init_params()
-  !CALL Simulate()
+  CALL Simulate()
           
 END PROGRAM
     

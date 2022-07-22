@@ -2,7 +2,7 @@
 
 COMPILER = gfortran
 LDOPTS = -O
-COMPOPTS = -c -O  
+COMPOPTS = -c -O -Wall
 LIBS = -L/usr/lib/ -lfftw -lblas -llapack 
 OBJECTS	= fft.o globals.o \
 calc_dens_and_coeffs_r.o calc_orbitals.o  get_E_ovrl.o   \
