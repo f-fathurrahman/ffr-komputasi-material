@@ -1,27 +1,29 @@
+!-------------
 MODULE globals
+!-------------
 
- IMPLICIT NONE
+IMPLICIT NONE
 
- DOUBLE PRECISION :: PI 
- DOUBLE COMPLEX   :: Im
+real(8):: PI 
+complex(8):: Im
 
- !#################################################
- ! Geometry and basis set size. Values are set during initialisation
- !#################################################
-
- DOUBLE PRECISION :: BoxL, Omega,& ! Linear Box Size
-                    TimeStepOrt, TimeStepCP, RedFac, mu, Ediff
+!#################################################
+! Geometry and basis set size. Values are set during initialisation
+!#################################################
+ real(8):: BoxL, Omega,& ! Linear Box Size
+            TimeStepOrt, TimeStepCP, RedFac, mu, Ediff
  INTEGER :: MaxBas, GridSize, &! Maximum number of waves along 
            DiagSize, NoOfPW,   &! LINEAR direction, Number of Plane Waves
            MaxIter
  LOGICAL :: PrintOut
  LOGICAL :: OnlyStatic
+
  !#################################################
  ! Physical fields
  !#################################################
 
- DOUBLE COMPLEX, ALLOCATABLE :: Density_K(:,:,:)
- DOUBLE COMPLEX, ALLOCATABLE :: Density_R(:,:,:)
+ complex(8), ALLOCATABLE :: Density_K(:,:,:)
+ complex(8), ALLOCATABLE :: Density_R(:,:,:)
 
  !#################################################
  ! Physical system: nr of ions, electrons and orbitals
@@ -29,63 +31,62 @@ MODULE globals
 
  INTEGER :: N_ion, N_electron, N_orbitals
 
- !#################################################
- ! Wavefunction coefficients
- !#################################################
+!#################################################
+! Wavefunction coefficients
+!#################################################
+! complex(8), ALLOCATABLE :: Coeffs_K(:,:,:,:), Coeffs_R(:,:,:,:)
 
- ! DOUBLE COMPLEX, ALLOCATABLE :: Coeffs_K(:,:,:,:), Coeffs_R(:,:,:,:)
+!#################################################
+! Stored values of pseudopot.
+! core charges and short range part of local pseudopot
+!#################################################
+complex(8), ALLOCATABLE :: CoreCharge(:,:,:,:),  &
+                               totCoreCharge(:,:,:), &
+                               ShortLocal(:,:,:,:), &
+                               NonLocal(:,:,:), totShortLocal(:,:,:), &
+                               PseudoGrid(:,:,:)
 
- !#################################################
- ! Stored values of pseudopot.
- ! core charges and short range part of local pseudopot
- !#################################################
- DOUBLE COMPLEX, ALLOCATABLE :: CoreCharge(:,:,:,:),  &
-                                totCoreCharge(:,:,:), &
-                                ShortLocal(:,:,:,:), &
-                                NonLocal(:,:,:), totShortLocal(:,:,:), &
-                                PseudoGrid(:,:,:)
- !#################################################
- ! Data of ions, stored Coulomb potential and kinetic
- ! term.
- !#################################################
- TYPE Type_Ions
-   INTEGER :: AtomNum
-   DOUBLE PRECISION :: Mass
-   DOUBLE PRECISION :: R_I(3)
- END TYPE Type_Ions
- TYPE(Type_Ions), ALLOCATABLE :: Ions(:)
+!#################################################
+! Data of ions, stored Coulomb potential and kinetic
+! term.
+!#################################################
+TYPE Type_Ions
+  INTEGER :: AtomNum
+  real(8):: Mass
+  real(8):: R_I(3)
+END TYPE Type_Ions
+TYPE(Type_Ions), ALLOCATABLE :: Ions(:)
  
- DOUBLE PRECISION, ALLOCATABLE :: Gmin2Grid(:,:,:), &
-                                 G2Grid (:), FillFac(:)
- !#################################################
- ! Connection between linear indices of H_KS and 
- ! grid positions 
- !#################################################
+
+real(8), ALLOCATABLE :: Gmin2Grid(:,:,:), G2Grid (:), FillFac(:)
+ 
 
 
- INTEGER, ALLOCATABLE :: GridIndex(:,:,:), GridPos(:,:), GGrid(:,:,:,:)
+!#################################################
+! Connection between linear indices of H_KS and 
+! grid positions 
+!#################################################
+INTEGER, ALLOCATABLE :: GridIndex(:,:,:), GridPos(:,:), GGrid(:,:,:,:)
 
- !#################################################
- ! Cut-off in reciprocal space
- !#################################################
+!#################################################
+! Cut-off in reciprocal space
+!#################################################
+real(8):: GMax
 
- DOUBLE PRECISION :: GMax
 
-
- !#################################################
- ! Pseudopotential parameters
- !#################################################
-
- TYPE Type_PP_Params
-   INTEGER :: AtomNum
-   INTEGER :: Zion
-   INTEGER :: N_nonzero_C_i
-   DOUBLE PRECISION :: Xi
-   DOUBLE PRECISION :: C(4)
-   DOUBLE PRECISION :: MaxL
-   DOUBLE PRECISION :: r_s
-   DOUBLE PRECISION :: h_1s, h_2s, r_p, h_1p
- END TYPE Type_PP_Params
+!#################################################
+! Pseudopotential parameters
+!#################################################
+TYPE Type_PP_Params
+  INTEGER :: AtomNum
+  INTEGER :: Zion
+  INTEGER :: N_nonzero_C_i
+  real(8):: Xi
+  real(8):: C(4)
+  real(8):: MaxL
+  real(8):: r_s
+  real(8):: h_1s, h_2s, r_p, h_1p
+END TYPE Type_PP_Params
 
  INTEGER :: No_OF_DIFF_IONS !Has to be assigned in main/InCP
 

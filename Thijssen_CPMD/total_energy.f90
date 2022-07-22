@@ -1,30 +1,23 @@
-MODULE energy
-! In this module, the Kohn-Sham matrix is set up and diagonalised.
-! The density is then fed into a new KS Hamiltonian etcetera
-USE pseudo
-USE excorr
-USE Globals
-USE utilities
-
-
-CONTAINS
-
-
-  SUBROUTINE Total_Energy(NZCoeffs, E_KS)
-! Evaluate the energy for a given solution Coeffs_K
-
+SUBROUTINE Total_Energy(NZCoeffs, E_KS)
+  use globals
+  ! Evaluate the energy for a given solution Coeffs_K
   IMPLICIT NONE
-  DOUBLE COMPLEX, INTENT(IN) :: NZCoeffs(N_orbitals, NoOfPW)
+  complex(8), INTENT(IN) :: NZCoeffs(N_orbitals, NoOfPW)
   INTEGER :: I1, J1, K1, I2, J2, K2, IIndex, JIndex, G2, N, IT, JT, KT, &
              IElec, M, PP_Index, AtomNum, IOrb
-  DOUBLE COMPLEX, ALLOCATABLE :: TempVec(:,:,:), TempVec2_R(:,:,:), &
+  complex(8), ALLOCATABLE :: TempVec(:,:,:), TempVec2_R(:,:,:), &
                                  TempVec2_K(:,:,:)
-  DOUBLE COMPLEX :: II, PreFac
-  DOUBLE COMPLEX, INTENT(OUT) :: E_KS
-  DOUBLE COMPLEX :: E_kin, E_locPP, E_locPPsr, E_hartree, E_xc, E_nonlocPP, &
+  complex(8) :: II, PreFac
+  complex(8), INTENT(OUT) :: E_KS
+  complex(8) :: E_kin, E_locPP, E_locPPsr, E_hartree, E_xc, E_nonlocPP, &
                     E_ovrl, E_self, E_totSelf, E_core
 
-  DOUBLE PRECISION :: RPos, h_1s, h_2s, h_1p
+  real(8) :: RPos, h_1s, h_2s, h_1p
+
+  ! Function
+  real(8) :: Get_E_Self, Get_E_ovrl
+  INTEGER :: get_index_pp
+  real(8) :: epsilon_xc
 
   E_KS=CMPLX(0.D0)
   E_kin = CMPLX(0.D0)
@@ -79,7 +72,7 @@ CONTAINS
     DO N = 1, N_ion
       AtomNum = Ions(N)%AtomNum
       IF (AtomNum > 4) THEN
-        PP_Index = GetIndexPP(AtomNum)
+        PP_Index = get_index_pp(AtomNum)
         h_1s = PP_Params(PP_Index)%h_1s
         h_2s = PP_Params(PP_Index)%h_2s
         h_1p = PP_Params(PP_Index)%h_1p
@@ -118,86 +111,4 @@ CONTAINS
   E_KS = E_kin + E_locPPsr + E_xc + E_nonlocPP + E_self + E_ovrl - E_totSelf
   print '(A23 F15.8)', 'Total energy:', DBLE(E_KS) 
   print *
-  END SUBROUTINE Total_Energy
-
-
-
-  SUBROUTINE Check_ConstEnergy(NZCoeffsDot, R_ionDot)
-  IMPLICIT NONE
-  DOUBLE COMPLEX, INTENT(IN) :: NZCoeffsDot(N_orbitals, NoOfPW), &
-                                R_ionDot(N_ion, 3)
-  DOUBLE COMPLEX :: E
-  INTEGER        :: N
-
-  E = CMPLX(0.D0)
-  DO N=1, N_ion
-    E = E + SUM(R_ionDot(N,:)*CONJG(R_ionDot(N,:)))/(2*Ions(N)%Mass) 
-  END DO
-  E = E + SUM(NZCoeffsDot*CONJG(NZCoeffsDot))/(2*mu)
-  print '(A23 D15.3 )', 'Constant Energy check:', DBLE(E)
-  print *
-  END SUBROUTINE Check_ConstEnergy
-
-
-
-  
-  DOUBLE PRECISION FUNCTION Get_E_ovrl()
-   IMPLICIT NONE
-
-   DOUBLE PRECISION :: RPos, Xi1, Xi2, AvXi, DPos(3), G2
-   REAL :: erfc
-   INTEGER :: AtomNum1, AtomNum2, Zion1, Zion2, I, J, K, N1, N2, Pos(3)
-   INTEGER :: ind1, ind2
-   Get_E_ovrl = 0.D0
-   DO N1 = 1, N_ion
-     AtomNum1 = Ions(N1)%AtomNum
-     ind1 = GetIndexPP(AtomNum1)
-     Zion1 = PP_Params(ind1)%Zion
-     Xi1 = PP_Params(ind1)%Xi
-     DO N2 = N1, N_ion
-       AtomNum2 = Ions(N2)%AtomNum
-       ind2 = GetIndexPP(AtomNum2)
-       Zion2 = PP_Params(ind2)%Zion
-       Xi2 = PP_Params(ind2)%Xi
-       DPos = Ions(N1)%R_I(:)-Ions(N2)%R_I(:)
-       AvXi = SQRT(2.D0*(Xi1**2+Xi2**2))
-       DO I=-2, 2
-         DO J=-2, 2
-           DO K=-2, 2
-             IF ((N1 .NE. N2) .OR. (I.NE.0) .OR. (J.NE.0) .OR. (K.NE.0)) THEN
-               Pos = (/I*BoxL,J*BoxL,K*BoxL/)
-               RPos = SQRT(DOT_PRODUCT(DPos-Pos, DPos-Pos))
-               Get_E_ovrl = Get_E_ovrl+Zion1*Zion2/Rpos*DBLE(erfc(REAL(Rpos/AvXi)))
-             END IF
-           END DO !K
-         END DO !J
-       END DO !I
-     END DO !N2
-   END DO !N1
-  END FUNCTION Get_E_ovrl
-
-
-  
-  DOUBLE PRECISION FUNCTION Get_E_self(AtomNum)
-  ! Returns the long-and short range part of the FT of the local pseudopotential
-  ! This is useful for calculating the Kohn-Sham Hamiltonian, but not for the 
-  ! total energy, as the long range part should be treated differently in that case
-  ! (Ewald sum)
-  IMPLICIT NONE
-
-  INTEGER, INTENT(IN) :: AtomNum
-  DOUBLE PRECISION :: Xi, Zion
-  INTEGER :: ind
-
-  ind = GetIndexPP(AtomNum)
-  Zion = DBLE(PP_Params(ind)%Zion)
-  Xi = PP_Params(ind)%Xi
-
-  Get_E_Self = Zion*Zion/(2*SQRT(PI)*Xi)
-
-END FUNCTION Get_E_Self
-
-
-  
-END MODULE energy
-
+END SUBROUTINE
