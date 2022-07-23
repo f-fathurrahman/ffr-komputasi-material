@@ -1,10 +1,10 @@
 # Makefile for Car-Parrinello Program
 
 COMPILER = gfortran
-LDOPTS = -O
-COMPOPTS = -c -O -Wall
+LDOPTS = -O3
+COMPOPTS = -c -O3 -Wall
 LIBS = -L/usr/lib/ -lfftw -lblas -llapack 
-OBJECTS	= fft.o globals.o \
+OBJECTS	= fft.o globals.o energy_components.o \
 calc_dens_and_coeffs_r.o calc_orbitals.o  get_E_ovrl.o   \
 init_coeffs.o  nonloc_pp.o store_optimal.o \
 calc_facs.o check_const_energy.o get_E_self.o init_grids.o periodic_boundary.o  total_energy.o \

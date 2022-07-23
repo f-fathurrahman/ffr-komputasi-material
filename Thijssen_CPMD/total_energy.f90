@@ -1,5 +1,6 @@
 SUBROUTINE Total_Energy(NZCoeffs, E_KS)
   use globals
+  use energy_components
   ! Evaluate the energy for a given solution Coeffs_K
   IMPLICIT NONE
   complex(8), INTENT(IN) :: NZCoeffs(N_orbitals, NoOfPW)
@@ -9,8 +10,6 @@ SUBROUTINE Total_Energy(NZCoeffs, E_KS)
                                  TempVec2_K(:,:,:)
   complex(8) :: II, PreFac
   complex(8), INTENT(OUT) :: E_KS
-  complex(8) :: E_kin, E_locPP, E_locPPsr, E_hartree, E_xc, E_nonlocPP, &
-                    E_ovrl, E_self, E_totSelf, E_core
 
   real(8) :: RPos, h_1s, h_2s, h_1p
 
@@ -19,7 +18,7 @@ SUBROUTINE Total_Energy(NZCoeffs, E_KS)
   INTEGER :: get_index_pp
   real(8) :: epsilon_xc
 
-  E_KS=CMPLX(0.D0)
+  E_KS = CMPLX(0.D0)
   E_kin = CMPLX(0.D0)
   E_locPP = CMPLX(0.D0)
   E_nonlocPP = CMPLX(0.D0)
@@ -31,25 +30,22 @@ SUBROUTINE Total_Energy(NZCoeffs, E_KS)
   
   II = CONJG(Im)
 
-! KINETIC ENERGY
-
-  print *, 'nr el. ', N_electron
+  ! KINETIC ENERGY
+  
   PreFac = 2*PI*PI/BoxL**2
   DO Iorb = 1, N_orbitals
     E_kin = E_kin + FillFac(Iorb)*PreFac*&
         SUM(NZCoeffs(Iorb,:)*CONJG(NZCoeffs(Iorb,:))*G2Grid)
   END DO
-  print '(A23 F15.8)', 'kin:', DBLE(E_kin)
-   
-! SHORT RANGE PART OF LOCAL PP
-  
+     
+  !
+  ! SHORT RANGE PART OF LOCAL PP
+  !
   E_locPPsr = Omega*SUM(totShortLocal*CONJG(Density_K))
-  print '(A23 F15.8)', 'pp_sr:', DBLE(E_locPPsr)
 
   E_locPP = Omega*SUM(PseudoGrid*CONJG(Density_K))
-  print '(A23 F15.8)', 'loc pp:', DBLE(E_locPP)
 
-! EXCHANGE CORRELATION ENERGY
+  ! EXCHANGE CORRELATION ENERGY
   DO I1 = 0, GridSize-1
     DO J1 = 0, GridSize-1
       DO K1 = 0, GridSize-1
@@ -59,14 +55,12 @@ SUBROUTINE Total_Energy(NZCoeffs, E_KS)
       END DO
     END DO
   END DO
-  print '(A23 F15.8)', 'xc:', DBLE(E_xc)
 
-! HARTREE
+  ! HARTREE
   PreFac = BoxL**2*Omega/(2*PI)
   E_hartree = PreFac*SUM(Gmin2Grid*Density_K*CONJG(Density_K))
-  print '(A23 F15.8)', 'Hartree energy:', DBLE(E_hartree)
 
-! Nonlocal PsP
+  ! Nonlocal PsP
   E_nonlocPP = CMPLX(0.D0)
   DO IOrb = 1, N_orbitals
     DO N = 1, N_ion
@@ -91,24 +85,18 @@ SUBROUTINE Total_Energy(NZCoeffs, E_KS)
       END IF
     END DO  
   END DO
-  print '(A23 F15.8)', 'Nonlocal Psp:', DBLE(E_nonlocPP)
 
-! CORE ENERGY
+  ! CORE ENERGY
   PreFac = BoxL**2*Omega/(2*PI)
   E_core = PreFac*SUM(Gmin2Grid*totCoreCharge*CONJG(totCoreCharge))
 
-  print '(A23 F15.8)', 'Local core energy:', DBLE(E_core)
-
   E_self = PreFac*SUM(Gmin2Grid*(totCoreCharge+Density_K)*CONJG(totCoreCharge+Density_K))
 
-  print '(A23 F15.8)', 'self-energy:', DBLE(E_self)
-
   E_ovrl = Get_E_ovrl()
-  print '(A23 F15.8)', 'ovrl:', DBLE(E_ovrl)
+
   DO N=1, N_ion
-    E_totSelf=E_totSelf+Get_E_Self(Ions(N)%AtomNum)
+    E_totSelf = E_totSelf + Get_E_Self(Ions(N)%AtomNum)
   END DO
   E_KS = E_kin + E_locPPsr + E_xc + E_nonlocPP + E_self + E_ovrl - E_totSelf
-  print '(A23 F15.8)', 'Total energy:', DBLE(E_KS) 
-  print *
+
 END SUBROUTINE

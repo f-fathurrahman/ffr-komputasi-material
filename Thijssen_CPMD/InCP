@@ -4,7 +4,7 @@
 800                    mu
 0.3                    TimeStep Optimisation
 0.3                    TimeStep CarPar
-1.D-10                 Optimized if energydifference in two seq. steps < value
+1.D-6                  Optimized if energydifference in two seq. steps < value
 5000                   MaxIter
 0.9                    RedFac
 1                      Number of different ions
