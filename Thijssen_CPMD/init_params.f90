@@ -65,19 +65,21 @@ SUBROUTINE init_params()
   ENDDO
   WRITE(*,*) 'No of ions', N_ion
   DO i = 1, N_ion
-    WRITE(*,'(1x,I4,4F18.10)') ions(i)%AtomNum, ions(i)%Mass, ions(i)%R_I(1), ions(i)%R_I(2), ions(i)%R_I(3)
+    WRITE(*,'(1x,I4,4F18.10)') ions(i)%AtomNum, ions(i)%Mass, &
+                            &  ions(i)%R_I(1), ions(i)%R_I(2), ions(i)%R_I(3)
   ENDDO 
   
   CALL init_grids()
 
-  READ(8, *) N_electron
-  READ(8, *) N_Orbitals
+  ! Specify number of electrons and also the occupation numbers
+  READ(8,*) N_electron
+  READ(8,*) N_Orbitals
   ALLOCATE(FillFac(N_orbitals))
   DO N = 1, N_orbitals
     READ(8,*) FillFac(N)
   ENDDO
   CLOSE(8)
 
-  write(*,*) 'Finished reading input file'
+  WRITE(*,*) 'Finished reading input file'
 
 END SUBROUTINE

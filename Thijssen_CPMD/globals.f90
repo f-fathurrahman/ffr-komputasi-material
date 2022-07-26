@@ -51,12 +51,12 @@ COMPLEX(8), ALLOCATABLE :: CoreCharge(:,:,:,:),  &
 !#################################################
 TYPE Type_Ions
   INTEGER :: AtomNum
-  real(8):: Mass
-  real(8):: R_I(3)
+  REAL(8):: Mass
+  REAL(8):: R_I(3)
 END TYPE Type_Ions
 TYPE(Type_Ions), ALLOCATABLE :: Ions(:)
 
-REAL(8), ALLOCATABLE :: Gmin2Grid(:,:,:), G2Grid (:), FillFac(:)
+REAL(8), ALLOCATABLE :: Gmin2Grid(:,:,:), G2Grid(:), FillFac(:)
 
 
 !#################################################

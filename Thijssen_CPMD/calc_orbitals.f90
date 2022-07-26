@@ -17,7 +17,7 @@ SUBROUTINE Calc_Orbitals()
                              Y(:,:), R_IonDot(:,:)
   COMPLEX(8) :: E, Eold
   REAL(8) :: Time, TimeStep
-  real(8) :: delta_E
+  REAL(8) :: delta_E
 
   ALLOCATE(OrbForce(N_Orbitals, NoOfPW))
   ALLOCATE(NZCoeffs(N_Orbitals, NoOfPW))
@@ -26,23 +26,32 @@ SUBROUTINE Calc_Orbitals()
   ALLOCATE(OldNZCoeffs(N_Orbitals, NoOfPW))
   ALLOCATE(Y(N_Orbitals, N_Orbitals))
 
-  NZCoeffsDot = CMPLX(0.D0)
-  CALL Init_Coeffs(NZCoeffs,NZCoeffsDot,R_ionDot, Time)
+  NZCoeffsDot = CMPLX(0.D0, kind=8)
+  !
+  CALL init_coeffs(NZCoeffs,NZCoeffsDot,R_ionDot, Time)
+  !
   TimeStep = TimeStepOrt
   OldNZCoeffs = NZCoeffs
-  CALL Rattle(NZCoeffs, OldNZCoeffs, NZCoeffsDot)
-  CALL Calc_Orb_Force(NZCoeffs, OrbForce)
+  !
+  WRITE(*,*) 'Before rattle: sum NZCoeffs = ', sum(NZCoeffs)
+  CALL rattle(NZCoeffs, OldNZCoeffs, NZCoeffsDot)
+  WRITE(*,*) 'After rattle: sum NZCoeffs = ', sum(NZCoeffs)
+  !STOP 'ffr 39'
+  !
+  CALL calc_orb_force(NZCoeffs, OrbForce)
   
   PrintOut = .TRUE.
-  Eold = CMPLX(1.D0)
+  Eold = CMPLX(1.D0, kind=8)
   E = Eold
   
   DO Iter = 1, MaxIter
     OldNZCoeffs = NZCoeffs
     NZCoeffsDot = NZCoeffsDot + TimeStep*OrbForce/2
     NZCoeffs = NZCoeffs + TimeStep*NZCoeffsDot
-    CALL Rattle(NZCoeffs, OldNZCoeffs, NZCoeffsDot)
-    CALL Calc_Orb_Force(NZCoeffs, OrbForce)
+    !
+    CALL rattle(NZCoeffs, OldNZCoeffs, NZCoeffsDot)
+    CALL calc_orb_force(NZCoeffs, OrbForce)
+    !
     NZCoeffsDot = NZCoeffsDot + TimeStep*OrbForce/2
     Y =  MATMUL(CONJG(NZCoeffsDot),TRANSPOSE(NZCoeffs))
     Y = -0.5D0*(CONJG(Y) + TRANSPOSE(Y))
