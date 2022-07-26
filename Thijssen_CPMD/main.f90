@@ -1,7 +1,7 @@
+! Original code by Prof. Thijssen
+! Modified by Fadjar Fathurrahman
 PROGRAM CarPar
-
   CALL init_params()
-  CALL Simulate()
-          
+  CALL simulate()
 END PROGRAM
     

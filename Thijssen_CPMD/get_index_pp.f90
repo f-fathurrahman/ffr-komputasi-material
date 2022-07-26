@@ -1,15 +1,18 @@
-!-------------------------------------
-INTEGER FUNCTION get_index_pp(AtomNum)
-!-------------------------------------
-  use globals, only: No_OF_DIFF_IONS, PP_Params
+!-----------------------------------------
+FUNCTION get_index_pp(AtomNum) RESULT(res)
+!-----------------------------------------
+  USE globals, ONLY: No_OF_DIFF_IONS, PP_Params
+  !
   IMPLICIT NONE
   INTEGER, INTENT(IN) :: AtomNum
   INTEGER :: I
-  get_index_pp=-1
-  DO I=1, No_OF_DIFF_IONS
-    IF (PP_Params(I)%AtomNum.EQ.AtomNum) THEN
-        get_index_pp = I
-        EXIT
-    END IF
-  END DO
+  INTEGER :: res
+  
+  res = -1
+  DO i = 1,No_OF_DIFF_IONS
+    IF( PP_Params(i)%AtomNum == AtomNum ) THEN
+      res = i
+      EXIT
+    ENDIF
+  ENDDO
 END FUNCTION

@@ -4,32 +4,31 @@ MODULE globals
 
 IMPLICIT NONE
 
-real(8):: PI 
-complex(8):: Im
+REAL(8):: PI 
+COMPLEX(8):: Im
 
 !#################################################
 ! Geometry and basis set size. Values are set during initialisation
 !#################################################
- real(8):: BoxL, Omega,& ! Linear Box Size
-            TimeStepOrt, TimeStepCP, RedFac, mu, Ediff
- INTEGER :: MaxBas, GridSize, &! Maximum number of waves along 
+REAL(8):: BoxL, Omega,& ! Linear Box Size
+          TimeStepOrt, TimeStepCP, RedFac, mu, Ediff
+INTEGER :: MaxBas, GridSize, &! Maximum number of waves along 
            DiagSize, NoOfPW,   &! LINEAR direction, Number of Plane Waves
            MaxIter
- LOGICAL :: PrintOut
- LOGICAL :: OnlyStatic
+LOGICAL :: PrintOut
+LOGICAL :: OnlyStatic
 
- !#################################################
- ! Physical fields
- !#################################################
+!#################################################
+! Physical fields
+!#################################################
+COMPLEX(8), ALLOCATABLE :: Density_K(:,:,:)
+COMPLEX(8), ALLOCATABLE :: Density_R(:,:,:)
 
- complex(8), ALLOCATABLE :: Density_K(:,:,:)
- complex(8), ALLOCATABLE :: Density_R(:,:,:)
+!#################################################
+! Physical system: nr of ions, electrons and orbitals
+!#################################################
+INTEGER :: N_ion, N_electron, N_orbitals
 
- !#################################################
- ! Physical system: nr of ions, electrons and orbitals
- !#################################################
-
- INTEGER :: N_ion, N_electron, N_orbitals
 
 !#################################################
 ! Wavefunction coefficients
@@ -40,11 +39,11 @@ complex(8):: Im
 ! Stored values of pseudopot.
 ! core charges and short range part of local pseudopot
 !#################################################
-complex(8), ALLOCATABLE :: CoreCharge(:,:,:,:),  &
-                               totCoreCharge(:,:,:), &
-                               ShortLocal(:,:,:,:), &
-                               NonLocal(:,:,:), totShortLocal(:,:,:), &
-                               PseudoGrid(:,:,:)
+COMPLEX(8), ALLOCATABLE :: CoreCharge(:,:,:,:),  &
+                           totCoreCharge(:,:,:), &
+                           ShortLocal(:,:,:,:), &
+                           NonLocal(:,:,:), totShortLocal(:,:,:), &
+                           PseudoGrid(:,:,:)
 
 !#################################################
 ! Data of ions, stored Coulomb potential and kinetic
@@ -56,10 +55,8 @@ TYPE Type_Ions
   real(8):: R_I(3)
 END TYPE Type_Ions
 TYPE(Type_Ions), ALLOCATABLE :: Ions(:)
- 
 
-real(8), ALLOCATABLE :: Gmin2Grid(:,:,:), G2Grid (:), FillFac(:)
- 
+REAL(8), ALLOCATABLE :: Gmin2Grid(:,:,:), G2Grid (:), FillFac(:)
 
 
 !#################################################
@@ -71,7 +68,7 @@ INTEGER, ALLOCATABLE :: GridIndex(:,:,:), GridPos(:,:), GGrid(:,:,:,:)
 !#################################################
 ! Cut-off in reciprocal space
 !#################################################
-real(8):: GMax
+REAL(8):: GMax
 
 
 !#################################################
@@ -81,16 +78,18 @@ TYPE Type_PP_Params
   INTEGER :: AtomNum
   INTEGER :: Zion
   INTEGER :: N_nonzero_C_i
-  real(8):: Xi
-  real(8):: C(4)
-  real(8):: MaxL
-  real(8):: r_s
-  real(8):: h_1s, h_2s, r_p, h_1p
+  REAL(8):: Xi
+  REAL(8):: C(4)
+  REAL(8):: MaxL
+  REAL(8):: r_s
+  REAL(8):: h_1s, h_2s, r_p, h_1p
 END TYPE Type_PP_Params
 
- INTEGER :: No_OF_DIFF_IONS !Has to be assigned in main/InCP
+INTEGER :: No_OF_DIFF_IONS !Has to be assigned in main/InCP
 
- TYPE(Type_PP_Params), ALLOCATABLE :: PP_params(:) 
+TYPE(Type_PP_Params), ALLOCATABLE :: PP_params(:) 
 
 
 END MODULE Globals
+
+
