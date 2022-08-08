@@ -28,7 +28,7 @@ SUBROUTINE Calc_Orbitals()
 
   NZCoeffsDot = CMPLX(0.D0, kind=8)
   !
-  CALL init_coeffs(NZCoeffs,NZCoeffsDot,R_ionDot, Time)
+  CALL init_coeffs(NZCoeffs, NZCoeffsDot, R_ionDot, Time)
   !
   TimeStep = TimeStepOrt
   OldNZCoeffs = NZCoeffs
@@ -45,13 +45,14 @@ SUBROUTINE Calc_Orbitals()
   E = Eold
   
   DO Iter = 1, MaxIter
-    OldNZCoeffs = NZCoeffs
-    NZCoeffsDot = NZCoeffsDot + TimeStep*OrbForce/2
-    NZCoeffs = NZCoeffs + TimeStep*NZCoeffsDot
+    OldNZCoeffs = NZCoeffs ! save old orbitals
+    NZCoeffsDot = NZCoeffsDot + TimeStep*OrbForce/2 ! orbital velocity
+    NZCoeffs = NZCoeffs + TimeStep*NZCoeffsDot ! update orbitals
     !
-    CALL rattle(NZCoeffs, OldNZCoeffs, NZCoeffsDot)
-    CALL calc_orb_force(NZCoeffs, OrbForce)
+    CALL rattle(NZCoeffs, OldNZCoeffs, NZCoeffsDot) ! apply constraint
+    CALL calc_orb_force(NZCoeffs, OrbForce) ! calc gradient
     !
+    ! Electron velocities, mass is taken to be one
     NZCoeffsDot = NZCoeffsDot + TimeStep*OrbForce/2
     Y =  MATMUL(CONJG(NZCoeffsDot),TRANSPOSE(NZCoeffs))
     Y = -0.5D0*(CONJG(Y) + TRANSPOSE(Y))

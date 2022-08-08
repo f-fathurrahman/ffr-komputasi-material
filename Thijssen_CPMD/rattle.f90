@@ -32,8 +32,7 @@ SUBROUTINE Rattle(NZCoeffs, OldNZCoeffs, NZCoeffsdot)
   X = 0.5D0*(I - A)
 
   DO 
-    Correction = I - A - MATMUL(TRANSPOSE(CONJG(B)), X) - MATMUL(X, B) - &
-               MATMUL(X,X)
+    Correction = I - A - MATMUL(TRANSPOSE(CONJG(B)), X) - MATMUL(X, B) - MATMUL(X,X)
     X = X + 0.5*Correction
     nrm = REAL(SUM( CONJG(Correction)*Correction ), kind=8)
     IF( nrm < 1.D-10 ) EXIT  
