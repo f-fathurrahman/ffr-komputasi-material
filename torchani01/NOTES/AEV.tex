@@ -1,0 +1,104 @@
+\section{Atomic environment vector}
+
+Using Behler-Parrinello symmetry functions (BPSF)
+
+The original BPSF are used to compute an atomic environment vector (AEV)
+$\mathbf{G}^{X}_{i}$ for $i$-th atom of a molecule with atomic number $X$
+which are composed of $M$ elements:
+\begin{equation}
+\mathbf{G}^{X}_{i} = \left\{
+G_{1}, G_{2}, G_{3}, \ldots, G_{M}
+\right\}
+\end{equation}
+
+AEVs probe specific regions of an individual atoms's radial and angular chemical
+environment.
+
+Each $\mathbf{G}^{X}_{i}$ is then used as input into a single NNP.
+Total energy of a molecule, $E_{T}$ is computed from the outputs, $E_{i}$
+of the atomic number specific NNPs using:
+\begin{equation}
+E_{T} = \sum_{i}^{\text{all atoms}} E_{i}
+\end{equation}
+
+Radial elements of $\mathbf{G}^{X}_{i}$:
+\begin{equation}
+G^{\mathrm{R}}_{m} = \sum_{j \neq i} \exp\left[ -\eta
+  \left( R_{ij} - R_{\mathrm{shift}} \right)^2 \right]
+  f_{\mathrm{C}}\left(  R_{ij} \right)
+\end{equation}
+with piecewise cutoff function:
+\begin{equation}
+f_{\mathrm{C}}\left(R_{ij}\right) = \begin{cases}
+0.5\cos\left( \dfrac{\pi R_{ij}}{R_{\mathrm{C}}} \right) + 0.5 & \text{for }
+R_{ij} \leq R_{\mathrm{C}} \\
+0 & \text{for } R_{ij} > R_{\mathrm{C}}
+\end{cases}
+\end{equation}
+
+The index $m$ is over a set of $\eta$ and $R_{\mathrm{s}}$.
+Parameter $\eta$ is used to change the width of the Gaussian distribution
+while the purpose of $R_{\mathrm{s}}$ is to shift the center of the peak.
+In an ANI potential, only single $\eta$ is used to produce thin Gaussian peaks
+and multiple $R_{\mathrm{s}}$ are used to probe outward from the atomic center.
+The reasoning behind this specific use of
+parameters is two-fold:
+\begin{itemize}
+\item firstly, when probing with many small $\eta$ parameters,
+vector elements can grow to very large values,
+which are detrimental to the training of NNPs.
+\item Secondly, using $R_{\mathrm{s}}$ in this manner allows the
+probing of very specific regions of
+the radial environment, which helps with transferability
+\end{itemize}
+
+Two modifcations are made to the original version of Behler
+and Parrinello's angular symmetry function to produce one
+better suited to probing the local angular environment of
+complex chemical systems.
+\begin{itemize}
+\item The first addition is $\theta_{\mathrm{s}}$, which allows
+an arbitrary number of shifts in the angular environment, and
+\item the second is a modified exponential factor that allows an
+$R_{\mathrm{s}}$ parameter to be added.
+The $R_{\mathrm{s}}$ addition allows the angular
+environment to be considered within radial shells based on the
+average of the distance from the neighboring atoms.
+\end{itemize}
+
+The effect
+of these two changes is that AEV elements are generally smaller
+because they overlap atoms in different angular regions less and
+they provide a distinctive image of various molecular features,
+a property that assists neural networks in learning the energetics
+of specific bonding patterns, ring patterns, functional groups, or
+other molecular features.
+
+Given atoms $i$, $j$, and $k$ angle $\theta_{ijk}$, centered on atom $i$,
+is computed along with two distances $R_{ij}$ and $R_{ik}$.
+
+A single element $G_{m}^{\mathrm{Amod}}$ of $\mathbf{G}_{i}^{\mathrm{X}}$
+to probe the angular environment of atom $i$, takes the form of a sum over
+all $j$ and $k$ neighboring atom pairs, of the product of a radial and an
+angular factor
+\begin{equation}
+G_{m}^{\mathrm{Amod}} = 2^{1-\zeta}
+\sum_{j,k \neq i}^{\text{all atoms}}
+\left( 1 + \cos(\theta_{ijk} - \theta_{\mathrm{s}}) \right)^{\zeta}
+\times
+\exp\left[ -\eta \left( \dfrac{R_{ij} + R_{jk}}{2} -
+R_{\mathrm{s}} \right)^2 \right]
+f_{\mathrm{C}}(R_{ij}) f_{\mathrm{C}}(R_{ik})
+\end{equation}
+
+The Gaussian factor combined with the cutoff functions, like
+the radial symmetry functions, allows chemical locality to be
+exploited in the angular symmetry functions.
+In this case, the index $m$ is over four separate
+parameters: $\zeta$, $\theta_{s}$,
+$h$, and $R_{\mathrm{s}}$.
+$\eta$ and $R_{\mathrm{s}}$ serve a similar purpose as in eqn (3).
+Applying a $\theta_{\mathrm{s}}$ parameter
+allows probing of specific regions of the angular environment in
+a similar way as is accomplished with $R_{\mathrm{s}}$ in the radial part.
+Also, $z$ changes the width of the peaks in the angular environment
