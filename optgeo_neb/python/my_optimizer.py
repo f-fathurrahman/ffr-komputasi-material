@@ -2,7 +2,7 @@ from math import sqrt
 import time
 
 from ase.parallel import world, barrier
-from MyDynamics import MyDynamics
+from my_dynamics import MyDynamics
 
 class MyOptimizer(MyDynamics):
     """Base-class for all structure optimization classes."""
@@ -108,7 +108,10 @@ class MyOptimizer(MyDynamics):
                 axis=1
             ).max() < self.fmax ** 2 and self.atoms.get_curvature() < 0.0
         #print("MyOptimizer: end of converged?")
-        return (forces ** 2).sum(axis=1).max() < self.fmax ** 2
+        max_forces = (forces ** 2).sum(axis=1).max()
+        print("Check converged: max_forces = %18.10f, fmax = %18.10f" % (max_forces, self.fmax**2))
+        #
+        return max_forces < self.fmax ** 2
 
     def log(self, forces=None):
         #print("MyOptimizer: log")

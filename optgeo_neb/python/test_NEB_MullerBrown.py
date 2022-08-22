@@ -1,23 +1,28 @@
 import copy
 
 import ase.io
-from MullerBrown import MullerBrown
+from muller_brown import MullerBrown
 from ase.optimize import BFGS, MDMin
 #from ase.neb import NEB
-from MyNEB import MyNEB
-from MyMDMin import MyMDMin
-from MyBFGS import MyBFGS
+from my_neb import MyNEB
+from my_mdmin import MyMDMin
+from my_bfgs import MyBFGS
 
 ase_calculator = MullerBrown()
 
 n_images = 10
 
+#
 # Run test_MullerBrown.py to produce these files
+#
 initial_ase = ase.io.read("initial_optimized.traj")
 final_ase = ase.io.read("final_optimized.traj")
 
-images_ase = [initial_ase]
-
+#
+# Initialize images
+#
+images_ase = [initial_ase] # initial image
+# Append all other images, also their calculators
 for i in range(1, n_images-1):
     image_ase = initial_ase.copy()
     image_ase.set_calculator(copy.deepcopy(ase_calculator))
@@ -40,9 +45,14 @@ neb_ase.interpolate(method="linear") # default
 #    y = r[0,1]
 #    print("%3d r=[%18.10f,%18.10f] E=%18.10f" % (i+1, x, y, image.get_potential_energy()))
 
+#
+# Optimize the images
+#
 bfgs_ase = MyBFGS(neb_ase, trajectory="neb_ase_bfgs.traj")
 #bfgs_ase.max_steps = 2
 bfgs_ase.run(fmax=0.05)
+
+
 print("\nSummary of the results: \n")
 atoms_ase = ase.io.read("neb_ase_bfgs.traj", ":")
 n_eval_ase = int(len(atoms_ase) - 2 * (len(atoms_ase)/n_images))

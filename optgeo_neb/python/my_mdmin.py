@@ -1,5 +1,5 @@
 import numpy as np
-from MyOptimizer import MyOptimizer
+from my_optimizer import MyOptimizer
 
 class MyMDMin(MyOptimizer):
     def __init__(self, atoms, restart=None, logfile='-', trajectory=None,

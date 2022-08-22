@@ -1,8 +1,9 @@
 import copy
 
 from ase import Atoms
-from MullerBrown import MullerBrown
-from ase.optimize import BFGS, MDMin
+from muller_brown import MullerBrown
+from my_bfgs import MyBFGS
+from my_mdmin import MyMDMin
 
 ase_calculator = MullerBrown()
 
@@ -22,13 +23,13 @@ print("Forces           = ", initial_structure.get_forces())
 
 print("Optimization\n")
 print("initial_structure positions: ", initial_structure.get_positions())
-initial_opt = BFGS(initial_structure, trajectory='initial_optimized.traj')
+initial_opt = MyBFGS(initial_structure, trajectory='initial_optimized.traj')
 initial_opt.run(fmax=0.01)
 print("initial_structure positions: ", initial_structure.get_positions())
 #print("Pass here")
 
 print()
 print("final_structure positions: ", final_structure.get_positions())
-final_opt = BFGS(final_structure, trajectory='final_optimized.traj')
+final_opt = MyBFGS(final_structure, trajectory='final_optimized.traj')
 final_opt.run(fmax=0.01)
 print("final_structure positions: ", final_structure.get_positions())

@@ -5,7 +5,7 @@ import numpy as np
 from numpy.linalg import eigh
 
 #from ase.optimize.optimize import Optimizer
-from MyOptimizer import MyOptimizer
+from my_optimizer import MyOptimizer
 from ase.utils import basestring
 
 class MyBFGS(MyOptimizer):
@@ -73,14 +73,18 @@ class MyBFGS(MyOptimizer):
 
         if f is None:
             f = atoms.get_forces()
-
+        #
         r = atoms.get_positions()
         f = f.reshape(-1)
+        #
         self.update(r.flat, f, self.r0, self.f0)
+        #
         omega, V = eigh(self.H)
         print("omega = ", omega)
+        #
         dr = np.dot(V, np.dot(f, V) / np.fabs(omega)).reshape((-1, 3))
         print("dr = ", dr)
+        #
         steplengths = (dr**2).sum(1)**0.5
         print("MyBFGS: steplengths = ", steplengths)
         dr = self.determine_step(dr, steplengths)

@@ -1,6 +1,6 @@
 import copy
 from ase import Atoms
-from MullerBrown import MullerBrown
+from muller_brown import MullerBrown
 
 from ase.build import fcc100, add_adsorbate
 from ase.calculators.emt import EMT
