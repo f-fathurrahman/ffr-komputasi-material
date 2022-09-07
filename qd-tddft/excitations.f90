@@ -35,9 +35,12 @@ subroutine excitations
   call build_rho(wfs, rho)
   call interaction_pot(rho, vh, vx, vc, ex, ec)
   vtot = vext + vh + vx + vc
+  !
+  write(*,*) 'Eigenvalues: '
   do j = 1, N_wf
-     call hpsi(vtot, wfs(:, :, j), hwf)
-     eigenval(j) = dotproduct(wfs(:, :, j), hwf)
+    call hpsi(vtot, wfs(:, :, j), hwf)
+    eigenval(j) = dotproduct(wfs(:, :, j), hwf)
+    write(*,*) j, eigenval(j)
   enddo
 
   n_pairs = N_occ*N_empty
@@ -45,11 +48,11 @@ subroutine excitations
 
   j = 1
   do a = n_occ+1, n_wf
-     do i = 1, n_occ
-        pair_i(j) = i
-        pair_a(j) = a
-        j = j + 1
-     enddo
+    do i = 1, n_occ
+       pair_i(j) = i
+       pair_a(j) = a
+       j = j + 1
+    enddo
   enddo
 
   allocate(mat(n_pairs, n_pairs), energies(n_pairs, 3))
@@ -57,29 +60,29 @@ subroutine excitations
   energies = 0.0d0
 
   ! calculate the matrix elements of (v + fxc)
+  write(*,*) 'Calculating matrix elements of (v + fxc): '
   do ia = 1, n_pairs
-     i = pair_i(ia)
-     a = pair_a(ia)
-     do jb = 1, n_pairs
-        j = pair_i(jb)
-        b = pair_a(jb)
-        mat(ia, jb) = k_term(i, a, j, b)
-     enddo
+    i = pair_i(ia)
+    a = pair_a(ia)
+    do jb = 1, n_pairs
+       j = pair_i(jb)
+       b = pair_a(jb)
+       mat(ia, jb) = k_term(i, a, j, b)
+    enddo
   enddo
 
-
-
+  ! diagonal
   do ia = 1, n_pairs
-     i = pair_i(ia)
-     a = pair_a(ia)
-     temp = eigenval(a) - eigenval(i)
-     do jb = 1, n_pairs
-        j = pair_i(jb)
-        b = pair_a(jb)
-        mat(ia, jb)  = 4.0d0 * sqrt(temp) * mat(ia, jb) * sqrt(eigenval(b) - eigenval(j))
-        if(jb /= ia) mat(jb, ia) = mat(ia, jb) ! the matrix is symmetric
-     enddo
-     mat(ia, ia) = temp**2 + mat(ia, ia)
+    i = pair_i(ia)
+    a = pair_a(ia)
+    temp = eigenval(a) - eigenval(i)
+    do jb = 1, n_pairs
+      j = pair_i(jb)
+      b = pair_a(jb)
+      mat(ia, jb)  = 4.0d0 * sqrt(temp) * mat(ia, jb) * sqrt(eigenval(b) - eigenval(j))
+      if(jb /= ia) mat(jb, ia) = mat(ia, jb) ! the matrix is symmetric
+    enddo
+    mat(ia, ia) = temp**2 + mat(ia, ia)
   enddo
 
   write(*, *)
@@ -95,17 +98,15 @@ subroutine excitations
      i = pair_i(ia)
      a = pair_a(ia)
      call dipole_matrix_elem(i, a, os(ia,:))
-  end do
+  enddo
 
   do ia = 1, n_pairs
-     do j = 1, 2
-          energies(ia, 1+j) = 2.0_8 * (sum(os(:,j)*mat(:,ia)        &
-             *sqrt(eigenval(pair_a(:)) - eigenval(pair_i(:))) ))**2
-     end do
-  end do
+    do j = 1, 2
+        energies(ia,1+j) = 2.d0 * (sum(os(:,j)*mat(:,ia) * sqrt(eigenval(pair_a(:)) - eigenval(pair_i(:))) ))**2
+    enddo
+  enddo
 
   ! And write down the results
-
   write(*, '(4(a15,1x))') 'E' , '<x>', '<y>', '<f>'
   do ia = 1, n_pairs
      write(*, '(5(e15.8,1x))') energies(ia,1), &
@@ -130,7 +131,9 @@ subroutine excitations
       
   contains
 
+  !-----------------------------
   subroutine eigensolve(k, a, e)
+  !-----------------------------
     integer, intent(in)     :: k
     real(8), intent(inout)  :: a(k, k)
     real(8), intent(out)    :: e(k)
@@ -142,10 +145,14 @@ subroutine excitations
     allocate(work(lwork))
     call dsyev ('V', 'U', k, a(1,1), k, e(1), work(1), lwork, info)
     deallocate(work)
-
+  !------------------------
   end subroutine eigensolve
+  !------------------------
 
+
+  !----------------------------------
   real(8) function k_term(i, a, j, b)
+  !----------------------------------
     integer, intent(in) :: i, a, j, b
     real(8), allocatable :: rho_i(:, :), rho_j(:, :), pot(:, :)
     integer :: ix, iy
@@ -169,9 +176,14 @@ subroutine excitations
     enddo
 
     deallocate(rho_i, rho_j, pot)
+  !------------------
   end function k_term
+  !------------------
 
+
+  !-------------------------------------
   subroutine dipole_matrix_elem(i, j, s)
+  !-------------------------------------
     integer, intent(in) :: i, j
     real(8), intent(out) :: s(2)
 
@@ -185,9 +197,9 @@ subroutine excitations
        enddo
     enddo
     s = s*delta**2
-      
+  !--------------------------------
   end subroutine dipole_matrix_elem
-
+  !--------------------------------
 
 
 

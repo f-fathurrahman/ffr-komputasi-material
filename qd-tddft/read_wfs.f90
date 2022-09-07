@@ -21,6 +21,8 @@ subroutine read_wfs(filename)
 
   integer :: i
 
+  write(*,*) 'read_wfc: filename = ', trim(filename)
+
   open(unit=11, file=trim(filename), form='unformatted', &
        status = 'old', action = 'read', iostat = i)
   if(i.ne.0) then
