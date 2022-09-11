@@ -1,5 +1,9 @@
 import sys
 import numpy as np
+
+import numpy.random
+numpy.random.seed(1234)
+
 from my_sgdml.train import GDMLTrain
 
 dataset = np.load("DATASET/ethanol_dft.npz")

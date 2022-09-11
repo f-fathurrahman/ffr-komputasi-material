@@ -1,5 +1,11 @@
 import sys
 import numpy as np
+import scipy
+import os
+
+import numpy.random
+numpy.random.seed(1234)
+
 from my_sgdml.train import GDMLTrain
 
 dataset = np.load("DATASET/ethanol_dft.npz")
@@ -89,7 +95,7 @@ if "r_unit" in train_dataset and "e_unit" in train_dataset:
     task["e_unit"] = train_dataset["e_unit"]
 """
 
-task['perms'] = np.arange(train_dataset['R'].shape[1])[None,:]  # no symmetries
+task["perms"] = np.arange(train_dataset["R"].shape[1])[None,:]  # no symmetries
 
 #-----------------
 # TRAIN START HERE
@@ -98,29 +104,29 @@ task['perms'] = np.arange(train_dataset['R'].shape[1])[None,:]  # no symmetries
 
 task = dict(task)  # make mutable
 
-n_train, n_atoms = task['R_train'].shape[:2]
+n_train, n_atoms = task["R_train"].shape[:2]
 
 from my_sgdml.utils.desc import Desc
 desc = Desc(n_atoms, max_processes=None)
 
-n_perms = task['perms'].shape[0]
-tril_perms = np.array([Desc.perm(p) for p in task['perms']])
+n_perms = task["perms"].shape[0]
+tril_perms = np.array([Desc.perm(p) for p in task["perms"]])
 
 dim_i = 3 * n_atoms
 dim_d = desc.dim
 
 perm_offsets = np.arange(n_perms)[:, None] * dim_d
-tril_perms_lin = (tril_perms + perm_offsets).flatten('F')
+tril_perms_lin = (tril_perms + perm_offsets).flatten("F")
 
 lat_and_inv = None
 callback = None
 
-R = task['R_train'].reshape(n_train, -1)
+R = task["R_train"].reshape(n_train, -1)
 R_desc, R_d_desc = desc.from_R(
     R,
     lat_and_inv=lat_and_inv,
     callback=partial(
-        callback, disp_str='Generating descriptors and their Jacobians'
+        callback, disp_str="Generating descriptors and their Jacobians"
     )
     if callback is not None
     else None,
@@ -129,10 +135,10 @@ R_desc, R_d_desc = desc.from_R(
 
 # Generate label vector.
 E_train_mean = None
-y = task['F_train'].ravel().copy()
-#if task['use_E'] and task['use_E_cstr']:
+y = task["F_train"].ravel().copy()
+#if task["use_E"] and task["use_E_cstr"]:
 #    print("Pass here in 134")
-#    E_train = task['E_train'].ravel().copy()
+#    E_train = task["E_train"].ravel().copy()
 #    E_train_mean = np.mean(E_train)
 #    y = np.hstack((y, -E_train + E_train_mean))
 #    # y = np.hstack((n*Ft, (1-n)*Et))
@@ -140,3 +146,107 @@ y = task['F_train'].ravel().copy()
 y_std = np.std(y)
 print("y_std = ", y_std)
 y /= y_std
+
+
+"""
+from my_sgdml.solvers.analytic import Analytic
+analytic = Analytic(gdml_train, desc, callback=callback)
+alphas = analytic.solve(task, R_desc, R_d_desc, tril_perms_lin, y)
+print(alphas.shape)
+"""
+
+sig = task["sig"]
+lam = task["lam"]
+use_E_cstr = task["use_E_cstr"]
+
+n_train, dim_d = R_d_desc.shape[:2]
+n_atoms = int((1 + np.sqrt(8 * dim_d + 1)) / 2)
+dim_i = 3 * n_atoms
+
+print("Assembling kernel matrix")
+
+K = -gdml_train._assemble_kernel_mat(
+    R_desc,
+    R_d_desc,
+    tril_perms_lin,
+    sig,
+    desc,
+    use_E_cstr=False,
+    callback=None,
+)  # Flip sign to make convex
+
+print(K.shape)
+
+#
+# This is the analytic.solve step
+#
+if K.shape[0] == K.shape[1]:
+    K[np.diag_indices_from(K)] += lam  # Regularize
+    try:
+        print("Trying Cholesky decomposition")
+        # Cholesky (do not overwrite K in case we need to retry)
+        L, lower = scipy.linalg.cho_factor(
+            K, overwrite_a=False, check_finite=False
+        )
+        alphas = -scipy.linalg.cho_solve(
+            (L, lower), y, overwrite_b=False, check_finite=False
+        )
+        print("Solving linear equation successful")
+    except np.linalg.LinAlgError:  # Try a solver that makes less assumptions
+        try:
+            print("Trying LU decomposition")
+            # LU
+            alphas = -scipy.linalg.solve(
+                K, y, overwrite_a=True, overwrite_b=True, check_finite=False
+            )
+        except MemoryError:
+            print("Not enough memory to train this system using a closed form solver.")
+            print()
+            os._exit(1)
+    except MemoryError:
+        print("Not enough memory to train this system using a closed form solver.")
+        print()
+        os._exit(1)
+else:
+    print("Using least squares")
+    # Least squares for non-square K
+    alphas = -np.linalg.lstsq(K, y, rcond=-1)[0]
+
+
+
+alphas_E = None
+alphas_F = alphas
+
+solver_keys = {} # remove this
+print("After finding the parameters, create model")
+print("solver_keys = ", solver_keys)
+model = gdml_train.create_model(
+    task,
+    "analytic",
+    R_desc,
+    R_d_desc,
+    tril_perms_lin,
+    y_std,
+    alphas_F,
+    alphas_E=alphas_E,
+)
+model.update(solver_keys)
+
+# Recover integration constant.
+# Note: if energy constraints are included in the kernel (via "use_E_cstr"), do not
+# compute the integration constant, but simply set it to the mean of the training energies
+# (which was subtracted from the labels before training).
+if model["use_E"]:
+    c = (
+        gdml_train._recov_int_const(model, task, R_desc=R_desc, R_d_desc=R_d_desc)
+        if E_train_mean is None
+        else E_train_mean
+    )
+    print("Recover integration constant: c = ", c)
+    if c is None:
+        # Something does not seem right.
+        # Turn off energy predictions for this model, only output force predictions.
+        model["use_E"] = False
+    else:
+        model["c"] = c
+
