@@ -8,12 +8,13 @@ n_train = 200
 gdml_train = GDMLTrain()
 task = gdml_train.create_task(dataset, n_train,\
         valid_dataset=dataset, n_valid=1000,\
-        sig=20, lam=1e-10)
+        sig=20, lam=1e-10, use_sym=True)
 
-try:
-    model = gdml_train.train(task)
-except Exception, err:
-    sys.exit(err)
-else:
-    np.savez_compressed('m_ethanol.npz', **model)
+model = gdml_train.train(task)
+
+#try:
+#except Exception, err:
+#    sys.exit(err)
+#else:
+#    np.savez_compressed('m_ethanol.npz', **model)
 
