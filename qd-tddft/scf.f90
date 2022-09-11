@@ -20,31 +20,40 @@ subroutine scf()
   implicit none
 
   real(8), external :: energy
-  real(8) :: ex, ec, etot, diff
-  real(8), parameter :: alpha = 0.2_8, &
-                        tol = 1.0e-7_8
+  real(8) :: ex, ec, etot, diff, etot_old, diffEtot
+  real(8), parameter :: alpha = 0.5d0, &
+                        tol = 1.0d-7
   real(8), allocatable :: eigenval(:), residues(:)
   real(8), allocatable :: vext(:,:), vh(:,:), vx(:,:), vc(:,:), vtot(:, :) ! the potentials
   real(8), allocatable :: rho(:,:), rhoprev(:, :), phi(:, :)                             ! the density
   
   integer :: i, j
-  integer, parameter :: max_iter = 100
+  integer, parameter :: max_iter = 200
+  real(8) :: ddot
   
   allocate(eigenval(N_wf), residues(N_wf))
   allocate(vext(N, N), vh(N, N), vx(N, N), vc(N, N), vtot(N, N))
   allocate(rho(N, N), rhoprev(N, N), phi(N, N))
 
+  call info_mesh()
+
   ! The first iteration will use the independent particle approximation to the problem
   call external_pot(vext)
   call output(vext, 'vext.dat')
-  vh = 0.0_8; vc = 0.0_8; vx = 0.0_8; ex = 0.0_8; ec = 0.0_8
+  vh = 0.0_8
+  vc = 0.0_8
+  vx = 0.0_8
+  ex = 0.0_8
+  ec = 0.0_8
   vtot = vext + vh + vx + vc
+
+  etot_old = 0.d0
 
   do i = 1, max_iter
 
      call conjugate_gradients(N_wf, wfs, vtot, eigenval, residues)
 
-     call external_pot(vext)
+     !call external_pot(vext) ! need to call this every SCF step?
      rhoprev = rho
      call build_rho(wfs, rho)
 
@@ -56,13 +65,17 @@ subroutine scf()
      vtot = vext + vh + vx + vc
 
      etot =  energy(eigenval, rho, vh, vc, vx, ec, ex)
+     diffEtot = abs(etot_old - etot)
 
      write(*, '(/,a,i6)') 'SCF CYCLE ITER # ',i
-     write(*, '(5x,a,es18.4)') 'diff = ',diff
-     do j = 1, N_wf
-        write(*, '(5x,i4, 2es20.8)') j, eigenval(j), residues(j)
-     enddo
-     write(*,'(a)')
+     write(*, '(5x,a,es18.4)') 'diffRhoe = ',diff
+     write(*,'(1x,A,I6,F18.10,ES18.5)') 'Total energy: ', i, etot, diffEtot
+     !do j = 1, N_wf
+     !   write(*, '(5x,i4, 2es20.8)') j, eigenval(j), residues(j)
+     !enddo
+     !write(*,'(a)')
+
+     etot_old = etot
 
   enddo
 
@@ -75,7 +88,8 @@ subroutine scf()
      call hpsi(vtot, wfs(:, :, j), phi)
      eigenval(j) = dotproduct(wfs(:, :, j), phi)
   enddo
-  etot =  energy(eigenval, rho, vh, vc, vx, ec, ex)
+
+  etot = energy(eigenval, rho, vh, vc, vx, ec, ex)
 
 
   ! Write down all the information.
@@ -88,10 +102,10 @@ subroutine scf()
   write(*,'(a)')
 
   ! Output the final functions
-  call output(rho, 'rho.dat')
-  call output(vh, 'vh.dat')
-  call output(vc, 'vc.dat')
-  call output(vx, 'vx.dat')
+  !call output(rho, 'rho.dat')
+  !call output(vh, 'vh.dat')
+  !call output(vc, 'vc.dat')
+  !call output(vx, 'vx.dat')
 
   deallocate(vext, vh, vx, vc, rho, vtot)
 

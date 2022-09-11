@@ -18,7 +18,8 @@ subroutine propagate()
   prop_time = 1000.d0
   dt = 1.0d0
   !dt = 0.5d0
-  niter = nint(prop_time/dt)
+  !niter = nint(prop_time/dt)
+  niter = 1
 
   dipole_unit = 12
   open(unit = dipole_unit, file="dipole.dat", action ="write", status="replace", form ="formatted")

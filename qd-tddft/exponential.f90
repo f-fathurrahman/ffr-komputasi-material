@@ -15,6 +15,7 @@ module expo
                         LANCZOS = 2, &
                         EXPOKIT = 3
 
+  !integer, parameter :: mode = TAYLOR
   integer, parameter :: mode = LANCZOS
   !integer, parameter :: mode = EXPOKIT
 
@@ -60,7 +61,10 @@ subroutine exponential(v, wf, dt)
 
 end subroutine exponential
 
+
+!---------------------------------------
 subroutine exponential_taylor(v, wf, dt)
+!---------------------------------------
   implicit none
   real(8), intent(in) :: v(N, N)
   complex(8), intent(inout) :: wf(N, N)
@@ -71,18 +75,21 @@ subroutine exponential_taylor(v, wf, dt)
   complex(8) :: zpsi(n, n), hzpsi(n, n)
   integer :: i
 
-  zfact = (1.0_8, 0.0_8)
+  zfact = (1.0d0, 0.0d0)
   zpsi = wf
   do i = 1, order
-     zfact = zfact*(0.0_8, -1.0_8)*dt/i
+     zfact = zfact*(0.0d0, -1.0d0)*dt/i
      call zhpsi(v, zpsi, hzpsi)
      wf = wf + zfact*hzpsi
-     if(i.ne.order) zpsi = hzpsi
+     if(i /= order) zpsi = hzpsi
   enddo
-
 end subroutine exponential_taylor
 
+
+
+!----------------------------------------
 subroutine exponential_lanczos(v, wf, dt)
+!----------------------------------------
   implicit none
   real(8), intent(in) :: v(N, N)
   complex(8), intent(inout) :: wf(N, N)
@@ -134,7 +141,7 @@ subroutine exponential_lanczos(v, wf, dt)
   enddo
 
   order = min(korder, i+1)
-  if(res> tol .and. beta > 1.0e-12_8) then
+  if(res > tol .and. beta > 1.0e-12_8) then
      write(*, '(1x,a,2ES18.10)') 'Warning: Lanczos exponential expansion did not converge: ', res, beta
   endif
 
@@ -143,6 +150,10 @@ subroutine exponential_lanczos(v, wf, dt)
   deallocate(x, hm, expo, wsp)
 
 end subroutine exponential_lanczos
+
+
+
+
 
 subroutine exponential_expokit(wf, dt)
   implicit none

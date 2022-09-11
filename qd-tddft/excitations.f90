@@ -85,8 +85,8 @@ subroutine excitations
     mat(ia, ia) = temp**2 + mat(ia, ia)
   enddo
 
-  write(*, *)
-  write(*, *) mat
+  !write(*, *)
+  !write(*, *) mat
 
 
   ! Diagonalization of the matrix mat. Eigenvalues go to energies(:, 1)
@@ -143,7 +143,7 @@ subroutine excitations
 
     lwork = 6*k
     allocate(work(lwork))
-    call dsyev ('V', 'U', k, a(1,1), k, e(1), work(1), lwork, info)
+    call dsyev('V', 'U', k, a(1,1), k, e(1), work(1), lwork, info)
     deallocate(work)
   !------------------------
   end subroutine eigensolve

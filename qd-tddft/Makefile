@@ -5,7 +5,7 @@ LIBS_EXT = -lblas -llapack -lgsl -lgslcblas -lfftw3
 SRC = mesh.f90 output.f90 \
 coeff.f90 \
 fftw3.f90 cf.f90 poisson.f90 \
-epot.f90 states.f90 energy.f90 \
+external_pot.f90 states.f90 energy.f90 \
 ipot.f90  perturbation.f90  qdf.f90  sf.f90 \
 cg.f90  excitations.f90  gs.f90  read_wfs.f90 \
 expokit.f90  hpsi.f90  propagate.f90  rho.f90  td.f90  vxc.f90 \

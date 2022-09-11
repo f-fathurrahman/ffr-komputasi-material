@@ -20,7 +20,7 @@ subroutine gs
   ! calculated. The allocates the wfs variable, that holds the wavefunctions
   ! throught all the program.
   N_occ = 3 ! should be an odd number? To avoid getting a metallic system
-  N_empty = 2
+  N_empty = 0
   N_wf = N_occ + N_empty
   allocate(wfs(N, N, N_wf))
 
