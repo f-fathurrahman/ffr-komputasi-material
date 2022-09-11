@@ -321,6 +321,8 @@ class Desc(object):
                 derivatives of the descriptor for each geometry.
         """
 
+        print("Calling Desc.from_R ....")
+
         # Add singleton dimension if input is (,3N).
         if R.ndim == 1:
             R = R[None, :]
@@ -331,6 +333,9 @@ class Desc(object):
 
         R_desc = np.empty([M, self.dim])
         R_d_desc = np.empty([M, self.dim, 3])
+
+        print("R_desc.shape = ", R_desc.shape)
+        print("R_d_desc.shape = ", R_d_desc.shape)
 
         # Generate descriptor and their Jacobians
         start = timeit.default_timer()

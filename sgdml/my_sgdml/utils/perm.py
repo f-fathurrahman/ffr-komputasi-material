@@ -141,10 +141,16 @@ def bipartite_match(R, z, lat_and_inv=None, max_processes=None, callback=None):
 
     adj_set = np.empty((n_train, desc.dim))
     v_set = np.empty((n_train, n_atoms, n_atoms))
+
+    print("n_train = ", n_train)
+    print("lat_and_inv = ", lat_and_inv)
+    (lat_and_inv is None) and print("Will call scipy pdist")
+
     for i in range(n_train):
         r = np.squeeze(R[i, :, :])
 
         if lat_and_inv is None:
+            
             adj = scipy.spatial.distance.pdist(r, 'euclidean')
 
             # from ase import Atoms
@@ -382,6 +388,8 @@ def complete_sym_group(
 
 
 def find_perms(R, z, lat_and_inv=None, callback=None, max_processes=None):
+
+    print("utils.find_perms is called")
 
     m, n_atoms = R.shape[:2]
 

@@ -1,31 +1,3 @@
-"""
-This module contains all routines for training GDML and sGDML models.
-"""
-
-# MIT License
-#
-# Copyright (c) 2018-2022 Stefan Chmiela
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
-from __future__ import print_function
-
 import sys
 import os
 import logging
@@ -61,190 +33,8 @@ from .utils.desc import Desc
 from .utils import io, perm, ui
 
 
-def _share_array(arr_np, typecode_or_type):
-    """
-    Return a ctypes array allocated from shared memory with data from a
-    NumPy array.
+class MyGDMLTrain(object):
 
-    Parameters
-    ----------
-        arr_np : :obj:`numpy.ndarray`
-            NumPy array.
-        typecode_or_type : char or :obj:`ctype`
-            Either a ctypes type or a one character typecode of the
-            kind used by the Python array module.
-
-    Returns
-    -------
-        array of :obj:`ctype`
-    """
-
-    arr = mp.RawArray(typecode_or_type, arr_np.ravel())
-    return arr, arr_np.shape
-
-
-def _assemble_kernel_mat_wkr(
-    j, tril_perms_lin, sig, use_E_cstr=False, exploit_sym=False, cols_m_limit=None
-):
-    r"""
-    Compute one row and column of the force field kernel matrix.
-
-    The Hessian of the Matern kernel is used with n = 2 (twice
-    differentiable). Each row and column consists of matrix-valued
-    blocks, which encode the interaction of one training point with all
-    others. The result is stored in shared memory (a global variable).
-
-    Parameters
-    ----------
-        j : int
-            Index of training point.
-        tril_perms_lin : :obj:`numpy.ndarray`
-            1D array (int) containing all recovered permutations
-            expanded as one large permutation to be applied to a tiled
-            copy of the object to be permuted.
-        sig : int
-            Hyper-parameter :math:`\sigma`.
-        use_E_cstr : bool, optional
-            True: include energy constraints in the kernel,
-            False: default (s)GDML kernel.
-        exploit_sym : boolean, optional
-            Do not create symmetric entries of the kernel matrix twice
-            (this only works for spectific inputs for `cols_m_limit`)
-        cols_m_limit : int, optional
-            Limit the number of columns (include training points 1-`M`).
-            Note that each training points consists of multiple columns.
-
-    Returns
-    -------
-        int
-            Number of kernel matrix blocks created, divided by 2
-            (symmetric blocks are always created at together).
-    """
-
-    global glob
-
-    R_desc = np.frombuffer(glob['R_desc']).reshape(glob['R_desc_shape'])
-    R_d_desc = np.frombuffer(glob['R_d_desc']).reshape(glob['R_d_desc_shape'])
-    K = np.frombuffer(glob['K']).reshape(glob['K_shape'])
-
-    desc_func = glob['desc_func']
-
-    n_train, dim_d = R_d_desc.shape[:2]
-    n_atoms = int((1 + np.sqrt(8 * dim_d + 1)) / 2)
-    dim_i = 3 * n_atoms
-    n_perms = int(len(tril_perms_lin) / dim_d)
-
-    if type(j) is tuple:  # Selective/"fancy" indexing
-        (
-            K_j,
-            j,
-            keep_idxs_3n,
-        ) = j  # (block index in final K, block index global, indices of partials within block)
-        blk_j = slice(K_j, K_j + len(keep_idxs_3n))
-
-    else:  # Sequential indexing
-        blk_j = slice(j * dim_i, (j + 1) * dim_i)
-        keep_idxs_3n = slice(None)  # same as [:]
-
-    # TODO: document this exception
-    if use_E_cstr and not (cols_m_limit is None or cols_m_limit == n_train):
-        raise ValueError(
-            '\'use_E_cstr\'- and \'cols_m_limit\'-parameters are mutually exclusive!'
-        )
-
-    # Create permutated variants of 'rj_desc' and 'rj_d_desc'.
-    rj_desc_perms = np.reshape(
-        np.tile(R_desc[j, :], n_perms)[tril_perms_lin], (n_perms, -1), order='F'
-    )
-
-    rj_d_desc = desc_func.d_desc_from_comp(R_d_desc[j, :, :])[0][
-        :, keep_idxs_3n
-    ]  # convert descriptor back to full representation
-
-    rj_d_desc_perms = np.reshape(
-        np.tile(rj_d_desc.T, n_perms)[:, tril_perms_lin], (-1, dim_d, n_perms)
-    )
-
-    mat52_base_div = 3 * sig ** 4
-    sqrt5 = np.sqrt(5.0)
-    sig_pow2 = sig ** 2
-
-    dim_i_keep = rj_d_desc.shape[1]
-    diff_ab_outer_perms = np.empty((dim_d, dim_i_keep))
-    diff_ab_perms = np.empty((n_perms, dim_d))
-    ri_d_desc = np.zeros((1, dim_d, dim_i))  # must be zeros!
-    k = np.empty((dim_i, dim_i_keep))
-
-    for i in range(j if exploit_sym else 0, n_train):
-
-        blk_i = slice(i * dim_i, (i + 1) * dim_i)
-
-        # diff_ab_perms = R_desc[i, :] - rj_desc_perms
-        np.subtract(R_desc[i, :], rj_desc_perms, out=diff_ab_perms)
-
-        norm_ab_perms = sqrt5 * np.linalg.norm(diff_ab_perms, axis=1)
-        mat52_base_perms = np.exp(-norm_ab_perms / sig) / mat52_base_div * 5
-
-        # diff_ab_outer_perms = 5 * np.einsum(
-        #    'ki,kj->ij',
-        #    diff_ab_perms * mat52_base_perms[:, None],
-        #    np.einsum('ik,jki -> ij', diff_ab_perms, rj_d_desc_perms)
-        # )
-        np.einsum(
-            'ki,kj->ij',
-            diff_ab_perms * mat52_base_perms[:, None] * 5,
-            np.einsum('ki,jik -> kj', diff_ab_perms, rj_d_desc_perms),
-            out=diff_ab_outer_perms,
-        )
-
-        diff_ab_outer_perms -= np.einsum(
-            'ikj,j->ki',
-            rj_d_desc_perms,
-            (sig_pow2 + sig * norm_ab_perms) * mat52_base_perms,
-        )
-
-        # ri_d_desc = desc_func.d_desc_from_comp(R_d_desc[i, :, :])[0]
-        desc_func.d_desc_from_comp(R_d_desc[i, :, :], out=ri_d_desc)
-
-        # K[blk_i, blk_j] = ri_d_desc[0].T.dot(diff_ab_outer_perms)
-        np.dot(ri_d_desc[0].T, diff_ab_outer_perms, out=k)
-        K[blk_i, blk_j] = k
-
-        # print(k - k2)
-
-        if exploit_sym and (
-            cols_m_limit is None or i < cols_m_limit
-        ):  # this will never be called with 'keep_idxs_3n' set to anything else than [:]
-            K[blk_j, blk_i] = K[blk_i, blk_j].T
-
-    if use_E_cstr:
-
-        E_off = K.shape[0] - n_train, K.shape[1] - n_train
-        blk_j_full = slice(j * dim_i, (j + 1) * dim_i)
-        for i in range(n_train):
-
-            diff_ab_perms = R_desc[i, :] - rj_desc_perms
-            norm_ab_perms = sqrt5 * np.linalg.norm(diff_ab_perms, axis=1)
-
-            K_fe = (
-                5
-                * diff_ab_perms
-                / (3 * sig ** 3)
-                * (norm_ab_perms[:, None] + sig)
-                * np.exp(-norm_ab_perms / sig)[:, None]
-            )
-            K_fe = -np.einsum('ik,jki -> j', K_fe, rj_d_desc_perms)
-            K[blk_j_full, E_off[1] + i] = K_fe  # vertical
-            K[E_off[0] + i, blk_j] = K_fe[keep_idxs_3n]  # lower horizontal
-
-            K[E_off[0] + i, E_off[1] + j] = K[E_off[0] + j, E_off[1] + i] = -(
-                1 + (norm_ab_perms / sig) * (1 + norm_ab_perms / (3 * sig))
-            ).dot(np.exp(-norm_ab_perms / sig))
-
-    return blk_j.stop - blk_j.start
-
-
-class GDMLTrain(object):
     def __init__(self, max_memory=None, max_processes=None, use_torch=False):
         """
         Train sGDML force fields.
@@ -887,7 +677,6 @@ class GDMLTrain(object):
             y = np.hstack((y, -E_train + E_train_mean))
             # y = np.hstack((n*Ft, (1-n)*Et))
         y_std = np.std(y)
-        print("y_std = ", y_std)
         y /= y_std
 
         max_memory_bytes = self._max_memory * 1024 ** 3
@@ -907,8 +696,6 @@ class GDMLTrain(object):
             est_bytes_analytic + est_bytes_overhead
         ) < max_memory_bytes
 
-        print("use_analytic_solver = ", use_analytic_solver)
-
         # Fall back to analytic solver, if iterative solver file is missing.
         base_path = os.path.dirname(os.path.abspath(__file__))
         iter_solver_path = os.path.join(base_path, 'solvers/iterative.py')
@@ -926,7 +713,6 @@ class GDMLTrain(object):
                 )
             )
 
-            print("Using analytic solver")
             analytic = Analytic(self, desc, callback=callback)
             alphas = analytic.solve(task, R_desc, R_d_desc, tril_perms_lin, y)
 
@@ -1002,9 +788,6 @@ class GDMLTrain(object):
             alphas_E = alphas[-n_train:]
             alphas_F = alphas[:-n_train]
 
-
-        print("After finding the parameters, create model")
-        print("solver_keys = ", solver_keys)
         model = self.create_model(
             task,
             'analytic' if use_analytic_solver else 'cg',
@@ -1027,7 +810,6 @@ class GDMLTrain(object):
                 if E_train_mean is None
                 else E_train_mean
             )
-            print("Recover integration constant: c = ", c)
             if c is None:
                 # Something does not seem right. Turn off energy predictions for this model, only output force predictions.
                 model['use_E'] = False

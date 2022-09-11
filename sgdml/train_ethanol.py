@@ -8,7 +8,7 @@ n_train = 200
 gdml_train = GDMLTrain()
 task = gdml_train.create_task(dataset, n_train,\
         valid_dataset=dataset, n_valid=1000,\
-        sig=20, lam=1e-10, use_sym=True)
+        sig=20, lam=1e-10, use_sym=False)
 
 model = gdml_train.train(task)
 
