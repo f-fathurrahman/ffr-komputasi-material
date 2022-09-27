@@ -139,6 +139,11 @@ println("Cell size (nm) = ", DX)
 # Length in nm for plotting
 XX = (DX:DX:DX*NN)
 
+plt.clf()
+plt.plot(XX, prl, label="real-part")
+plt.plot(XX, pim, label="imag-part")
+plt.savefig("IMG_Se1_1_psi.png", dpi=150)
+
 #=
 subplot(2,1,1)
 plot(XX,prl,'k')
