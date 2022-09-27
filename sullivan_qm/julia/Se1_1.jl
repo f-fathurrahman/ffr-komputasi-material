@@ -4,6 +4,13 @@
 using Printf
 using LinearAlgebra
 
+import PyPlot
+const plt = PyPlot
+
+# FIXME: Use atomic units?
+
+function main()
+
 # Number of points in the problem space.
 NN = 400
 
@@ -35,22 +42,24 @@ J2eV = 1/eV2J
 # Time steps
 Δt = 2e-17 # s
 
-# Ea must be < 0.15
+# Ra must be < 0.15
 Ra = (0.5*ħ/melec)*(Δt/Δx^2)
+
+println("Ra = ", Ra)
 
 # Specify the potential
 V = zeros(Float64, NN)
 
-# Barrier
 NN_half = Int64(NN/2)
-for n  in NN_half:(NN_half+50)
-    V[n] = 0.15*eV2J
-end
+# Barrier
+#for n  in NN_half:(NN_half+50)
+#    V[n] = 0.15*eV2J
+#end
 
 # Semiconductor conduction band
-#for n=1:NN/2
-#    %V(n) = .1*eV2J
-#end
+for n in 1:NN_half
+    V[n] = 0.1*eV2J
+end
 
 #for n=NN/2+1:NN
 #    %V(n) = .2*eV2J
@@ -93,9 +102,19 @@ end
 
 
 T = 0
-n_step = 1
+n_step = 1000
 
-# -----------This is the core FDTD program ------------
+
+# Cell size in nm.
+dx_nm = Δx*1e9
+println("Cell size (nm) = ", dx_nm)
+
+# Length in nm for plotting
+xgrid = dx_nm:dx_nm:dx_nm*NN
+
+psi2 = zeros(Float64, NN)
+
+# This is the core FDTD program
 for m in 1:n_step
     T = T + 1
     for n in 2:NN-1
@@ -104,6 +123,13 @@ for m in 1:n_step
     for n in 2:NN-1
         pim[n] = pim[n] + Ra*( prl[n-1] -2*prl[n] + prl[n+1] ) - (Δt/ħ)*V[n]*prl[n]
     end
+    for n in 1:NN
+        psi2[n] = prl[n]^2 + pim[n]^2
+    end
+    plt.clf()
+    plt.plot(xgrid, psi2, label="psi2")
+    plt.savefig("IMG_Se1_1_psi_"*string(m)*".png", dpi=150)
+    @printf("Step %d is done\n", m)
 end
 
 # ------------------------------------------------
@@ -129,38 +155,6 @@ end
 # Kinetic energy
 KE = -J2eV*( (ħ/Δx)^2 / (2*melec) )*real(ke)
 
-import PyPlot
-const plt = PyPlot
+end
 
-# Cell size in nm.
-DX = Δx*1e9
-println("Cell size (nm) = ", DX)
-
-# Length in nm for plotting
-XX = (DX:DX:DX*NN)
-
-plt.clf()
-plt.plot(XX, prl, label="real-part")
-plt.plot(XX, pim, label="imag-part")
-plt.savefig("IMG_Se1_1_psi.png", dpi=150)
-
-#=
-subplot(2,1,1)
-plot(XX,prl,'k')
-hold on
-plot(XX,pim,'-.k')
-plot(XX,J2eV*V,'--k')
-hold off
-axis( [ 1 DX*NN -0.2 0.3 ])
-TT = text(5, 0.15, sprintf('%7.0f fs',T*dt*1e15))
-set(TT,'fontsize',12)
-TT = text(5, -0.15, sprintf('KE = %5.3f eV',KE))
-set(TT,'fontsize',12)
-TT = text(25, -0.15, sprintf('PE = %5.3f eV',PE))
-set(TT,'fontsize',12)
-TT = text(25, 0.13, sprintf('E_t_o_t = %5.3f eV',KE+PE))
-set(TT,'fontsize', 12)
-xlabel('nm')
-set(gca,'fontsize',12)
-title('Se1-1')
-=#
+main()
