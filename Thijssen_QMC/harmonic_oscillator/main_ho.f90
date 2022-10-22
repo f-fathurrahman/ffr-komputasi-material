@@ -145,11 +145,11 @@ SUBROUTINE Metropolis(Energy, Alpha, InitStep, StepNum, WalkNum)
     !
     IF( Step > InitStep) THEN
       Energy = Energy/WalkNum
-      write(*,*) 'Energy in Metropolis() = ', Energy
+      !write(*,*) 'Energy in Metropolis() = ', Energy
       WRITE(11, *) Energy
       WRITE(12, *) EnerSq/WalkNum - Energy**2
-      Energy = 0.d0
-      EnerSq = 0.d0
+      !Energy = 0.d0
+      !EnerSq = 0.d0
     END IF
   ENDDO
   !

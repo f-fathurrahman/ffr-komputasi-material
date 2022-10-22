@@ -1,0 +1,1 @@
+gfortran -O3 -Wall m_global_ho.f90 rangen.f main_ho.f90
