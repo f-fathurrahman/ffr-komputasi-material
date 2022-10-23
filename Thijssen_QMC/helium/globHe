@@ -1,0 +1,11 @@
+      IMPLICIT NONE
+
+      INTEGER MaxWalkNum, PartNum
+C PartNum is the number of particles (electrons), which is 2 for the 
+C Helium atom. 
+
+      PARAMETER (MaxWalkNum=300, PartNum=2)
+
+      DOUBLE PRECISION Walker(MaxWalkNum,PartNum,3)
+
+      COMMON Walker

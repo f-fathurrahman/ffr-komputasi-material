@@ -1,0 +1,76 @@
+\documentclass{article}
+\usepackage{mathptmx}
+%\usepackage{ptmx}
+\usepackage{amsmath}
+% \usepackage{incfig}
+\usepackage{multirow}
+% \usepackage{epsfig}
+\usepackage{rotating}
+\usepackage{a4wide}
+
+%\input{$HOME/tex/include/head.tex}
+
+\begin{document}
+\bc
+\LARGE
+The local energy for the helium molecule trial wavefunction.
+\ec
+The trial wavefunction has the form
+\[
+\Psi(\bfr_1, \bfr_2) = e^{-2r_1} e^{-2r_2} e^{\frac{r_12}{2(1+\alpha r_{12})}}.
+\]
+We abbreviate this as follows
+\[
+\Psi(\bfr_1, \bfr_2) = \phi_1 \phi_2 f_{12}
+\]
+where $\phi_1 = e^{-2r_1}$ etcetera.
+
+Now we use the following rules
+\[
+\nabla_1 \phi_1 = \hat{\bfr}_1 \phi'_1,
+\]
+where $\phi'(1) = \partial \phi_1/\partial r_1$, and $\hat{\bfr}_1$
+is a unit vector along $\bfr_1$.
+
+Furthermore
+\[
+\nabla^2\phi_1 = \frac{2}{r_1} \phi'_1 + \frac{\partial^2 \phi_1}{\partial r_1^2}.
+\]
+Similarly, we have
+\[
+\nabla_1 f_{12} = \hat{\bfr}_{12} f'(r_{12}) \txt{ and }
+\]
+\[
+\nabla^2 f_{12} = \frac{2}{r_{12}} f'_{12} + \frac{\partial^2 f_{12}}{\partial
+r_{12}^2}.
+\]
+
+We now can write immediately
+\begin{multline*}
+\left( \nabla_1^2 + \nabla_2^2\right) \psi(\bfr_1, \bfr_2) = 
+\frac{2}{r_1} \phi_1' \phi_2 f_{12} + \frac{2}{r_2} \phi_1 \phi_2' f_{12} + \\
+\phi_1'' \phi_2 f_{12} + \phi_1 \phi_2'' f_{12} + 2\left[ (\hat{\bfr}_1 \phi'_1
+\phi_2 -
+\hat{\bfr}_2 \phi_1 \phi'_2 ) \cdot \hat{\bfr}_{12} \right] f'_{12} + \\
+\frac{4}{r_{12}} \phi_1 \phi_2 f_{12}' + 2\phi_1 \phi_2 f_{12}''.
+\end{multline*}
+
+Now work out the derivatives:
+\[
+\phi_1' = - 2 \phi_1; \phantom{xxx} \phi_1'' = -2,
+\]
+and similarly for $\phi_2$. Furthermore
+\begin{align*}
+f_{12}' &= \frac{1}{2(1+\alpha r_{12})^2} f_{12} \\
+f_{12}'' &= \left[ \frac{1}{4(1+\alpha r_{12})^4} - 
+\frac{\alpha}{(1+\alpha r_{12})^3}\right] f_{12}.
+\end{align*}
+
+Putting all the pieces together, and putting the factor $-1/2$ in front of the 
+expression, we then obtain for the kinetic energy $K$:
+\[
+K = \frac{2}{r_1} +  \frac{2}{r_2} -4 + \frac{(\hat{\bfr}_1 - \hat{\bfr}_2) \cdot
+\hat{\bfr}_{12}}{(1 + \alpha r_{12})^2} - \frac{1}{r_{12}  (1 + \alpha r_{12})^3} -
+\frac{1}{4(1 + \alpha r_{12})^4} .
+\]
+\end{document}
