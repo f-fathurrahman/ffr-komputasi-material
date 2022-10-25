@@ -1,0 +1,9 @@
+      IMPLICIT NONE
+      INTEGER Size, MaxSize, MCSteps, Magnetisation
+      PARAMETER (MaxSize=256)
+      INTEGER Spins(0:MaxSize, 0:MaxSize)
+
+      DOUBLE PRECISION J, H, Energy, MCWeights(0:4)
+
+      COMMON J, H, MCWeights, Energy, 
+     .       Magnetisation, MCSteps, Spins, Size
