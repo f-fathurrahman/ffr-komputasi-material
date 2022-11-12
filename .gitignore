@@ -2,6 +2,7 @@ ORIG_*
 rundir_*
 STRUCT.xsf
 
+*.dat
 *.mod
 *.x
 *.so

@@ -5,9 +5,9 @@ C The temperature is included in the coupling strength
 C J = K/(kT), where K is the "bare" coupling strength, and
 C H = B/(kT), where B is the magnetic field.
 
-      CALL Initialise
-      CALL MonteCarlo
-      CALL Finalise
+      CALL Initialise()
+      CALL MonteCarlo()
+      CALL Finalise()
       END    
 
 
@@ -34,7 +34,7 @@ C H = B/(kT), where B is the magnetic field.
         MCWeights(I) = EXP(-2*I*J)
       END DO
 #ifdef Plot
-        CALL InitPlot('lightblue', 700,700, 'out.ps', 1)
+      CALL InitPlot('lightblue', 700,700, 'out.ps', 1)
         CALL Framing(-0.05D0*Size, -0.05D0*Size, 
      .                1.05D0*Size,  1.05D0*Size)
         CALL PutStopButton()
@@ -51,8 +51,8 @@ C H = B/(kT), where B is the magnetic field.
       INTEGER MCIter, IX, IY, CostFactor, CurSpin
       DOUBLE PRECISION RealRand
 
-      OPEN (8, File='Energy')
-      OPEN (9, File='Magnet')
+      OPEN(8, File='Energy.dat')
+      OPEN(9, File='Magnet.dat')
 
       DO MCIter = 1, MCSteps
         DO IX = 0, Size-1
