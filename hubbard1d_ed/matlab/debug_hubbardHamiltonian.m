@@ -1,5 +1,5 @@
 t = 0.5;
-U = 1.0;
+U = 0.1;
 noOfSites = 4;
 noOfUp = 3;
 noOfDn = 2;
@@ -47,7 +47,7 @@ for m=1:totalNoOfPossiblestates % go through each state in the basis:
   dnSectorDec = combinedBasis(m, 3);
   
   upSector= de2bi_modified(upSectorDec, noOfSites);
-  dnSector= de2bi_modified(dnSectorDec, noOfSites);      
+  dnSector= de2bi_modified(dnSectorDec, noOfSites);
   
   % find the occupied lattice sites:    
   upNonZero = find(upSector);
