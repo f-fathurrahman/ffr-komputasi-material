@@ -63,22 +63,21 @@ SUBROUTINE InitWalkers(Alpha, InitStep, StepNum, WalkNum)
 END SUBROUTINE 
 
 
-real(8) FUNCTION TransProb(X, NewX, Alpha)
+REAL(8) FUNCTION TransProb(X, NewX, Alpha)
 ! Calculate the transition probability for a walker with coordinate 
 ! X stepping to NewX, with variational parameter Alpha
-  use m_global_ho
-  implicit none 
-  real(8) :: Alpha, X, NewX
-
+  USE m_global_ho
+  IMPLICIT NONE
+  REAL(8) :: Alpha, X, NewX
   TransProb = EXP(-2*Alpha*(NewX**2-X**2))
 END FUNCTION
 
 
 SUBROUTINE CalcLocal(ELocal, X, Alpha)
   ! Calculate the local energy for a walker at position X
-  use m_global_ho
-  implicit none
-  real(8) :: ELocal, Alpha, X
+  USE m_global_ho
+  IMPLICIT NONE
+  REAL(8) :: ELocal, Alpha, X
   ELocal = Alpha + X**2*(0.5D0 - 2.D0*Alpha**2)
 END SUBROUTINE
       
@@ -89,10 +88,10 @@ SUBROUTINE Metropolis(Energy, Alpha, InitStep, StepNum, WalkNum)
   ! all WalkNum walkers are moved to new positions. The first InitStep
   ! steps are used for equilibration. The energy is evaluated for the 
   ! variational parameter Alpha.  
-  use m_global_ho
-  implicit none
+  USE m_global_ho
+  IMPLICIT NONE
 
-  real(8) :: Energy, Alpha, X, NewX, TransProb, ELocal, &
+  REAL(8) :: Energy, Alpha, X, NewX, TransProb, ELocal, &
              GaussWidth, Rand1, Rand2, RandArr(MaxWalkNum), &
              RealRand, EnerSq
 
@@ -156,7 +155,7 @@ SUBROUTINE Metropolis(Energy, Alpha, InitStep, StepNum, WalkNum)
   NetStep = StepNum-InitStep
   Energy = Energy/(NetStep*WalkNum)
   DO I=-10,10
-    write(8, '(F10.5 F10.5)') I*0.2D0, Hist(I)/DBLE(WalkNum*NetStep)
+     WRITE(8, '(F10.5 F10.5)') I*0.2D0, Hist(I)/DBLE(WalkNum*NetStep)
   ENDDO
 END SUBROUTINE
       
