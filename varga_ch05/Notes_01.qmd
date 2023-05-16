@@ -1,0 +1,125 @@
+---
+title: "Time-dependent Quantum Problems (1d)"
+author: "efefer"
+format:
+  revealjs:
+    smaller: true
+    scrollable: true
+---
+
+## Time-dependent Schroedinger equation (TDSE)
+
+$$
+\imath \hbar \frac{\partial}{\partial t} \Psi_{\mathrm{S}}(t) = H \Psi_{\mathrm{S}}(t)
+$$
+
+Formal solution can be obtained using _time evolution operator_:
+$$
+U(t) = \mathrm{e}^{-\imath H t/\hbar}
+$$
+which maps $\Psi_{\mathrm{S}}(0)$  ke $\Psi_{\mathrm{S}}(t)$.
+
+Operator evolusi ini sendiri memenuhi Persamaan Schroedinger bergantung-waktu:
+Time evolution operator also satisfies TDSE:
+$$
+\imath \hbar \dot{U}(t) = H U(t)
+$$
+with initial condition $U(0) = 1$.
+
+
+## Time propagation using finite-difference
+
+Discretize time using temporal grid points: $t = i\Delta t$
+
+Use forward difference approximation to first derivative wrt time:
+$$
+\frac{\partial \Psi}{\partial t} = \frac{\Psi(t + \Delta t) - \Psi(t)}{\Delta t}
+$$
+or centered difference:
+$$
+\frac{\partial \Psi}{\partial t} = \frac{\Psi(t + \Delta t) - \Psi(t - \Delta t)}{2\Delta t}
+$$
+
+Apply these to TDSE, we obtain, for example, in case of centered difference:
+$$
+\imath \hbar \frac{\partial}{\partial t} \Psi(t) = H \Psi(t) 
+$$
+We obtain the following scheme:
+$$
+\Psi(t + \Delta t) = -2 \imath \Delta t H \Psi(t) + \Psi(t - \Delta t) + \mathcal{O}(\Delta t^3)
+$$
+This is an explicit scheme, given information of $\Psi$ at two previous time points.
+
+What about backward difference? We will obtain an implicit scheme.
+
+
+## Free Gaussian wave packet
+
+Hamiltonian:
+$$
+H_{0} = -\frac{h^2}{2m} \frac{\mathrm{d}^2}{\mathrm{d}x^2}
+$$
+
+Free-particle eigenstates:
+$$
+\frac{1}{2\pi} \mathrm{e}^{\imath \left[kx - \omega(k) t \right]}
+$$
+
+$$
+\omega(k) = E(k) = \frac{k^2}{2m}
+$$
+
+The wave packet is defined as:
+$$
+\psi(x,t) = \frac{1}{2\pi} \int_{-\infty}^{\infty} A(k) \, 
+\mathrm{e}^{\imath \left[kx - \omega(k) t \right]} \, \mathrm{d}k
+$$
+
+For a Gaussian wave packet the amplitude is defined as
+$$
+A(k) = \left( \frac{1}{\sigma\sqrt{\pi}} \right)^{1/2}
+\exp\left[ -\frac{(k - k_0)^2}{2\sigma^2} \right]
+$$
+
+Integrating over $k$ we obtain:
+$$
+\psi(x,t) = \left( \frac{\sigma}{\sqrt{\pi}(1 + \imath \Omega t)} \right)^{1/2}
+\exp\left[ -\frac{\sigma^2}{2} \frac{(x - vt)^2}{1 + \imath \Omega t} \right]
+\exp\left[ \imath k_0 (x - vt) \right]
+$$
+where:
+$v = \hbar k_0/m$ and $\Omega = \hbar \sigma^2/m$
+
+For $t = 0$
+$$
+\psi(x,0) = \left( \frac{\sigma}{\sqrt{\pi}} \right)^{1/2}
+\underbrace{\exp\left[ -\frac{\sigma^2}{2}x^2 \right]}_{\text{Gaussian}}
+\underbrace{\exp\left[\imath k_0 x\right]}_{\text{plane wave}}
+$$
+A Gaussian modulated with plane wave
+
+
+Probability distribution of the Gaussian wave packet:
+$$
+\left| \psi(x,t) \right|^2 =
+\frac{\sigma}{\sqrt{\pi}(1 + \Omega^2 t^2)}
+\exp\left[
+  -\sigma^2 \frac{(x - vt)^2}{(1 + \Omega^2 t^2)}
+\right]
+$$
+
+
+## Crank-Nicolson method
+
+$$
+\mathrm{e}^{\imath H \Delta t/\hbar} \approx
+\left( 1 + \frac{\imath \Delta t}{2\hbar} \right)^{-1}
+\left( 1 - \frac{\imath \Delta t}{2\hbar} \right) 
+$$
+
+$$
+\psi(t + \Delta t) =
+\left( 1 + \frac{\imath \Delta t}{2\hbar} \right)^{-1}
+\left( 1 - \frac{\imath \Delta t}{2\hbar} \right) \psi(t)
+$$
+
