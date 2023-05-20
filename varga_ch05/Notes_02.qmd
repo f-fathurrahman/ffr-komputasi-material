@@ -1,0 +1,51 @@
+---
+title: "Time-dependent Quantum Problems (1d)"
+author: "efefer"
+format:
+  revealjs:
+    smaller: true
+    scrollable: true
+---
+
+##
+
+$$
+\imath \hbar \frac{\partial \psi(x,t)}{\partial t} =
+-\frac{\hbar^2}{2m} \frac{\partial^2 \psi(x,t)}{\partial x^2} + V(x,t) \psi(x,t)
+$$ {#eq-01}
+
+$V(x,t)$ is the potential energy function
+
+Represent the wavefunction in terms of its real and imaginary parts:
+$$
+\begin{align}
+\psi(x,t) & = \psi_{R}(x,t) + \imath \psi_{I}(x,t) \\
+\psi^{*}(x,t) & = \psi_{R}(x,t) - \imath \psi_{I}(x,t)
+\end{align}
+$$ {#eq-02}
+
+Insert (@eq-02) to (@eq-01), separate real and imaginary parts:
+$$
+\begin{align}
+\frac{\partial}{\partial t} \psi_{R}(x,t) & =
+-\frac{\hbar}{2m} \frac{\partial^2}{\partial x^2} \psi_{I}(x,t) +
+\frac{1}{\hbar} V(x,t) \psi_{I}(x,t) \\
+\frac{\partial}{\partial t} \psi_{I}(x,t) & =
+\frac{\hbar}{2m} \frac{\partial^2}{\partial x^2} \psi_{R}(x,t) +
+\frac{1}{\hbar} V(x,t) \psi_{R}(x,t)
+\end{align}
+$$
+
+Use:
+$$
+\begin{align}
+\frac{\partial \psi(x,t)}{\partial t} & \approx \frac{\psi(x,t+\Delta t) - \psi(x,t)}{\Delta t} \\
+\frac{\partial^2 \psi(x,t)}{\partial x^2} & \approx
+\frac{\psi(x + \Delta x,t) - 2\psi(x,t) + \psi(x - \Delta x,t)}{\Delta x^2}
+\end{align}
+$$
+
+Update scheme:
+$$
+\psi_{R}(x_i,t) = \psi_{R}(x_i,t) - C_1 ()
+$$
