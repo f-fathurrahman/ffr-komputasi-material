@@ -149,7 +149,7 @@ $$
 We have defined $p = \hbar k$ based on the analogy to the classical
 expression for kinetic energy
 $$
-\mathrm{E}_{\mathrm{cl}} = \frac{1}{2} m v_{\mathrm{cl}}^2 =
+E_{\mathrm{cl}} = \frac{1}{2} m v_{\mathrm{cl}}^2 =
 \frac{p_{\mathrm{cl}}^2}{2m}
 $$
 

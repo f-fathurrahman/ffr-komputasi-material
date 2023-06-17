@@ -7,7 +7,7 @@ format:
     scrollable: true
 ---
 
-##
+## Finite difference time domain method
 
 $$
 \imath \hbar \frac{\partial \psi(x,t)}{\partial t} =
