@@ -725,11 +725,11 @@ matrix.""")
             # now eig[i,:] is eigenvector for eval[i]-th eigenvalue
             eig = eig.T
             # sort evectors, eigenvalues and convert to real numbers
-            (evals, eig) = _nicefy_eig(eval,eig)
+            (evals, eig) = _nicefy_eig(evals, eig)
             # reshape eigenvectors if doing a spinfull calculation
             if self._nspin == 2:
                 eig = eig.reshape((self._nsta,self._norb,2))
-            return (evals,eig)
+            return (evals, eig)
 
 
 
@@ -2380,17 +2380,17 @@ Warning:
         kint=np.array(kint)
         return kint
 
-def _nicefy_eig(eval,eig=None):
+def _nicefy_eig(evals, eig=None):
     "Sort eigenvaules and eigenvectors, if given, and convert to real numbers"
     # first take only real parts of the eigenvalues
-    eval=np.array(eval.real,dtype=float)
+    evals = np.array(evals.real, dtype=float)
     # sort energies
-    args=eval.argsort()
-    eval=eval[args]
+    args = evals.argsort()
+    evals = evals[args]
     if not (eig is None):
         eig=eig[args]
-        return (eval,eig)
-    return eval
+        return (evals, eig)
+    return evals
 
 # for nice justified printout
 def _nice_float(x,just,rnd):
