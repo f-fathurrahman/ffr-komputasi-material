@@ -1,5 +1,10 @@
 import JuLIP
 import ACE1x
+import Random
+import ACEfit
+import ACE1pack
+using LinearAlgebra: Diagonal
+import PrettyTables
 
 include("MyACE1Model.jl")
 
@@ -13,8 +18,8 @@ include("MyACE1Model.jl")
 # * `rcut` : cutoff radius (optional, defaults are provided)
 
 model = my_acemodel(
-    elements = [:Si,], 
+    elements = [:Si,],
     order = 3,   
-    totaldegree = 10,           
+    totaldegree = 10,
     rcut = 5.0)
 @show length(model.basis);

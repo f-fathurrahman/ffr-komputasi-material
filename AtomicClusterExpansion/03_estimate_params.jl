@@ -1,8 +1,3 @@
-import ACEfit
-import ACE1pack
-using LinearAlgebra: Diagonal
-import PrettyTables
-
 solver = ACEfit.BLR() 
 my_acefit!(model, train; solver=solver, data_keys...);
 

@@ -1,5 +1,3 @@
-import Random
-
 data_keys = (energy_key = "energy", force_key = "forces")
 
 function gen_dat()
