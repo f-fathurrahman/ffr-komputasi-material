@@ -14,27 +14,28 @@ complex<double> i(0, 1);
 
 int main(){
 
-    //Initialize TBTK.
+    // Initialize TBTK.
     Initialize();
 
-    //Parameters.
+    // Parameters.
     const unsigned int SIZE = 500;
     const double t = -1;
     const double mu = -1;
 
-    //Set up the Model.
+    // Set up the Model.
     Model model;
-    for(unsigned int x = 0; x < SIZE; x++)
+    for(unsigned int x = 0; x < SIZE; x++) {
         model << HoppingAmplitude(t, {x+1}, {x}) + HC;
+    }
     model.construct();
     model.setChemicalPotential(mu);
 
-    //Set up the Solver.
+    // Set up the Solver.
     Solver::Diagonalizer solver;
     solver.setModel(model);
     solver.run();
 
-    //Set up the PropertyExtractor.
+    // Set up the PropertyExtractor.
     const double LOWER_BOUND = -3;
     const double UPPER_BOUND = 3;
     const unsigned int RESOLUTION = 1000;
@@ -44,30 +45,33 @@ int main(){
         UPPER_BOUND,
         RESOLUTION
     );
-    //Calculate the density of states (DOS).
+    
+    // Calculate the density of states (DOS).
     Property::DOS dos = propertyExtractor.calculateDOS();
-    //Smooth the DOS.
+    
+    // Smooth the DOS.
     const double SMOOTHING_SIGMA = 0.03;
     const unsigned int SMOOTHING_WINDOW = 101;
     dos = Smooth::gaussian(dos, SMOOTHING_SIGMA, SMOOTHING_WINDOW);
     
-    //Plot the DOS.
+    // Plot the DOS.
     Plotter plotter;
     plotter.plot(dos);
-    plotter.save("figures_DOS.png");
+    plotter.save("IMG_DOS.png");
     
-    //Calculate the wave functions.
+    // Calculate the wave functions.
     Property::WaveFunctions waveFunctions
         = propertyExtractor.calculateWaveFunctions(
             {{_a_}},
             {_a_}
         );
+    // FIXME: Is this using pattern matching ?
 
-    //Plot wave function for state 0, 1, and 2.
+    // Plot wave function for state 0, 1, and 2.
     plotter.clear();
     plotter.setTitle("Wave function for state 0, 1, and 2.");
     for(unsigned int state = 0; state < 3; state++)
         plotter.plot({_a_}, state, waveFunctions);
-    plotter.save("figures_WaveFunctions.png");
+    plotter.save("IMG_WaveFunctions.png");
 }
 
