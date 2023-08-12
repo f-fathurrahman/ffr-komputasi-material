@@ -28,99 +28,99 @@ using namespace std;
 namespace MyTBTK{
 
 SourceAmplitude::SourceAmplitude(
-	complex<double> amplitude,
-	Index index
+    complex<double> amplitude,
+    Index index
 ) :
-	amplitude(amplitude),
-	amplitudeCallback(nullptr),
-	index(index)
+    amplitude(amplitude),
+    amplitudeCallback(nullptr),
+    index(index)
 {
 };
 
 SourceAmplitude::SourceAmplitude(
-	const AmplitudeCallback &amplitudeCallback,
-	Index index
+    const AmplitudeCallback &amplitudeCallback,
+    Index index
 ) :
-	amplitudeCallback(&amplitudeCallback),
-	index(index)
+    amplitudeCallback(&amplitudeCallback),
+    index(index)
 {
 };
 
 SourceAmplitude::SourceAmplitude(
-	const string &serialization,
-	Serializable::Mode mode
+    const string &serialization,
+    Serializable::Mode mode
 ){
-	MyTBTKAssert(
-		Serializable::validate(
-			serialization,
-			"SourceAmplitude",
-			mode
-		),
-		"SourceAmplitude::SourceAmplitude()",
-		"Unable to parse string as SourceAmplitude '" << serialization
-		<< "'.",
-		""
-	);
+    MyTBTKAssert(
+        Serializable::validate(
+            serialization,
+            "SourceAmplitude",
+            mode
+        ),
+        "SourceAmplitude::SourceAmplitude()",
+        "Unable to parse string as SourceAmplitude '" << serialization
+        << "'.",
+        ""
+    );
 
-	switch(mode){
-	case Serializable::Mode::JSON:
-	{
-		try{
-			amplitudeCallback = nullptr;
+    switch(mode){
+    case Serializable::Mode::JSON:
+    {
+        try{
+            amplitudeCallback = nullptr;
 
-			nlohmann::json j = nlohmann::json::parse(serialization);
-			amplitude = Serializable::deserialize<complex<double>>(
-				j["amplitude"].get<string>(),
-				mode
-			);
-			index = Index(j["index"].dump(), mode);
-		}
-		catch(nlohmann::json::exception &e){
-			MyTBTKExit(
-				"SourceAmplitude::SourceAmplitude()",
-				"Unable to parse string as SourceAmplitude '"
-				<< serialization << "'.",
-				""
-			);
-		}
+            nlohmann::json j = nlohmann::json::parse(serialization);
+            amplitude = Serializable::deserialize<complex<double>>(
+                j["amplitude"].get<string>(),
+                mode
+            );
+            index = Index(j["index"].dump(), mode);
+        }
+        catch(nlohmann::json::exception &e){
+            MyTBTKExit(
+                "SourceAmplitude::SourceAmplitude()",
+                "Unable to parse string as SourceAmplitude '"
+                << serialization << "'.",
+                ""
+            );
+        }
 
-		break;
-	}
-	default:
-		MyTBTKExit(
-			"SourceAmplitude::SourceAmplitude()",
-			"Only Serializable::Mode::JSON is supported yet.",
-			""
-		);
-	}
+        break;
+    }
+    default:
+        MyTBTKExit(
+            "SourceAmplitude::SourceAmplitude()",
+            "Only Serializable::Mode::JSON is supported yet.",
+            ""
+        );
+    }
 }
 
 string SourceAmplitude::serialize(Serializable::Mode mode) const{
-	MyTBTKAssert(
-		amplitudeCallback == nullptr,
-		"SourceAmplitude::serialize()",
-		"Unable to serialize SourceAmplitude that uses callback."
-		<< " value.",
-		""
-	);
+    MyTBTKAssert(
+        amplitudeCallback == nullptr,
+        "SourceAmplitude::serialize()",
+        "Unable to serialize SourceAmplitude that uses callback."
+        << " value.",
+        ""
+    );
 
-	switch(mode){
-	case Serializable::Mode::JSON:
-	{
-		nlohmann::json j;
-		j["id"] = "SourceAmplitude";
-		j["amplitude"] = Serializable::serialize(amplitude, mode);
-		j["index"] = nlohmann::json::parse(index.serialize(mode));
+    switch(mode){
+    case Serializable::Mode::JSON:
+    {
+        nlohmann::json j;
+        j["id"] = "SourceAmplitude";
+        j["amplitude"] = Serializable::serialize(amplitude, mode);
+        j["index"] = nlohmann::json::parse(index.serialize(mode));
 
-		return j.dump();
-	}
-	default:
-		MyTBTKExit(
-			"SourceAmplitude::serialize()",
-			"Only Serializable::Mode::JSON is supported yet.",
-			""
-		);
-	}
+        return j.dump();
+    }
+    default:
+        MyTBTKExit(
+            "SourceAmplitude::serialize()",
+            "Only Serializable::Mode::JSON is supported yet.",
+            ""
+        );
+    }
 }
 
-};	//End of namespace MyTBTK
+};    //End of namespace MyTBTK

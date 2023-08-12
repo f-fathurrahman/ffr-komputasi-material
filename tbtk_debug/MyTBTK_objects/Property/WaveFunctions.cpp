@@ -18,13 +18,13 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Property/WaveFunctions.h"
+#include "MyTBTK/Property/WaveFunctions.h"
 
-#include "TBTK/json.hpp"
+#include "MyTBTK/json.hpp"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Property{
 
 WaveFunctions::WaveFunctions(
@@ -75,7 +75,7 @@ WaveFunctions::WaveFunctions(
 		mode
 	)
 {
-	TBTKAssert(
+	MyTBTKAssert(
 		validate(serialization, "WaveFunctions", mode),
 		"WaveFunctions::WaveFunctions()",
 		"Unable to parse string as WaveFunctions '" << serialization
@@ -93,7 +93,7 @@ WaveFunctions::WaveFunctions(
 				states.push_back(*it);
 		}
 		catch(nlohmann::json::exception &e){
-			TBTKExit(
+			MyTBTKExit(
 				"WaveFunctions::WaveFuntions()",
 				"Unable to parse string as WaveFunctions '"
 				<< serialization << "'.",
@@ -103,7 +103,7 @@ WaveFunctions::WaveFunctions(
 
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"WaveFunctions::WaveFunctions()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -117,7 +117,7 @@ const complex<double>& WaveFunctions::operator()(
 ) const{
 	if(isContinuous){
 		int n = state - states.at(0);
-		TBTKAssert(
+		MyTBTKAssert(
 			n >= 0 && (unsigned int)n < states.size(),
 			"WaveFunctions::operator()",
 			"WaveFunctions does not contain state '" << state << "'.",
@@ -130,7 +130,7 @@ const complex<double>& WaveFunctions::operator()(
 			if(state == states.at(n))
 				return AbstractProperty::operator()(index, n);
 		}
-		TBTKExit(
+		MyTBTKExit(
 			"WaveFunctions::operator()",
 			"WaveFunctions does not contain state '" << state
 			<< "'.",
@@ -145,7 +145,7 @@ complex<double>& WaveFunctions::operator()(
 ){
 	if(isContinuous){
 		int n = state - states.at(0);
-		TBTKAssert(
+		MyTBTKAssert(
 			n >= 0 && (unsigned int)n < states.size(),
 			"WaveFunctions::operator()",
 			"WaveFunctions does not contain state '" << state
@@ -159,7 +159,7 @@ complex<double>& WaveFunctions::operator()(
 			if(state == states.at(n))
 				return AbstractProperty::operator()(index, n);
 		}
-		TBTKExit(
+		MyTBTKExit(
 			"WaveFunctions::operator()",
 			"WaveFunctions does not contain state '" << state
 			<< "'.",
@@ -232,7 +232,7 @@ string WaveFunctions::serialize(Mode mode) const{
 		return j.dump();
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"WaveFunctions::serialize()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -241,4 +241,4 @@ string WaveFunctions::serialize(Mode mode) const{
 }
 
 };	//End of namespace Property
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

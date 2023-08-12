@@ -1,8 +1,8 @@
-#include "TBTK/InteractionAmplitudeSet.h"
+#include "MyTBTK/InteractionAmplitudeSet.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 /*InteractionAmplitudeSet::InteractionAmplitudeSet(const HoppingAmplitudeSet *hoppingAmplitudeSet){
 	this->hoppingAmplitudeSet = hoppingAmplitudeSet;
@@ -11,4 +11,4 @@ namespace TBTK{
 InteractionAmplitudeSet::~InteractionAmplitudeSet(){
 }*/
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

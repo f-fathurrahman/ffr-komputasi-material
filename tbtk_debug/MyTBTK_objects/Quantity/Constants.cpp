@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Quantity/Constants.h"
+#include "MyTBTK/Quantity/Constants.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Quantity{
 
 map<string, Constant> Constants::constants;
@@ -51,4 +51,4 @@ void Constants::initialize(){
 }
 
 };	//End of namespace Quantity
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

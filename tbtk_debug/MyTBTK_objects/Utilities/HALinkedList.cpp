@@ -18,9 +18,9 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/HALinkedList.h"
+#include "MyTBTK/HALinkedList.h"
 
-namespace TBTK{
+namespace MyTBTK{
 
 HALinkedList::HALinkedList(const HoppingAmplitudeSet &as){
 	int numHoppingAmplitudes = 0;
@@ -107,4 +107,4 @@ void HALinkedList::addLinkedList(int from){
 	}
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

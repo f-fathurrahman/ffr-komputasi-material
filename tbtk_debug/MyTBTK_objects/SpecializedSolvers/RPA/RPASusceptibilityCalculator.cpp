@@ -18,10 +18,10 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Functions.h"
-#include "TBTK/RPA/MatsubaraSusceptibilityCalculator.h"
-#include "TBTK/RPA/RPASusceptibilityCalculator.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/RPA/MatsubaraSusceptibilityCalculator.h"
+#include "MyTBTK/RPA/RPASusceptibilityCalculator.h"
+#include "MyTBTK/UnitHandler.h"
 
 #include <complex>
 #include <iomanip>
@@ -30,7 +30,7 @@ using namespace std;
 
 //const complex<double> i(0, 1);
 
-namespace TBTK{
+namespace MyTBTK{
 
 RPASusceptibilityCalculator::RPASusceptibilityCalculator(
 	const RPA::MomentumSpaceContext &momentumSpaceContext,
@@ -46,7 +46,7 @@ RPASusceptibilityCalculator::RPASusceptibilityCalculator(
 			momentumSpaceContext
 		);
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"RPASusceptibilityCalculator::RPASusceptibilityCalculator()",
 			"Unknown algorithm.",
 			"This should never happen, contact the developer."
@@ -159,7 +159,7 @@ vector<vector<vector<complex<double>>>> RPASusceptibilityCalculator::rpaSuscepti
 	const vector<int> &orbitalIndices,
 	const vector<InteractionAmplitude> &interactionAmplitudes
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		orbitalIndices.size() == 4,
 		"SusceptibilityCalculator::rpaSusceptibilityMainAlgorithm()",
 		"Four orbital indices required but " << orbitalIndices.size()
@@ -295,7 +295,7 @@ vector<complex<double>> RPASusceptibilityCalculator::calculateRPASusceptibility(
 	const DualIndex &kDual,
 	const vector<int> &orbitalIndices
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		orbitalIndices.size() == 4,
 		"getSusceptibility()",
 		"Four orbital indices required but " << orbitalIndices.size()
@@ -442,7 +442,7 @@ vector<complex<double>> RPASusceptibilityCalculator::calculateChargeRPASusceptib
 	const DualIndex &kDual,
 	const vector<int> &orbitalIndices
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		orbitalIndices.size() == 4,
 		"getSusceptibility()",
 		"Four orbital indices required but " << orbitalIndices.size()
@@ -547,7 +547,7 @@ vector<complex<double>> RPASusceptibilityCalculator::calculateSpinRPASusceptibil
 	const DualIndex &kDual,
 	const vector<int> &orbitalIndices
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		orbitalIndices.size() == 4,
 		"getSusceptibility()",
 		"Four orbital indices required but " << orbitalIndices.size()
@@ -648,4 +648,4 @@ vector<complex<double>> RPASusceptibilityCalculator::calculateSpinRPASusceptibil
 	return result;
 }
 
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK

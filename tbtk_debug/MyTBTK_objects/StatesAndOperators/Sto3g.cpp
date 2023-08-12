@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Sto3g.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/Sto3g.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 Sto3g::Sto3g(
 	double slaterExponent,
@@ -46,7 +46,7 @@ Sto3g::Sto3g(
 
 complex<double> Sto3g::getOverlap(const AbstractState &ket) const{
 	//Only overlaps between Sto3g states are supported.
-	TBTKAssert(
+	MyTBTKAssert(
 		ket.getStateID() == StateID::STO3G,
 		"Sto3g::getOverlap()",
 		"Ket state with StateID '" << ket.getStateID() << "' is not"
@@ -60,7 +60,7 @@ complex<double> Sto3g::getOverlap(const AbstractState &ket) const{
 	//different.
 	int braSpinIndex = spinIndex;
 	int ketSpinIndex = ketSto3g.spinIndex;
-	TBTKAssert(
+	MyTBTKAssert(
 		(braSpinIndex == -1 && ketSpinIndex == -1)
 		|| (braSpinIndex != -1 && ketSpinIndex != -1),
 		"Sto3g::getOverlap()",
@@ -115,7 +115,7 @@ complex<double> Sto3g::getMatrixElement(
 	const AbstractOperator &o
 ) const{
 	//Only matrix elements between Sto3g states are supported.
-	TBTKAssert(
+	MyTBTKAssert(
 		ket.getStateID() == StateID::STO3G,
 		"Sto3g::getMatrixElement()",
 		"Ket state with StateID '" << ket.getStateID() << "' is not"
@@ -125,7 +125,7 @@ complex<double> Sto3g::getMatrixElement(
 
 	//Confirm that the states either both have or both do not have spin
 	//indices.
-	TBTKAssert(
+	MyTBTKAssert(
 		(spinIndex == -1 && ((const Sto3g&)ket).spinIndex == -1)
 		|| (spinIndex != -1 && ((const Sto3g&)ket).spinIndex != -1),
 		"Sto3g::getMatrixElement()",
@@ -151,7 +151,7 @@ complex<double> Sto3g::getMatrixElement(
 			(const HartreeFockPotentialOperator&)o
 		);
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Sto3g::getMatrixElement()",
 			"Unsupported OperatorID '" << o.getOperatorID()
 			<< "'.",
@@ -275,7 +275,7 @@ complex<double> Sto3g::getHartreeFockPotentialTerm(
 	const Sto3g &ket,
 	const HartreeFockPotentialOperator &o
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		o.getFirstState().getStateID() == StateID::STO3G
 		&& o.getSecondState().getStateID() == StateID::STO3G,
 		"Sto3g::getHartreeFockPotentialTerm()",
@@ -317,7 +317,7 @@ complex<double> Sto3g::getSingleHartreeFockTerm(
 
 	//Confirm that the states either all have or all do not have spin
 	//indices.
-	TBTKAssert(
+	MyTBTKAssert(
 		(
 			state0.spinIndex == -1
 			&& state1.spinIndex == -1
@@ -459,4 +459,4 @@ double Sto3g::F_0(double x){
 	}
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

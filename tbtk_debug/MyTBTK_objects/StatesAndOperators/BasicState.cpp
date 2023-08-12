@@ -18,14 +18,14 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/BasicState.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/BasicState.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 #include <algorithm>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 BasicState::BasicState(const Index &index, const Index &unitCellIndex) :
 	AbstractState(AbstractState::StateID::Basic)
@@ -75,7 +75,7 @@ void BasicState::addMatrixElement(
 }
 
 complex<double> BasicState::getOverlap(const AbstractState &bra) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		bra.getStateID() == AbstractState::Basic,
 		"BasicState::getOverlap()",
 		"Incompatible states.",
@@ -128,7 +128,7 @@ complex<double> BasicState::getOverlap(const AbstractState &bra) const{
 		const Index &braUnitCell = bra.getContainer();
 		const Index &ketRelativeUnitCell = get<2>(storage->overlaps.at(n));
 
-		TBTKAssert(
+		MyTBTKAssert(
 			braIndex.size() == ketIndex.size(),
 			"BasicState::getOverlap()",
 			"Incompatible indices for <bra| and |ket>. <bra| has"
@@ -137,7 +137,7 @@ complex<double> BasicState::getOverlap(const AbstractState &bra) const{
 			<< ketIndex.toString() << "'.",
 			""
 		);
-		TBTKAssert(
+		MyTBTKAssert(
 			braUnitCell.size() == ketRelativeUnitCell.size(),
 			"BasicState::getOverlap()",
 			"Incompatible unit cell indices for <bra| and |ket>."
@@ -147,7 +147,7 @@ complex<double> BasicState::getOverlap(const AbstractState &bra) const{
 			<< ketRelativeUnitCell.toString() << "'.",
 			""
 		);
-		TBTKAssert(
+		MyTBTKAssert(
 			getContainer().size() == ketRelativeUnitCell.size(),
 			"BasicState::getOverlap()",
 			"Incompatible unit cell indices for <bra| and |ket>."
@@ -177,7 +177,7 @@ complex<double> BasicState::getMatrixElement(
 	const AbstractState &bra,
 	const AbstractOperator &o
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		bra.getStateID() == AbstractState::Basic,
 		"BasicState::getMatrixElement()",
 		"Incompatible states.",
@@ -230,7 +230,7 @@ complex<double> BasicState::getMatrixElement(
 		const Index &braUnitCell = bra.getContainer();
 		const Index &ketRelativeUnitCell = get<2>(storage->matrixElements.at(n));
 
-		TBTKAssert(
+		MyTBTKAssert(
 			braIndex.size() == ketIndex.size(),
 			"BasicState::getMatrixElements()",
 			"Incompatible indices for <bra| and |ket>. <bra| has"
@@ -239,7 +239,7 @@ complex<double> BasicState::getMatrixElement(
 			<< ketIndex.toString() << "'.",
 			""
 		);
-		TBTKAssert(
+		MyTBTKAssert(
 			braUnitCell.size() == ketRelativeUnitCell.size(),
 			"BasicState::getMatrixElements()",
 			"Incompatible unit cell indices for <bra| and |ket>."
@@ -249,7 +249,7 @@ complex<double> BasicState::getMatrixElement(
 			<< ketRelativeUnitCell.toString() << "'.",
 			""
 		);
-		TBTKAssert(
+		MyTBTKAssert(
 			getContainer().size() == ketRelativeUnitCell.size(),
 			"BasicState::getMatrixElements()",
 			"Incompatible unit cell indices for <bra| and |ket>."
@@ -319,4 +319,4 @@ void BasicState::Storage::sortMatrixElements(){
 	matrixElementsIsSorted = true;
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

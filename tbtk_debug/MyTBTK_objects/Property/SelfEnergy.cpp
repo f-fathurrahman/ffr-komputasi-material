@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Property/SelfEnergy.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/Property/SelfEnergy.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Property{
 
 SelfEnergy::SelfEnergy() : EnergyResolvedProperty(){
@@ -97,7 +97,7 @@ SelfEnergy::SelfEnergy(
 		mode
 	)
 {
-	TBTKAssert(
+	MyTBTKAssert(
 		Serializable::validate(serialization, "SelfEnergy", mode),
 		"Property::SelfEnergy::SelfEnergy()",
 		"Unable to parse string as SelfEnergy '" << serialization
@@ -119,7 +119,7 @@ string SelfEnergy::serialize(Serializable::Mode mode) const{
 		return j.dump();
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Property::SelfEnergy::serialize()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -128,4 +128,4 @@ string SelfEnergy::serialize(Serializable::Mode mode) const{
 }
 
 };	//End of namespace Property
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

@@ -30,105 +30,105 @@ using namespace std;
 namespace MyTBTK{
 
 OverlapAmplitude::OverlapAmplitude(
-	complex<double> amplitude,
-	const Index &braIndex,
-	const Index &ketIndex
+    complex<double> amplitude,
+    const Index &braIndex,
+    const Index &ketIndex
 ) :
-	braIndex(braIndex),
-	ketIndex(ketIndex)
+    braIndex(braIndex),
+    ketIndex(ketIndex)
 {
-	this->amplitude = amplitude;
-	this->amplitudeCallback = nullptr;
+    this->amplitude = amplitude;
+    this->amplitudeCallback = nullptr;
 };
 
 OverlapAmplitude::OverlapAmplitude(
-	const AmplitudeCallback &amplitudeCallback,
-	const Index &braIndex,
-	const Index &ketIndex
+    const AmplitudeCallback &amplitudeCallback,
+    const Index &braIndex,
+    const Index &ketIndex
 ) :
-	braIndex(braIndex),
-	ketIndex(ketIndex)
+    braIndex(braIndex),
+    ketIndex(ketIndex)
 {
-	this->amplitudeCallback = &amplitudeCallback;
+    this->amplitudeCallback = &amplitudeCallback;
 };
 
 OverlapAmplitude::OverlapAmplitude(
-	const string &serialization,
-	Serializable::Mode mode
+    const string &serialization,
+    Serializable::Mode mode
 ){
-	MyTBTKAssert(
-		Serializable::validate(
-			serialization,
-			"OverlapAmplitude",
-			mode
-		),
-		"OverlapAmplitude::OverlapAmplitude()",
-		"Unable to parse string as OverlapAmplitude '"
-		<< serialization << "'.",
-		""
-	);
+    MyTBTKAssert(
+        Serializable::validate(
+            serialization,
+            "OverlapAmplitude",
+            mode
+        ),
+        "OverlapAmplitude::OverlapAmplitude()",
+        "Unable to parse string as OverlapAmplitude '"
+        << serialization << "'.",
+        ""
+    );
 
-	switch(mode){
-	case Serializable::Mode::JSON:
-	{
-		try{
-			amplitudeCallback = nullptr;
+    switch(mode){
+    case Serializable::Mode::JSON:
+    {
+        try{
+            amplitudeCallback = nullptr;
 
-			nlohmann::json j = nlohmann::json::parse(serialization);
-			amplitude = Serializable::deserialize<complex<double>>(
-				j["amplitude"].get<string>(),
-				mode
-			);
-			braIndex = Index(j["braIndex"].dump(), mode);
-			ketIndex = Index(j["ketIndex"].dump(), mode);
-		}
-		catch(nlohmann::json::exception &e){
-			MyTBTKExit(
-				"OverlapAmplitude::OverlapAmplitude()",
-				"Unable to parse string as OverlapAmplitude '"
-				<< serialization << "'.",
-				""
-			);
-		}
+            nlohmann::json j = nlohmann::json::parse(serialization);
+            amplitude = Serializable::deserialize<complex<double>>(
+                j["amplitude"].get<string>(),
+                mode
+            );
+            braIndex = Index(j["braIndex"].dump(), mode);
+            ketIndex = Index(j["ketIndex"].dump(), mode);
+        }
+        catch(nlohmann::json::exception &e){
+            MyTBTKExit(
+                "OverlapAmplitude::OverlapAmplitude()",
+                "Unable to parse string as OverlapAmplitude '"
+                << serialization << "'.",
+                ""
+            );
+        }
 
-		break;
-	}
-	default:
-		MyTBTKExit(
-			"OverlapAmplitude::OverlapAmplitude()",
-			"Only Serializable::Mode::Debug is supported yet.",
-			""
-		);
-	}
+        break;
+    }
+    default:
+        MyTBTKExit(
+            "OverlapAmplitude::OverlapAmplitude()",
+            "Only Serializable::Mode::Debug is supported yet.",
+            ""
+        );
+    }
 }
 
 string OverlapAmplitude::serialize(Serializable::Mode mode) const{
-	MyTBTKAssert(
-		amplitudeCallback == nullptr,
-		"OverlapAmplitude::serialize()",
-		"Unable to serialize OverlapAmplitude that uses callback"
-		<< " value.",
-		""
-	);
+    MyTBTKAssert(
+        amplitudeCallback == nullptr,
+        "OverlapAmplitude::serialize()",
+        "Unable to serialize OverlapAmplitude that uses callback"
+        << " value.",
+        ""
+    );
 
-	switch(mode){
-	case Serializable::Mode::JSON:
-	{
-		nlohmann::json j;
-		j["id"] = "OverlapAmplitude";
-		j["amplitude"] = Serializable::serialize(amplitude, mode);
-		j["braIndex"] = nlohmann::json::parse(braIndex.serialize(mode));
-		j["ketIndex"] = nlohmann::json::parse(ketIndex.serialize(mode));
+    switch(mode){
+    case Serializable::Mode::JSON:
+    {
+        nlohmann::json j;
+        j["id"] = "OverlapAmplitude";
+        j["amplitude"] = Serializable::serialize(amplitude, mode);
+        j["braIndex"] = nlohmann::json::parse(braIndex.serialize(mode));
+        j["ketIndex"] = nlohmann::json::parse(ketIndex.serialize(mode));
 
-		return j.dump();
-	}
-	default:
-		MyTBTKExit(
-			"OverlapAmplitude::serialize()",
-			"Only Serializable::Mode::Debug is supported yet.",
-			""
-		);
-	}
+        return j.dump();
+    }
+    default:
+        MyTBTKExit(
+            "OverlapAmplitude::serialize()",
+            "Only Serializable::Mode::Debug is supported yet.",
+            ""
+        );
+    }
 }
 
-};	//End of namespace MyTBTK
+};    //End of namespace MyTBTK

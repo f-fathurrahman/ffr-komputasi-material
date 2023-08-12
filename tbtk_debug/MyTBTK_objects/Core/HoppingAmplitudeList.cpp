@@ -31,84 +31,84 @@ HoppingAmplitudeList::HoppingAmplitudeList(){
 }
 
 HoppingAmplitudeList::HoppingAmplitudeList(
-	const string &serialization,
-	Serializable::Mode mode
+    const string &serialization,
+    Serializable::Mode mode
 ){
-	MyTBTKAssert(
-		Serializable::validate(
-			serialization,
-			"HoppingAmplitudeList",
-			mode
-		),
-		"HoppingAmplitudeList::HoppingAmplitudeList()",
-		"Unable to parse string as HoppingAmplitudeList '"
-		<< serialization << "'.",
-		""
-	);
+    MyTBTKAssert(
+        Serializable::validate(
+            serialization,
+            "HoppingAmplitudeList",
+            mode
+        ),
+        "HoppingAmplitudeList::HoppingAmplitudeList()",
+        "Unable to parse string as HoppingAmplitudeList '"
+        << serialization << "'.",
+        ""
+    );
 
-	switch(mode){
-	case Serializable::Mode::JSON:
-	{
-		try{
-			nlohmann::json j = nlohmann::json::parse(serialization);
-			nlohmann::json has = j.at(
-				"hoppingAmplitudes"
-			);
-			for(
-				nlohmann::json::iterator it = has.begin();
-				it != has.end();
-				++it
-			){
-				hoppingAmplitudes.push_back(
-					HoppingAmplitude(it->dump(), mode)
-				);
-			}
-		}
-		catch(nlohmann::json::exception &e){
-			MyTBTKExit(
-				"HoppingAmplitudeList::HoppingAmplitudeList()",
-				"Unable to parse string as HoppingAmplitudeList '"
-				<< serialization << "'.",
-				""
-			);
-		}
+    switch(mode){
+    case Serializable::Mode::JSON:
+    {
+        try{
+            nlohmann::json j = nlohmann::json::parse(serialization);
+            nlohmann::json has = j.at(
+                "hoppingAmplitudes"
+            );
+            for(
+                nlohmann::json::iterator it = has.begin();
+                it != has.end();
+                ++it
+            ){
+                hoppingAmplitudes.push_back(
+                    HoppingAmplitude(it->dump(), mode)
+                );
+            }
+        }
+        catch(nlohmann::json::exception &e){
+            MyTBTKExit(
+                "HoppingAmplitudeList::HoppingAmplitudeList()",
+                "Unable to parse string as HoppingAmplitudeList '"
+                << serialization << "'.",
+                ""
+            );
+        }
 
-		break;
-	}
-	default:
-		MyTBTKExit(
-			"HoppingAmplitudeList::HoppingAmplitudeList()",
-			"Only Serializable::Mode::JSON is supported yet.",
-			""
-		);
-	}
+        break;
+    }
+    default:
+        MyTBTKExit(
+            "HoppingAmplitudeList::HoppingAmplitudeList()",
+            "Only Serializable::Mode::JSON is supported yet.",
+            ""
+        );
+    }
 }
 
 string HoppingAmplitudeList::serialize(Serializable::Mode mode) const{
-	switch(mode){
-	case Serializable::Mode::JSON:
-	{
-		nlohmann::json j;
-		j["id"] = "HoppingAmplitudeList";
-		for(unsigned int n = 0; n < hoppingAmplitudes.size(); n++){
-			j["hoppingAmplitudes"].push_back(
-				nlohmann::json::parse(
-					hoppingAmplitudes[n].serialize(
-						Serializable::Mode::JSON
-					)
-				)
-			);
-		}
+    switch(mode){
+    case Serializable::Mode::JSON:
+    {
+        nlohmann::json j;
+        j["id"] = "HoppingAmplitudeList";
+        for(unsigned int n = 0; n < hoppingAmplitudes.size(); n++){
+            j["hoppingAmplitudes"].push_back(
+                nlohmann::json::parse(
+                    hoppingAmplitudes[n].serialize(
+                        Serializable::Mode::JSON
+                    )
+                )
+            );
+        }
 
-		return j.dump();
-	}
-	default:
-		MyTBTKExit(
-			"HoppingAmplitudeList::serialize()",
-			"Only Serializable::Mode::JSON is supported yet.",
-			""
-		);
-	}
+        return j.dump();
+    }
+    default:
+        MyTBTKExit(
+            "HoppingAmplitudeList::serialize()",
+            "Only Serializable::Mode::JSON is supported yet.",
+            ""
+        );
+    }
 }
 
-};	//End of namespace MyTBTK
+};    //End of namespace MyTBTK

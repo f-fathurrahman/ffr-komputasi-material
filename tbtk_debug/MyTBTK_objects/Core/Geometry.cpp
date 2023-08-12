@@ -30,50 +30,50 @@ namespace MyTBTK{
 
 Geometry::Geometry(
 ){
-	dimensions = -1;
+    dimensions = -1;
 }
 
 Geometry::Geometry(
-	const string &serialization,
-	Mode mode
+    const string &serialization,
+    Mode mode
 ){
-	MyTBTKAssert(
-		validate(serialization, "Geometry", mode),
-		"Geometry::Geometry()",
-		"Unable to parse string as Geometry '" << serialization
-		<< "'.",
-		""
-	);
+    MyTBTKAssert(
+        validate(serialization, "Geometry", mode),
+        "Geometry::Geometry()",
+        "Unable to parse string as Geometry '" << serialization
+        << "'.",
+        ""
+    );
 
-	switch(mode){
-	case Mode::JSON:
-	{
-		try{
-			nlohmann::json j = nlohmann::json::parse(serialization);
-			dimensions = j.at("dimensions").get<int>();
-			coordinates = IndexedDataTree<SerializableVector<double>>(
-				j.at("coordinates").dump(),
-				mode
-			);
-		}
-		catch(nlohmann::json::exception &e){
-			MyTBTKExit(
-				"Geometry::Geometry()",
-				"Unable to parse string as Geometry '"
-				<< serialization << "'.",
-				""
-			);
-		}
+    switch(mode){
+    case Mode::JSON:
+    {
+        try{
+            nlohmann::json j = nlohmann::json::parse(serialization);
+            dimensions = j.at("dimensions").get<int>();
+            coordinates = IndexedDataTree<SerializableVector<double>>(
+                j.at("coordinates").dump(),
+                mode
+            );
+        }
+        catch(nlohmann::json::exception &e){
+            MyTBTKExit(
+                "Geometry::Geometry()",
+                "Unable to parse string as Geometry '"
+                << serialization << "'.",
+                ""
+            );
+        }
 
-		break;
-	}
-	default:
-		MyTBTKExit(
-			"Geometry::Geometry()",
-			"Only Serializable::Mode:Debug is supported yet.",
-			""
-		);
-	}
+        break;
+    }
+    default:
+        MyTBTKExit(
+            "Geometry::Geometry()",
+            "Only Serializable::Mode:Debug is supported yet.",
+            ""
+        );
+    }
 }
 
 Geometry::~Geometry(
@@ -81,46 +81,46 @@ Geometry::~Geometry(
 }
 
 void Geometry::translate(const vector<double> &translation){
-	MyTBTKAssert(
-		(int)translation.size() == dimensions,
-		"Geometry::translate()",
-		"Incompatible dimensions. The coordinates have '" << dimensions
-		<< "' dimensions, but the translation has ' "
-		<< translation.size() << "' dimensions.",
-		""
-	);
+    MyTBTKAssert(
+        (int)translation.size() == dimensions,
+        "Geometry::translate()",
+        "Incompatible dimensions. The coordinates have '" << dimensions
+        << "' dimensions, but the translation has ' "
+        << translation.size() << "' dimensions.",
+        ""
+    );
 
-	for(
-		IndexedDataTree<SerializableVector<double>>::Iterator iterator
-			= coordinates.begin();
-		iterator != coordinates.end();
-		++iterator
-	){
-		for(int n = 0; n < dimensions; n++)
-			(*iterator)[n] += translation[n];
-	}
+    for(
+        IndexedDataTree<SerializableVector<double>>::Iterator iterator
+            = coordinates.begin();
+        iterator != coordinates.end();
+        ++iterator
+    ){
+        for(int n = 0; n < dimensions; n++)
+            (*iterator)[n] += translation[n];
+    }
 }
 
 string Geometry::serialize(Mode mode) const{
-	switch(mode){
-	case Mode::JSON:
-	{
-		nlohmann::json j;
-		j["id"] = "Geometry";
-		j["dimensions"] = dimensions;
-		j["coordinates"] = nlohmann::json::parse(
-			coordinates.serialize(mode)
-		);
+    switch(mode){
+    case Mode::JSON:
+    {
+        nlohmann::json j;
+        j["id"] = "Geometry";
+        j["dimensions"] = dimensions;
+        j["coordinates"] = nlohmann::json::parse(
+            coordinates.serialize(mode)
+        );
 
-		return j.dump();
-	}
-	default:
-		MyTBTKExit(
-			"Geometry::Geometry()",
-			"Only Serializable::Mode::Debug is supported yet.",
-			""
-		);
-	}
+        return j.dump();
+    }
+    default:
+        MyTBTKExit(
+            "Geometry::Geometry()",
+            "Only Serializable::Mode::Debug is supported yet.",
+            ""
+        );
+    }
 }
 
-};	//End of namespace MyTBTK
+};    //End of namespace MyTBTK

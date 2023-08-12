@@ -19,10 +19,10 @@
  */
 
 
-#include "TBTK/BitRegister.h"
-#include "TBTK/Streams.h"
+#include "MyTBTK/BitRegister.h"
+#include "MyTBTK/Streams.h"
 
-namespace TBTK{
+namespace MyTBTK{
 
 BitRegister::BitRegister(unsigned int numBits){
 }
@@ -34,4 +34,4 @@ BitRegister::BitRegister(const BitRegister &bitRegister){
 /*BitRegister::~BitRegister(){
 }*/
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

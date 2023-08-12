@@ -18,9 +18,9 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/DefaultOperator.h"
+#include "MyTBTK/DefaultOperator.h"
 
-namespace TBTK{
+namespace MyTBTK{
 
 DefaultOperator::DefaultOperator() : AbstractOperator(AbstractOperator::OperatorID::Default){
 }
@@ -28,4 +28,4 @@ DefaultOperator::DefaultOperator() : AbstractOperator(AbstractOperator::Operator
 DefaultOperator::~DefaultOperator(){
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

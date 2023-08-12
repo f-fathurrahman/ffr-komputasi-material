@@ -18,9 +18,9 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Functions.h"
-#include "TBTK/RPA/ZFactorCalculator.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/RPA/ZFactorCalculator.h"
+#include "MyTBTK/UnitHandler.h"
 
 #include <complex>
 #include <iomanip>
@@ -29,7 +29,7 @@ using namespace std;
 
 const complex<double> i(0, 1);
 
-namespace TBTK{
+namespace MyTBTK{
 
 ZFactorCalculator::ZFactorCalculator(
 	const RPA::MomentumSpaceContext &momentumSpaceContext,
@@ -64,7 +64,7 @@ ZFactorCalculator::~ZFactorCalculator(){
 }
 
 void ZFactorCalculator::init(){
-	TBTKAssert(
+	MyTBTKAssert(
 		numSummationEnergies%2 == 1,
 		"ZFactorCalculator::init()",
 		"The number of summation energies must be an odd number.",
@@ -260,7 +260,7 @@ vector<complex<double>> ZFactorCalculator::calculateZFactor(
 /*vector<complex<double>> ZFactorCalculator::calculateZFactor2(
 	const vector<double> &k
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		isInitialized,
 		"ZFactorCalculator::calculateSusceptibility2()",
 		"ZFactorCalculator not yet initialized.",
@@ -458,7 +458,7 @@ vector<complex<double>> ZFactorCalculator::calculateZFactor(
 	Context &context
 ){
 	Streams::out << counter << "\n";
-	TBTKAssert(
+	MyTBTKAssert(
 		isInitialized,
 		"SusceptibilityCalculator::calculateSusceptibility()",
 		"SusceptibilityCalculator not yet initialized.",
@@ -544,4 +544,4 @@ vector<complex<double>> ZFactorCalculator::calculateZFactor(
 	return abs(matrix[3]);
 }*/
 
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK

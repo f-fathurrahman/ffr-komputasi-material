@@ -1,10 +1,10 @@
-#include "TBTK/Exception.h"
+#include "MyTBTK/Exception.h"
 
 #include <iostream>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 Exception::Exception(){
 }
@@ -36,4 +36,4 @@ const char* Exception::what() const noexcept{
 	return message.c_str();
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

@@ -18,13 +18,13 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Property/GreensFunction.h"
-#include "TBTK/TBTKMacros.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Property/GreensFunction.h"
+#include "MyTBTK/MyTBTKMacros.h"
+#include "MyTBTK/UnitHandler.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Property{
 
 GreensFunction::GreensFunction() : EnergyResolvedProperty(){
@@ -59,7 +59,7 @@ GreensFunction::GreensFunction(
 	),
 	type(type)
 {
-	TBTKAssert(
+	MyTBTKAssert(
 		type != Type::Matsubara,
 		"GreensFunction::GreensFunction()",
 		"This constructor does not allow for the construction of a"
@@ -140,7 +140,7 @@ string GreensFunction::toString() const{
 		stream << "\tEnergyType: Bosonic Matsubara";
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"GreensFunction::toString()",
 			"Unknown energy type.",
 			"This should never happen, contact the developer."
@@ -151,4 +151,4 @@ string GreensFunction::toString() const{
 }
 
 };	//End of namespace Property
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

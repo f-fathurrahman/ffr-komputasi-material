@@ -1,8 +1,8 @@
-#include "TBTK/InteractionAmplitude.h"
+#include "MyTBTK/InteractionAmplitude.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 InteractionAmplitude::InteractionAmplitude(){
 	amplitudeCallback = nullptr;
@@ -51,4 +51,4 @@ InteractionAmplitude::InteractionAmplitude(const InteractionAmplitude &ia){
 InteractionAmplitude::~InteractionAmplitude(){
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

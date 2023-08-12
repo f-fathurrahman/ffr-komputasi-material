@@ -18,14 +18,14 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/FockStateRuleSet.h"
+#include "MyTBTK/FockStateRuleSet.h"
 
 #include <algorithm>
 #include <vector>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 FockStateRuleSet::FockStateRuleSet(){
 }
@@ -87,4 +87,4 @@ bool FockStateRuleSet::operator==(const FockStateRuleSet &rhs) const{
 	return false;
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

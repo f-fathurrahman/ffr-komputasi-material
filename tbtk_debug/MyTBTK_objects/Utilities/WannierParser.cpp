@@ -18,22 +18,22 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Atom.h"
-#include "TBTK/BasicState.h"
-#include "TBTK/FieldWrapper.h"
-#include "TBTK/ParallelepipedCell.h"
-#include "TBTK/ParallelepipedArrayState.h"
-#include "TBTK/Timer.h"
-#include "TBTK/UnitCell.h"
-#include "TBTK/Vector3d.h"
-#include "TBTK/WannierParser.h"
+#include "MyTBTK/Atom.h"
+#include "MyTBTK/BasicState.h"
+#include "MyTBTK/FieldWrapper.h"
+#include "MyTBTK/ParallelepipedCell.h"
+#include "MyTBTK/ParallelepipedArrayState.h"
+#include "MyTBTK/Timer.h"
+#include "MyTBTK/UnitCell.h"
+#include "MyTBTK/Vector3d.h"
+#include "MyTBTK/WannierParser.h"
 
 #include <fstream>
 #include <sstream>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 /*UnitCell* WannierParser::parseMatrixElements(string filename){
 	ifstream fin(filename);
@@ -277,7 +277,7 @@ vector<ParallelepipedArrayState*> WannierParser::parseWannierFunctions(
 		else if(command.compare("CRYSTAL") == 0){
 		}
 		else if(command.compare("DIM-GROUP") == 0){
-			TBTKAssert(
+			MyTBTKAssert(
 				dimGroup == -1,
 				"WannierParser::parseWannierFunction()",
 				"Multiple definitions of DIM-GROUP encountered.",
@@ -286,7 +286,7 @@ vector<ParallelepipedArrayState*> WannierParser::parseWannierFunctions(
 			ss >> dimGroup;
 		}
 		else if(command.compare("PRIMVEC") == 0){
-			TBTKAssert(
+			MyTBTKAssert(
 				primVec == nullptr,
 				"WannierParser::parseWannierFunction()",
 				"Multiple definitions of PRIMVEC encountered.",
@@ -298,7 +298,7 @@ vector<ParallelepipedArrayState*> WannierParser::parseWannierFunctions(
 				ss >> primVec[n];
 		}
 		else if(command.compare("CONVVEC") == 0){
-			TBTKAssert(
+			MyTBTKAssert(
 				convVec == nullptr,
 				"WannierParser::parseWannierFunction()",
 				"Multiple definitions of CONVVEC encountered.",
@@ -310,7 +310,7 @@ vector<ParallelepipedArrayState*> WannierParser::parseWannierFunctions(
 				ss >> convVec[n];
 		}
 		else if(command.compare("PRIMCOORD") == 0){
-			TBTKAssert(
+			MyTBTKAssert(
 				primCoord == nullptr,
 				"WannierParser::parseWannierFunction()",
 				"Multiple definitions of PRIMCOORD encountered.",
@@ -451,7 +451,7 @@ vector<ParallelepipedArrayState*> WannierParser::parseWannierFunctions(
 
 			string endGrid;
 			ss >> endGrid;
-			TBTKAssert(
+			MyTBTKAssert(
 				endGrid.substr(0, 4).compare("END_") == 0,
 				"WannierParser::parseWannierFunction()",
 				"Expected END_... but found " << endGrid << ".",
@@ -460,7 +460,7 @@ vector<ParallelepipedArrayState*> WannierParser::parseWannierFunctions(
 
 			string endBlock;
 			ss >> endBlock;
-			TBTKAssert(
+			MyTBTKAssert(
 				endBlock.compare("END_BLOCK_DATAGRID3D") == 0
 				|| endBlock.compare("END_BLOCK_DATAGRID_3D") == 0,
 				"WannierParser::parseWannierFunction()",
@@ -469,7 +469,7 @@ vector<ParallelepipedArrayState*> WannierParser::parseWannierFunctions(
 			);
 		}
 		else{
-			TBTKExit(
+			MyTBTKExit(
 				"WannierParser::parseWannierFunction()",
 				"Encountered unknown command '" << command
 				<< "' while parsing input.",
@@ -484,4 +484,4 @@ vector<ParallelepipedArrayState*> WannierParser::parseWannierFunctions(
 	return ppaStates;
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

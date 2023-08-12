@@ -18,15 +18,15 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Streams.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 #include <fstream>
 #include <iostream>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 //ostream Streams::out(new ForkBuffer(&cout, &Streams::log));
 //stream Streams::log(&nullBuffer);
@@ -62,15 +62,15 @@ void Streams::setStdMuteErr(){
 void Streams::openLog(std::string fileName){
 	stdLogBuffer.open(fileName);
 
-/*	Streams::log << TBTK_ABOUT << "\n";
-	Streams::log << "Date: " << TBTK_GET_CURRENT_TIME_STRING() << "\n";
+/*	Streams::log << MyTBTK_ABOUT << "\n";
+	Streams::log << "Date: " << MyTBTK_GET_CURRENT_TIME_STRING() << "\n";
 	Streams::log << "\n";*/
-	Streams::log << TBTK_RUNTIME_CONTEXT_STRING << "\n";
+	Streams::log << MyTBTK_RUNTIME_CONTEXT_STRING << "\n";
 }
 
 void Streams::closeLog(){
 	Streams::log << "\n";
-	Streams::log << "Date: " << TBTK_GET_CURRENT_TIME_STRING();
+	Streams::log << "Date: " << MyTBTK_GET_CURRENT_TIME_STRING();
 	stdLogBuffer.close();
 }
 
@@ -112,7 +112,7 @@ Streams::LogBuffer::~LogBuffer(){
 
 void Streams::LogBuffer::open(std::string fileName){
 	if(fout.is_open()){
-		//Do not use TBTKExit or TBTKAssert here. These rely on Streams
+		//Do not use MyTBTKExit or MyTBTKAssert here. These rely on Streams
 		//for output. cerr is used to ensure proper error messages also
 		//in the case that Streams fail.
 		cerr << "Error in Streams::LogBuffer::openFile(): Log file already open." << endl;
@@ -128,7 +128,7 @@ void Streams::LogBuffer::close(){
 		fout.close();
 	}
 	else{
-		//Do not use TBTKExit or TBTKAssert here. These rely on Streams
+		//Do not use MyTBTKExit or MyTBTKAssert here. These rely on Streams
 		//for output. cerr is used to ensure proper error messages also
 		//in the case that Streams fail.
 		Streams::err << "Error in Streams::LogBuffer::closeFile(): No log file is open.\n";
@@ -146,4 +146,4 @@ int Streams::LogBuffer::overflow(int c){
 	return c;
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

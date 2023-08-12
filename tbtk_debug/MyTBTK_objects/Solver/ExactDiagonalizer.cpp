@@ -1,17 +1,17 @@
-#include "TBTK/Solver/ExactDiagonalizer.h"
-#include "TBTK/FockSpace.h"
-#include "TBTK/FileWriter.h"
-#include "TBTK/FockStateRule/DifferenceRule.h"
-#include "TBTK/FockStateRule/SumRule.h"
-#include "TBTK/FockStateRule/WrapperRule.h"
-#include "TBTK/Solver/Diagonalizer.h"
-#include "TBTK/Property/DOS.h"
-#include "TBTK/PropertyExtractor/Diagonalizer.h"
-#include "TBTK/Timer.h"
+#include "MyTBTK/Solver/ExactDiagonalizer.h"
+#include "MyTBTK/FockSpace.h"
+#include "MyTBTK/FileWriter.h"
+#include "MyTBTK/FockStateRule/DifferenceRule.h"
+#include "MyTBTK/FockStateRule/SumRule.h"
+#include "MyTBTK/FockStateRule/WrapperRule.h"
+#include "MyTBTK/Solver/Diagonalizer.h"
+#include "MyTBTK/Property/DOS.h"
+#include "MyTBTK/PropertyExtractor/Diagonalizer.h"
+#include "MyTBTK/Timer.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 ExactDiagonalizer::ExactDiagonalizer(/*Model *model*/){
@@ -243,4 +243,4 @@ ExactDiagonalizer::SubspaceContext::~SubspaceContext(){
 }
 
 };	//End of namespace Solver
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

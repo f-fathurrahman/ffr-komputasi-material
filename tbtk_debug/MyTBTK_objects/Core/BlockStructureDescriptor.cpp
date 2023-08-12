@@ -28,41 +28,41 @@ BlockStructureDescriptor::BlockStructureDescriptor(){
 }
 
 BlockStructureDescriptor::BlockStructureDescriptor(
-	const HoppingAmplitudeSet &hoppingAmplitudeSet
+    const HoppingAmplitudeSet &hoppingAmplitudeSet
 ){
-	IndexTree blockIndices = hoppingAmplitudeSet.getSubspaceIndices();
-	for(
-		IndexTree::ConstIterator blockIterator = blockIndices.cbegin();
-		blockIterator != blockIndices.cend();
-		++blockIterator
-	){
-		HoppingAmplitudeSet::ConstIterator iterator
-			= hoppingAmplitudeSet.cbegin(*blockIterator);
-		numStatesInBlock.push_back(iterator.getNumBasisIndices());
-	}
+    IndexTree blockIndices = hoppingAmplitudeSet.getSubspaceIndices();
+    for(
+        IndexTree::ConstIterator blockIterator = blockIndices.cbegin();
+        blockIterator != blockIndices.cend();
+        ++blockIterator
+    ){
+        HoppingAmplitudeSet::ConstIterator iterator
+            = hoppingAmplitudeSet.cbegin(*blockIterator);
+        numStatesInBlock.push_back(iterator.getNumBasisIndices());
+    }
 
-	if(numStatesInBlock.size() == 0){
-		numStatesInBlock.push_back(hoppingAmplitudeSet.getBasisSize());
-		blockToStateMap.push_back(0);
-		for(int n = 0; n < hoppingAmplitudeSet.getBasisSize(); n++)
-			stateToBlockMap.push_back(0);
-	}
-	else{
-		unsigned int blockCounter = 0;
-		unsigned int intraBlockCounter = 0;
-		for(int n = 0; n < hoppingAmplitudeSet.getBasisSize(); n++){
-			if(intraBlockCounter >= numStatesInBlock.at(blockCounter)){
-				intraBlockCounter = 0;
-				blockCounter++;
-			}
+    if(numStatesInBlock.size() == 0){
+        numStatesInBlock.push_back(hoppingAmplitudeSet.getBasisSize());
+        blockToStateMap.push_back(0);
+        for(int n = 0; n < hoppingAmplitudeSet.getBasisSize(); n++)
+            stateToBlockMap.push_back(0);
+    }
+    else{
+        unsigned int blockCounter = 0;
+        unsigned int intraBlockCounter = 0;
+        for(int n = 0; n < hoppingAmplitudeSet.getBasisSize(); n++){
+            if(intraBlockCounter >= numStatesInBlock.at(blockCounter)){
+                intraBlockCounter = 0;
+                blockCounter++;
+            }
 
-			if(intraBlockCounter == 0)
-				blockToStateMap.push_back(n);
+            if(intraBlockCounter == 0)
+                blockToStateMap.push_back(n);
 
-			stateToBlockMap.push_back(blockCounter);
-			intraBlockCounter++;
-		}
-	}
+            stateToBlockMap.push_back(blockCounter);
+            intraBlockCounter++;
+        }
+    }
 }
 
-};	//End of namespace MyTBTK
+};    //End of namespace MyTBTK

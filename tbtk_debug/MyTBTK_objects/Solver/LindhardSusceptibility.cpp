@@ -18,16 +18,16 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Functions.h"
-#include "TBTK/Solver/LindhardSusceptibility.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/Solver/LindhardSusceptibility.h"
+#include "MyTBTK/UnitHandler.h"
 
 #include <complex>
 #include <iomanip>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 LindhardSusceptibility::LindhardSusceptibility(
@@ -207,7 +207,7 @@ vector<complex<double>> LindhardSusceptibility::calculateSusceptibilityLindhard(
 	const vector<complex<double>> &energies
 ){
 	std::vector<Index> indices = index.split();
-	TBTKAssert(
+	MyTBTKAssert(
 		indices.size() == 5,
 		"LindhardSusceptibility::calculateSusceptibilityLindhard()",
 		"The Index must be a compound Index with 5 component Indices,"
@@ -217,7 +217,7 @@ vector<complex<double>> LindhardSusceptibility::calculateSusceptibilityLindhard(
 	const Index kIndex = indices[0];
 	for(unsigned int n = 1; n < 5; n++){
 		//Temporary restriction that should be removed in the future.
-		TBTKAssert(
+		MyTBTKAssert(
 			indices[n].getSize() == 1,
 			"LindhardSusceptibility::calculateSusceptibilityLindhard()",
 			"Only single subindex orbitals supported so far.",
@@ -462,7 +462,7 @@ void LindhardSusceptibility::generateKPlusQLookupTable(){
 		unsigned int counter = 0;
 		int value;
 		while(fin >> value){
-			TBTKAssert(
+			MyTBTKAssert(
 				counter < mesh.size()*mesh.size(),
 				"LindhardSusceptibility::generateKPlusQLookupTable()",
 				"Found cache file '" << cacheName << "',"
@@ -475,7 +475,7 @@ void LindhardSusceptibility::generateKPlusQLookupTable(){
 		}
 		fin.close();
 
-		TBTKAssert(
+		MyTBTKAssert(
 			counter == mesh.size()*mesh.size(),
 			"LindhardSusceptibility::generateKPlusQLookupTable()",
 			"Found cache file" << cacheName << ","
@@ -488,7 +488,7 @@ void LindhardSusceptibility::generateKPlusQLookupTable(){
 		return;
 	}
 
-#ifdef TBTK_USE_OPEN_MP
+#ifdef MyTBTK_USE_OPEN_MP
 	#pragma omp parallel for
 #endif
 	for(unsigned int k = 0; k < mesh.size(); k++){
@@ -528,4 +528,4 @@ void LindhardSusceptibility::generateKPlusQLookupTable(){
 }
 
 }	//End of namespace Solver
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK

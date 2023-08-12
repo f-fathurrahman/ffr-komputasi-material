@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Quantity/Constants.h"
-#include "TBTK/Quantity/Derived.h"
+#include "MyTBTK/Quantity/Constants.h"
+#include "MyTBTK/Quantity/Derived.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Quantity{
 
 //Mass.
@@ -162,4 +162,4 @@ void initializeDerivedQuantities(){
 }
 
 };	//End of namespace Quantity
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

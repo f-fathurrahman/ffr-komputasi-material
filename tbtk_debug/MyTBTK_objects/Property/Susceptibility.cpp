@@ -18,14 +18,14 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Property/Susceptibility.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/Property/Susceptibility.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
-#include "TBTK/json.hpp"
+#include "MyTBTK/json.hpp"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Property{
 
 Susceptibility::Susceptibility() : EnergyResolvedProperty(){
@@ -99,7 +99,7 @@ Susceptibility::Susceptibility(
 		mode
 	)
 {
-	TBTKAssert(
+	MyTBTKAssert(
 		validate(serialization, "Susceptibility", mode),
 		"Property::Susceptibility::Susceptibility()",
 		"Unable to parse string as Susceptibility '" << serialization
@@ -112,7 +112,7 @@ Susceptibility::Susceptibility(
 		try{
 		}
 		catch(nlohmann::json::exception &e){
-			TBTKExit(
+			MyTBTKExit(
 				"Property::Susceptibility::Susceptibility()",
 				"Unable to parse string as"
 				<< " EnergyResolvedProperty '" << serialization
@@ -123,7 +123,7 @@ Susceptibility::Susceptibility(
 
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Property::Susceptibility::Susceptibility()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -144,7 +144,7 @@ string Susceptibility::serialize(Mode mode) const{
 		return j.dump();
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Property::Susceptibility::serialize()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -153,4 +153,4 @@ string Susceptibility::serialize(Mode mode) const{
 }
 
 };	//End of namespace Property
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

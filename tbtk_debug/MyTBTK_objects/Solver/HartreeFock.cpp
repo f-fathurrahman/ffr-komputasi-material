@@ -18,19 +18,19 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/AbstractState.h"
-#include "TBTK/HartreeFockPotentialOperator.h"
-#include "TBTK/KineticOperator.h"
-#include "TBTK/MultiCounter.h"
-#include "TBTK/NuclearPotentialOperator.h"
-#include "TBTK/Property/WaveFunctions.h"
-#include "TBTK/PropertyExtractor/Diagonalizer.h"
-#include "TBTK/Solver/HartreeFock.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/AbstractState.h"
+#include "MyTBTK/HartreeFockPotentialOperator.h"
+#include "MyTBTK/KineticOperator.h"
+#include "MyTBTK/MultiCounter.h"
+#include "MyTBTK/NuclearPotentialOperator.h"
+#include "MyTBTK/Property/WaveFunctions.h"
+#include "MyTBTK/PropertyExtractor/Diagonalizer.h"
+#include "MyTBTK/Solver/HartreeFock.h"
+#include "MyTBTK/UnitHandler.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 HartreeFock::HartreeFock() : selfConsistencyCallback(*this){
@@ -51,7 +51,7 @@ void HartreeFock::run(){
 		basisStates.push_back(&(*iterator));
 	}
 
-	TBTKAssert(
+	MyTBTKAssert(
 		(int)basisStates.size() == getModel().getBasisSize(),
 		"Solver::HartreeFock::run()",
 		"The models basis size is different from the number of basis"
@@ -172,7 +172,7 @@ complex<double> HartreeFock::Callbacks::getHoppingAmplitude(
 	const Index &to,
 	const Index &from
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		solver != nullptr,
 		"Solver::HartreeFock::Callbacks::getHoppingAmplitude()",
 		"Solver not set.",
@@ -232,7 +232,7 @@ complex<double> HartreeFock::Callbacks::getOverlapAmplitude(
 	const Index &bra,
 	const Index &ket
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		solver != nullptr,
 		"Solver::HartreeFock::Callbacks::getOverlapAmplitude()",
 		"Solver not set.",
@@ -302,4 +302,4 @@ bool HartreeFock::SelfConsistencyCallback::selfConsistencyCallback(
 }
 
 };	//End of namespace Solver
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

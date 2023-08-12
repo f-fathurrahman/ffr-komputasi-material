@@ -13,16 +13,16 @@
  * limitations under the License.
  */
 
-/** @package TBTKcalc
+/** @package MyTBTKcalc
  *  @file Argument.cpp
  *  @brief Argument to matplotlib.
  *
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Visualization/MatPlotLib/ColorMap.h"
+#include "MyTBTK/Visualization/MatPlotLib/ColorMap.h"
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Visualization{
 namespace MatPlotLib{
 
@@ -287,4 +287,4 @@ Array<double> ColorMap::inferno({
 
 };	//End namespace MatPlotLib
 };	//End namespace Visualization
-};	//End namespace TBTK
+};	//End namespace MyTBTK

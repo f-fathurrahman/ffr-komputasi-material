@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/PropertyExtractor/IndexTreeGenerator.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/PropertyExtractor/IndexTreeGenerator.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace PropertyExtractor{
 
 IndexTreeGenerator::IndexTreeGenerator(const Model &model) : model(model){
@@ -53,7 +53,7 @@ IndexTree IndexTreeGenerator::generate(
 					pattern.at(c) = IDX_ALL;
 					break;
 				default:
-					TBTKAssert(
+					MyTBTKAssert(
 						pattern.at(c) >= 0,
 						"PropertyExtractor::IndexTreeGenerator()",
 						"Subindex " << c << " of pattern " << n << " is invalid.",
@@ -125,7 +125,7 @@ IndexTree IndexTreeGenerator::generate(
 			}
 		}
 		else{
-			TBTKExit(
+			MyTBTKExit(
 				"PropertyExtractor::IndexTreeGenerator::generate()",
 				"Invalid pattern '" << pattern << "'.",
 				""
@@ -139,4 +139,4 @@ IndexTree IndexTreeGenerator::generate(
 }
 
 };	//End of namesapce PropertyExtractor
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

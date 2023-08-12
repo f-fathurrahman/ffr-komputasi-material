@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Property/InteractionVertex.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/Property/InteractionVertex.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Property{
 
 InteractionVertex::InteractionVertex() : EnergyResolvedProperty(){
@@ -85,4 +85,4 @@ InteractionVertex::InteractionVertex(
 }
 
 };	//End of namespace Property
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

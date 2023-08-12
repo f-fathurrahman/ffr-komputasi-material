@@ -18,16 +18,16 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/PropertyExtractor/LindhardSusceptibility.h"
-#include "TBTK/Functions.h"
-#include "TBTK/Streams.h"
-#include "TBTK/Timer.h"
+#include "MyTBTK/PropertyExtractor/LindhardSusceptibility.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/Timer.h"
 
 #include <cmath>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace PropertyExtractor{
 
 LindhardSusceptibility::LindhardSusceptibility(
@@ -45,7 +45,7 @@ Property::Susceptibility LindhardSusceptibility::calculateSusceptibility(
 		const Index &pattern = *(patterns.begin() + n);
 
 		vector<Index> indices = pattern.split();
-		TBTKAssert(
+		MyTBTKAssert(
 			indices.size() == 5,
 			"PropertyExtractor::LindhardSusceptibility::calculateSusceptibility()",
 			"Invalid pattern '" << pattern.toString() << "'.",
@@ -54,7 +54,7 @@ Property::Susceptibility LindhardSusceptibility::calculateSusceptibility(
 			<< " are " << indices.size() << "."
 		);
 		for(unsigned int n = 2; n < indices.size(); n++){
-			TBTKAssert(
+			MyTBTKAssert(
 				indices[n].getSize() == indices[1].getSize(),
 				"PropertyExtractor::LindhardSusceptibility::calculateSusceptibility()",
 				"Currently the last four Indices has to have"
@@ -185,7 +185,7 @@ Property::Susceptibility LindhardSusceptibility::calculateSusceptibility(
 		const Index &pattern = *(patterns.begin() + n);
 
 		vector<Index> indices = pattern.split();
-		TBTKAssert(
+		MyTBTKAssert(
 			indices.size() == 5,
 			"PropertyExtractor::LindhardSusceptibility::calculateSusceptibility()",
 			"Invalid pattern '" << pattern.toString() << "'.",
@@ -194,7 +194,7 @@ Property::Susceptibility LindhardSusceptibility::calculateSusceptibility(
 			<< " are " << indices.size() << "."
 		);
 		for(unsigned int n = 2; n < indices.size(); n++){
-			TBTKAssert(
+			MyTBTKAssert(
 				indices[n].getSize() == indices[1].getSize(),
 				"PropertyExtractor::LindhardSusceptibility::calculateSusceptibility()",
 				"Currently the last four Indices has to have"
@@ -362,7 +362,7 @@ Property::Susceptibility LindhardSusceptibility::calculateSusceptibility(
 		int upperBosonicMatsubaraEnergyIndex
 			= getUpperBosonicMatsubaraEnergyIndex();
 
-		TBTKAssert(
+		MyTBTKAssert(
 			lowerBosonicMatsubaraEnergyIndex
 			<= upperBosonicMatsubaraEnergyIndex,
 			"PropertyExtractor::LindhardSusceptibility::calculateSusceptibility()",
@@ -410,7 +410,7 @@ Property::Susceptibility LindhardSusceptibility::calculateSusceptibility(
 		return susceptibility;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::LindhardSusceptibility::LindhardSusceptibility()",
 			"Uknown EnergyType.",
 			"This should never happen, contact the developer."
@@ -442,4 +442,4 @@ void LindhardSusceptibility::calculateSusceptibilityCallback(
 }
 
 };	//End of namespace PropertyExtractor
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

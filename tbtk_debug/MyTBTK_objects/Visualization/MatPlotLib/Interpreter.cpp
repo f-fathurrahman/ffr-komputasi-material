@@ -35,8 +35,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#define TBTK_NUMPY_INITIALIZING_TRANSLATION_UNIT
-#include "TBTK/Visualization/MatPlotLib/Interpreter.h"
+#define MyTBTK_NUMPY_INITIALIZING_TRANSLATION_UNIT
+#include "MyTBTK/Visualization/MatPlotLib/Interpreter.h"
 
 #include <vector>
 #include <map>
@@ -50,7 +50,7 @@
 
 #include <Python.h>
 
-namespace TBTK {
+namespace MyTBTK {
 namespace Visualization {
 namespace MatPlotLib {
 namespace matplotlibcpp {
@@ -58,7 +58,7 @@ namespace detail {
 
 extern std::string s_backend;
 
-#ifdef TBTK_MATPLOTLIB_DO_NOT_FORCE_AGG
+#ifdef MyTBTK_MATPLOTLIB_DO_NOT_FORCE_AGG
 	std::string s_backend;
 #else
 	std::string s_backend = "Agg";
@@ -232,4 +232,4 @@ void Interpreter::import_numpy(){
 } // end namespace matplotlibcpp
 } // end namespace MatPlotLib
 } // end namespace Visualization
-} // end namespace TBTK
+} // end namespace MyTBTK

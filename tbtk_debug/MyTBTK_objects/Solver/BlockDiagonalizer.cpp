@@ -18,15 +18,15 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Solver/BlockDiagonalizer.h"
-#include "TBTK/Streams.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/Solver/BlockDiagonalizer.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 #include <iomanip>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 BlockDiagonalizer::BlockDiagonalizer() : Communicator(false){
@@ -359,7 +359,7 @@ void BlockDiagonalizer::solve(){
 					&info
 				);
 
-				TBTKAssert(
+				MyTBTKAssert(
 					info == 0,
 					"Diagonalizer:solve()",
 					"Diagonalization routine zhpev exited with INFO=" + to_string(info) + ".",
@@ -399,7 +399,7 @@ void BlockDiagonalizer::solve(){
 					&info
 				);
 
-				TBTKAssert(
+				MyTBTKAssert(
 					info == 0,
 					"Diagonalizer:solve()",
 					"Diagonalization routine zhpev exited with INFO=" + to_string(info) + ".",
@@ -437,4 +437,4 @@ void BlockDiagonalizer::solve(){
 }
 
 };	//End of namespace Solver
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

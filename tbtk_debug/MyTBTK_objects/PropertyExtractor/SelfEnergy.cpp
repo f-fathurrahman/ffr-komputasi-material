@@ -18,16 +18,16 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/PropertyExtractor/SelfEnergy.h"
-#include "TBTK/Functions.h"
-#include "TBTK/Streams.h"
-#include "TBTK/Timer.h"
+#include "MyTBTK/PropertyExtractor/SelfEnergy.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/Timer.h"
 
 #include <cmath>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace PropertyExtractor{
 
 SelfEnergy::SelfEnergy(
@@ -45,7 +45,7 @@ Property::SelfEnergy SelfEnergy::calculateSelfEnergy(
 		const Index &pattern = *(patterns.begin() + n);
 
 		vector<Index> components = pattern.split();
-		TBTKAssert(
+		MyTBTKAssert(
 			components.size() == 3,
 			"PropertyExtractor::SelfEnergy::calculateSelfEnergy()",
 			"Invalid pattern '" << pattern.toString() << "'.",
@@ -54,7 +54,7 @@ Property::SelfEnergy SelfEnergy::calculateSelfEnergy(
 			<< " are " << components.size() << "."
 		);
 		for(unsigned int n = 2; n < components.size(); n++){
-			TBTKAssert(
+			MyTBTKAssert(
 				components[n].getSize() == components[1].getSize(),
 				"PropertyExtractor::SelfEnergy::calculateSelfEnergy()",
 				"Currently the last four Indices has to have"
@@ -157,7 +157,7 @@ Property::SelfEnergy SelfEnergy::calculateSelfEnergy(
 		const Index &pattern = *(patterns.begin() + n);
 
 		vector<Index> components = pattern.split();
-		TBTKAssert(
+		MyTBTKAssert(
 			components.size() == 3,
 			"PropertyExtractor::SelfEnergy::calculateSelfEnergy()",
 			"Invalid pattern '" << pattern.toString() << "'.",
@@ -166,7 +166,7 @@ Property::SelfEnergy SelfEnergy::calculateSelfEnergy(
 			<< components.size() << "."
 		);
 		for(unsigned int n = 2; n < components.size(); n++){
-			TBTKAssert(
+			MyTBTKAssert(
 				components[n].getSize() == components[1].getSize(),
 				"PropertyExtractor::SelfEnergy::calculateSelfEnergy()",
 				"Currently the last four Indices has to have"
@@ -274,7 +274,7 @@ Property::SelfEnergy SelfEnergy::calculateSelfEnergy(
 		int upperFermionicMatsubaraEnergyIndex
 			= getUpperFermionicMatsubaraEnergyIndex();
 
-		TBTKAssert(
+		MyTBTKAssert(
 			lowerFermionicMatsubaraEnergyIndex
 			<= upperFermionicMatsubaraEnergyIndex,
 			"PropertyExtractor::SelfEnergy::calculateSelfEnergy()",
@@ -321,7 +321,7 @@ Property::SelfEnergy SelfEnergy::calculateSelfEnergy(
 		return selfEnergy;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::ElectronFluctuationVertex::calculateInteractionVertex()",
 			"The InteractionVertex has to have the energy type"
 			<< " Property::EnergyResolvedProperty::EnergyType::BosonicMatsubara.",
@@ -353,4 +353,4 @@ void SelfEnergy::calculateSelfEnergyCallback(
 }
 
 };	//End of namespace PropertyExtractor
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

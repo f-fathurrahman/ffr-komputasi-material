@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/ArrayState.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/ArrayState.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 ArrayState::ArrayState(
 	initializer_list<unsigned int> resolution
@@ -46,18 +46,18 @@ ArrayState* ArrayState::clone() const{
 }
 
 complex<double> ArrayState::getOverlap(const AbstractState &bra) const{
-	TBTKNotYetImplemented("ArrayState::getOverlap()");
+	MyTBTKNotYetImplemented("ArrayState::getOverlap()");
 }
 
 complex<double> ArrayState::getMatrixElement(
 	const AbstractState &bra,
 	const AbstractOperator &o
 ) const{
-	TBTKNotYetImplemented("ArrayState::getOverlap()");
+	MyTBTKNotYetImplemented("ArrayState::getOverlap()");
 }
 
 ArrayState::Storage::Storage(initializer_list<unsigned int> resolution){
-	TBTKAssert(
+	MyTBTKAssert(
 		resolution.size() == 3,
 		"ArrayState::Storage::Storage()",
 		"Only three dimensional ArrayStates supported, but"
@@ -79,4 +79,4 @@ ArrayState::Storage::~Storage(){
 	delete data;
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

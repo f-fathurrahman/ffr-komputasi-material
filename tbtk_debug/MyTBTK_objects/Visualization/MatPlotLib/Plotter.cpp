@@ -22,20 +22,20 @@
 //that _POSIX_C_SOURCE is redefined.
 #include "Python.h"
 
-#include "TBTK/AnnotatedArray.h"
-#include "TBTK/MultiCounter.h"
-#include "TBTK/PropertyConverter.h"
-#include "TBTK/Range.h"
-#include "TBTK/Smooth.h"
-#include "TBTK/Streams.h"
-#include "TBTK/Visualization/MatPlotLib/ColorMap.h"
-#include "TBTK/Visualization/MatPlotLib/Plotter.h"
+#include "MyTBTK/AnnotatedArray.h"
+#include "MyTBTK/MultiCounter.h"
+#include "MyTBTK/PropertyConverter.h"
+#include "MyTBTK/Range.h"
+#include "MyTBTK/Smooth.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/Visualization/MatPlotLib/ColorMap.h"
+#include "MyTBTK/Visualization/MatPlotLib/Plotter.h"
 
 #include <sstream>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Visualization{
 namespace MatPlotLib{
 
@@ -341,7 +341,7 @@ void Plotter::plot(
 			break;
 		}
 	}
-	TBTKAssert(
+	MyTBTKAssert(
 		foundState,
 		"Plotter::plot()",
 		"State '" << state << "' is not included in 'waveFunctions'.",
@@ -423,7 +423,7 @@ void Plotter::plot(
 			break;
 		}
 	}
-	TBTKAssert(
+	MyTBTKAssert(
 		foundState,
 		"Plotter::plot()",
 		"State '" << state << "' is not included in 'waveFunctions'.",
@@ -524,7 +524,7 @@ void Plotter::plot(
 		break;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Plotter:plot()",
 			"Array size not supported.",
 			"Only arrays with one and two dimensions can be"
@@ -575,7 +575,7 @@ void Plotter::plot(const Array<double> &data, const Argument &argument){
 		break;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Plotter:plot()",
 			"Array size not supported.",
 			"Only arrays with one or two dimensions can be"
@@ -591,14 +591,14 @@ void Plotter::plot(
 ){
 	const vector<unsigned int> &xRanges = x.getRanges();
 	const vector<unsigned int> &yRanges = y.getRanges();
-	TBTKAssert(
+	MyTBTKAssert(
 		xRanges.size() == yRanges.size(),
 		"Plotter::plot()",
 		"Incompatible ranges. 'x' and 'y' must have the same ranges.",
 		""
 	);
 	for(unsigned int n = 0; n < xRanges.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			xRanges[n] == yRanges[n],
 			"Plotter::plot()",
 			"Incompatible ranges. 'x' and 'y' must have the same"
@@ -621,7 +621,7 @@ void Plotter::plot(
 		break;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Plotter:plot()",
 			"Array size not supported.",
 			"This function can only be used with one-dimensional"
@@ -639,7 +639,7 @@ void Plotter::plot(
 	const vector<unsigned int> &xRanges = x.getRanges();
 	const vector<unsigned int> &yRanges = y.getRanges();
 	const vector<unsigned int> &zRanges = z.getRanges();
-	TBTKAssert(
+	MyTBTKAssert(
 		xRanges.size() == yRanges.size()
 		&& xRanges.size() == zRanges.size(),
 		"Plotter::plot()",
@@ -651,7 +651,7 @@ void Plotter::plot(
 		if(xRanges[n] == 0)
 			return;
 
-		TBTKAssert(
+		MyTBTKAssert(
 			xRanges[n] == yRanges[n] && xRanges[n] == zRanges[n],
 			"Plotter::plot()",
 			"Incompatible ranges. 'x', 'y', and 'z' must have the"
@@ -688,7 +688,7 @@ void Plotter::plot(
 		break;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Plotter:plot()",
 			"Array size not supported.",
 			"This function can only be used with two-dimensional"
@@ -702,7 +702,7 @@ void Plotter::plot(
 	const vector<vector<double>> &intensities,
 	const Decoration &decoration
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		data.size() == intensities.size(),
 		"Plotter::plot()",
 		"The dimensions of 'data' and 'intensities' do not agree."
@@ -721,7 +721,7 @@ void Plotter::plot(
 	double min = 0;
 	double max = 1;
 	for(unsigned int n = 0; n < data.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			data[n].size() == intensities[n].size(),
 			"Plotter::plot()",
 			"The dimensions of 'data[" << n << "]' and"
@@ -805,7 +805,7 @@ void Plotter::plot(
 		break;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Plotter:plot()",
 			"Array size not supported.",
 			"Only arrays with one or two dimensions can be"
@@ -816,14 +816,14 @@ void Plotter::plot(
 
 string Plotter::colorToHex(const Array<double> &color) const{
 	const vector<unsigned int> &ranges = color.getRanges();
-	TBTKAssert(
+	MyTBTKAssert(
 		ranges.size() == 1,
 		"Plotter::colorToHex()",
 		"Invalid color. The number of ranges must be 1, but is '"
 		<< ranges.size() << "'.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		ranges[0] == 3,
 		"Plotter::colorToHex()",
 		"Invalid color. The number of colors must be 3, but is '"
@@ -857,7 +857,7 @@ void Plotter::plot1D(
 	const vector<double> &y,
 	const Argument &argument
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		x.size() == y.size(),
 		"Plotter::plot1D()",
 		"Incompatible 'x' and 'y'. 'x' has size " << x.size()
@@ -933,7 +933,7 @@ void Plotter::plot2D(
 
 	unsigned int sizeY = z[0].size();
 	for(unsigned int x = 1; x < z.size(); x++){
-		TBTKAssert(
+		MyTBTKAssert(
 			z[x].size() == sizeY,
 			"Plotter:plot2D()",
 			"Incompatible array dimensions. 'z[0]' has " << sizeY
@@ -962,7 +962,7 @@ void Plotter::plot2D(
 	const vector<vector<double>> &z,
 	const Argument &argument
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		x.size() == y.size() && x.size() == z.size(),
 		"Plotter::plot2D()",
 		"Incompatible array dimensions. 'x' has '" << x.size() << "'"
@@ -977,7 +977,7 @@ void Plotter::plot2D(
 		return;
 	size[1] = z[0].size();
 	for(unsigned int X = 0; X < z.size(); X++){
-		TBTKAssert(
+		MyTBTKAssert(
 			x[X].size() == size[1],
 			"Plotter::plot2D()",
 			"Incompatible array dimensions. 'x[" << X << "]' has '"
@@ -985,7 +985,7 @@ void Plotter::plot2D(
 			<< size[1] << "' elements.",
 			""
 		);
-		TBTKAssert(
+		MyTBTKAssert(
 			y[X].size() == size[1],
 			"Plotter::plot2D()",
 			"Incompatible array dimensions. 'y[" << X << "]' has '"
@@ -993,7 +993,7 @@ void Plotter::plot2D(
 			<< size[1] << "' elements.",
 			""
 		);
-		TBTKAssert(
+		MyTBTKAssert(
 			z[X].size() == size[1],
 			"Plotter::plot2D()",
 			"Incompatible array dimensions. 'z[" << X << "]' has '"
@@ -1029,7 +1029,7 @@ void Plotter::plot2D(
 		break;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Plotter::plot2D()",
 			"Unkown plot method.",
 			"This should never happen, contact the developer."
@@ -1057,7 +1057,7 @@ AnnotatedArray<double, double> Plotter::convertAxes(
 		++iterator
 	){
 		unsigned int axisID = iterator->first;
-		TBTKAssert(
+		MyTBTKAssert(
 			axisID < axes.size(),
 			"Plotter::convertAxes()",
 			"'axisID' cannot be larger than the number of axes,"
@@ -1106,7 +1106,7 @@ Array<double> Plotter::getNonDefaultAxis(
 	unsigned int axisID
 ) const{
 	const vector<unsigned int> &ranges = axis.getRanges();
-	TBTKAssert(
+	MyTBTKAssert(
 		axisID < ranges.size(),
 		"Plotter::getNonDefaultAxis()",
 		"Unable to calculate non-default axis because 'axisID="
@@ -1146,7 +1146,7 @@ Array<double> Plotter::getNonDefaultAxis(
 		default:
 		{
 			const vector<double> &ticks = axes[n].second;
-			TBTKAssert(
+			MyTBTKAssert(
 				ticks.size() == ranges[axisID],
 				"Plotter::getNonDefaultAxis()",
 				"Incompatible ticks and axis data. The number"
@@ -1168,4 +1168,4 @@ Array<double> Plotter::getNonDefaultAxis(
 
 };	//End of namespace MatPlotLib
 };	//End of namespace Visualization
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

@@ -18,10 +18,10 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Functions.h"
-#include "TBTK/InteractionAmplitude.h"
-#include "TBTK/Solver/SelfEnergy.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/InteractionAmplitude.h"
+#include "MyTBTK/Solver/SelfEnergy.h"
+#include "MyTBTK/UnitHandler.h"
 
 #include <complex>
 #include <iomanip>
@@ -30,7 +30,7 @@ using namespace std;
 
 //const complex<double> i(0, 1);
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 SelfEnergy::SelfEnergy(
@@ -51,7 +51,7 @@ SelfEnergy::~SelfEnergy(){
 }
 
 void SelfEnergy::init(){
-	TBTKAssert(
+	MyTBTKAssert(
 		interactionVertex.getEnergyType()
 		== Property::EnergyResolvedProperty<
 			complex<double>
@@ -61,7 +61,7 @@ void SelfEnergy::init(){
 		<< "Property::EnergyResolved::Property::EnergyType::BosonicMatsubara.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		interactionVertex.getNumMatsubaraEnergies()%2 == 1,
 		"Solver::SelfEnergy::init()",
 		"The number of summation energies must be an odd number but it"
@@ -69,7 +69,7 @@ void SelfEnergy::init(){
 		<< "'.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		interactionVertex.getLowerMatsubaraEnergyIndex()
 		== -interactionVertex.getUpperMatsubaraEnergyIndex(),
 		"Solver::SelfEnergy::init()",
@@ -116,7 +116,7 @@ void SelfEnergy::generateKMinusQLookupTable(){
 		unsigned int counter = 0;
 		int value;
 		while(fin >> value){
-			TBTKAssert(
+			MyTBTKAssert(
 				counter < mesh.size()*mesh.size(),
 				"Solver::SelfEnergy::generateKMinusQLookupTable()",
 				"Found cache file '" << cacheName << "',"
@@ -129,7 +129,7 @@ void SelfEnergy::generateKMinusQLookupTable(){
 		}
 		fin.close();
 
-		TBTKAssert(
+		MyTBTKAssert(
 			counter == mesh.size()*mesh.size(),
 			"Solver::SelfEnergy::generateKMinusQLookupTable()",
 			"Found cache file '" << cacheName << "',"
@@ -142,7 +142,7 @@ void SelfEnergy::generateKMinusQLookupTable(){
 		return;
 	}
 
-#ifdef TBTK_USE_OPEN_MP
+#ifdef MyTBTK_USE_OPEN_MP
 	#pragma omp parallel for
 #endif
 	for(unsigned int k = 0; k < mesh.size(); k++){
@@ -214,7 +214,7 @@ vector<complex<double>> SelfEnergy::calculateSelfEnergy(
 	const Index &index,
 	const vector<complex<double>> &selfEnergyEnergies
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		isInitialized,
 		"Solver::SelfEnergy::calculateSelfEnergy()",
 		"Solver::SelfEnergy not yet initialized.",
@@ -238,9 +238,9 @@ vector<complex<double>> SelfEnergy::calculateSelfEnergySelfConsistently(
 	unsigned int numMatsubaraFrequencies,
 	const vector<complex<double>> &energies
 ){
-	TBTKNotYetImplemented("SelfEnergyCalculator::calculateSelfEnergySelfConsistently");
+	MyTBTKNotYetImplemented("SelfEnergyCalculator::calculateSelfEnergySelfConsistently");
 
-	TBTKAssert(
+	MyTBTKAssert(
 		isInitialized,
 		"SelfEnergyCalculator::calculateSelfEnergySelfConsistently()",
 		"SelfEnergyCalculator not yet initialized.",
@@ -260,7 +260,7 @@ void SelfEnergy::selfEnergyMainLoop(
 	vector<complex<double>> &result
 ){
 	vector<Index> components = index.split();
-	TBTKAssert(
+	MyTBTKAssert(
 		components.size() == 3,
 		"Solver::SelfEnergy::calculateSelfEnergy()",
 		"The Index must be a compound Index with 3 component Indices,"
@@ -273,7 +273,7 @@ void SelfEnergy::selfEnergyMainLoop(
 	const Index intraBlockIndices1 = components[2];
 
 	for(unsigned int n = 0; n < 2; n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			components[n+1].getSize() == 1,
 			"Solver::SelfEnergy::calculateSelfEnergy()",
 			"The four last components of the compound Index"
@@ -464,4 +464,4 @@ void SelfEnergy::selfEnergyMainLoop(
 }
 
 }	//End of namespace Solver
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK

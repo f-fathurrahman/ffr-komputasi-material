@@ -17,13 +17,13 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/AbstractIndexFilter.h"
-#include "TBTK/Models/SquareLattice.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/AbstractIndexFilter.h"
+#include "MyTBTK/Models/SquareLattice.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Models{
 
 class IndexFilter : public AbstractIndexFilter{
@@ -68,7 +68,7 @@ SquareLattice::SquareLattice(
 	const Index &size,
 	const vector<complex<double>> &parameters
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		parameters.size() > 1 && parameters.size() < 4,
 		"Models::SquareLattice::SquareLattice()",
 		"'parameters' must have '2' or '3' components, but '"
@@ -79,7 +79,7 @@ SquareLattice::SquareLattice(
 	bool hasSpinIndex = false;
 	for(unsigned int n = 0; n < size.getSize(); n++){
 		if(size[n].isSpinIndex()){
-			TBTKAssert(
+			MyTBTKAssert(
 				!hasSpinIndex,
 				"Models::SquareLattice::SquareLattice()",
 				"Multiple spin subindices detected in 'size'.",
@@ -100,7 +100,7 @@ void SquareLattice::createModelWithSpin(
 	const Index &size,
 	const vector<complex<double>> &parameters
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		size.getSize() == 3,
 		"Models::SquareLattice::SquareLattice()",
 		"'size' must have exactly '3' components when using IDX_SPIN"
@@ -169,7 +169,7 @@ void SquareLattice::createModelWithoutSpin(
 	const Index &size,
 	const vector<complex<double>> &parameters
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		size.getSize() == 2,
 		"Models::SquareLattice::SquareLattice()",
 		"'size' must have exactly '2' components when not using"
@@ -212,4 +212,4 @@ void SquareLattice::createModelWithoutSpin(
 }
 
 };	//End of namespace Models
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

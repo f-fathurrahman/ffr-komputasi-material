@@ -18,13 +18,13 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Property/SpectralFunction.h"
+#include "MyTBTK/Property/SpectralFunction.h"
 
 #include <utility>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Property{
 
 SpectralFunction::SpectralFunction(
@@ -97,8 +97,8 @@ SpectralFunction& SpectralFunction::operator=(SpectralFunction &&rhs){
 }
 
 string SpectralFunction::serialize(Mode mode) const{
-	TBTKNotYetImplemented("SpectralFunction::serialize()");
+	MyTBTKNotYetImplemented("SpectralFunction::serialize()");
 }
 
 };	//End of namespace Property
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/ParametrizedLine3d.h"
+#include "MyTBTK/ParametrizedLine3d.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 ParametrizedLine3d::ParametrizedLine3d(
 	const Vector3d &start,
@@ -38,4 +38,4 @@ Vector3d ParametrizedLine3d::operator()(
 	return start + (*lambda.begin())*direction;
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

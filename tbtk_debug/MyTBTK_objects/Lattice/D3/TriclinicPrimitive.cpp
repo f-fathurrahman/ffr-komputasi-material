@@ -18,15 +18,15 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/TBTKMacros.h"
-#include "TBTK/Lattice/D3/TriclinicPrimitive.h"
-#include "TBTK/Vector3d.h"
+#include "MyTBTK/MyTBTKMacros.h"
+#include "MyTBTK/Lattice/D3/TriclinicPrimitive.h"
+#include "MyTBTK/Vector3d.h"
 
 #include <cmath>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Lattice{
 namespace D3{
 
@@ -52,7 +52,7 @@ TriclinicPrimitive::TriclinicPrimitive(
 
 	Vector3d comp1 = Vector3d(latticeVectors.at(0)).unit()*cos(angle02);
 	Vector3d comp2 = Vector3d(latticeVectors.at(1)).unit()*cos(angle12);
-	TBTKAssert(
+	MyTBTKAssert(
 		(comp1 + comp2).norm() < 1,
 		"TriclinicPrimitive::TriclinicPrimitive()",
 		"Incompatible lattice angles. It is impossible to simultaneously satisfy the given angles (angle01=" << angle01 << ", angle02=" << angle02 << ", angle12=" << angle12 << ").",
@@ -70,4 +70,4 @@ TriclinicPrimitive::~TriclinicPrimitive(){
 
 };	//End of namespace D3
 };	//End of namespace Lattice
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

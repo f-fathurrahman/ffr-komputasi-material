@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/GaussianState.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/GaussianState.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 GaussianState::GaussianState(
 	const Index &index,
@@ -47,14 +47,14 @@ GaussianState::GaussianState(
 }
 
 complex<double> GaussianState::getOverlap(const AbstractState &ket) const{
-	TBTKNotYetImplemented("GaussianState::getOverlap()");
+	MyTBTKNotYetImplemented("GaussianState::getOverlap()");
 }
 
 complex<double> GaussianState::getMatrixElement(
 	const AbstractState &ket,
 	const AbstractOperator &o
 ) const{
-	TBTKNotYetImplemented("GaussianState::getMatrixElement()");
+	MyTBTKNotYetImplemented("GaussianState::getMatrixElement()");
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

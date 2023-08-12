@@ -18,17 +18,17 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/RealLattice.h"
-#include "TBTK/ReciprocalLattice.h"
-#include "TBTK/TBTKMacros.h"
-#include "TBTK/Vector3d.h"
+#include "MyTBTK/RealLattice.h"
+#include "MyTBTK/ReciprocalLattice.h"
+#include "MyTBTK/MyTBTKMacros.h"
+#include "MyTBTK/Vector3d.h"
 
 #include <limits>
 #include <typeinfo>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 ReciprocalLattice::ReciprocalLattice(
 	UnitCell *unitCell
@@ -54,7 +54,7 @@ ReciprocalLattice::~ReciprocalLattice(){
 Model* ReciprocalLattice::generateModel(initializer_list<double> momentum) const{
 /*	Model *model = new Model();
 
-	TBTKAssert(
+	MyTBTKAssert(
 		momentum.size() == reciprocalLatticeVectors.at(0).size(),
 		"ReciprocalLattice::ReciprocalLattice()",
 		"Incompatible dimensions. The number of components of momentum"
@@ -122,7 +122,7 @@ Model* ReciprocalLattice::generateModel(initializer_list<double> momentum) const
 Model* ReciprocalLattice::generateModel(vector<double> momentum) const{
 	Model *model = new Model();
 
-	TBTKAssert(
+	MyTBTKAssert(
 		momentum.size() == reciprocalLatticeVectors.at(0).size(),
 		"ReciprocalLattice::ReciprocalLattice()",
 		"Incompatible dimensions. The number of components of momentum"
@@ -190,7 +190,7 @@ Model* ReciprocalLattice::generateModel(
 	const vector<vector<double>> &momentums,
 	const vector<Index> &blockIndices
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		momentums.size() == blockIndices.size(),
 		"ReciprocalLattice::ReciprocalLattice()",
 		"Incompatible dimensions. The number of momentums must be the"
@@ -202,7 +202,7 @@ Model* ReciprocalLattice::generateModel(
 	);
 
 	for(unsigned int n = 0; n < momentums.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			momentums[n].size() == reciprocalLatticeVectors.at(0).size(),
 			"ReciprocalLattice::ReciprocalLattice()",
 			"Incompatible dimensions. The number of components of"
@@ -214,7 +214,7 @@ Model* ReciprocalLattice::generateModel(
 			<< reciprocalLatticeVectors.at(0).size() << ".",
 			""
 		);
-		TBTKAssert(
+		MyTBTKAssert(
 			blockIndices[n].getSize() == reciprocalLatticeVectors.at(0).size(),
 			"ReciprocalLattice::ReciprocalLattice()",
 			"Incompatible dimensions. The number of components of"
@@ -292,7 +292,7 @@ Model* ReciprocalLattice::generateModel(
 					}
 
 					static const complex<double> i(0., 1.);
-#ifdef TBTK_USE_OPEN_MP
+#ifdef MyTBTK_USE_OPEN_MP
 					#pragma omp parallel for
 #endif
 					for(
@@ -348,7 +348,7 @@ Model* ReciprocalLattice::generateModel(
 void ReciprocalLattice::setupReciprocalLatticeVectors(const UnitCell *unitCell){
 	const vector<vector<double>> latticeVectors = unitCell->getLatticeVectors();
 
-	TBTKAssert(
+	MyTBTKAssert(
 		latticeVectors.at(0).size() == latticeVectors.size(),
 		"ReciprocalLattice::ReciprocalLattice()",
 		"Lattice vector dimension not supported.",
@@ -390,7 +390,7 @@ void ReciprocalLattice::setupReciprocalLatticeVectors(const UnitCell *unitCell){
 	case 3:
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"ReciprocalLattice::setupReciprocalLatticeVectors()",
 			"Unit cell dimension not supported.",
 			"Only UnitCells with 1-3 lattice vectors are"
@@ -450,7 +450,7 @@ void ReciprocalLattice::setupRealSpaceEnvironment(const UnitCell *unitCell){
 	case 3:
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"ReciprocalLattice::setupReciprocalLatticeVectors()",
 			"Unit cell dimension not supported.",
 			"Only UnitCells with 1-3 lattice vectors are"
@@ -479,7 +479,7 @@ void ReciprocalLattice::setupRealSpaceEnvironment(const UnitCell *unitCell){
 			w = (n%2)*v[0] + ((n/2)%2)*v[1] + ((n/4)%2)*v[2];
 			break;
 		default:
-			TBTKExit(
+			MyTBTKExit(
 				"ReciprocalLattice::setupReciprocalLatticeVectors()",
 				"Unit cell dimension not supported.",
 				"Only UnitCells with 1-3 lattice vectors are"
@@ -496,7 +496,7 @@ void ReciprocalLattice::setupRealSpaceEnvironment(const UnitCell *unitCell){
 	const vector<AbstractState*> &states = unitCell->getStates();
 	double maxExtent = 0.;
 	for(unsigned int n = 0; n < states.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			states.at(n)->getExtent() != numeric_limits<double>::infinity()
 			&& states.at(n)->getExtent() != numeric_limits<double>::max(),
 			"ReciprocalLattice::ReciprocalLattice()",
@@ -547,7 +547,7 @@ void ReciprocalLattice::setupRealSpaceEnvironment(const UnitCell *unitCell){
 					realSpaceEnvironmentLattice.addLatticePoint({x, y, z});
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"ReciprocalLattice::setupReciprocalLatticeVectors()",
 			"Unit cell dimension not supported.",
 			"Only UnitCells with 1-3 lattice vectors are"
@@ -598,7 +598,7 @@ void ReciprocalLattice::setupRealSpaceEnvironment(const UnitCell *unitCell){
 			}
 			break;
 		default:
-			TBTKExit(
+			MyTBTKExit(
 				"ReciprocalLattice::setupReciprocalLatticeVectors()",
 				"Unit cell dimension not supported.",
 				"Only UnitCells with 1-3 lattice vectors are"
@@ -610,4 +610,4 @@ void ReciprocalLattice::setupRealSpaceEnvironment(const UnitCell *unitCell){
 	}
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

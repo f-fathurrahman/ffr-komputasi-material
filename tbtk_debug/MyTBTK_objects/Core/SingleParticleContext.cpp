@@ -27,158 +27,158 @@ using namespace std;
 namespace MyTBTK{
 
 SingleParticleContext::SingleParticleContext(){
-	statistics = Statistics::FermiDirac;
+    statistics = Statistics::FermiDirac;
 }
 
 SingleParticleContext::SingleParticleContext(
-	const vector<unsigned int> &capacity
+    const vector<unsigned int> &capacity
 ) :
-	hoppingAmplitudeSet(capacity)
+    hoppingAmplitudeSet(capacity)
 {
-	statistics = Statistics::FermiDirac;
+    statistics = Statistics::FermiDirac;
 }
 
 SingleParticleContext::SingleParticleContext(
-	const string &serialization,
-	Mode mode
+    const string &serialization,
+    Mode mode
 )
 {
-	MyTBTKAssert(
-		validate(serialization, "SingleParticleContext", mode),
-		"SingleParticleContext::SingleParticleContext()",
-		"Unable to parse string as SingleParticleContext '"
-		<< serialization << "'.",
-		""
-	);
+    MyTBTKAssert(
+        validate(serialization, "SingleParticleContext", mode),
+        "SingleParticleContext::SingleParticleContext()",
+        "Unable to parse string as SingleParticleContext '"
+        << serialization << "'.",
+        ""
+    );
 
-	switch(mode){
-	case Mode::JSON:
-	{
-		try{
-			nlohmann::json j = nlohmann::json::parse(serialization);
-			statistics = Serializable::deserialize<Statistics>(
-				j.at("statistics").get<string>(),
-				mode
-			);
-			hoppingAmplitudeSet = HoppingAmplitudeSet(
-				j.at("hoppingAmplitudeSet").dump(),
-				mode
-			);
-			geometry = Geometry(
-				j.at("geometry").dump(),
-				mode
-			);
-			sourceAmplitudeSet = SourceAmplitudeSet(
-				j.at("sourceAmplitudeSet").dump(),
-				mode
-			);
-			overlapAmplitudeSet = OverlapAmplitudeSet(
-				j.at("overlapAmplitudeSet").dump(),
-				mode
-			);
-		}
-		catch(nlohmann::json::exception &e){
-			MyTBTKExit(
-				"SingleParticleContext::SingleParticleContext()",
-				"Unable to parse string as"
-				<< " SingleParticleContext '" << serialization
-				<< "'.",
-				""
-			);
-		}
+    switch(mode){
+    case Mode::JSON:
+    {
+        try{
+            nlohmann::json j = nlohmann::json::parse(serialization);
+            statistics = Serializable::deserialize<Statistics>(
+                j.at("statistics").get<string>(),
+                mode
+            );
+            hoppingAmplitudeSet = HoppingAmplitudeSet(
+                j.at("hoppingAmplitudeSet").dump(),
+                mode
+            );
+            geometry = Geometry(
+                j.at("geometry").dump(),
+                mode
+            );
+            sourceAmplitudeSet = SourceAmplitudeSet(
+                j.at("sourceAmplitudeSet").dump(),
+                mode
+            );
+            overlapAmplitudeSet = OverlapAmplitudeSet(
+                j.at("overlapAmplitudeSet").dump(),
+                mode
+            );
+        }
+        catch(nlohmann::json::exception &e){
+            MyTBTKExit(
+                "SingleParticleContext::SingleParticleContext()",
+                "Unable to parse string as"
+                << " SingleParticleContext '" << serialization
+                << "'.",
+                ""
+            );
+        }
 
-		break;
-	}
-	default:
-		MyTBTKExit(
-			"SingleParticleContext::SingleParticleContext()",
-			"Only Serializable::Mode::Debug is supported yet.",
-			""
-		);
-	}
+        break;
+    }
+    default:
+        MyTBTKExit(
+            "SingleParticleContext::SingleParticleContext()",
+            "Only Serializable::Mode::Debug is supported yet.",
+            ""
+        );
+    }
 }
 
 void SingleParticleContext::generateHoppingAmplitudeSet(
-	const HoppingAmplitude::AmplitudeCallback &hoppingAmplitudeCallback
+    const HoppingAmplitude::AmplitudeCallback &hoppingAmplitudeCallback
 ){
-	for(
-		BasisStateSet::ConstIterator toIterator
-			= basisStateSet.cbegin();
-		toIterator != basisStateSet.cend();
-		++toIterator
-	){
-		for(
-			BasisStateSet::ConstIterator fromIterator
-				= basisStateSet.cbegin();
-			fromIterator != basisStateSet.cend();
-			++fromIterator
-		){
-			hoppingAmplitudeSet.add(
-				HoppingAmplitude(
-					hoppingAmplitudeCallback,
-					(*toIterator).getIndex(),
-					(*fromIterator).getIndex()
-				)
-			);
-		}
-	}
+    for(
+        BasisStateSet::ConstIterator toIterator
+            = basisStateSet.cbegin();
+        toIterator != basisStateSet.cend();
+        ++toIterator
+    ){
+        for(
+            BasisStateSet::ConstIterator fromIterator
+                = basisStateSet.cbegin();
+            fromIterator != basisStateSet.cend();
+            ++fromIterator
+        ){
+            hoppingAmplitudeSet.add(
+                HoppingAmplitude(
+                    hoppingAmplitudeCallback,
+                    (*toIterator).getIndex(),
+                    (*fromIterator).getIndex()
+                )
+            );
+        }
+    }
 }
 
 void SingleParticleContext::generateOverlapAmplitudeSet(
-	const OverlapAmplitude::AmplitudeCallback &overlapAmplitudeCallback
+    const OverlapAmplitude::AmplitudeCallback &overlapAmplitudeCallback
 ){
-	for(
-		BasisStateSet::ConstIterator toIterator
-			= basisStateSet.cbegin();
-		toIterator != basisStateSet.cend();
-		++toIterator
-	){
-		for(
-			BasisStateSet::ConstIterator fromIterator
-				= basisStateSet.cbegin();
-			fromIterator != basisStateSet.cend();
-			++fromIterator
-		){
-			overlapAmplitudeSet.add(
-				OverlapAmplitude(
-					overlapAmplitudeCallback,
-					(*toIterator).getIndex(),
-					(*fromIterator).getIndex()
-				)
-			);
-		}
-	}
+    for(
+        BasisStateSet::ConstIterator toIterator
+            = basisStateSet.cbegin();
+        toIterator != basisStateSet.cend();
+        ++toIterator
+    ){
+        for(
+            BasisStateSet::ConstIterator fromIterator
+                = basisStateSet.cbegin();
+            fromIterator != basisStateSet.cend();
+            ++fromIterator
+        ){
+            overlapAmplitudeSet.add(
+                OverlapAmplitude(
+                    overlapAmplitudeCallback,
+                    (*toIterator).getIndex(),
+                    (*fromIterator).getIndex()
+                )
+            );
+        }
+    }
 }
 
 string SingleParticleContext::serialize(Mode mode) const{
-	switch(mode){
-	case Mode::JSON:
-	{
-		nlohmann::json j;
-		j["id"] = "SingleParticleContext";
-		j["statistics"] = Serializable::serialize(statistics, mode);
-		j["hoppingAmplitudeSet"] = nlohmann::json::parse(
-			hoppingAmplitudeSet.serialize(mode)
-		);
-		j["geometry"] = nlohmann::json::parse(
-			geometry.serialize(mode)
-		);
-		j["sourceAmplitudeSet"] = nlohmann::json::parse(
-			sourceAmplitudeSet.serialize(mode)
-		);
-		j["overlapAmplitudeSet"] = nlohmann::json::parse(
-			overlapAmplitudeSet.serialize(mode)
-		);
+    switch(mode){
+    case Mode::JSON:
+    {
+        nlohmann::json j;
+        j["id"] = "SingleParticleContext";
+        j["statistics"] = Serializable::serialize(statistics, mode);
+        j["hoppingAmplitudeSet"] = nlohmann::json::parse(
+            hoppingAmplitudeSet.serialize(mode)
+        );
+        j["geometry"] = nlohmann::json::parse(
+            geometry.serialize(mode)
+        );
+        j["sourceAmplitudeSet"] = nlohmann::json::parse(
+            sourceAmplitudeSet.serialize(mode)
+        );
+        j["overlapAmplitudeSet"] = nlohmann::json::parse(
+            overlapAmplitudeSet.serialize(mode)
+        );
 
-		return j.dump();
-	}
-	default:
-		MyTBTKExit(
-			"SingleParticleContext::serialize()",
-			"Only Serializable::Mode::Debugis supported yet.",
-			""
-		);
-	}
+        return j.dump();
+    }
+    default:
+        MyTBTKExit(
+            "SingleParticleContext::serialize()",
+            "Only Serializable::Mode::Debugis supported yet.",
+            ""
+        );
+    }
 }
 
-};	//End of namespace MyTBTK
+};    //End of namespace MyTBTK

@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Property/Property.h"
+#include "MyTBTK/Property/Property.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Property{
 
 Property::Property(){
@@ -32,4 +32,4 @@ Property::~Property(){
 }
 
 };	//End of namespace Property
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

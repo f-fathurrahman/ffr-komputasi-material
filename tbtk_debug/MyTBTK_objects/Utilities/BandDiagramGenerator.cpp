@@ -18,15 +18,15 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/BandDiagramGenerator.h"
-#include "TBTK/Solver/Diagonalizer.h"
-#include "TBTK/ParametrizedLine.h"
-#include "TBTK/Timer.h"
-#include "TBTK/VectorNd.h"
+#include "MyTBTK/BandDiagramGenerator.h"
+#include "MyTBTK/Solver/Diagonalizer.h"
+#include "MyTBTK/ParametrizedLine.h"
+#include "MyTBTK/Timer.h"
+#include "MyTBTK/VectorNd.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 BandDiagramGenerator::BandDiagramGenerator(){
 	reciprocalLattice = nullptr;
@@ -37,7 +37,7 @@ vector<vector<double>> BandDiagramGenerator::generateBandDiagram(
 	unsigned int resolution,
 	initializer_list<initializer_list<double>> nestingVectors
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		reciprocalLattice != nullptr,
 		"BandDiagramGenerator::BandDiagramGenerator()",
 		"ReciprocalLattice not set.",
@@ -47,7 +47,7 @@ vector<vector<double>> BandDiagramGenerator::generateBandDiagram(
 
 	unsigned int numDimensions = kPoints.begin()->size();
 	for(unsigned int n = 1; n < kPoints.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			(kPoints.begin() + n)->size() == numDimensions,
 			"BandDiagramGenerator::BandDiagramGenerator()",
 			"Incompatible k-point dimensions. First k-point has "
@@ -58,7 +58,7 @@ vector<vector<double>> BandDiagramGenerator::generateBandDiagram(
 		);
 	}
 	for(unsigned int n = 0; n < nestingVectors.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			(nestingVectors.begin() + n)->size() == numDimensions,
 			"BandDiagramGenerator::BandDiagramGenerator()",
 			"Incompatible nesting vector dimension. The k-points"
@@ -131,4 +131,4 @@ vector<vector<double>> BandDiagramGenerator::generateBandDiagram(
 	return bandDiagram;
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

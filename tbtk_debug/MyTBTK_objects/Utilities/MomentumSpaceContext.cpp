@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/MomentumSpaceContext.h"
+#include "MyTBTK/MomentumSpaceContext.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 MomentumSpaceContext::MomentumSpaceContext(
 	const BrillouinZone &brillouinZone,
@@ -33,4 +33,4 @@ MomentumSpaceContext::MomentumSpaceContext(
 	mesh = brillouinZone.getMinorMesh(numMeshPoints);
 }
 
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK

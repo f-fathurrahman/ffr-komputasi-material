@@ -34,680 +34,680 @@ namespace MyTBTK{
 const HoppingAmplitudeTree HoppingAmplitudeTree::emptyTree;
 
 HoppingAmplitudeTree::HoppingAmplitudeTree(){
-	basisIndex = -1;
-	basisSize = -1;
-	isPotentialBlockSeparator = true;
+    basisIndex = -1;
+    basisSize = -1;
+    isPotentialBlockSeparator = true;
 }
 
 HoppingAmplitudeTree::HoppingAmplitudeTree(
-	const vector<unsigned int> &capacity
+    const vector<unsigned int> &capacity
 ){
-	basisIndex = -1;
-	basisSize = -1;
-	isPotentialBlockSeparator = true;
+    basisIndex = -1;
+    basisSize = -1;
+    isPotentialBlockSeparator = true;
 
-	if(capacity.size() != 0){
-		vector<unsigned int> childCapacity;
-		for(unsigned int n = 1; n < capacity.size(); n++)
-			childCapacity.push_back(capacity[n]);
+    if(capacity.size() != 0){
+        vector<unsigned int> childCapacity;
+        for(unsigned int n = 1; n < capacity.size(); n++)
+            childCapacity.push_back(capacity[n]);
 
-		children.reserve(capacity[0]);
-		for(unsigned int n = 0; n < capacity[0]; n++){
-			children.push_back(
-				HoppingAmplitudeTree(childCapacity)
-			);
-		}
-	}
+        children.reserve(capacity[0]);
+        for(unsigned int n = 0; n < capacity[0]; n++){
+            children.push_back(
+                HoppingAmplitudeTree(childCapacity)
+            );
+        }
+    }
 }
 
 HoppingAmplitudeTree::HoppingAmplitudeTree(
-	const string &serialization,
-	Mode mode
+    const string &serialization,
+    Mode mode
 ){
-	MyTBTKAssert(
-		validate(serialization, "HoppingAmplitudeTree", mode),
-		"HoppingAmplitudeTree::HoppingAmplitudeTree()",
-		"Unable to parse string as HoppingAmplitudeTree '"
-		<< serialization << "'.",
-		""
-	);
+    MyTBTKAssert(
+        validate(serialization, "HoppingAmplitudeTree", mode),
+        "HoppingAmplitudeTree::HoppingAmplitudeTree()",
+        "Unable to parse string as HoppingAmplitudeTree '"
+        << serialization << "'.",
+        ""
+    );
 
-	switch(mode){
-	case Mode::Debug:
-	{
-		string content = getContent(serialization, mode);
+    switch(mode){
+    case Mode::Debug:
+    {
+        string content = getContent(serialization, mode);
 
-		vector<string> elements = split(content, mode);
+        vector<string> elements = split(content, mode);
 
-		stringstream ss;
-		ss.str(elements.at(0));
-		ss >> basisIndex;
-		ss.clear();
-		ss.str(elements.at(1));
-		ss >> basisSize;
-		ss.clear();
-		ss.str(elements.at(2));
-		ss >> isPotentialBlockSeparator;
+        stringstream ss;
+        ss.str(elements.at(0));
+        ss >> basisIndex;
+        ss.clear();
+        ss.str(elements.at(1));
+        ss >> basisSize;
+        ss.clear();
+        ss.str(elements.at(2));
+        ss >> isPotentialBlockSeparator;
 
-		unsigned int counter = 3;
-		while(
-			counter < elements.size() &&
-			getID(
-				elements.at(counter),
-				mode
-			).compare("HoppingAmplitude") == 0
-		){
-			hoppingAmplitudes.push_back(
-				HoppingAmplitude(
-					elements.at(counter),
-					mode
-				)
-			);
-			counter++;
-		}
-		for(unsigned int n = counter; n < elements.size(); n++){
-			MyTBTKAssert(
-				getID(
-					elements.at(n),
-					mode
-				).compare("HoppingAmplitudeTree") == 0,
-				"HoppingAmplitudeTree::HoppingAmplitudeTree()",
-				"Unable to parse string as"
-				<< " HoppingAmplitudeTree. Expected"
-				<< " 'HoppingAmplitudeTree' but found '"
-				<< getID(elements.at(n), mode) << "'.",
-				""
-			)
-			children.push_back(HoppingAmplitudeTree(elements.at(n), mode));
-		}
+        unsigned int counter = 3;
+        while(
+            counter < elements.size() &&
+            getID(
+                elements.at(counter),
+                mode
+            ).compare("HoppingAmplitude") == 0
+        ){
+            hoppingAmplitudes.push_back(
+                HoppingAmplitude(
+                    elements.at(counter),
+                    mode
+                )
+            );
+            counter++;
+        }
+        for(unsigned int n = counter; n < elements.size(); n++){
+            MyTBTKAssert(
+                getID(
+                    elements.at(n),
+                    mode
+                ).compare("HoppingAmplitudeTree") == 0,
+                "HoppingAmplitudeTree::HoppingAmplitudeTree()",
+                "Unable to parse string as"
+                << " HoppingAmplitudeTree. Expected"
+                << " 'HoppingAmplitudeTree' but found '"
+                << getID(elements.at(n), mode) << "'.",
+                ""
+            )
+            children.push_back(HoppingAmplitudeTree(elements.at(n), mode));
+        }
 
-		break;
-	}
-	case Mode::JSON:
-	{
-		try{
-			nlohmann::json j = nlohmann::json::parse(serialization);
-			basisIndex = j.at("basisIndex").get<int>();
-			basisSize = j.at("basisSize").get<int>();
-			isPotentialBlockSeparator = j.at(
-				"isPotentialBlockSeparator"
-			).get<bool>();
-			try{
-				nlohmann::json has = j.at("hoppingAmplitudes");
-				for(nlohmann::json::iterator it = has.begin(); it != has.end(); ++it){
-					hoppingAmplitudes.push_back(
-						HoppingAmplitude(it->dump(), mode)
-					);
-				}
-			}
-			catch(nlohmann::json::exception &e){
-				//It is valid to not have HoppingAmplitudes.
-			}
+        break;
+    }
+    case Mode::JSON:
+    {
+        try{
+            nlohmann::json j = nlohmann::json::parse(serialization);
+            basisIndex = j.at("basisIndex").get<int>();
+            basisSize = j.at("basisSize").get<int>();
+            isPotentialBlockSeparator = j.at(
+                "isPotentialBlockSeparator"
+            ).get<bool>();
+            try{
+                nlohmann::json has = j.at("hoppingAmplitudes");
+                for(nlohmann::json::iterator it = has.begin(); it != has.end(); ++it){
+                    hoppingAmplitudes.push_back(
+                        HoppingAmplitude(it->dump(), mode)
+                    );
+                }
+            }
+            catch(nlohmann::json::exception &e){
+                //It is valid to not have HoppingAmplitudes.
+            }
 
-			try{
-				nlohmann::json c = j.at("children");
-				for(nlohmann::json::iterator it = c.begin(); it != c.end(); ++it){
-					children.push_back(
-						HoppingAmplitudeTree(it->dump(), mode)
-					);
-				}
-			}
-			catch(nlohmann::json::exception &e){
-				//It is valid to not have children.
-			}
-		}
-		catch(nlohmann::json::exception &e){
-			MyTBTKExit(
-				"HoppingAmplitudeTree::HoppingAmplitudeTree()",
-				"Unable to parse string as"
-				<< " HoppingAmplitudeTree '" << serialization
-				<< "'.",
-				""
-			);
-		}
+            try{
+                nlohmann::json c = j.at("children");
+                for(nlohmann::json::iterator it = c.begin(); it != c.end(); ++it){
+                    children.push_back(
+                        HoppingAmplitudeTree(it->dump(), mode)
+                    );
+                }
+            }
+            catch(nlohmann::json::exception &e){
+                //It is valid to not have children.
+            }
+        }
+        catch(nlohmann::json::exception &e){
+            MyTBTKExit(
+                "HoppingAmplitudeTree::HoppingAmplitudeTree()",
+                "Unable to parse string as"
+                << " HoppingAmplitudeTree '" << serialization
+                << "'.",
+                ""
+            );
+        }
 
-		break;
-	}
-	default:
-		MyTBTKExit(
-			"HoppingAmplitudeTree::HoppingAmplitudeTree()",
-			"Only Serializable::Mode::Debug is supported yet.",
-			""
-		);
-	}
+        break;
+    }
+    default:
+        MyTBTKExit(
+            "HoppingAmplitudeTree::HoppingAmplitudeTree()",
+            "Only Serializable::Mode::Debug is supported yet.",
+            ""
+        );
+    }
 }
 
 HoppingAmplitudeTree::~HoppingAmplitudeTree(){
 }
 
 vector<Index> HoppingAmplitudeTree::getIndexList(const Index &pattern) const{
-	vector<Index> indexList;
+    vector<Index> indexList;
 
-	Index subTreeIndex;
-	Index intraSubTreeIndex;
-	for(unsigned int n = 0; n < pattern.getSize(); n++){
-		if(pattern[n] < 0)
-			break;
+    Index subTreeIndex;
+    Index intraSubTreeIndex;
+    for(unsigned int n = 0; n < pattern.getSize(); n++){
+        if(pattern[n] < 0)
+            break;
 
-		subTreeIndex.pushBack(pattern[n]);
-	}
+        subTreeIndex.pushBack(pattern[n]);
+    }
 
-	const HoppingAmplitudeTree *subTree = getSubTree(subTreeIndex);
+    const HoppingAmplitudeTree *subTree = getSubTree(subTreeIndex);
 
-	for(
-		ConstIterator iterator = subTree->cbegin();
-		iterator != subTree->cend();
-		++iterator
-	){
-		if((*iterator).getFromIndex().equals(pattern, true)){
-			if(
-				indexList.size() == 0
-				|| !indexList.back().equals((*iterator).getFromIndex(), false)
-			){
-				indexList.push_back((*iterator).getFromIndex());
-			}
-		}
-	}
+    for(
+        ConstIterator iterator = subTree->cbegin();
+        iterator != subTree->cend();
+        ++iterator
+    ){
+        if((*iterator).getFromIndex().equals(pattern, true)){
+            if(
+                indexList.size() == 0
+                || !indexList.back().equals((*iterator).getFromIndex(), false)
+            ){
+                indexList.push_back((*iterator).getFromIndex());
+            }
+        }
+    }
 
-	return indexList;
+    return indexList;
 }
 
 vector<Index> HoppingAmplitudeTree::getIndexListMultiplePatterns(
-	const vector<Index> &patterns
+    const vector<Index> &patterns
 ) const{
-	set<Index> indexSet;
-	for(auto pattern : patterns){
-		vector<Index> indices = getIndexList(pattern);
-		for(auto index : indices)
-			indexSet.insert(index);
-	}
+    set<Index> indexSet;
+    for(auto pattern : patterns){
+        vector<Index> indices = getIndexList(pattern);
+        for(auto index : indices)
+            indexSet.insert(index);
+    }
 
-	return vector<Index>(indexSet.begin(), indexSet.end());
+    return vector<Index>(indexSet.begin(), indexSet.end());
 }
 
 void HoppingAmplitudeTree::print(){
-	print(0);
+    print(0);
 }
 
 void HoppingAmplitudeTree::print(unsigned int subindex){
-	for(unsigned int n = 0; n < subindex; n++)
-		Streams::out << "\t";
-	Streams::out << basisIndex << ":" << hoppingAmplitudes.size() << "\n";
-	for(unsigned int n = 0; n < children.size(); n++)
-		children.at(n).print(subindex + 1);
+    for(unsigned int n = 0; n < subindex; n++)
+        Streams::out << "\t";
+    Streams::out << basisIndex << ":" << hoppingAmplitudes.size() << "\n";
+    for(unsigned int n = 0; n < children.size(); n++)
+        children.at(n).print(subindex + 1);
 }
 
 void HoppingAmplitudeTree::add(HoppingAmplitude ha){
-	_add(ha, 0);
+    _add(ha, 0);
 }
 
 void HoppingAmplitudeTree::_add(HoppingAmplitude &ha, unsigned int subindex){
-	if(subindex < ha.getFromIndex().getSize()){
-		//If the current subindex is not the last, the HoppingAmplitude
-		//is propagated to the next node level.
+    if(subindex < ha.getFromIndex().getSize()){
+        //If the current subindex is not the last, the HoppingAmplitude
+        //is propagated to the next node level.
 
-		//Get current subindex
-		int currentIndex = ha.getFromIndex().at(subindex);
-		//Error detection:
-		//Negative indices not allowed.
-		MyTBTKAssert(
-			currentIndex >= 0,
-			"HoppingAmplitude:_add()",
-			"Invalid Index. Only indices with non-negative"
-			<< " subindices can be added. But the from-Index "
-			<< ha.getFromIndex().toString() << " has a negative"
-			<< " subindex in position '" << subindex << "'.",
-			""
-		);
-		//If the subindex is bigger than the current number of child
-		//nodes, create empty nodes.
-		if(currentIndex >= (int)children.size()){
-			for(int n = children.size(); n <= currentIndex; n++){
-				children.push_back(HoppingAmplitudeTree());
-			}
-		}
-		//Error detection:
-		//If a HoppingAmplitude is found on this level, another
-		//HoppingAmplitude with fewer subindices than the current
-		//HoppingAmplitude have previously been added to this node.
-		//This is an error because different number of subindices is
-		//only allowed if the HoppingAmplitudes differ in one of their
-		//common indices.
-		MyTBTKAssert(
-			hoppingAmplitudes.size() == 0,
-			"HoppingAmplitudeTree::_add()",
-			"Incompatible HoppingAmplitudes. Tried to add a"
-			<< " HoppingAmplitude with from-Index "
-			<< ha.getFromIndex().toString() << ", but"
-			<< " HoppingAmplitude with from-Index "
-			<< hoppingAmplitudes[0].getFromIndex().toString()
-			<< " has already been added.",
-			""
-		);
-		//Ensure isPotentialBlockSeparator is set to false in case the
-		//'toIndex' and the 'fromIndex' differs in the subindex
-		//corresponding to this HoppingAmplitudeTree level.
-		if(ha.getToIndex().getSize() <= subindex || currentIndex != ha.getToIndex().at(subindex))
-			isPotentialBlockSeparator = false;
-		//Propagate to the next node level.
-		children.at(currentIndex)._add(ha, subindex+1);
-	}
-	else{
-		//If the current subindex is the last, the HoppingAmplitude
-		//is added to this node.
+        //Get current subindex
+        int currentIndex = ha.getFromIndex().at(subindex);
+        //Error detection:
+        //Negative indices not allowed.
+        MyTBTKAssert(
+            currentIndex >= 0,
+            "HoppingAmplitude:_add()",
+            "Invalid Index. Only indices with non-negative"
+            << " subindices can be added. But the from-Index "
+            << ha.getFromIndex().toString() << " has a negative"
+            << " subindex in position '" << subindex << "'.",
+            ""
+        );
+        //If the subindex is bigger than the current number of child
+        //nodes, create empty nodes.
+        if(currentIndex >= (int)children.size()){
+            for(int n = children.size(); n <= currentIndex; n++){
+                children.push_back(HoppingAmplitudeTree());
+            }
+        }
+        //Error detection:
+        //If a HoppingAmplitude is found on this level, another
+        //HoppingAmplitude with fewer subindices than the current
+        //HoppingAmplitude have previously been added to this node.
+        //This is an error because different number of subindices is
+        //only allowed if the HoppingAmplitudes differ in one of their
+        //common indices.
+        MyTBTKAssert(
+            hoppingAmplitudes.size() == 0,
+            "HoppingAmplitudeTree::_add()",
+            "Incompatible HoppingAmplitudes. Tried to add a"
+            << " HoppingAmplitude with from-Index "
+            << ha.getFromIndex().toString() << ", but"
+            << " HoppingAmplitude with from-Index "
+            << hoppingAmplitudes[0].getFromIndex().toString()
+            << " has already been added.",
+            ""
+        );
+        //Ensure isPotentialBlockSeparator is set to false in case the
+        //'toIndex' and the 'fromIndex' differs in the subindex
+        //corresponding to this HoppingAmplitudeTree level.
+        if(ha.getToIndex().getSize() <= subindex || currentIndex != ha.getToIndex().at(subindex))
+            isPotentialBlockSeparator = false;
+        //Propagate to the next node level.
+        children.at(currentIndex)._add(ha, subindex+1);
+    }
+    else{
+        //If the current subindex is the last, the HoppingAmplitude
+        //is added to this node.
 
-		//Error detection:
-		//If childen is non-zeros, another HoppingAmplitude with more
-		//indices have already been added to this node. This is an
-		//error because different number of subindices is only allowed
-		//if the HoppingAmplitudes differ in one of their common
-		//indices.
-		MyTBTKAssert(
-			children.size() == 0,
-			"HoppingAmplitudeTree:_add(),",
-			"Incompatible HoppingAmplitudes. Tried to add a"
-			<< " HoppingAmplitude with from-Index "
-			<< ha.getFromIndex().toString() << ", but"
-			<< " HoppingAmplitude with from-Index "
-			<< getFirstHA().getFromIndex().toString() << " has"
-			<< " already been added.",
-			""
-		);
-		//Add HoppingAmplitude to node.
-		hoppingAmplitudes.push_back(ha);
-	}
+        //Error detection:
+        //If childen is non-zeros, another HoppingAmplitude with more
+        //indices have already been added to this node. This is an
+        //error because different number of subindices is only allowed
+        //if the HoppingAmplitudes differ in one of their common
+        //indices.
+        MyTBTKAssert(
+            children.size() == 0,
+            "HoppingAmplitudeTree:_add(),",
+            "Incompatible HoppingAmplitudes. Tried to add a"
+            << " HoppingAmplitude with from-Index "
+            << ha.getFromIndex().toString() << ", but"
+            << " HoppingAmplitude with from-Index "
+            << getFirstHA().getFromIndex().toString() << " has"
+            << " already been added.",
+            ""
+        );
+        //Add HoppingAmplitude to node.
+        hoppingAmplitudes.push_back(ha);
+    }
 }
 
 HoppingAmplitudeTree* HoppingAmplitudeTree::getSubTree(
-	const Index &subspace
+    const Index &subspace
 ){
-	//Casting is safe because we do not guarantee that the
-	//HoppingAmplitudeTre is not modified. Casting away const from the
-	//returned reference is therefore not a violation of any promisse made
-	//by this function. See also "Avoiding Duplication in const and
-	//Non-const Member Function" in S. Meyers, Effective C++.
-	return const_cast<HoppingAmplitudeTree*>(
-		static_cast<const HoppingAmplitudeTree*>(this)->getSubTree(
-			subspace
-		)
-	);
+    //Casting is safe because we do not guarantee that the
+    //HoppingAmplitudeTre is not modified. Casting away const from the
+    //returned reference is therefore not a violation of any promisse made
+    //by this function. See also "Avoiding Duplication in const and
+    //Non-const Member Function" in S. Meyers, Effective C++.
+    return const_cast<HoppingAmplitudeTree*>(
+        static_cast<const HoppingAmplitudeTree*>(this)->getSubTree(
+            subspace
+        )
+    );
 }
 
 const HoppingAmplitudeTree* HoppingAmplitudeTree::getSubTree(
-	const Index &subspace
+    const Index &subspace
 ) const{
-	for(unsigned int n = 0; n < subspace.getSize(); n++){
-		if(subspace.at(n) < 0){
-			MyTBTKExit(
-				"HoppingAmplitudeTree::getSubTree()",
-				"Invalid subspace index '" << subspace.toString() << "'.",
-				"Subspace indices cannot have negative subindices."
-			);
-		}
-	}
+    for(unsigned int n = 0; n < subspace.getSize(); n++){
+        if(subspace.at(n) < 0){
+            MyTBTKExit(
+                "HoppingAmplitudeTree::getSubTree()",
+                "Invalid subspace index '" << subspace.toString() << "'.",
+                "Subspace indices cannot have negative subindices."
+            );
+        }
+    }
 
-	return getSubTree(subspace, 0);
+    return getSubTree(subspace, 0);
 }
 
 const HoppingAmplitudeTree* HoppingAmplitudeTree::getSubTree(
-	const Index &subspace,
-	unsigned int subindex
+    const Index &subspace,
+    unsigned int subindex
 ) const{
-	if(subindex == subspace.getSize()){
-		//Correct node reached
+    if(subindex == subspace.getSize()){
+        //Correct node reached
 
-		return this;
-	}
+        return this;
+    }
 
-	if((unsigned int)subspace.at(subindex) < children.size()){
-		return children.at(subspace.at(subindex)).getSubTree(
-			subspace,
-			subindex+1
-		);
-	}
-	else{
-		return &emptyTree;
-	}
+    if((unsigned int)subspace.at(subindex) < children.size()){
+        return children.at(subspace.at(subindex)).getSubTree(
+            subspace,
+            subindex+1
+        );
+    }
+    else{
+        return &emptyTree;
+    }
 }
 
 bool HoppingAmplitudeTree::isProperSubspace(const Index &subspace) const{
-	for(unsigned int n = 0; n < subspace.getSize(); n++){
-		if(subspace.at(n) < 0){
-			MyTBTKExit(
-				"HoppingAmplitudeTree::getSubTree()",
-				"Invalid subspace index '"
-				<< subspace.toString() << "'.",
-				"Subspace indices cannot have negative"
-				<< " subindices."
-			);
-		}
-	}
+    for(unsigned int n = 0; n < subspace.getSize(); n++){
+        if(subspace.at(n) < 0){
+            MyTBTKExit(
+                "HoppingAmplitudeTree::getSubTree()",
+                "Invalid subspace index '"
+                << subspace.toString() << "'.",
+                "Subspace indices cannot have negative"
+                << " subindices."
+            );
+        }
+    }
 
-	return _isProperSubspace(subspace, 0);
+    return _isProperSubspace(subspace, 0);
 }
 
 bool HoppingAmplitudeTree::_isProperSubspace(
-	const Index &subspace,
-	unsigned int subindex
+    const Index &subspace,
+    unsigned int subindex
 ) const{
-	if(subindex+1 == subspace.getSize())
-		return isPotentialBlockSeparator;
+    if(subindex+1 == subspace.getSize())
+        return isPotentialBlockSeparator;
 
-	if(isPotentialBlockSeparator){
-		if((unsigned int)subspace.at(subindex) < children.size()){
-			return children[subspace[subindex]]._isProperSubspace(
-				subspace,
-				subindex+1
-			);
-		}
-		else{
-			//The subspace is empty and getSubTree will return
-			//HoppingAmaplitudeTree::emptyTree. The empty subspace
-			//is considered a proper subspace.
-			return true;
-		}
-	}
-	else{
-		return false;
-	}
+    if(isPotentialBlockSeparator){
+        if((unsigned int)subspace.at(subindex) < children.size()){
+            return children[subspace[subindex]]._isProperSubspace(
+                subspace,
+                subindex+1
+            );
+        }
+        else{
+            //The subspace is empty and getSubTree will return
+            //HoppingAmaplitudeTree::emptyTree. The empty subspace
+            //is considered a proper subspace.
+            return true;
+        }
+    }
+    else{
+        return false;
+    }
 }
 
 IndexTree HoppingAmplitudeTree::getSubspaceIndices() const{
-	IndexTree blockIndices;
-	if(isPotentialBlockSeparator)
-		getBlockIndices(blockIndices, Index());
-	blockIndices.generateLinearMap();
+    IndexTree blockIndices;
+    if(isPotentialBlockSeparator)
+        getBlockIndices(blockIndices, Index());
+    blockIndices.generateLinearMap();
 
-	return blockIndices;
+    return blockIndices;
 }
 
 void HoppingAmplitudeTree::getBlockIndices(
-	IndexTree &blockIndices,
-	Index index
+    IndexTree &blockIndices,
+    Index index
 ) const{
-	if(children.size() > 0 && isPotentialBlockSeparator){
-		for(unsigned int n = 0; n < children.size(); n++){
-			index.pushBack(n);
-			children.at(n).getBlockIndices(blockIndices, index);
-			index.popBack();
-		}
-	}
-	else if(children.size() > 0 || basisIndex != -1){
-		blockIndices.add(index);
-	}
+    if(children.size() > 0 && isPotentialBlockSeparator){
+        for(unsigned int n = 0; n < children.size(); n++){
+            index.pushBack(n);
+            children.at(n).getBlockIndices(blockIndices, index);
+            index.popBack();
+        }
+    }
+    else if(children.size() > 0 || basisIndex != -1){
+        blockIndices.add(index);
+    }
 }
 
 Index HoppingAmplitudeTree::getSubspaceIndex(const Index &index) const{
-	Index blockIndex;
-	getBlockIndex(index, 0, blockIndex);
+    Index blockIndex;
+    getBlockIndex(index, 0, blockIndex);
 
-	return blockIndex;
+    return blockIndex;
 }
 
 void HoppingAmplitudeTree::getBlockIndex(
-	const Index &index,
-	unsigned int subindex,
-	Index &blockIndex
+    const Index &index,
+    unsigned int subindex,
+    Index &blockIndex
 ) const{
-	if(children.size() > 0 && isPotentialBlockSeparator){
-		blockIndex.pushBack(index[subindex]);
-		children[index[subindex]].getBlockIndex(index, subindex+1, blockIndex);
-	}
+    if(children.size() > 0 && isPotentialBlockSeparator){
+        blockIndex.pushBack(index[subindex]);
+        children[index[subindex]].getBlockIndex(index, subindex+1, blockIndex);
+    }
 }
 
 const std::vector<
-	HoppingAmplitude
+    HoppingAmplitude
 >& HoppingAmplitudeTree::getHoppingAmplitudes(
-	Index index
+    Index index
 ) const{
-	return _getHoppingAmplitudes(index, 0);
+    return _getHoppingAmplitudes(index, 0);
 }
 
 const std::vector<
-	HoppingAmplitude
+    HoppingAmplitude
 >& HoppingAmplitudeTree::_getHoppingAmplitudes(
-	Index index,
-	unsigned int subindex
+    Index index,
+    unsigned int subindex
 ) const{
-	if(subindex < index.getSize()){
-		//If the current subindex is not the last, continue to the next
-		//node level.
+    if(subindex < index.getSize()){
+        //If the current subindex is not the last, continue to the next
+        //node level.
 
-		//Get current subindex
-		int currentIndex = index.at(subindex);
-		//Error detection:
-		//If the subindex is bigger than the current number of child
-		//nodes, an error has occured.
-		if(currentIndex >= (int)children.size()){
-			Streams::err << "Error, index out of bound: ";
-			index.print();
-			exit(1);
-		}
-		//Continue to the next node level.
-		return children.at(currentIndex)._getHoppingAmplitudes(
-			index,
-			subindex+1
-		);
-	}
-	else{
-		//If the current subindex is the last, return HoppingAmplitudes.
-		return hoppingAmplitudes;
-	}
+        //Get current subindex
+        int currentIndex = index.at(subindex);
+        //Error detection:
+        //If the subindex is bigger than the current number of child
+        //nodes, an error has occured.
+        if(currentIndex >= (int)children.size()){
+            Streams::err << "Error, index out of bound: ";
+            index.print();
+            exit(1);
+        }
+        //Continue to the next node level.
+        return children.at(currentIndex)._getHoppingAmplitudes(
+            index,
+            subindex+1
+        );
+    }
+    else{
+        //If the current subindex is the last, return HoppingAmplitudes.
+        return hoppingAmplitudes;
+    }
 }
 
 int HoppingAmplitudeTree::getBasisIndex(const Index &index) const{
-	return _getBasisIndex(index, 0);
+    return _getBasisIndex(index, 0);
 }
 
 int HoppingAmplitudeTree::_getBasisIndex(const Index &index, unsigned int subindex) const{
-	if(subindex < index.getSize()){
-		//If the current subindex is not the last, continue to the next
-		//node level.
+    if(subindex < index.getSize()){
+        //If the current subindex is not the last, continue to the next
+        //node level.
 
-		//Get current subindex
-		int currentIndex = index.at(subindex);
-		//Error detection:
-		//If the subindex is bigger than the current number of child
-		//nodes, an error has occured.
-		if(currentIndex >= (int)children.size()){
-			Streams::err << "Error, index out of bound: ";
-			index.print();
-			exit(1);
-		}
-		//Continue to the next node level.
-		return children.at(currentIndex)._getBasisIndex(index, subindex+1);
-	}
-	else{
-		//If the current subindex is the last, return HoppingAmplitudes.
-		return basisIndex;
-	}
+        //Get current subindex
+        int currentIndex = index.at(subindex);
+        //Error detection:
+        //If the subindex is bigger than the current number of child
+        //nodes, an error has occured.
+        if(currentIndex >= (int)children.size()){
+            Streams::err << "Error, index out of bound: ";
+            index.print();
+            exit(1);
+        }
+        //Continue to the next node level.
+        return children.at(currentIndex)._getBasisIndex(index, subindex+1);
+    }
+    else{
+        //If the current subindex is the last, return HoppingAmplitudes.
+        return basisIndex;
+    }
 }
 
 Index HoppingAmplitudeTree::getPhysicalIndex(int basisIndex) const{
-	MyTBTKAssert(
-		basisIndex >= 0 && basisIndex < this->basisSize,
-		"HoppingAmplitudeTree::getPhysicalIndex()",
-		"Hilbert space index out of bound.",
-		""
-	);
+    MyTBTKAssert(
+        basisIndex >= 0 && basisIndex < this->basisSize,
+        "HoppingAmplitudeTree::getPhysicalIndex()",
+        "Hilbert space index out of bound.",
+        ""
+    );
 
-	vector<Subindex> indices;
-	_getPhysicalIndex(basisIndex, indices);
+    vector<Subindex> indices;
+    _getPhysicalIndex(basisIndex, indices);
 
-	return Index(indices);
+    return Index(indices);
 }
 
 void HoppingAmplitudeTree::_getPhysicalIndex(
-	int basisIndex,
-	vector<Subindex> &indices
+    int basisIndex,
+    vector<Subindex> &indices
 ) const{
-	if(this->basisIndex != -1)
-		return;
+    if(this->basisIndex != -1)
+        return;
 
-	for(unsigned int n = 0; n < children.size(); n++){
-		int min = children.at(n).getMinIndex();
-		int max = children.at(n).getMaxIndex();
+    for(unsigned int n = 0; n < children.size(); n++){
+        int min = children.at(n).getMinIndex();
+        int max = children.at(n).getMaxIndex();
 
-		if(min == -1)
-			continue;
+        if(min == -1)
+            continue;
 
-		if(min <= basisIndex && basisIndex <= max){
-			indices.push_back(n);
-			children.at(n)._getPhysicalIndex(basisIndex, indices);
-			break;
-		}
-	}
+        if(min <= basisIndex && basisIndex <= max){
+            indices.push_back(n);
+            children.at(n)._getPhysicalIndex(basisIndex, indices);
+            break;
+        }
+    }
 }
 
 int HoppingAmplitudeTree::getMinIndex() const{
-	if(basisIndex != -1)
-		return basisIndex;
+    if(basisIndex != -1)
+        return basisIndex;
 
-	int min = -1;
-	for(unsigned int n = 0; n < children.size(); n++){
-		min = children.at(n).getMinIndex();
-		if(min != -1)
-			break;
-	}
+    int min = -1;
+    for(unsigned int n = 0; n < children.size(); n++){
+        min = children.at(n).getMinIndex();
+        if(min != -1)
+            break;
+    }
 
-	return min;
+    return min;
 }
 
 int HoppingAmplitudeTree::getMaxIndex() const{
-	if(basisIndex != -1)
-		return basisIndex;
+    if(basisIndex != -1)
+        return basisIndex;
 
-	int max = -1;
-	for(int n = children.size()-1; n >= 0; n--){
-		max = children.at(n).getMaxIndex();
-		if(max != -1)
-			break;
-	}
+    int max = -1;
+    for(int n = children.size()-1; n >= 0; n--){
+        max = children.at(n).getMaxIndex();
+        if(max != -1)
+            break;
+    }
 
-	return max;
+    return max;
 }
 
 void HoppingAmplitudeTree::generateBasisIndices(){
-	basisSize = generateBasisIndices(0);
+    basisSize = generateBasisIndices(0);
 }
 
 int HoppingAmplitudeTree::generateBasisIndices(int i){
-	if(children.size() == 0){
-		if(hoppingAmplitudes.size() != 0){
-			basisIndex = i;
-			return i + 1;
-		}
-		else{
-			return i;
-		}
-	}
+    if(children.size() == 0){
+        if(hoppingAmplitudes.size() != 0){
+            basisIndex = i;
+            return i + 1;
+        }
+        else{
+            return i;
+        }
+    }
 
-	for(unsigned int n = 0; n < children.size(); n++){
-		i = children.at(n).generateBasisIndices(i);
-	}
+    for(unsigned int n = 0; n < children.size(); n++){
+        i = children.at(n).generateBasisIndices(i);
+    }
 
-	return i;
+    return i;
 }
 
 class SortHelperClass{
 public:
-	static HoppingAmplitudeTree *rootNode;
-	inline bool operator() (const HoppingAmplitude& ha1, const HoppingAmplitude& ha2){
-		int basisIndex1 = rootNode->getBasisIndex(ha1.getToIndex());
-		int basisIndex2 = rootNode->getBasisIndex(ha2.getToIndex());
-		if(basisIndex1 < basisIndex2)
-			return true;
-		else
-			return false;
-	}
+    static HoppingAmplitudeTree *rootNode;
+    inline bool operator() (const HoppingAmplitude& ha1, const HoppingAmplitude& ha2){
+        int basisIndex1 = rootNode->getBasisIndex(ha1.getToIndex());
+        int basisIndex2 = rootNode->getBasisIndex(ha2.getToIndex());
+        if(basisIndex1 < basisIndex2)
+            return true;
+        else
+            return false;
+    }
 };
 
 HoppingAmplitudeTree *SortHelperClass::rootNode = NULL;
 
 void HoppingAmplitudeTree::sort(HoppingAmplitudeTree *rootNode){
-	if(hoppingAmplitudes.size() != 0){
-		SortHelperClass::rootNode = rootNode;
-		std::sort(hoppingAmplitudes.begin(), hoppingAmplitudes.end(), SortHelperClass());
-	}
-	else if(children.size() != 0){
-		for(unsigned int n = 0; n < children.size(); n++)
-			children.at(n).sort(rootNode);
-	}
+    if(hoppingAmplitudes.size() != 0){
+        SortHelperClass::rootNode = rootNode;
+        std::sort(hoppingAmplitudes.begin(), hoppingAmplitudes.end(), SortHelperClass());
+    }
+    else if(children.size() != 0){
+        for(unsigned int n = 0; n < children.size(); n++)
+            children.at(n).sort(rootNode);
+    }
 }
 
 string HoppingAmplitudeTree::serialize(Mode mode) const{
-	switch(mode){
-	case Mode::Debug:
-	{
-		stringstream ss;
-		ss << "HoppingAmplitudeTree(";
-		ss << Serializable::serialize(basisIndex, mode);
-		ss << "," << Serializable::serialize(basisSize, mode);
-		ss << "," << Serializable::serialize(
-			isPotentialBlockSeparator,
-			mode
-		);
-		for(unsigned int n = 0; n < hoppingAmplitudes.size(); n++){
-			ss << ",";
-			ss << hoppingAmplitudes.at(n).serialize(mode);
-		}
-		for(unsigned int n = 0; n < children.size(); n++){
-			ss << ",";
-			ss << children.at(n).serialize(mode);
-		}
+    switch(mode){
+    case Mode::Debug:
+    {
+        stringstream ss;
+        ss << "HoppingAmplitudeTree(";
+        ss << Serializable::serialize(basisIndex, mode);
+        ss << "," << Serializable::serialize(basisSize, mode);
+        ss << "," << Serializable::serialize(
+            isPotentialBlockSeparator,
+            mode
+        );
+        for(unsigned int n = 0; n < hoppingAmplitudes.size(); n++){
+            ss << ",";
+            ss << hoppingAmplitudes.at(n).serialize(mode);
+        }
+        for(unsigned int n = 0; n < children.size(); n++){
+            ss << ",";
+            ss << children.at(n).serialize(mode);
+        }
 
-		ss << ")";
+        ss << ")";
 
-		return ss.str();
-	}
-	case Mode::JSON:
-	{
-		nlohmann::json j;
-		j["id"] = "HoppingAmplitudeTree";
-		j["basisIndex"] = basisIndex;
-		j["basisSize"] = basisSize;
-		j["isPotentialBlockSeparator"] = isPotentialBlockSeparator;
-		for(unsigned int n = 0; n < hoppingAmplitudes.size(); n++){
-			j["hoppingAmplitudes"].push_back(
-				nlohmann::json::parse(
-					hoppingAmplitudes.at(n).serialize(
-						Serializable::Mode::JSON
-					)
-				)
-			);
-		}
-		for(unsigned int n = 0; n < children.size(); n++){
-			j["children"].push_back(
-				nlohmann::json::parse(
-					children.at(n).serialize(
-						Serializable::Mode::JSON
-					)
-				)
-			);
-		}
+        return ss.str();
+    }
+    case Mode::JSON:
+    {
+        nlohmann::json j;
+        j["id"] = "HoppingAmplitudeTree";
+        j["basisIndex"] = basisIndex;
+        j["basisSize"] = basisSize;
+        j["isPotentialBlockSeparator"] = isPotentialBlockSeparator;
+        for(unsigned int n = 0; n < hoppingAmplitudes.size(); n++){
+            j["hoppingAmplitudes"].push_back(
+                nlohmann::json::parse(
+                    hoppingAmplitudes.at(n).serialize(
+                        Serializable::Mode::JSON
+                    )
+                )
+            );
+        }
+        for(unsigned int n = 0; n < children.size(); n++){
+            j["children"].push_back(
+                nlohmann::json::parse(
+                    children.at(n).serialize(
+                        Serializable::Mode::JSON
+                    )
+                )
+            );
+        }
 
-		return j.dump();
-	}
-	default:
-		MyTBTKExit(
-			"HoppingAmplitudeTree::serialize()",
-			"Only Serializable::Mode::Debug is supported yet.",
-			""
-		);
-	}
+        return j.dump();
+    }
+    default:
+        MyTBTKExit(
+            "HoppingAmplitudeTree::serialize()",
+            "Only Serializable::Mode::Debug is supported yet.",
+            ""
+        );
+    }
 }
 
 HoppingAmplitude HoppingAmplitudeTree::getFirstHA() const{
-	if(children.size() == 0)
-		return hoppingAmplitudes.at(0);
+    if(children.size() == 0)
+        return hoppingAmplitudes.at(0);
 
-	for(unsigned int n = 0; n < children.size(); n++){
-		if(children.at(n).children.size() != 0 || children.at(n).hoppingAmplitudes.size() != 0)
-			return children.at(n).getFirstHA();
-	}
+    for(unsigned int n = 0; n < children.size(); n++){
+        if(children.at(n).children.size() != 0 || children.at(n).hoppingAmplitudes.size() != 0)
+            return children.at(n).getFirstHA();
+    }
 
-	//Sould never happen. Line added to avoid compiler warnings.
-	return HoppingAmplitude(0, {0, 0, 0}, {0, 0, 0});
+    //Sould never happen. Line added to avoid compiler warnings.
+    return HoppingAmplitude(0, {0, 0, 0}, {0, 0, 0});
 }
 
-};	//End of namespace MyTBTK
+};    //End of namespace MyTBTK

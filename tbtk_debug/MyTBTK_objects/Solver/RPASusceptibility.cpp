@@ -18,16 +18,16 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Functions.h"
-#include "TBTK/Solver/RPASusceptibility.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/Solver/RPASusceptibility.h"
+#include "MyTBTK/UnitHandler.h"
 
 #include <complex>
 #include <iomanip>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 RPASusceptibility::RPASusceptibility(
@@ -41,7 +41,7 @@ RPASusceptibility::RPASusceptibility(
 }
 
 RPASusceptibility* RPASusceptibility::createSlave(){
-	TBTKExit(
+	MyTBTKExit(
 		"Solver::RPASusceptibility::createSlave()",
 		"This function is not supported by this solver.",
 		""
@@ -92,7 +92,7 @@ inline void RPASusceptibility::invertMatrix(
 	const vector<InteractionAmplitude> &interactionAmplitudes
 ){
 	vector<Index> components = index.split();
-	TBTKAssert(
+	MyTBTKAssert(
 		components.size() == 5,
 		"SusceptibilityCalculator::rpaSusceptibilityMainAlgorithm()",
 		"The Index must be a compound Index with 5 component Indices,"
@@ -148,7 +148,7 @@ inline void RPASusceptibility::invertMatrix(
 		}
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Solver::RPASusceptibility::calculateSusceptibilityMainAlgorithm()",
 			"Only the energy types"
 			" Property::EnergyResolvedProperty::EnergyType::Real and"
@@ -299,7 +299,7 @@ vector<vector<vector<vector<vector<complex<double>>>>>> RPASusceptibility::rpaSu
 	const vector<InteractionAmplitude> &interactionAmplitudes
 ){
 	vector<Index> components = index.split();
-	TBTKAssert(
+	MyTBTKAssert(
 		components.size() == 5,
 		"SusceptibilityCalculator::rpaSusceptibilityMainAlgorithm()",
 		"The Index must be a compound Index with 5 component Indices,"
@@ -355,7 +355,7 @@ vector<vector<vector<vector<vector<complex<double>>>>>> RPASusceptibility::rpaSu
 		}
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Solver::RPASusceptibility::calculateSusceptibilityMainAlgorithm()",
 			"Only the energy types"
 			" Property::EnergyResolvedProperty::EnergyType::Real and"
@@ -574,7 +574,7 @@ IndexedDataTree<vector<complex<double>>> RPASusceptibility::calculateRPASuscepti
 	const Index &index
 ){
 	vector<Index> components = index.split();
-	TBTKAssert(
+	MyTBTKAssert(
 		components.size() == 5,
 		"SusceptibilityCalculator::calculateRPASusceptibility()",
 		"The Index must be a compound Index with 5 component Indices,"
@@ -636,4 +636,4 @@ IndexedDataTree<vector<complex<double>>> RPASusceptibility::calculateRPASuscepti
 }
 
 }	//End of namespace Solver
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK

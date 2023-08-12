@@ -18,17 +18,17 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Functions.h"
-#include "TBTK/InteractionAmplitude.h"
-#include "TBTK/Solver/ElectronFluctuationVertex.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/InteractionAmplitude.h"
+#include "MyTBTK/Solver/ElectronFluctuationVertex.h"
+#include "MyTBTK/UnitHandler.h"
 
 #include <complex>
 #include <iomanip>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 ElectronFluctuationVertex::ElectronFluctuationVertex(
@@ -55,7 +55,7 @@ vector<complex<double>> ElectronFluctuationVertex::calculateSelfEnergyVertex(
 
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Solver::ElectronFluctuationVertex::calculateSelfEnergyVertex()",
 			"Unknow EnergyType.",
 			""
@@ -91,7 +91,7 @@ void ElectronFluctuationVertex::calculateSelfEnergyVertexMainAlgorithm(
 	const vector<InteractionAmplitude> &uRight
 ){
 	vector<Index> components = index.split();
-	TBTKAssert(
+	MyTBTKAssert(
 		components.size() == 5,
 		"Solver::ElectronFluctuationVertex::calculateSelfEnergyVertexMainAlgorithm()",
 		"The Index must be a compound Index with 5 component Indices,"
@@ -165,4 +165,4 @@ void ElectronFluctuationVertex::calculateSelfEnergyVertexMainAlgorithm(
 }
 
 }	//End of namespace Solver
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK

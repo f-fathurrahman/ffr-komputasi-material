@@ -18,9 +18,9 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/FockStateRule/FockStateRule.h"
+#include "MyTBTK/FockStateRule/FockStateRule.h"
 
-namespace TBTK{
+namespace MyTBTK{
 namespace FockStateRule{
 
 FockStateRule::FockStateRule(FockStateRuleID fockStateRuleID){
@@ -31,4 +31,4 @@ FockStateRule::~FockStateRule(){
 }
 
 };	//End of namespace FockSpaceRule
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

@@ -18,16 +18,16 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Array.h"
-#include "TBTK/PadeApproximatorContinuousFractions.h"
-#include "TBTK/Solver/AnalyticalContinuerContinuousFractions.h"
-#include "TBTK/Streams.h"
-#include "TBTK/TBTKMacros.h"
-#include "TBTK/Timer.h"
+#include "MyTBTK/Array.h"
+#include "MyTBTK/PadeApproximatorContinuousFractions.h"
+#include "MyTBTK/Solver/AnalyticalContinuerContinuousFractions.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/MyTBTKMacros.h"
+#include "MyTBTK/Timer.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 AnalyticalContinuerContinuousFractions::AnalyticalContinuerContinuousFractions(
@@ -47,7 +47,7 @@ Property::GreensFunction AnalyticalContinuerContinuousFractions::convert(
 	//Make this a class or function variable.
 	const double precision = 256;
 
-	TBTKAssert(
+	MyTBTKAssert(
 		greensFunction.getType()
 			== Property::GreensFunction::Type::Matsubara,
 		"Solver::AnalyticalContinuerContinuousFractions::convert()",
@@ -77,7 +77,7 @@ Property::GreensFunction AnalyticalContinuerContinuousFractions::convert(
 
 			break;
 		default:
-			TBTKExit(
+			MyTBTKExit(
 				"Solver::AnalyticalContinuer::convert()",
 				"Invalid 'newType'. Only conversion to the"
 				<< " retarded and advanced Green's function is"
@@ -107,7 +107,7 @@ Property::GreensFunction AnalyticalContinuerContinuousFractions::convert(
 						continue;
 				}
 				else{
-					TBTKExit(
+					MyTBTKExit(
 						"Solver::AnalyticalContinuerContinuousFractions::convert()",
 						"Invalid 'newType'. Only"
 						<< " conversion to the"
@@ -172,7 +172,7 @@ Property::GreensFunction AnalyticalContinuerContinuousFractions::convert(
 		return newGreensFunction;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Solver::AnalyticalContinuerContinuousFractions::convert()",
 			"Only Green's functions on the custom format are"
 			<< " supported yet.",
@@ -191,7 +191,7 @@ complex<double> AnalyticalContinuerContinuousFractions::getContourDeformation(
 	case Property::GreensFunction::Type::Advanced:
 		return complex<double>(0, -1)*energyInfinitesimal;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Solver::AnalyticalContinuerContinuousFractions::convert()",
 			"Invalid Green's function type. Only contours for the"
 			<< " retarded, and advanced Green's functions are"
@@ -202,4 +202,4 @@ complex<double> AnalyticalContinuerContinuousFractions::getContourDeformation(
 }
 
 };	//End of namespace Solver
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

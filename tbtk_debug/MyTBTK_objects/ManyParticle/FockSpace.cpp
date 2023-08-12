@@ -19,10 +19,10 @@
  */
 
 
-#include "TBTK/FockSpace.h"
-#include "TBTK/FockStateMap/LookupTableMap.h"
+#include "MyTBTK/FockSpace.h"
+#include "MyTBTK/FockStateMap/LookupTableMap.h"
 
-namespace TBTK{
+namespace MyTBTK{
 
 template<>
 FockSpace<BitRegister>::FockSpace(
@@ -42,7 +42,7 @@ FockSpace<BitRegister>::FockSpace(
 //		maxParticlesPerState = maxParticlesPerState;
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"FockSpace::FockSpace()",
 			"Unknown statistics.",
 			"This should never happen, contact the developer."
@@ -55,7 +55,7 @@ FockSpace<BitRegister>::FockSpace(
 
 	exponentialDimension = numBitsPerState*hoppingAmplitudeSet->getBasisSize();
 
-	TBTKAssert(
+	MyTBTKAssert(
 		exponentialDimension < BitRegister().getNumBits(),
 		"FockSpace::FockSpace()",
 		"The Hilbert space is too big to be contained in a BitRegister.",
@@ -74,7 +74,7 @@ FockSpace<BitRegister>::FockSpace(
 	case Statistics::BoseEinstein:
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"FockSpace::FockSpace()",
 			"Unknown statistics.",
 			"This should never happen, contact the developer."
@@ -166,7 +166,7 @@ FockSpace<ExtensiveBitRegister>::FockSpace(
 //		maxParticlesPerState = maxParticlesPerState;
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"FockSpace::FockSpace()",
 			"Unknown statistics.",
 			"This should never happen, contact the developer."
@@ -193,7 +193,7 @@ FockSpace<ExtensiveBitRegister>::FockSpace(
 	case Statistics::BoseEinstein:
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"FockSpace::FockSpace()",
 			"Unknown statistics.",
 			"This should never happen, contact the developer."
@@ -252,4 +252,4 @@ FockSpace<ExtensiveBitRegister>::FockSpace(
 	);*/
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

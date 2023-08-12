@@ -18,9 +18,9 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Communicator.h"
+#include "MyTBTK/Communicator.h"
 
-namespace TBTK{
+namespace MyTBTK{
 
 bool Communicator::globalVerbose = true;
 
@@ -28,4 +28,4 @@ Communicator::Communicator(bool verbose){
 	this->verbose = verbose;
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

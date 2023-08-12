@@ -18,9 +18,9 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/FockStateMap/DefaultMap.h"
+#include "MyTBTK/FockStateMap/DefaultMap.h"
 
-namespace TBTK{
+namespace MyTBTK{
 namespace FockStateMap{
 
 template<>
@@ -35,7 +35,7 @@ template<>
 unsigned int DefaultMap<ExtensiveBitRegister>::getBasisIndex(
 	const FockState<ExtensiveBitRegister> &fockState
 ) const{
-	TBTKExit(
+	MyTBTKExit(
 		"DefaultFockStateMap<ExtensiveBitRegister>::getBasisIndex()",
 		"Function not supported for ExtensiveBitRegister.",
 		"Use BitRegister instead, or change StateMap."
@@ -56,7 +56,7 @@ template<>
 FockState<ExtensiveBitRegister> DefaultMap<ExtensiveBitRegister>::getFockState(
 	unsigned int state
 ) const{
-	TBTKExit(
+	MyTBTKExit(
 		"DefaultFockStateMap<ExtensiveBitRegister>::getFockState()",
 		"Function not supported for ExtensiveBitRegister.",
 		"Use BitRegister instead, or change StateMap."
@@ -64,4 +64,4 @@ FockState<ExtensiveBitRegister> DefaultMap<ExtensiveBitRegister>::getFockState(
 }
 
 };	//End of namesapce FockStateMap
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

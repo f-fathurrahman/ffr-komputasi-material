@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Timer.h"
+#include "MyTBTK/Timer.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 vector<chrono::time_point<chrono::high_resolution_clock>> Timer::timestamps;
 vector<string> Timer::tags;
@@ -30,4 +30,4 @@ vector<chrono::time_point<chrono::high_resolution_clock>> Timer::accumulatorTime
 vector<string> Timer::accumulatorTags;
 vector<long> Timer::accumulators;
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

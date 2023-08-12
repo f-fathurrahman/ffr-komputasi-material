@@ -18,17 +18,17 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/HoppingAmplitudeSet.h"
-#include "TBTK/Streams.h"
-#include "TBTK/TBTKMacros.h"
-#include "TBTK/Solver/TimeEvolver.h"
+#include "MyTBTK/HoppingAmplitudeSet.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/MyTBTKMacros.h"
+#include "MyTBTK/Solver/TimeEvolver.h"
 
 #include <complex>
 #include <cmath>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 const complex<double> i(0, 1);
@@ -69,7 +69,7 @@ TimeEvolver::~TimeEvolver(){
 		dSolvers.erase(dSolvers.begin() + timeEvolverIndex);
 	}
 	else{
-		TBTKExit(
+		MyTBTKExit(
 			"TimeEvolver::~TimeEvolver()",
 			"TimeEvolver not found.",
 			""
@@ -175,7 +175,7 @@ bool TimeEvolver::SelfConsistencyCallback::selfConsistencyCallback(
 		}
 	}
 
-	TBTKExit(
+	MyTBTKExit(
 		"TimeEvolver::selfConsistencyCallback()",
 		"Diagonalizer not found.",
 		""
@@ -248,7 +248,7 @@ void TimeEvolver::updateOccupancy(){
 			decayHandler->decay(this, occupancy, eigenValues, eigenVectorsMap);
 			break;
 		default:	//Should never happen. Hard error generated for quick bug detection.
-			TBTKExit(
+			MyTBTKExit(
 				"TimeEvolver::updateOccupancy()",
 				"Unkown DecayMode - " << static_cast<int>(decayMode) << ".",
 				""
@@ -282,7 +282,7 @@ void TimeEvolver::decayInstantly(){
 }
 
 void TimeEvolver::decayInterpolate(){
-	TBTKAssert(
+	MyTBTKAssert(
 		!particleNumberIsFixed,
 		"TimeEvolver::decayInterpolate()",
 		"Fixed particle number not supported.",
@@ -331,4 +331,4 @@ void TimeEvolver::calculateOrthogonalityError(){
 }
 
 };	//End of namespace Solver
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

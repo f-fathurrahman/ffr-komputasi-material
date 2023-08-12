@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Quantity/Base.h"
-#include "TBTK/Quantity/Constants.h"
+#include "MyTBTK/Quantity/Base.h"
+#include "MyTBTK/Quantity/Constants.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Quantity{
 
 template<>
@@ -160,4 +160,4 @@ void initializeBaseQuantities(){
 }
 
 };	//End of namespace Quantity
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

@@ -18,17 +18,17 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Array.h"
-#include "TBTK/BlockStructureDescriptor.h"
-#include "TBTK/Convolver.h"
-#include "TBTK/Solver/SelfEnergy2.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Array.h"
+#include "MyTBTK/BlockStructureDescriptor.h"
+#include "MyTBTK/Convolver.h"
+#include "MyTBTK/Solver/SelfEnergy2.h"
+#include "MyTBTK/UnitHandler.h"
 
 #include <complex>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 SelfEnergy2::SelfEnergy2(
@@ -49,7 +49,7 @@ vector<complex<double>> SelfEnergy2::calculateSelfEnergy(
 	int upperMatsubaraEnergyIndex
 ){
 	vector<Index> components = index.split();
-	TBTKAssert(
+	MyTBTKAssert(
 		components.size() == 3,
 		"Solver::SelfEnergy2::calculateSelfEnergy()",
 		"The Index must be a compund Index with 3 component Indices,"
@@ -57,7 +57,7 @@ vector<complex<double>> SelfEnergy2::calculateSelfEnergy(
 		""
 	);
 	for(unsigned int n = 1; n < components.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			components[n].getSize() == 1,
 			"Solver::SelfEnergy2::calculateSelfEnergy()",
 			"Currently only intra block indices with a single"
@@ -73,7 +73,7 @@ vector<complex<double>> SelfEnergy2::calculateSelfEnergy(
 		components[2]
 	};
 
-	TBTKAssert(
+	MyTBTKAssert(
 		lowerMatsubaraEnergyIndex <= upperMatsubaraEnergyIndex,
 		"Solver::SelfEnergy2::calculateSelfEnergy()",
 		"The lowerMatsubaraEnergyIndex='" << lowerMatsubaraEnergyIndex
@@ -81,14 +81,14 @@ vector<complex<double>> SelfEnergy2::calculateSelfEnergy(
 		<< upperMatsubaraEnergyIndex << "'.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		abs(lowerMatsubaraEnergyIndex)%2 == 1,
 		"Solver::SelfEnergy2::calclulateSelfEnergy()",
 		"The lowerMatsubaraEnergyIndex='" << lowerMatsubaraEnergyIndex
 		<< "' must be odd.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		abs(upperMatsubaraEnergyIndex)%2 == 1,
 		"Solver::SelfEnergy2::calclulateSelfEnergy()",
 		"The upperMatsubaraEnergyIndex='" << upperMatsubaraEnergyIndex
@@ -99,7 +99,7 @@ vector<complex<double>> SelfEnergy2::calculateSelfEnergy(
 		upperMatsubaraEnergyIndex - lowerMatsubaraEnergyIndex
 	)/ 2 + 1;
 
-	TBTKAssert(
+	MyTBTKAssert(
 		greensFunction.getEnergyType()
 			== Property::EnergyResolvedProperty<
 				complex<double>
@@ -114,7 +114,7 @@ vector<complex<double>> SelfEnergy2::calculateSelfEnergy(
 	int upperMatsubaraEnergyIndexGreensFunction
 		= greensFunction.getUpperMatsubaraEnergyIndex();
 
-	TBTKAssert(
+	MyTBTKAssert(
 		interactionVertex.getEnergyType()
 			== Property::EnergyResolvedProperty<
 				complex<double>
@@ -248,7 +248,7 @@ Property::SelfEnergy SelfEnergy2::calculateSelfEnergyAllBlocks(
 	int upperMatsubaraEnergyIndex
 ){
 	vector<Index> components = index.split();
-	TBTKAssert(
+	MyTBTKAssert(
 		components.size() == 2,
 		"Solver::SelfEnergy2::calculateSelfEnergyAllBlocks()",
 		"The Index must be a compund Index with 2 component Indices,"
@@ -256,7 +256,7 @@ Property::SelfEnergy SelfEnergy2::calculateSelfEnergyAllBlocks(
 		""
 	);
 	for(unsigned int n = 0; n < components.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			components[n].getSize() == 1,
 			"Solver::SelfEnergy2::calculateSelfEnergyAllBlocks()",
 			"Currently only intra block indices with a single"
@@ -271,7 +271,7 @@ Property::SelfEnergy SelfEnergy2::calculateSelfEnergyAllBlocks(
 		components[1]
 	};
 
-	TBTKAssert(
+	MyTBTKAssert(
 		lowerMatsubaraEnergyIndex <= upperMatsubaraEnergyIndex,
 		"Solver::SelfEnergy2::calculateSelfEnergyAllBlocks()",
 		"The lowerMatsubaraEnergyIndex='" << lowerMatsubaraEnergyIndex
@@ -279,14 +279,14 @@ Property::SelfEnergy SelfEnergy2::calculateSelfEnergyAllBlocks(
 		<< upperMatsubaraEnergyIndex << "'.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		abs(lowerMatsubaraEnergyIndex)%2 == 1,
 		"Solver::SelfEnergy2::calclulateSelfEnergyAllBlocks()",
 		"The lowerMatsubaraEnergyIndex='" << lowerMatsubaraEnergyIndex
 		<< "' must be odd.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		abs(upperMatsubaraEnergyIndex)%2 == 1,
 		"Solver::SelfEnergy2::calclulateSelfEnergyAllBlocks()",
 		"The upperMatsubaraEnergyIndex='" << upperMatsubaraEnergyIndex
@@ -297,7 +297,7 @@ Property::SelfEnergy SelfEnergy2::calculateSelfEnergyAllBlocks(
 		upperMatsubaraEnergyIndex - lowerMatsubaraEnergyIndex
 	)/ 2 + 1;
 
-	TBTKAssert(
+	MyTBTKAssert(
 		greensFunction.getEnergyType()
 			== Property::EnergyResolvedProperty<
 				complex<double>
@@ -314,7 +314,7 @@ Property::SelfEnergy SelfEnergy2::calculateSelfEnergyAllBlocks(
 	int upperMatsubaraEnergyIndexGreensFunction
 		= greensFunction.getUpperMatsubaraEnergyIndex();
 
-	TBTKAssert(
+	MyTBTKAssert(
 		interactionVertex.getEnergyType()
 			== Property::EnergyResolvedProperty<
 				complex<double>
@@ -339,7 +339,7 @@ Property::SelfEnergy SelfEnergy2::calculateSelfEnergyAllBlocks(
 
 	vector<Index> intraBlockIndexList = getIntraBlockIndexList();
 
-	TBTKAssert(
+	MyTBTKAssert(
 		numMeshPoints.size() == 2,
 		"Solver::SelfEnergy2::calculateSelfEnergyAllBlocks()",
 		"Only two-dimensional momentum spaces supported yet, but the"
@@ -565,7 +565,7 @@ unsigned int SelfEnergy2::getNumIntraBlockIndices(){
 		getModel().getHoppingAmplitudeSet()
 	);
 	const vector<vector<double>> &mesh = momentumSpaceContext.getMesh();
-	TBTKAssert(
+	MyTBTKAssert(
 		mesh.size() == blockStructureDescriptor.getNumBlocks(),
 		"Solver::SelfEnergy2::getNumIntraBlockIndices()",
 		"The number of mesh points '" << mesh.size() << "' must be the"
@@ -582,7 +582,7 @@ unsigned int SelfEnergy2::getNumIntraBlockIndices(){
 		n < blockStructureDescriptor.getNumBlocks();
 		n++
 	){
-		TBTKAssert(
+		MyTBTKAssert(
 			numIntraBlockIndices
 			== blockStructureDescriptor.getNumStatesInBlock(n),
 			"Solver::SelfEnergy2::getNumIntraBlockIndices()",
@@ -653,7 +653,7 @@ vector<Index> SelfEnergy2::getIntraBlockIndexList(){
 			for(unsigned int m = 0; m < momentumSpaceContext.getNumMeshPoints().size(); m++)
 				index.popFront();
 
-			TBTKAssert(
+			MyTBTKAssert(
 				index.equals(intraBlockIndexList[state]),
 				"Solver::SelfEnergy2::getIntraBlockIndexList()",
 				"Incompatible intra block Indices. The intra"
@@ -673,4 +673,4 @@ vector<Index> SelfEnergy2::getIntraBlockIndexList(){
 }
 
 }	//End of namespace Solver
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK

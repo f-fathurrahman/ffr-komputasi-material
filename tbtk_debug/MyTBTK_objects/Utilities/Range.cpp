@@ -18,14 +18,14 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Range.h"
+#include "MyTBTK/Range.h"
 
-#include "TBTK/json.hpp"
+#include "MyTBTK/json.hpp"
 
 using namespace std;
 //using namespace nlohmann;
 
-namespace TBTK{
+namespace MyTBTK{
 
 Range::Range(
 	double lowerBound,
@@ -34,7 +34,7 @@ Range::Range(
 	bool includeLowerBound,
 	bool includeUpperBound
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		resolution > 1,
 		"Range::Range()",
 		"'resolution' must be larger than 1.",
@@ -57,7 +57,7 @@ Range::Range(
 }
 
 Range::Range(const string &serialization, Mode mode){
-	TBTKAssert(
+	MyTBTKAssert(
 		validate(serialization, "Range", mode),
 		"Range::Range()",
 		"Unable to parse string as Range '" << serialization << "'.",
@@ -73,7 +73,7 @@ Range::Range(const string &serialization, Mode mode){
 			resolution = j.at("resolution").get<unsigned int>();
 		}
 		catch(nlohmann::json::exception &e){
-			TBTKExit(
+			MyTBTKExit(
 				"Range::Range()",
 				"Unable to parse string as Range '"
 				<< serialization << "'.",
@@ -83,7 +83,7 @@ Range::Range(const string &serialization, Mode mode){
 
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Range::Range()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -104,7 +104,7 @@ std::string Range::serialize(Mode mode) const{
 		return j.dump();
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Range::serialize()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -112,4 +112,4 @@ std::string Range::serialize(Mode mode) const{
 	}
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

@@ -18,18 +18,18 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/TBTKMacros.h"
-#include "TBTK/Vector2d.h"
+#include "MyTBTK/MyTBTKMacros.h"
+#include "MyTBTK/Vector2d.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 Vector2d::Vector2d(){
 }
 
 Vector2d::Vector2d(initializer_list<double> components){
-	TBTKAssert(
+	MyTBTKAssert(
 		components.size() == 2,
 		"Vector3d::Vector3d()",
 		"Incompatible dimensions. Vector2d takes 2 components, but "
@@ -42,7 +42,7 @@ Vector2d::Vector2d(initializer_list<double> components){
 }
 
 Vector2d::Vector2d(const vector<double> &components){
-	TBTKAssert(
+	MyTBTKAssert(
 		components.size() == 2,
 		"Vector3d::Vector2d()",
 		"Incompatible dimensions. Vector2d takes 2 components, but "
@@ -54,4 +54,4 @@ Vector2d::Vector2d(const vector<double> &components){
 	y = *(components.begin() + 1);
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

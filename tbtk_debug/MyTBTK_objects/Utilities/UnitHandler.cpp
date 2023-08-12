@@ -18,10 +18,10 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Quantity/Constants.h"
-#include "TBTK/Streams.h"
-#include "TBTK/TBTKMacros.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Quantity/Constants.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/MyTBTKMacros.h"
+#include "MyTBTK/UnitHandler.h"
 
 #include <iostream>
 #include <sstream>
@@ -33,7 +33,7 @@
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 map<
 	string,
@@ -131,7 +131,7 @@ string UnitHandler::getUnitString(const std::string &constantName){
 		);
 	}
 	catch(const out_of_range &e){
-		TBTKExit(
+		MyTBTKExit(
 			"UnitHandler::getUnitString()",
 			"Unknown constant '" << constantName << "'.",
 			""

@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/PadeApproximatorContinuousFractions.h"
+#include "MyTBTK/PadeApproximatorContinuousFractions.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 Polynomial<
 	ArbitraryPrecision::Complex,
@@ -32,7 +32,7 @@ Polynomial<
 	const vector<ArbitraryPrecision::Complex> &values,
 	const vector<ArbitraryPrecision::Complex> &arguments
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		values.size() == arguments.size(),
 		"PadeApproximatorContinuousFractions::approximate()",
 		"Incompatible sizes. The size of 'values' (" << values.size()
@@ -128,4 +128,4 @@ Polynomial<
 	return polynomial;
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

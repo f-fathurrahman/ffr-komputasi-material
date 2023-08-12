@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/TBTKMacros.h"
-#include "TBTK/VectorNd.h"
+#include "MyTBTK/MyTBTKMacros.h"
+#include "MyTBTK/VectorNd.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 VectorNd::VectorNd(){
 }
@@ -45,4 +45,4 @@ VectorNd::VectorNd(const vector<double> &components) : data(components.size()){
 		data[n] = components.at(n);
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

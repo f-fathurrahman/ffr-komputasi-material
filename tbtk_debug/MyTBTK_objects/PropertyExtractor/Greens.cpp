@@ -18,17 +18,17 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/PropertyExtractor/Greens.h"
-#include "TBTK/PropertyExtractor/PatternValidator.h"
-#include "TBTK/Functions.h"
-#include "TBTK/Streams.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/PropertyExtractor/Greens.h"
+#include "MyTBTK/PropertyExtractor/PatternValidator.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 #include <set>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace PropertyExtractor{
 
 Greens::Greens(Solver::Greens &solver){
@@ -43,7 +43,7 @@ void Greens::setEnergyWindow(
 	double upperBound,
 	int energyResolution
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::Greens::setEnergyWindow()",
 		"This function is not supported by this PropertyExtractor.",
 		"The energy window is instead determined by the Green's"
@@ -266,7 +266,7 @@ void Greens::calculateDensityCallback(
 		break;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::Greens::calculateDensityCallback()",
 			"Only calculation of the Density from the Retarded,"
 			<< " Advanced, and NonPrincipal Green's function"
@@ -323,7 +323,7 @@ void Greens::calculateLDOSCallback(
 		break;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::Greens::calculateDensityCallback()",
 			"Only calculation of the Density from the Retarded,"
 			<< " Advanced, and NonPrincipal Green's function"
@@ -334,4 +334,4 @@ void Greens::calculateLDOSCallback(
 }
 
 };	//End of namespace PropertyExtractor
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

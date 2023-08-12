@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/ParallelepipedArrayState.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/ParallelepipedArrayState.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 ParallelepipedArrayState::ParallelepipedArrayState(
 	const vector<vector<double>> &basisVectors,
@@ -45,14 +45,14 @@ ParallelepipedArrayState* ParallelepipedArrayState::clone() const{
 }
 
 complex<double> ParallelepipedArrayState::getOverlap(const AbstractState &bra) const{
-	TBTKNotYetImplemented("ArrayState::getOverlap()");
+	MyTBTKNotYetImplemented("ArrayState::getOverlap()");
 }
 
 complex<double> ParallelepipedArrayState::getMatrixElement(
 	const AbstractState &bra,
 	const AbstractOperator &o
 ) const{
-	TBTKNotYetImplemented("ArrayState::getOverlap()");
+	MyTBTKNotYetImplemented("ArrayState::getOverlap()");
 }
 
 void ParallelepipedArrayState::setAmplitude(
@@ -73,7 +73,7 @@ void ParallelepipedArrayState::setAmplitude(
 				ss << *(coordinate.begin() + n);
 			}
 			ss << ")";
-			TBTKExit(
+			MyTBTKExit(
 				"ParallelepipedArrayState::setAmplitude()",
 				"Coordinate " << ss.str() << " out of bound.",
 				"" << index.at(0) << "\t" << index.at(1) << "\t" << index.at(2)
@@ -90,7 +90,7 @@ const complex<double>& ParallelepipedArrayState::getAmplitude(
 	static constexpr complex<double> zero = 0;
 
 	const vector<double> &localCenter = getCoordinates();
-	TBTKAssert(
+	MyTBTKAssert(
 		localCenter.size() == coordinate.size(),
 		"ParallelepipedArrayState::operator()",
 		"Coordinate dimension does not agree with the dimension of the"
@@ -122,7 +122,7 @@ const complex<double>& ParallelepipedArrayState::getAmplitude(
 	static constexpr complex<double> zero = 0;
 
 	const vector<double> &localCenter = ArrayState::getCoordinates();
-	TBTKAssert(
+	MyTBTKAssert(
 		localCenter.size() == coordinate.size(),
 		"ParallelepipedArrayState::operator()",
 		"Coordinate dimension does not agree with the dimension of the"
@@ -163,4 +163,4 @@ double ParallelepipedArrayState::getExtent() const{
 	return ArrayState::getExtent();
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

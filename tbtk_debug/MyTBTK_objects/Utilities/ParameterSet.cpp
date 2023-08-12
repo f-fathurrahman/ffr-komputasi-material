@@ -19,13 +19,13 @@
  *  @author Andreas Theiler
  */
 
-#include "TBTK/ParameterSet.h"
-#include "TBTK/Streams.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/ParameterSet.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 ParameterSet::ParameterSet(){
 }
@@ -35,7 +35,7 @@ ParameterSet::~ParameterSet(){
 
 void ParameterSet::addInt(string name, int value){
 	for(unsigned int n = 0; n < intParams.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			(get<0>(intParams.at(n))).compare(name) != 0,
 			"Error in ParameterSet::addInt()",
 			"Multiple definitions of parameter '" << name << "'.",
@@ -48,7 +48,7 @@ void ParameterSet::addInt(string name, int value){
 
 void ParameterSet::addDouble(string name, double value){
 	for(unsigned int n = 0; n < doubleParams.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			(get<0>(doubleParams.at(n))).compare(name) != 0,
 			"ParameterSet::addDouble()",
 			"Multiple definitions of parameter '" << name << "'.",
@@ -61,7 +61,7 @@ void ParameterSet::addDouble(string name, double value){
 
 void ParameterSet::addComplex(string name, complex<double> value){
 	for(unsigned int n = 0; n < complexParams.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			(get<0>(complexParams.at(n))).compare(name) != 0,
 			"ParameterSet::addComplex()",
 			"Multiple definitions of parameter '" << name << "'.",
@@ -74,7 +74,7 @@ void ParameterSet::addComplex(string name, complex<double> value){
 
 void ParameterSet::addString(string name, std::string value){
 	for(unsigned int n = 0; n < stringParams.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			(get<0>(stringParams.at(n))).compare(name) != 0,
 			"ParameterSet::addString()",
 			"Multiple definitions of parameter '" << name << "'.",
@@ -87,7 +87,7 @@ void ParameterSet::addString(string name, std::string value){
 
 void ParameterSet::addBool(string name, bool value){
 	for(unsigned int n = 0; n < boolParams.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			(get<0>(boolParams.at(n))).compare(name) != 0,
 			"ParameterSet::addBool()",
 			"Multiple definitions of parameter '" << name << "'.",
@@ -107,7 +107,7 @@ void ParameterSet::setInt(std::string name, int value){
 		}
 	}
 
-	TBTKExit("Error in ParameterSet::setInt()",
+	MyTBTKExit("Error in ParameterSet::setInt()",
 		"Parameter '" << name << "' not found.",
 		""
 	);
@@ -121,7 +121,7 @@ void ParameterSet::setDouble(std::string name, double value){
 		}
 	}
 
-	TBTKExit("Error in ParameterSet::setDouble()",
+	MyTBTKExit("Error in ParameterSet::setDouble()",
 		"Parameter '" << name << "' not found.",
 		""
 	);
@@ -136,7 +136,7 @@ void ParameterSet::setComplex(std::string name, std::complex<double> value){
 		}
 	}
 
-	TBTKExit("Error in ParameterSet::setComplex()",
+	MyTBTKExit("Error in ParameterSet::setComplex()",
 		"Parameter '" << name << "' not found.",
 		""
 	);
@@ -150,7 +150,7 @@ void ParameterSet::setString(std::string name, std::string value){
 		}
 	}
 
-	TBTKExit("Error in ParameterSet::setString()",
+	MyTBTKExit("Error in ParameterSet::setString()",
 		"Parameter '" << name << "' not found.",
 		""
 	);
@@ -164,7 +164,7 @@ void ParameterSet::setBool(std::string name, bool value){
 		}
 	}
 
-	TBTKExit("Error in ParameterSet::setBool()",
+	MyTBTKExit("Error in ParameterSet::setBool()",
 		"Parameter '" << name << "' not found.",
 		""
 	);
@@ -177,7 +177,7 @@ int ParameterSet::getInt(string name) const {
 		}
 	}
 
-	TBTKExit(
+	MyTBTKExit(
 		"ParameterSet::getInt()",
 		"Parameter '" << name << "' not defined.",
 		""
@@ -191,7 +191,7 @@ double ParameterSet::getDouble(string name) const {
 		}
 	}
 
-	TBTKExit(
+	MyTBTKExit(
 		"ParameterSet::getDouble()",
 		"Parameter '" << name << "' not defined.",
 		""
@@ -205,7 +205,7 @@ complex<double> ParameterSet::getComplex(string name) const {
 		}
 	}
 
-	TBTKExit(
+	MyTBTKExit(
 		"ParameterSet::getComplex()",
 		"Parameter '" << name << "' not defined.",
 		""
@@ -219,7 +219,7 @@ string ParameterSet::getString(string name) const {
 		}
 	}
 
-	TBTKExit(
+	MyTBTKExit(
 		"ParameterSet::getString()",
 		"Parameter '" << name << "' not defined.",
 		""
@@ -233,7 +233,7 @@ bool ParameterSet::getBool(string name) const {
 		}
 	}
 
-	TBTKExit(
+	MyTBTKExit(
 		"ParameterSet::getBool()",
 		"Parameter '" << name << "' not defined.",
 		""
@@ -350,4 +350,4 @@ bool ParameterSet::boolExists(string name) const {
 	return false;
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

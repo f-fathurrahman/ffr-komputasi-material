@@ -18,10 +18,10 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/PropertyExtractor/ChebyshevExpander.h"
-#include "TBTK/Functions.h"
-#include "TBTK/Streams.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/PropertyExtractor/ChebyshevExpander.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 #include <set>
 
@@ -29,7 +29,7 @@ using namespace std;
 
 static complex<double> i(0, 1);
 
-namespace TBTK{
+namespace MyTBTK{
 namespace PropertyExtractor{
 
 ChebyshevExpander::ChebyshevExpander(Solver::ChebyshevExpander &cSolver){
@@ -37,25 +37,25 @@ ChebyshevExpander::ChebyshevExpander(Solver::ChebyshevExpander &cSolver){
 	double upperBound = getUpperBound();
 	int energyResolution = getEnergyResolution();
 
-	TBTKAssert(
+	MyTBTKAssert(
 		energyResolution > 0,
 		"PropertyExtractor::ChebyshevExpander::ChebyshevExpander()",
 		"Argument energyResolution has to be a positive number.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		lowerBound < upperBound,
 		"PropertyExtractor::ChebyshevExpander::ChebyshevExpander()",
 		"Argument lowerBound has to be smaller than argument upperBound.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		lowerBound >= -cSolver.getScaleFactor(),
 		"PropertyExtractor::ChebyshevExpander::ChebyshevExpander()",
 		"Argument lowerBound has to be larger than -cSolver->getScaleFactor().",
 		"Use Solver::ChebyshevExpander::setScaleFactor() to set a larger scale factor."
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		upperBound <= cSolver.getScaleFactor(),
 		"PropertyExtractor::ChebyshevExapnder::ChebysheExpander()",
 		"Argument upperBound has to be smaller than cSolver->getScaleFactor().",
@@ -112,7 +112,7 @@ Property::GreensFunction ChebyshevExpander::calculateGreensFunction(
 	for(unsigned int n = 0; n < patterns.size(); n++){
 		const vector<Index>& pattern = *(patterns.begin() + n);
 
-		TBTKAssert(
+		MyTBTKAssert(
 			pattern.size() == 2,
 			"ChebyshevExpander::calculateGreensFunction()",
 			"Invalid pattern. Each pattern entry needs to contain"
@@ -251,7 +251,7 @@ Property::GreensFunction ChebyshevExpander::calculateGreensFunctions(
 		chebyshevType = Solver::ChebyshevExpander::Type::NonPrincipal;
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::ChebyshevExpander::calculateGreensFunctions()",
 			"Unknown GreensFunction type.",
 			"This should never happen, contact the developer."
@@ -399,7 +399,7 @@ Property::Magnetization ChebyshevExpander::calculateMagnetization(
 		}
 	}
 	if(information.getSpinIndex() == -1){
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::ChebyshevExpander::calculateMagnetization()",
 			"No spin index indicated.",
 			"Use IDX_SPIN to indicate the position of the spin index."
@@ -534,7 +534,7 @@ Property::SpinPolarizedLDOS ChebyshevExpander::calculateSpinPolarizedLDOS(
 		}
 	}
 	if(information.getSpinIndex() == -1){
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::ChebsyhevExpander::calculateSpinPolarizedLDOS()",
 			"No spin index indicated.",
 			"Use IDX_SPIN to indicate the position of the spin index."
@@ -764,4 +764,4 @@ void ChebyshevExpander::calculateSP_LDOSCallback(
 }
 
 };	//End of namespace PropertyExtractor
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

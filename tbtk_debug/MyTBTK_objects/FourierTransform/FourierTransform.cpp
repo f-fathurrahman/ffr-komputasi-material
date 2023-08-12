@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/FourierTransform.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/FourierTransform.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 void FourierTransform::transform(
 	const CArray<complex<double>> &in,
@@ -34,7 +34,7 @@ void FourierTransform::transform(
 	fftw_plan plan;
 
 	//Const cast is OK since FFTW3 does not modify the input.
-	#pragma omp critical (TBTK_FOURIER_TRANSFORM)
+	#pragma omp critical (MyTBTK_FOURIER_TRANSFORM)
 	plan = fftw_plan_dft(
 		ranges.size(),
 		(int*)ranges.data(),
@@ -48,7 +48,7 @@ void FourierTransform::transform(
 
 	fftw_execute(plan);
 
-	#pragma omp critical (TBTK_FOURIER_TRANSFORM)
+	#pragma omp critical (MyTBTK_FOURIER_TRANSFORM)
 	fftw_destroy_plan(plan);
 
 	double numElements = 1;
@@ -72,7 +72,7 @@ FourierTransform::Plan<complex<double>>::Plan(
 	plan = new fftw_plan();
 
 	//Const cast is OK since FFTW3 does not modify the input.
-	#pragma omp critical (TBTK_FOURIER_TRANSFORM)
+	#pragma omp critical (MyTBTK_FOURIER_TRANSFORM)
 	*plan = fftw_plan_dft(
 		ranges.size(),
 		(int*)ranges.data(),

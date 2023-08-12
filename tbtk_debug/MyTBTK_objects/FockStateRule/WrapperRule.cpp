@@ -18,10 +18,10 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/FockStateRule/WrapperRule.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/FockStateRule/WrapperRule.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
-namespace TBTK{
+namespace MyTBTK{
 namespace FockStateRule{
 
 WrapperRule::WrapperRule(
@@ -76,4 +76,4 @@ bool WrapperRule::operator==(const FockStateRule& rhs) const{
 }
 
 };	//End of namespace FockSpaceRule
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

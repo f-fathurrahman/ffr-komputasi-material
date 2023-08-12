@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/SpacePartition.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/SpacePartition.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 SpacePartition::SpacePartition(){
 }
@@ -35,7 +35,7 @@ SpacePartition::SpacePartition(
 	this->dimensions = basisVectors.size();
 	this->meshType = meshType;
 
-	TBTKAssert(
+	MyTBTKAssert(
 		dimensions == 1
 		|| dimensions == 2
 		|| dimensions == 3,
@@ -46,7 +46,7 @@ SpacePartition::SpacePartition(
 	);
 
 	for(unsigned int n = 0; n < dimensions; n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			basisVectors.at(n).size() == dimensions,
 			"SpacePartition::SpacePartition()",
 			"Incompatible dimensions.",
@@ -81,4 +81,4 @@ SpacePartition::SpacePartition(
 SpacePartition::~SpacePartition(){
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

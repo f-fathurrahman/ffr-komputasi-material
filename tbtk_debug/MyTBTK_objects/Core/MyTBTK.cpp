@@ -26,10 +26,10 @@
 namespace MyTBTK{
 
 void Initialize(){
-	Quantity::Constants::initialize();
-	Quantity::initializeBaseQuantities();
-	Quantity::initializeDerivedQuantities();
-	UnitHandler::initialize();
+    Quantity::Constants::initialize();
+    Quantity::initializeBaseQuantities();
+    Quantity::initializeDerivedQuantities();
+    UnitHandler::initialize();
 }
 
 };

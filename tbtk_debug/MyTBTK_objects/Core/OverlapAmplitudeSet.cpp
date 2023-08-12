@@ -30,94 +30,94 @@ using namespace std;
 namespace MyTBTK{
 
 OverlapAmplitudeSet::OverlapAmplitudeSet(){
-	assumeOrthonormalBasis = true;
+    assumeOrthonormalBasis = true;
 }
 
 OverlapAmplitudeSet::OverlapAmplitudeSet(
-	const string &serialization,
-	Mode mode
+    const string &serialization,
+    Mode mode
 ){
-	switch(mode){
-	case Mode::JSON:
-	{
-		try{
-			nlohmann::json j = nlohmann::json::parse(serialization);
-			overlapAmplitudeTree
-				= IndexedDataTree<OverlapAmplitude>(
-					j.at("overlapAmplitudeTree").dump(),
-					mode
-				);
-			assumeOrthonormalBasis
-				= j.at("assumeOrthonormalBasis").get<bool>();
-		}
-		catch(nlohmann::json::exception &e){
-			MyTBTKExit(
-				"OverlapAmplitudeSet::OverlapAmplitudeSet()",
-				"Unable to parse string as OverlapAmplitudeSet"
-				<< " '" << serialization << "'.",
-				""
-			);
-		}
+    switch(mode){
+    case Mode::JSON:
+    {
+        try{
+            nlohmann::json j = nlohmann::json::parse(serialization);
+            overlapAmplitudeTree
+                = IndexedDataTree<OverlapAmplitude>(
+                    j.at("overlapAmplitudeTree").dump(),
+                    mode
+                );
+            assumeOrthonormalBasis
+                = j.at("assumeOrthonormalBasis").get<bool>();
+        }
+        catch(nlohmann::json::exception &e){
+            MyTBTKExit(
+                "OverlapAmplitudeSet::OverlapAmplitudeSet()",
+                "Unable to parse string as OverlapAmplitudeSet"
+                << " '" << serialization << "'.",
+                ""
+            );
+        }
 
-		break;
-	}
-	default:
-		MyTBTKExit(
-			"OverlapAmplitudeSet::OverlapAmplitudeSet()",
-			"Only Serializable::Mode::JSON is supported yet.",
-			""
-		);
-	}
+        break;
+    }
+    default:
+        MyTBTKExit(
+            "OverlapAmplitudeSet::OverlapAmplitudeSet()",
+            "Only Serializable::Mode::JSON is supported yet.",
+            ""
+        );
+    }
 }
 
 OverlapAmplitudeSet::~OverlapAmplitudeSet(){
 }
 
 OverlapAmplitudeSet::Iterator OverlapAmplitudeSet::begin(){
-	return OverlapAmplitudeSet::Iterator(overlapAmplitudeTree);
+    return OverlapAmplitudeSet::Iterator(overlapAmplitudeTree);
 }
 
 OverlapAmplitudeSet::ConstIterator OverlapAmplitudeSet::begin() const{
-	return OverlapAmplitudeSet::ConstIterator(overlapAmplitudeTree);
+    return OverlapAmplitudeSet::ConstIterator(overlapAmplitudeTree);
 }
 
 OverlapAmplitudeSet::ConstIterator OverlapAmplitudeSet::cbegin() const{
-	return OverlapAmplitudeSet::ConstIterator(overlapAmplitudeTree);
+    return OverlapAmplitudeSet::ConstIterator(overlapAmplitudeTree);
 }
 
 OverlapAmplitudeSet::Iterator OverlapAmplitudeSet::end(){
-	return OverlapAmplitudeSet::Iterator(overlapAmplitudeTree, true);
+    return OverlapAmplitudeSet::Iterator(overlapAmplitudeTree, true);
 }
 
 OverlapAmplitudeSet::ConstIterator OverlapAmplitudeSet::end() const{
-	return OverlapAmplitudeSet::ConstIterator(overlapAmplitudeTree, true);
+    return OverlapAmplitudeSet::ConstIterator(overlapAmplitudeTree, true);
 }
 
 OverlapAmplitudeSet::ConstIterator OverlapAmplitudeSet::cend() const{
-	return OverlapAmplitudeSet::ConstIterator(overlapAmplitudeTree, true);
+    return OverlapAmplitudeSet::ConstIterator(overlapAmplitudeTree, true);
 }
 
 string OverlapAmplitudeSet::serialize(Mode mode) const{
-	switch(mode){
-	case Mode::JSON:
-	{
-		nlohmann::json j;
-		j["id"] = "OverlapAmplitudeSet";
-		j["overlapAmplitudeTree"] = nlohmann::json::parse(
-			overlapAmplitudeTree.serialize(mode)
-		);
-		j["assumeOrthonormalBasis"]
-			= nlohmann::json(assumeOrthonormalBasis);
+    switch(mode){
+    case Mode::JSON:
+    {
+        nlohmann::json j;
+        j["id"] = "OverlapAmplitudeSet";
+        j["overlapAmplitudeTree"] = nlohmann::json::parse(
+            overlapAmplitudeTree.serialize(mode)
+        );
+        j["assumeOrthonormalBasis"]
+            = nlohmann::json(assumeOrthonormalBasis);
 
-		return j.dump();
-	}
-	default:
-		MyTBTKExit(
-			"OverlapAmplitudeSet::serialize()",
-			"Only Serializable::Mode::JSON is supported yet.",
-			""
-		);
-	}
+        return j.dump();
+    }
+    default:
+        MyTBTKExit(
+            "OverlapAmplitudeSet::serialize()",
+            "Only Serializable::Mode::JSON is supported yet.",
+            ""
+        );
+    }
 }
 
-};	//End of namespace MyTBTK
+};    //End of namespace MyTBTK

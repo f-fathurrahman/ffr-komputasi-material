@@ -18,16 +18,16 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/PropertyExtractor/RPASusceptibility.h"
-#include "TBTK/Functions.h"
-#include "TBTK/Streams.h"
-#include "TBTK/Timer.h"
+#include "MyTBTK/PropertyExtractor/RPASusceptibility.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/Timer.h"
 
 #include <cmath>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace PropertyExtractor{
 
 RPASusceptibility::RPASusceptibility(
@@ -41,7 +41,7 @@ void RPASusceptibility::setEnergyWindow(
 	double upperBound,
 	int resolution
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::RPASusceptibility::setEnergyWindow()",
 		"This function is not supported for this PropertyExtractor.",
 		""
@@ -54,7 +54,7 @@ void RPASusceptibility::setEnergyWindow(
 	int lowerBosonicMatsubaraEnergyIndex,
 	int upperBosonicMatsubaraEnergyIndex
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::RPASusceptibility::setEnergyWindow()",
 		"This function is not supported for this PropertyExtractor.",
 		""
@@ -70,7 +70,7 @@ Property::Susceptibility RPASusceptibility::calculateRPASusceptibility(
 		const Index &pattern = *(patterns.begin() + n);
 
 		vector<Index> indices = pattern.split();
-		TBTKAssert(
+		MyTBTKAssert(
 			indices.size() == 5,
 			"PropertyExtractor::RPASusceptibility::calculateRPASusceptibility()",
 			"Invalid pattern '" << pattern.toString() << "'.",
@@ -79,7 +79,7 @@ Property::Susceptibility RPASusceptibility::calculateRPASusceptibility(
 			<< " are " << indices.size() << "."
 		);
 		for(unsigned int n = 2; n < indices.size(); n++){
-			TBTKAssert(
+			MyTBTKAssert(
 				indices[n].getSize() == indices[1].getSize(),
 				"PropertyExtractor::RPASusceptibility::calculateRPASusceptibility()",
 				"Currently the last four Indices has to have"
@@ -210,7 +210,7 @@ Property::Susceptibility RPASusceptibility::calculateRPASusceptibility(
 		const Index &pattern = *(patterns.begin() + n);
 
 		vector<Index> indices = pattern.split();
-		TBTKAssert(
+		MyTBTKAssert(
 			indices.size() == 5,
 			"PropertyExtractor::RPASusceptibility::calculateRPASusceptibility()",
 			"Invalid pattern '" << pattern.toString() << "'.",
@@ -219,7 +219,7 @@ Property::Susceptibility RPASusceptibility::calculateRPASusceptibility(
 			<< " are " << indices.size() << "."
 		);
 		for(unsigned int n = 2; n < indices.size(); n++){
-			TBTKAssert(
+			MyTBTKAssert(
 				indices[n].getSize() == indices[1].getSize(),
 				"PropertyExtractor::RPASusceptibility::calculateRPASusceptibility()",
 				"Currently the last four Indices has to have"
@@ -391,7 +391,7 @@ Property::Susceptibility RPASusceptibility::calculateRPASusceptibility(
 		return susceptibility;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::RPASusceptibility::calculateRPASusceptibility()",
 			"Uknown EnergyType.",
 			"This should never happen, contact the developer."
@@ -424,7 +424,7 @@ void RPASusceptibility::calculateRPASusceptibilityCallback(
 				index
 			)
 		){
-			TBTKExit(
+			MyTBTKExit(
 				"PropertyExtractor::RPASusceptibility::calculateRPASusceptibilityCallback()",
 				"Unable to find RPASusceptibility for the"
 				<< " Index '" << index.toString() << "'.",
@@ -439,4 +439,4 @@ void RPASusceptibility::calculateRPASusceptibilityCallback(
 }
 
 };	//End of namespace PropertyExtractor
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

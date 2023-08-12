@@ -18,14 +18,14 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Property/TransmissionRate.h"
-#include "TBTK/Solver/Greens.h"
-#include "TBTK/Streams.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/Property/TransmissionRate.h"
+#include "MyTBTK/Solver/Greens.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 Greens::Greens() : Communicator(true){
@@ -37,7 +37,7 @@ Greens::~Greens(){
 Property::GreensFunction Greens::calculateInteractingGreensFunction(
 	const Property::SelfEnergy &selfEnergy
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		greensFunction->getIndexDescriptor().getFormat()
 			== IndexDescriptor::Format::Custom,
 		"Solver::Greens::calculateInteractingGreensFunction()",
@@ -48,7 +48,7 @@ Property::GreensFunction Greens::calculateInteractingGreensFunction(
 		<< " function for details on how to extract it on the Custom"
 		<< " format."
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		selfEnergy.getIndexDescriptor().getFormat()
 			== IndexDescriptor::Format::Custom,
 		"Solver::Greens::calculateInteractingGreensFunction()",
@@ -59,7 +59,7 @@ Property::GreensFunction Greens::calculateInteractingGreensFunction(
 		<< " self-energy for details on how to extract it on the"
 		<< " Custom format."
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		greensFunction->getEnergyType() == selfEnergy.getEnergyType(),
 		"Solver::GreensFunction::calculateInteractingGreensFunction()",
 		"The GreensFunction and SelfEnergy must have the same energy"
@@ -82,7 +82,7 @@ Property::GreensFunction Greens::calculateInteractingGreensFunction(
 	//Only supports Green's functions and self-energies with the exact same
 	//Index structure yet. Check this and print error message if this is
 	//not satisfied.
-	TBTKAssert(
+	MyTBTKAssert(
 		greensFunctionIndices.equals(selfEnergyIndices),
 		"Solver::Greens::calculateInteractingGreensFunction()",
 		"Only GreensFunctions and SelfEnergies with the exact same"
@@ -146,7 +146,7 @@ Property::GreensFunction Greens::calculateInteractingGreensFunction(
 				++iterator1
 			){
 				Index compoundIndex({*iterator0, *iterator1});
-				TBTKAssert(
+				MyTBTKAssert(
 					greensFunction->contains(
 						compoundIndex
 					),
@@ -170,7 +170,7 @@ Property::GreensFunction Greens::calculateInteractingGreensFunction(
 		//Only block restricted Green's functions supported yet. Print error
 		//message if this is not fulfilled.
 		if(!isBlockRestricted){
-			TBTKExit(
+			MyTBTKExit(
 				"Greens::calculateInteractingGreensFunction()",
 				"Only Green's functions with Index pairs that are"
 				<< " restricted to intra block pairs are supported"
@@ -203,7 +203,7 @@ Property::GreensFunction Greens::calculateInteractingGreensFunction(
 					++iterator1
 				){
 					Index compoundIndex({*iterator0, *iterator1});
-					TBTKAssert(
+					MyTBTKAssert(
 						greensFunction->contains(compoundIndex),
 						"Solver::Greens::calculateInteractingGreensFunction()",
 						"Missing Index. The Green's function"
@@ -244,7 +244,7 @@ Property::GreensFunction Greens::calculateInteractingGreensFunction(
 
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Solver::GreensFunction::calculateInteractingGreensFunction()",
 			"Unknown energy type",
 			"This should never happen, contact the developer."
@@ -475,7 +475,7 @@ Property::TransmissionRate Greens::calculateTransmissionRate(
 	const Property::SelfEnergy &selfEnergy0,
 	const Property::SelfEnergy &selfEnergy1
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		greensFunction->getType()
 			== Property::GreensFunction::Type::Retarded,
 		"Solver::Greens::calculateTransmission()",
@@ -483,7 +483,7 @@ Property::TransmissionRate Greens::calculateTransmissionRate(
 		<< " Property::GreensFunction::Type::Retarded",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		greensFunction->getIndexDescriptor().getFormat()
 			== IndexDescriptor::Format::Custom,
 		"Solver::Greens::calculateTransmission()",
@@ -494,7 +494,7 @@ Property::TransmissionRate Greens::calculateTransmissionRate(
 		<< " function for details on how to extract it on the Custom"
 		<< " format."
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		selfEnergy0.getIndexDescriptor().getFormat()
 			== IndexDescriptor::Format::Custom
 		&& selfEnergy1.getIndexDescriptor().getFormat()
@@ -507,7 +507,7 @@ Property::TransmissionRate Greens::calculateTransmissionRate(
 		<< " self-energy for details on how to extract it on the"
 		<< " Custom format."
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		greensFunction->getEnergyType() == selfEnergy0.getEnergyType()
 		&& greensFunction->getEnergyType()
 			== selfEnergy1.getEnergyType(),
@@ -516,7 +516,7 @@ Property::TransmissionRate Greens::calculateTransmissionRate(
 		<< " type.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		greensFunction->getEnergyType()
 			== Property::EnergyResolvedProperty<complex<double>>::EnergyType::Real,
 		"Solver::Greens::calculateTransmission()",
@@ -524,7 +524,7 @@ Property::TransmissionRate Greens::calculateTransmissionRate(
 		<< " EnergyResolvedProperty::EnergyType::Real is supported.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		greensFunction->getNumEnergies()
 			== selfEnergy0.getNumEnergies()
 		&& greensFunction->getNumEnergies()
@@ -539,7 +539,7 @@ Property::TransmissionRate Greens::calculateTransmissionRate(
 		<< "'.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		abs(
 			greensFunction->getLowerBound()
 			- selfEnergy0.getLowerBound()
@@ -555,7 +555,7 @@ Property::TransmissionRate Greens::calculateTransmissionRate(
 		<< selfEnergy0.getLowerBound() << "'.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		abs(
 			greensFunction->getUpperBound()
 			- selfEnergy0.getUpperBound()
@@ -571,7 +571,7 @@ Property::TransmissionRate Greens::calculateTransmissionRate(
 		<< selfEnergy0.getLowerBound() << "'.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		abs(
 			greensFunction->getLowerBound()
 			- selfEnergy1.getLowerBound()
@@ -587,7 +587,7 @@ Property::TransmissionRate Greens::calculateTransmissionRate(
 		<< selfEnergy1.getLowerBound() << "'.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		abs(
 			greensFunction->getUpperBound()
 			- selfEnergy1.getUpperBound()
@@ -618,7 +618,7 @@ Property::TransmissionRate Greens::calculateTransmissionRate(
 	//Only supports Green's functions and self-energies with the exact same
 	//Index structure yet. Check this and print error message if this is
 	//not satisfied.
-	TBTKAssert(
+	MyTBTKAssert(
 		greensFunctionIndices.equals(selfEnergy0Indices)
 		&& greensFunctionIndices.equals(selfEnergy1Indices),
 		"Solver::Greens::calculateTransmission()",
@@ -669,4 +669,4 @@ Property::TransmissionRate Greens::calculateTransmissionRate(
 }
 
 };	//End of namespace Solver
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

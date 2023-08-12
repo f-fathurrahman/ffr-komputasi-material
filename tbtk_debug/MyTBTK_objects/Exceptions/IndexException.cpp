@@ -1,6 +1,6 @@
-#include "TBTK/IndexException.h"
+#include "MyTBTK/IndexException.h"
 
-namespace TBTK{
+namespace MyTBTK{
 
 IndexException::IndexException(){
 }

@@ -19,21 +19,21 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Solver/ChebyshevExpander.h"
-#include "TBTK/Streams.h"
+#include "MyTBTK/Solver/ChebyshevExpander.h"
+#include "MyTBTK/Streams.h"
 
 #include <iostream>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 vector<complex<double>> ChebyshevExpander::calculateCoefficientsGPU(
 	Index to,
 	Index from
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"ChebyshevExpander::calculateCoefficientsGPU()",
 		"GPU Not supported.",
 		"Install with GPU support or use CPU version."
@@ -44,7 +44,7 @@ vector<vector<complex<double>>> ChebyshevExpander::calculateCoefficientsGPU(
 	vector<Index> &to,
 	Index from
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"ChebyshevExpander::calculateCoefficientsGPU()",
 		"GPU Not supported.",
 		"Install with GPU support or use CPU version."
@@ -52,7 +52,7 @@ vector<vector<complex<double>>> ChebyshevExpander::calculateCoefficientsGPU(
 }
 
 void ChebyshevExpander::loadLookupTableGPU(){
-	TBTKExit(
+	MyTBTKExit(
 		"ChebyshevExpander::loadLookupTableGPU()",
 		"GPU Not supported.",
 		"Install with GPU support or use CPU version."
@@ -60,7 +60,7 @@ void ChebyshevExpander::loadLookupTableGPU(){
 }
 
 void ChebyshevExpander::destroyLookupTableGPU(){
-	TBTKExit(
+	MyTBTKExit(
 		"ChebyshevExpander::destroyLookupTableGPU()",
 		"GPU Not supported.",
 		"Install with GPU support or use CPU version."
@@ -71,7 +71,7 @@ vector<complex<double>> ChebyshevExpander::generateGreensFunctionGPU(
 	const vector<complex<double>> &coefficients,
 	Type type
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"ChebyshevExpander::generateGreensFunctionGPU()",
 		"GPU Not supported.",
 		"Install with GPU support or use CPU version."
@@ -86,4 +86,4 @@ void ChebyshevExpander::destroyDeviceTableGPU(){
 }*/
 
 };	//End of namespace Solver
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

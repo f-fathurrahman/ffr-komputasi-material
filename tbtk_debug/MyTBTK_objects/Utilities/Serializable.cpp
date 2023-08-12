@@ -18,15 +18,15 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Serializable.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/Serializable.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
-#include "TBTK/json.hpp"
+#include "MyTBTK/json.hpp"
 
 using namespace std;
 //using namespace nlohmann;
 
-namespace TBTK{
+namespace MyTBTK{
 
 bool Serializable::validate(
 	const string &serialization,
@@ -39,14 +39,14 @@ bool Serializable::validate(
 		size_t position = serialization.find(id + "(");
 		if(position != 0 || serialization.back() != ')')
 			return false;
-/*		TBTKAssert(
+/*		MyTBTKAssert(
 			position == 0,
 			"Serializable::validate()",
 			"Unable to parse serialization string '"
 			<< serialization << "'.",
 			""
 		);
-		TBTKAssert(
+		MyTBTKAssert(
 			serialization.back() == ')',
 			"Serializable::validate()",
 			"Unable to parse serialization string '"
@@ -70,7 +70,7 @@ bool Serializable::validate(
 		}
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Serializable::validate()",
 			"Only Serializable::Mode::Debug is supported yet.",
 			""
@@ -98,7 +98,7 @@ bool Serializable::hasID(const string &serialization, Mode mode){
 			return false;
 		}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Serializable::hasID()",
 			"Only Serializable::Mode::Debug is supported yet.",
 			""
@@ -111,7 +111,7 @@ string Serializable::getID(const string &serialization, Mode mode){
 	case Mode::Debug:
 	{
 		size_t position = serialization.find('(');
-		TBTKAssert(
+		MyTBTKAssert(
 			position != string::npos,
 			"Serializable::getID()",
 			"Unable to parse serialization string '"
@@ -127,7 +127,7 @@ string Serializable::getID(const string &serialization, Mode mode){
 			return j.at("id");
 		}
 		catch(nlohmann::json::exception &e){
-			TBTKExit(
+			MyTBTKExit(
 				"Serializable::getID()",
 				"Unable to parse serialization string '"
 				<< serialization << "'.",
@@ -135,7 +135,7 @@ string Serializable::getID(const string &serialization, Mode mode){
 			);
 		}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Serializable::getID()",
 			"Only Serializable::Mode::Debug is supported yet.",
 			""
@@ -150,7 +150,7 @@ string Serializable::extractComponent(
 	const string &componentName,
 	Mode mode
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		validate(serialization, containerID, mode),
 		"Serializable::extractComponent()",
 		"Invalid container ID in the serialization string '"
@@ -164,7 +164,7 @@ string Serializable::extractComponent(
 			return j.at(componentName).dump();
 		}
 		catch(nlohmann::json::exception &e){
-			TBTKExit(
+			MyTBTKExit(
 				"Serializable::extractComponent()",
 				"Unable to extract component with ID '"
 				<< componentID << "' from the serialization"
@@ -173,7 +173,7 @@ string Serializable::extractComponent(
 			);
 		}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Serializable::extractComponent()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -186,14 +186,14 @@ string Serializable::getContent(const string &serialization, Mode mode){
 	case Mode::Debug:
 	{
 		size_t position = serialization.find('(');
-		TBTKAssert(
+		MyTBTKAssert(
 			position != string::npos,
 			"Serializable::getContent()",
 			"Unable to parse serialization string '"
 			<< serialization << "'.",
 			""
 		);
-		TBTKAssert(
+		MyTBTKAssert(
 			serialization.back() == ')',
 			"Serializable::getContent()",
 			"Unable to parse serialization string '"
@@ -207,7 +207,7 @@ string Serializable::getContent(const string &serialization, Mode mode){
 		return serialization.substr(contentStart, contentLength);
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Serializable::getContent()",
 			"Only Serializable::Mode::Debug is supported yet.",
 			""
@@ -227,7 +227,7 @@ vector<string> Serializable::split(const string &content, Mode mode){
 			if(c == '(')
 				bracketCounter++;
 			if(c == ')'){
-				TBTKAssert(
+				MyTBTKAssert(
 					bracketCounter > 0,
 					"Serializable::split()",
 					"Unable to split malformated serialization"
@@ -244,7 +244,7 @@ vector<string> Serializable::split(const string &content, Mode mode){
 				result.back() += c;
 		}
 
-		TBTKAssert(
+		MyTBTKAssert(
 			bracketCounter == 0,
 			"Serializable::split()",
 			"Unable to split malformated serialization conent string '"
@@ -255,7 +255,7 @@ vector<string> Serializable::split(const string &content, Mode mode){
 		return result;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Serializable::split()",
 			"Only Serializable::Mode::Debug is supported yet.",
 			""
@@ -276,7 +276,7 @@ string Serializable::extract(
 			return j.at(component).dump();
 		}
 		catch(nlohmann::json::exception &e){
-			TBTKExit(
+			MyTBTKExit(
 				"Serializable::extract()",
 				"Unable to extract '" << component << "' from"
 				<< " serialization string '" << serialization
@@ -285,7 +285,7 @@ string Serializable::extract(
 			);
 		}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Serializable::extract()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -293,4 +293,4 @@ string Serializable::extract(
 	}
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

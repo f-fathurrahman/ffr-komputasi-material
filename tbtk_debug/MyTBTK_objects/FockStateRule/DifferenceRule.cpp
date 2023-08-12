@@ -18,14 +18,14 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/FockStateRule/DifferenceRule.h"
-#include "TBTK/FockSpace.h"
+#include "MyTBTK/FockStateRule/DifferenceRule.h"
+#include "MyTBTK/FockSpace.h"
 
 #include <algorithm>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace FockStateRule{
 
 DifferenceRule::DifferenceRule(
@@ -225,4 +225,4 @@ void DifferenceRule::print() const{
 }
 
 };	//End of namespace FockStateRule
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/PropertyExtractor/Diagonalizer.h"
-#include "TBTK/PropertyExtractor/IndexTreeGenerator.h"
-#include "TBTK/PropertyExtractor/PatternValidator.h"
-#include "TBTK/Functions.h"
-#include "TBTK/Streams.h"
+#include "MyTBTK/PropertyExtractor/Diagonalizer.h"
+#include "MyTBTK/PropertyExtractor/IndexTreeGenerator.h"
+#include "MyTBTK/PropertyExtractor/PatternValidator.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/Streams.h"
 
 #include <cmath>
 
@@ -30,7 +30,7 @@ using namespace std;
 
 static complex<double> i(0, 1);
 
-namespace TBTK{
+namespace MyTBTK{
 namespace PropertyExtractor{
 
 Diagonalizer::Diagonalizer(Solver::Diagonalizer &solver) : solver(solver){
@@ -69,7 +69,7 @@ Property::WaveFunctions Diagonalizer::calculateWaveFunctions(
 				statesVector.push_back(n);
 		}
 		else{
-			TBTKAssert(
+			MyTBTKAssert(
 				*states.begin() >= 0,
 				"PropertyExtractor::Diagonalizer::calculateWaveFunctions()",
 				"Found unexpected index symbol.",
@@ -80,7 +80,7 @@ Property::WaveFunctions Diagonalizer::calculateWaveFunctions(
 	}
 	else{
 		for(unsigned int n = 0; n < states.size(); n++){
-			TBTKAssert(
+			MyTBTKAssert(
 				*(states.begin() + n) >= 0,
 				"PropertyExtractor::Diagonalizer::calculateWaveFunctions()",
 				"Found unexpected index symbol.",
@@ -153,7 +153,7 @@ Property::GreensFunction Diagonalizer::calculateGreensFunction(
 		int upperFermionicMatsubaraEnergyIndex
 			= getUpperFermionicMatsubaraEnergyIndex();
 
-		TBTKAssert(
+		MyTBTKAssert(
 			lowerFermionicMatsubaraEnergyIndex
 				<= upperFermionicMatsubaraEnergyIndex,
 			"PropertyExtractor::Diagonalizer::caluclateGreensFunction()",
@@ -188,7 +188,7 @@ Property::GreensFunction Diagonalizer::calculateGreensFunction(
 		break;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::Diagonalizer::calculateGreensFunction()",
 			"Only type Property::GreensFunction::Type::Advanced,"
 			<< " Property::GrensFunction::Type::Retarded, and"
@@ -321,7 +321,7 @@ Property::Magnetization Diagonalizer::calculateMagnetization(
 		}
 	}
 	if(information.getSpinIndex() == -1){
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::Diagonalizer::calculateMagnetization()",
 			"No spin index indiceated.",
 			"Used IDX_SPIN to indicate the position of the spin index."
@@ -467,7 +467,7 @@ Property::SpinPolarizedLDOS Diagonalizer::calculateSpinPolarizedLDOS(
 		}
 	}
 	if(information.getSpinIndex() == -1){
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::Diagonalizer::calculateSpinPolarizedLDOS()",
 			"No spin index indicated.",
 			"Used IDX_SPIN to indicate the position of the spin index."
@@ -561,7 +561,7 @@ double Diagonalizer::calculateEntropy(){
 			);
 			break;
 		default:
-			TBTKExit(
+			MyTBTKExit(
 				"PropertyExtractor::Diagonalizer::calculateEntropy()",
 				"Unknown statistics.",
 				"This should never happen, contact the developer."
@@ -624,7 +624,7 @@ void Diagonalizer::calculateGreensFunctionCallback(
 				delta = propertyExtractor->getEnergyInfinitesimal();
 				break;
 			default:
-				TBTKExit(
+				MyTBTKExit(
 					"Diagonalizer::calculateGreensFunctionCallback()",
 					"Unknown Green's function type.",
 					"This should never happen, contact the developer."
@@ -684,7 +684,7 @@ void Diagonalizer::calculateGreensFunctionCallback(
 		break;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Diagonalizer::calculateGreensFunctionCallback()",
 			"Only type Property::GreensFunction::Type::Advanced,"
 			<< " Property::GreensFunction::Type::Retarded, and"
@@ -856,4 +856,4 @@ void Diagonalizer::calculateSP_LDOSCallback(
 }
 
 };	//End of namespace PropertyExtractor
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

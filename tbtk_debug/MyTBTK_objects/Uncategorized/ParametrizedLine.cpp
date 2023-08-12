@@ -18,17 +18,17 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/ParametrizedLine.h"
+#include "MyTBTK/ParametrizedLine.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 ParametrizedLine::ParametrizedLine(
 	initializer_list<double> start,
 	initializer_list<double> direction
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		start.size() == direction.size(),
 		"ParametrizedLine::ParametrizedLine()",
 		"Incompatible vector dimensions. 'start' has " << start.size()
@@ -47,7 +47,7 @@ ParametrizedLine::ParametrizedLine(
 	const std::vector<double> &start,
 	const std::vector<double> &direction
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		start.size() == direction.size(),
 		"ParametrizedLine::ParametrizedLine()",
 		"Incompatible vector dimensions. 'start' has " << start.size()
@@ -72,4 +72,4 @@ vector<double> ParametrizedLine::operator()(
 	return result;
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

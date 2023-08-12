@@ -18,10 +18,10 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Functions.h"
-#include "TBTK/InteractionAmplitude.h"
-#include "TBTK/RPA/ElectronFluctuationVertexCalculator.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/InteractionAmplitude.h"
+#include "MyTBTK/RPA/ElectronFluctuationVertexCalculator.h"
+#include "MyTBTK/UnitHandler.h"
 
 #include <complex>
 #include <iomanip>
@@ -30,7 +30,7 @@ using namespace std;
 
 //const complex<double> i(0, 1);
 
-namespace TBTK{
+namespace MyTBTK{
 
 ElectronFluctuationVertexCalculator::ElectronFluctuationVertexCalculator(
 	const RPA::MomentumSpaceContext &momentumSpaceContext
@@ -175,14 +175,14 @@ vector<complex<double>> ElectronFluctuationVertexCalculator::calculateSelfEnergy
 	const vector<double> &k,
 	const vector<int> &orbitalIndices
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		isInitialized,
 		"ElectronFLuctuationVertexCalculator::calculateSelfEnergyVertex()",
 		"ElectronFluctuationVertexCalculator not yet initialized.",
 		"Use ElectronFluctuationVertexCalculator::init() to initialize"
 		<< " the SelfEnergyCalculator."
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		orbitalIndices.size() == 4,
 		"ElectronFluctuationVertexCalculator::calculateSelfEnergyVertex()",
 		"Two orbital indices required but " << orbitalIndices.size()
@@ -494,4 +494,4 @@ vector<complex<double>> ElectronFluctuationVertexCalculator::calculateSelfEnergy
 	return selfEnergyVertex;
 }
 
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK

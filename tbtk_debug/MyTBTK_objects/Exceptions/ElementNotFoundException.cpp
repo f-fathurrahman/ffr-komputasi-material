@@ -1,6 +1,6 @@
-#include "TBTK/ElementNotFoundException.h"
+#include "MyTBTK/ElementNotFoundException.h"
 
-namespace TBTK{
+namespace MyTBTK{
 
 ElementNotFoundException::ElementNotFoundException(){
 }

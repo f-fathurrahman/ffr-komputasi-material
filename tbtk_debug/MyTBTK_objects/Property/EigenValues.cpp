@@ -18,13 +18,13 @@
  *  @author Kristofer Björnson
 */
 
-#include "TBTK/Property/EigenValues.h"
+#include "MyTBTK/Property/EigenValues.h"
 
-#include "TBTK/json.hpp"
+#include "MyTBTK/json.hpp"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Property{
 
 EigenValues::EigenValues(
@@ -55,7 +55,7 @@ EigenValues::EigenValues(
 		mode
 	)
 {
-	TBTKAssert(
+	MyTBTKAssert(
 		validate(serialization, "EigenValues", mode),
 		"EigenValues::EigenValues()",
 		"Unable to parse string as EigenValues '" << serialization
@@ -85,7 +85,7 @@ string EigenValues::serialize(Mode mode) const{
 		return j.dump();
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"EigenValues::serialize()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -94,4 +94,4 @@ string EigenValues::serialize(Mode mode) const{
 }
 
 };	//End of namespace Property
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

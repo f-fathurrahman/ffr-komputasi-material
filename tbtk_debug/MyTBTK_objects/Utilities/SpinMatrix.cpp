@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/SpinMatrix.h"
+#include "MyTBTK/SpinMatrix.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 SpinMatrix::SpinMatrix(){
 }
@@ -89,4 +89,4 @@ std::string SpinMatrix::toString() const{
 	return stream.str();
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

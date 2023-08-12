@@ -18,15 +18,15 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Index.h"
-#include "TBTK/StateTreeNode.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/Index.h"
+#include "MyTBTK/StateTreeNode.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 #include <limits>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 StateTreeNode::StateTreeNode(
 	initializer_list<double> center,
@@ -67,7 +67,7 @@ StateTreeNode::StateTreeNode(
 	unsigned int numCoordinates = states.at(0)->getCoordinates().size();
 
 	for(unsigned int n = 1; n < states.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			numCoordinates == states.at(n)->getCoordinates().size(),
 			"StateTreeNode::StateTreeNode()",
 			"Unable to handle StateSets containing states with different dimensions.",
@@ -147,7 +147,7 @@ StateTreeNode::~StateTreeNode(){
 }
 
 void StateTreeNode::add(AbstractState *state){
-	TBTKAssert(
+	MyTBTKAssert(
 		state->getCoordinates().size() == center.size(),
 		"StateTreeNode::add()",
 		"Incompatible dimenstions. The StateTreeNode has stores states"
@@ -178,7 +178,7 @@ void StateTreeNode::add(AbstractState *state){
 		}
 		stateStr << "}";
 
-		TBTKExit(
+		MyTBTKExit(
 			"StateTreeNode::add()",
 			"Unable to add state to state tree. The StateTreeNode"
 			<< " center is '" << centerStr.str() << "' and the"
@@ -278,7 +278,7 @@ vector<const AbstractState*>* StateTreeNode::getOverlappingStates(
 	initializer_list<double> coordinates,
 	double extent
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		coordinates.size() == center.size(),
 		"StateTreeNode::getOverlappingStates",
 		"Incompatible dimenstions. The StateTreeNode stores states"
@@ -307,7 +307,7 @@ vector<const AbstractState*>* StateTreeNode::getOverlappingStates(
 	vector<double> coordinates,
 	double extent
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		coordinates.size() == center.size(),
 		"StateTreeNode::getOverlappingStates",
 		"Incompatible dimenstions. The StateTreeNode stores states"
@@ -366,4 +366,4 @@ void StateTreeNode::getOverlappingStatesRecursive(
 	}
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

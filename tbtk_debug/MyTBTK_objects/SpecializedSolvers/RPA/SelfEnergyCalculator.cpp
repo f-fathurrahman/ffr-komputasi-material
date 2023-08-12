@@ -18,10 +18,10 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Functions.h"
-#include "TBTK/InteractionAmplitude.h"
-#include "TBTK/RPA/SelfEnergyCalculator.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/InteractionAmplitude.h"
+#include "MyTBTK/RPA/SelfEnergyCalculator.h"
+#include "MyTBTK/UnitHandler.h"
 
 #include <complex>
 #include <iomanip>
@@ -30,13 +30,13 @@ using namespace std;
 
 const complex<double> i(0, 1);
 
-namespace TBTK{
+namespace MyTBTK{
 
 SelfEnergyCalculator::SelfEnergyCalculator(
 	const RPA::MomentumSpaceContext &momentumSpaceContext,
 	unsigned int numWorkers
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		numWorkers > 0,
 		"SelfEnergyCalculator::SelfEnergyCalculator()",
 		"'numWorkers' must be larger than zero.",
@@ -68,7 +68,7 @@ SelfEnergyCalculator::~SelfEnergyCalculator(){
 }
 
 void SelfEnergyCalculator::init(){
-	TBTKAssert(
+	MyTBTKAssert(
 		numSummationEnergies%2 == 1,
 		"SelfEnergyCalculator::int()",
 		"The number of summation energies must be an odd number.",
@@ -139,7 +139,7 @@ void SelfEnergyCalculator::generateKMinusQLookupTable(){
 		unsigned int counter = 0;
 		int value;
 		while(fin >> value){
-			TBTKAssert(
+			MyTBTKAssert(
 				counter < mesh.size()*mesh.size(),
 				"SelfEnergyCalculator::generateKMinusQLookupTable()",
 				"Found cache file '" << cacheName << "',"
@@ -152,7 +152,7 @@ void SelfEnergyCalculator::generateKMinusQLookupTable(){
 		}
 		fin.close();
 
-		TBTKAssert(
+		MyTBTKAssert(
 			counter == mesh.size()*mesh.size(),
 			"SelfEnergyCalculator::generateKMinusQLookupTable()",
 			"Found cache file '" << cacheName << "',"
@@ -165,7 +165,7 @@ void SelfEnergyCalculator::generateKMinusQLookupTable(){
 		return;
 	}
 
-#ifdef TBTK_USE_OPEN_MP
+#ifdef MyTBTK_USE_OPEN_MP
 	#pragma omp parallel for
 #endif
 	for(unsigned int k = 0; k < mesh.size(); k++){
@@ -239,14 +239,14 @@ vector<complex<double>> SelfEnergyCalculator::calculateSelfEnergy(
 	const vector<double> &k,
 	const vector<int> &orbitalIndices
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		isInitialized,
 		"SelfEnergyCalculator::calculateSelfEnergy()",
 		"SelfEnergyCalculator not yet initialized.",
 		"Use SelfEnergyCalculator::init() to initialize the"
 		<< " SelfEnergyCalculator."
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		orbitalIndices.size() == 2,
 		"calculateSelfEnergy()",
 		"Two orbital indices required but " << orbitalIndices.size()
@@ -304,9 +304,9 @@ vector<complex<double>> SelfEnergyCalculator::calculateSelfEnergy(
 vector<complex<double>> SelfEnergyCalculator::calculateSelfEnergySelfConsistently(
 	unsigned int numMatsubaraFrequencies
 ){
-	TBTKNotYetImplemented("SelfEnergyCalculator::calculateSelfEnergySelfConsistently");
+	MyTBTKNotYetImplemented("SelfEnergyCalculator::calculateSelfEnergySelfConsistently");
 
-	TBTKAssert(
+	MyTBTKAssert(
 		isInitialized,
 		"SelfEnergyCalculator::calculateSelfEnergySelfConsistently()",
 		"SelfEnergyCalculator not yet initialized.",
@@ -503,4 +503,4 @@ void SelfEnergyCalculator::selfEnergyMainLoop(
 		result.at(n) *= kT/mesh.size();
 }
 
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK

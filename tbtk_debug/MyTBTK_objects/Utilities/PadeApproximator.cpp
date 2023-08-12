@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/PadeApproximator.h"
+#include "MyTBTK/PadeApproximator.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 vector<
 	Polynomial<complex<double>, complex<double>, int>
@@ -30,7 +30,7 @@ vector<
 	const vector<complex<double>> &values,
 	const vector<complex<double>> &arguments
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		values.size() == arguments.size(),
 		"PadeApproximator::approximate()",
 		"Incompatible sizes. The size of 'values' (" << values.size()
@@ -38,7 +38,7 @@ vector<
 		<< arguments.size() << ").",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		values.size() > numeratorDegree + denominatorDegree,
 		"PadeApproximator::approximate()",
 		"The number of values and arguments (" << values.size() << ")"
@@ -115,7 +115,7 @@ vector<
 	const vector<complex<double>> &values,
 	const vector<complex<double>> &arguments
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		values.size() == arguments.size(),
 		"PadeApproximator::approximate()",
 		"Incompatible sizes. The size of 'values' (" << values.size()
@@ -123,7 +123,7 @@ vector<
 		<< arguments.size() << ").",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		values.size() > numeratorDegree + denominatorDegree,
 		"PadeApproximator::approximate()",
 		"The number of values and arguments (" << values.size() << ")"
@@ -323,7 +323,7 @@ void PadeApproximator::executeLeastSquare(
 	int N4 = -1;
 	int SMLSIZ = ilaenv_(&ISPEC, NAME, OPTS, &N1, &N2, &N3, &N4);
 	if(SMLSIZ < 0){
-		TBTKExit(
+		MyTBTKExit(
 			"PadeApproximator::executeLeastSquare()",
 			"Invalid argument to ilaenv_() at position '"
 			<< -SMLSIZ << ".",
@@ -391,4 +391,4 @@ void PadeApproximator::executeLeastSquare(
 	delete [] IWORK;
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

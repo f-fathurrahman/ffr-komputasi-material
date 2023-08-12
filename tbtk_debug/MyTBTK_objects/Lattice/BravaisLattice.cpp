@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Lattice/BravaisLattice.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/Lattice/BravaisLattice.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Lattice{
 
 BravaisLattice::BravaisLattice(){
@@ -33,7 +33,7 @@ BravaisLattice::~BravaisLattice(){
 }
 
 void BravaisLattice::makePrimitive(){
-	TBTKAssert(
+	MyTBTKAssert(
 		additionalSites.size() == 0,
 		"BravaisLattice::makePrimitive()",
 		"Conversion to primitive cell not implemented.",
@@ -44,7 +44,7 @@ void BravaisLattice::makePrimitive(){
 void BravaisLattice::setLatticeVectors(const vector<vector<double>> &latticeVectors){
 	this->latticeVectors.clear();
 	for(unsigned int n = 0; n < latticeVectors.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			latticeVectors.at(n).size() == latticeVectors.size(),
 			"BravaisLattice::setLatticeVectors()",
 			"Unsupported lattice vector dimension.",
@@ -65,7 +65,7 @@ void BravaisLattice::setLatticeVectors(const vector<vector<double>> &latticeVect
 void BravaisLattice::setAdditionalSites(const vector<vector<double>> &additionalSites){
 	this->additionalSites.clear();
 	for(unsigned int n = 0; n < additionalSites.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			additionalSites.at(n).size() == latticeVectors.size(),
 			"BravaisLattice::setAdditionalSites()",
 			"Unsupported site dimension.",
@@ -84,4 +84,4 @@ void BravaisLattice::setAdditionalSites(const vector<vector<double>> &additional
 }
 
 };	//End of namespace Lattice
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

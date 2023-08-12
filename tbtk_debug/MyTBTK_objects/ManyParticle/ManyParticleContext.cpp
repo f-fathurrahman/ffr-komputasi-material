@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/ManyParticleContext.h"
-#include "TBTK/Streams.h"
+#include "MyTBTK/ManyParticleContext.h"
+#include "MyTBTK/Streams.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 ManyParticleContext::ManyParticleContext(){
 }
@@ -83,4 +83,4 @@ ManyParticleContext::~ManyParticleContext(){
 		delete ebrFockSpace;*/
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

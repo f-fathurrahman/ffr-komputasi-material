@@ -18,18 +18,18 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/TBTKMacros.h"
-#include "TBTK/Vector3d.h"
+#include "MyTBTK/MyTBTKMacros.h"
+#include "MyTBTK/Vector3d.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 Vector3d::Vector3d(){
 }
 
 Vector3d::Vector3d(initializer_list<double> components){
-	TBTKAssert(
+	MyTBTKAssert(
 		components.size() == 3,
 		"Vector3d::Vector3d()",
 		"Incompatible dimensions. Vector3d takes 3 components, but "
@@ -43,7 +43,7 @@ Vector3d::Vector3d(initializer_list<double> components){
 }
 
 Vector3d::Vector3d(const vector<double> &components){
-	TBTKAssert(
+	MyTBTKAssert(
 		components.size() == 3,
 		"Vector3d::Vector3d()",
 		"Incompatible dimensions. Vector3d takes 3 components, but "
@@ -56,4 +56,4 @@ Vector3d::Vector3d(const vector<double> &components){
 	z = *(components.begin() + 2);
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

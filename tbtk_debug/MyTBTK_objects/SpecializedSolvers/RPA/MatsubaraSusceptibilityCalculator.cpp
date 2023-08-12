@@ -18,7 +18,7 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/RPA/MatsubaraSusceptibilityCalculator.h"
+#include "MyTBTK/RPA/MatsubaraSusceptibilityCalculator.h"
 
 #include <complex>
 #include <iomanip>
@@ -27,7 +27,7 @@ using namespace std;
 
 //const complex<double> i(0, 1);
 
-namespace TBTK{
+namespace MyTBTK{
 
 MatsubaraSusceptibilityCalculator::MatsubaraSusceptibilityCalculator(
 	const RPA::MomentumSpaceContext &momentumSpaceContext
@@ -67,7 +67,7 @@ complex<double> MatsubaraSusceptibilityCalculator::calculateSusceptibility(
 	const vector<int> &orbitalIndices,
 	complex<double> energy
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		orbitalIndices.size() == 4,
 		"getSusceptibility()",
 		"Four orbital indices required but " << orbitalIndices.size()
@@ -86,7 +86,7 @@ vector<complex<double>> MatsubaraSusceptibilityCalculator::calculateSusceptibili
 	const DualIndex &kDual,
 	const vector<int> &orbitalIndices
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		orbitalIndices.size() == 4,
 		"getSusceptibility()",
 		"Four orbital indices required but " << orbitalIndices.size()
@@ -113,7 +113,7 @@ complex<double> MatsubaraSusceptibilityCalculator::calculateSusceptibilityMatsub
 	const vector<int> &orbitalIndices,
 	complex<double> energy
 ){
-	TBTKNotYetImplemented(
+	MyTBTKNotYetImplemented(
 		"SusceptibilityCalculator::calculateSusceptibilityMatsubara()"
 	);
 }
@@ -123,7 +123,7 @@ vector<complex<double>> MatsubaraSusceptibilityCalculator::calculateSusceptibili
 	const DualIndex &kDual,
 	const vector<int> &orbitalIndices
 ){
-/*	TBTKAssert(
+/*	MyTBTKAssert(
 		getEnergies().size() == summationEnergies.size(),
 		"MatsubaraSusceptibilityCalculator::calculateSusceptibilityMatsubara()",
 		"Only equally sized 'energies' and 'summationEnergies' are"
@@ -230,7 +230,7 @@ void MatsubaraSusceptibilityCalculator::calculateGreensFunction(){
 	if(greensFunction != nullptr)
 		return;
 
-	TBTKAssert(
+	MyTBTKAssert(
 		summationEnergies.size() != 0,
 		"MatsubaraSusceptibilityCalculator::calculateGreensFunction()",
 		"Number of summation energies cannot be zero.",
@@ -300,4 +300,4 @@ void MatsubaraSusceptibilityCalculator::calculateGreensFunction(){
 	}
 }
 
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK

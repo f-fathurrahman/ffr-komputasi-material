@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/PropertyExtractor/BlockDiagonalizer.h"
-#include "TBTK/PropertyExtractor/IndexTreeGenerator.h"
-#include "TBTK/PropertyExtractor/PatternValidator.h"
-#include "TBTK/Functions.h"
-#include "TBTK/Streams.h"
+#include "MyTBTK/PropertyExtractor/BlockDiagonalizer.h"
+#include "MyTBTK/PropertyExtractor/IndexTreeGenerator.h"
+#include "MyTBTK/PropertyExtractor/PatternValidator.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/Streams.h"
 
 #include <cmath>
 
@@ -30,7 +30,7 @@ using namespace std;
 
 static complex<double> i(0, 1);
 
-namespace TBTK{
+namespace MyTBTK{
 namespace PropertyExtractor{
 
 BlockDiagonalizer::BlockDiagonalizer(
@@ -73,7 +73,7 @@ Property::WaveFunctions BlockDiagonalizer::calculateWaveFunctions(
 				statesVector.push_back(n);
 		}
 		else{
-			TBTKAssert(
+			MyTBTKAssert(
 				*states.begin() >= 0,
 				"PropertyExtractor::BlockDiagonalizer::calculateWaveFunctions()",
 				"Found unexpected index symbol.",
@@ -84,7 +84,7 @@ Property::WaveFunctions BlockDiagonalizer::calculateWaveFunctions(
 	}
 	else{
 		for(unsigned int n = 0; n < states.size(); n++){
-			TBTKAssert(
+			MyTBTKAssert(
 				*(states.begin() + n) >= 0,
 				"PropertyExtractor::BlockDiagonalizer::calculateWaveFunctions()",
 				"Found unexpected index symbol.",
@@ -187,7 +187,7 @@ Property::GreensFunction BlockDiagonalizer::calculateGreensFunction(
 		int upperFermionicMatsubaraEnergyIndex
 			= getUpperFermionicMatsubaraEnergyIndex();
 
-		TBTKAssert(
+		MyTBTKAssert(
 			lowerFermionicMatsubaraEnergyIndex
 				<= upperFermionicMatsubaraEnergyIndex,
 			"PropertyExtractor::BlockDiagonalizer::calculateGreensFunction()",
@@ -222,7 +222,7 @@ Property::GreensFunction BlockDiagonalizer::calculateGreensFunction(
 		return greensFunction;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::BlockDiagonalizer::calculateGreensFunction()",
 			"Only Property::GreensFunction::Type Advanced,"
 			<< " Retarded, and Matsubara supported yet.",
@@ -232,7 +232,7 @@ Property::GreensFunction BlockDiagonalizer::calculateGreensFunction(
 }
 
 Property::DOS BlockDiagonalizer::calculateDOS(){
-	TBTKAssert(
+	MyTBTKAssert(
 		getEnergyType() == EnergyType::Real,
 		"PropertyExtractor::BlockDiagonalizer::calculateDOS()",
 		"Only real energies supported for the DOS.",
@@ -365,7 +365,7 @@ Property::LDOS BlockDiagonalizer::calculateLDOS(
 	);
 	patternValidator.validate(patterns);
 
-	TBTKAssert(
+	MyTBTKAssert(
 		getEnergyType() == EnergyType::Real,
 		"PropertyExtractor::BlockDiagonalizer::calculateLDOS()",
 		"Only real energies supported for the LDOS.",
@@ -414,7 +414,7 @@ Property::SpinPolarizedLDOS BlockDiagonalizer::calculateSpinPolarizedLDOS(
 	);
 	patternValidator.validate(patterns);
 
-	TBTKAssert(
+	MyTBTKAssert(
 		getEnergyType() == EnergyType::Real,
 		"PropertyExtractor::BlockDiagonalizer::calculateSpinPolarizedLDOS()",
 		"Only real energies supported for the SpinPolarizedLDOS.",
@@ -473,7 +473,7 @@ double BlockDiagonalizer::calculateEntropy(){
 			);
 			break;
 		default:
-			TBTKExit(
+			MyTBTKExit(
 				"PropertyExtractor::BlockDiagonalizer::calculateEntropy()",
 				"Unknow statistsics.",
 				"This should never happen, contact the developer."
@@ -620,7 +620,7 @@ void BlockDiagonalizer::calculateGreensFunctionCallback(
 		break;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::BlockDiagonalizer::calculateGreensFunctionCallback()",
 			"Unsupported Green's function type.",
 			"This should never happen, contact the developer."
@@ -788,4 +788,4 @@ void BlockDiagonalizer::calculateSP_LDOSCallback(
 }
 
 };	//End of namespace PropertyExtractor
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

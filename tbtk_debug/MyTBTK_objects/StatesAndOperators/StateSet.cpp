@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/StateSet.h"
+#include "MyTBTK/StateSet.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 StateSet::StateSet(bool isOwner){
 	this->isOwner = isOwner;
@@ -34,4 +34,4 @@ StateSet::~StateSet(){
 			delete states.at(n);
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

@@ -18,13 +18,13 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Lattice/D2/D2HexagonalPrimitive.h"
+#include "MyTBTK/Lattice/D2/D2HexagonalPrimitive.h"
 
 #include <cmath>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Lattice{
 namespace D2{
 
@@ -38,4 +38,4 @@ HexagonalPrimitive::~HexagonalPrimitive(){
 
 };	//End of namespace D2
 };	//End of namespace Lattice
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

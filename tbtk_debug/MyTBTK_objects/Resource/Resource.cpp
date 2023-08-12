@@ -18,8 +18,8 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Resource.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/Resource.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 #include <sstream>
 
@@ -27,7 +27,7 @@
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 Resource::Resource(){
 }
@@ -54,7 +54,7 @@ void Resource::write(const string &uri){
 		fout.close();
 	}
 	else{
-		TBTKExit(
+		MyTBTKExit(
 			"Resource::write()",
 			"Scheme '" << scheme << "' not yet supported. Currently"
 			<< " only write to local storage is supported.",
@@ -68,7 +68,7 @@ void Resource::read(const string &uri){
 	size_t position = uri.find("://");
 	if(position == string::npos){
 		ifstream fin(uri);
-		TBTKAssert(
+		MyTBTKAssert(
 			fin.is_open(),
 			"Resource::read()",
 			"Unable to open file '" << uri << "'.",
@@ -93,7 +93,7 @@ void Resource::read(const string &uri){
 		break;
 	case CURLE_FILE_COULDNT_READ_FILE:
 	{
-		TBTKExit(
+		MyTBTKExit(
 			"Resource::read()",
 			"Unable to open file.",
 			"Check the URI and note that the path should be"
@@ -104,7 +104,7 @@ void Resource::read(const string &uri){
 	}
 	default:
 	{
-		TBTKExit(
+		MyTBTKExit(
 			"Resource::read()",
 			"Failed to read resource with CURL error code " << curlCode << ".",
 			""
@@ -145,4 +145,4 @@ size_t Resource::readCallback(
 	return size*nmemb;
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

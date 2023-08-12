@@ -18,19 +18,19 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Array.h"
-#include "TBTK/Convolver.h"
-#include "TBTK/FourierTransform.h"
-#include "TBTK/Functions.h"
-#include "TBTK/Solver/MatsubaraSusceptibility.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Array.h"
+#include "MyTBTK/Convolver.h"
+#include "MyTBTK/FourierTransform.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/Solver/MatsubaraSusceptibility.h"
+#include "MyTBTK/UnitHandler.h"
 
 #include <complex>
 #include <iomanip>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 MatsubaraSusceptibility::MatsubaraSusceptibility(
@@ -44,7 +44,7 @@ MatsubaraSusceptibility::MatsubaraSusceptibility(
 }
 
 MatsubaraSusceptibility* MatsubaraSusceptibility::createSlave(){
-	TBTKExit(
+	MyTBTKExit(
 		"Solver::MatsubaraSusceptibility::createSlave()",
 		"This function is not supported by this solver.",
 		""
@@ -55,7 +55,7 @@ vector<complex<double>> MatsubaraSusceptibility::calculateSusceptibility(
 	const Index &index,
 	const std::vector<std::complex<double>> &energies
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"Solver::MatsubaraSusceptibility::calculateSusceptibility()",
 		"This function is not supported for this solver. The"
 		<< " Susceptibility cannot be calculated for arbitrary"
@@ -74,7 +74,7 @@ vector<complex<double>> MatsubaraSusceptibility::calculateSusceptibility(
 	int upperMatsubaraEnergyIndex
 ){
 	vector<Index> components = index.split();
-	TBTKAssert(
+	MyTBTKAssert(
 		components.size() == 5,
 		"Solver::MatsubaraSusceptibility::calculateSusceptibility()",
 		"The Index must be a compund Index with 5 component Indices,"
@@ -89,7 +89,7 @@ vector<complex<double>> MatsubaraSusceptibility::calculateSusceptibility(
 		components[4]
 	};
 
-	TBTKAssert(
+	MyTBTKAssert(
 		lowerMatsubaraEnergyIndex <= upperMatsubaraEnergyIndex,
 		"Solver::MatsubaraSusceptibility::calculateSusceptibility()",
 		"The lowerMatsubaraEnergyIndex='" << lowerMatsubaraEnergyIndex
@@ -97,14 +97,14 @@ vector<complex<double>> MatsubaraSusceptibility::calculateSusceptibility(
 		<< upperMatsubaraEnergyIndex << "'.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		lowerMatsubaraEnergyIndex%2 == 0,
 		"Solver::MatsubaraSusceptibility::calculateSusceptibility()",
 		"The lowerMatsubaraEnergyIndex='" << lowerMatsubaraEnergyIndex
 		<< "' must be even.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		upperMatsubaraEnergyIndex%2 == 0,
 		"Solver::MatsubaraSusceptibility::calculateSusceptibility()",
 		"The upperMatsubaraEnergyIndex='" << upperMatsubaraEnergyIndex
@@ -115,7 +115,7 @@ vector<complex<double>> MatsubaraSusceptibility::calculateSusceptibility(
 		upperMatsubaraEnergyIndex - lowerMatsubaraEnergyIndex
 	)/2 + 1;
 
-	TBTKAssert(
+	MyTBTKAssert(
 		greensFunction.getEnergyType()
 			== Property::EnergyResolvedProperty<
 				complex<double>
@@ -241,7 +241,7 @@ Property::Susceptibility MatsubaraSusceptibility::calculateSusceptibilityAllBloc
 	int upperMatsubaraEnergyIndex
 ){
 	vector<Index> components = index.split();
-	TBTKAssert(
+	MyTBTKAssert(
 		components.size() == 4,
 		"Solver::MatsubaraSusceptibility::calculateSusceptibility()",
 		"The Index must be a compund Index with 4 component Indices,"
@@ -255,7 +255,7 @@ Property::Susceptibility MatsubaraSusceptibility::calculateSusceptibilityAllBloc
 		components[3]
 	};
 
-	TBTKAssert(
+	MyTBTKAssert(
 		lowerMatsubaraEnergyIndex <= upperMatsubaraEnergyIndex,
 		"Solver::MatsubaraSusceptibility::calculateSusceptibility()",
 		"The lowerMatsubaraEnergyIndex='" << lowerMatsubaraEnergyIndex
@@ -263,14 +263,14 @@ Property::Susceptibility MatsubaraSusceptibility::calculateSusceptibilityAllBloc
 		<< upperMatsubaraEnergyIndex << "'.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		lowerMatsubaraEnergyIndex%2 == 0,
 		"Solver::MatsubaraSusceptibility::calculateSusceptibility()",
 		"The lowerMatsubaraEnergyIndex='" << lowerMatsubaraEnergyIndex
 		<< "' must be even.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		upperMatsubaraEnergyIndex%2 == 0,
 		"Solver::MatsubaraSusceptibility::calculateSusceptibility()",
 		"The upperMatsubaraEnergyIndex='" << upperMatsubaraEnergyIndex
@@ -281,7 +281,7 @@ Property::Susceptibility MatsubaraSusceptibility::calculateSusceptibilityAllBloc
 		upperMatsubaraEnergyIndex - lowerMatsubaraEnergyIndex
 	)/2 + 1;
 
-	TBTKAssert(
+	MyTBTKAssert(
 		greensFunction.getEnergyType()
 			== Property::EnergyResolvedProperty<
 				complex<double>
@@ -298,7 +298,7 @@ Property::Susceptibility MatsubaraSusceptibility::calculateSusceptibilityAllBloc
 	const BrillouinZone &brillouinZone
 		= momentumSpaceContext.getBrillouinZone();
 
-	TBTKAssert(
+	MyTBTKAssert(
 		numMeshPoints.size() == 2,
 		"Solver::MatsubaraSusceptibility::calculateSusceptibility()",
 		"Only two-dimensional momentum spaces supported yet, but the"
@@ -447,4 +447,4 @@ Property::Susceptibility MatsubaraSusceptibility::calculateSusceptibilityAllBloc
 }
 
 }	//End of namespace Solver
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK

@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/RPA/MomentumSpaceContext.h"
+#include "MyTBTK/RPA/MomentumSpaceContext.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace RPA{
 
 MomentumSpaceContext::MomentumSpaceContext(){
@@ -44,21 +44,21 @@ MomentumSpaceContext::~MomentumSpaceContext(){
 }
 
 void MomentumSpaceContext::init(){
-	TBTKAssert(
+	MyTBTKAssert(
 		model != nullptr,
 		"MomentumSpaceContext::init()",
 		"Model not set.",
 		"Use MomentumSpaceContext::setModel() to set the Model."
 	);
 
-	TBTKAssert(
+	MyTBTKAssert(
 		brillouinZone != nullptr,
 		"MomentumSpaceContext::init()",
 		"BrillouinZone not set.",
 		"Use MomentumSpaceContext::setBrillouinZone() to set the"
 		<< " BrillouinZone."
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		numMeshPoints.size() == brillouinZone->getNumDimensions(),
 		"MomentumSpaceContext::init()",
 		"The mesh dimensions must agree with the BrillouinZone"
@@ -70,7 +70,7 @@ void MomentumSpaceContext::init(){
 	);
 	mesh = brillouinZone->getMinorMesh(numMeshPoints);
 
-	TBTKAssert(
+	MyTBTKAssert(
 		numOrbitals != 0,
 		"MomentumSpaceContext::init()",
 		"The number of orbitals must be larger than 0.",
@@ -78,7 +78,7 @@ void MomentumSpaceContext::init(){
 		<< " number of orbitals."
 	);
 
-	TBTKAssert(
+	MyTBTKAssert(
 		(int)(mesh.size()*numOrbitals) == model->getBasisSize(),
 		"MomentumSpaceContext::init()",
 		"Mesh and orbital specification does not match the Model. The"
@@ -152,4 +152,4 @@ void MomentumSpaceContext::init(){
 }
 
 }	//End of namespace RPA
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK

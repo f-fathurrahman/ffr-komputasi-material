@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Atom.h"
+#include "MyTBTK/Atom.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 string Atom::symbols[Atom::totalNumAtoms+1] = {
 	"None",
@@ -757,4 +757,4 @@ Atom::Atom(unsigned int atomicNumber){
 Atom::~Atom(){
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

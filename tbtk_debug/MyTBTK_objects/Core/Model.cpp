@@ -37,285 +37,288 @@ using namespace std;
 namespace MyTBTK{
 
 Model::Model() : Communicator(false){
-	temperature = 0.;
-	chemicalPotential = 0.;
 
-	manyParticleContext = NULL;
-	indexFilter = nullptr;
-	hoppingAmplitudeFilter = nullptr;
+    cout << "Model constructor is called\n";
+
+    temperature = 0.;
+    chemicalPotential = 0.;
+
+    manyParticleContext = NULL;
+    indexFilter = nullptr;
+    hoppingAmplitudeFilter = nullptr;
 }
 
 Model::Model(
-	const vector<unsigned int> &capacity
+    const vector<unsigned int> &capacity
 ) :
-	Communicator(true),
-	singleParticleContext(capacity)
+    Communicator(true),
+    singleParticleContext(capacity)
 {
-	temperature = 0.;
-	chemicalPotential = 0.;
+    temperature = 0.;
+    chemicalPotential = 0.;
 
-	manyParticleContext = NULL;
-	indexFilter = nullptr;
-	hoppingAmplitudeFilter = nullptr;
+    manyParticleContext = NULL;
+    indexFilter = nullptr;
+    hoppingAmplitudeFilter = nullptr;
 }
 
 Model::Model(const Model &model) : Communicator(model){
-	temperature = model.temperature;
-	chemicalPotential = model.chemicalPotential;
+    temperature = model.temperature;
+    chemicalPotential = model.chemicalPotential;
 
-	singleParticleContext = model.singleParticleContext;
-	if(model.manyParticleContext == nullptr){
-		manyParticleContext = nullptr;
-	}
-	else{
-		manyParticleContext = new ManyParticleContext(
-			*model.manyParticleContext
-		);
-	}
+    singleParticleContext = model.singleParticleContext;
+    if(model.manyParticleContext == nullptr){
+        manyParticleContext = nullptr;
+    }
+    else{
+        manyParticleContext = new ManyParticleContext(
+            *model.manyParticleContext
+        );
+    }
 
-	if(model.indexFilter == nullptr)
-		indexFilter = nullptr;
-	else
-		indexFilter = model.indexFilter->clone();
+    if(model.indexFilter == nullptr)
+        indexFilter = nullptr;
+    else
+        indexFilter = model.indexFilter->clone();
 
-	if(model.hoppingAmplitudeFilter == nullptr)
-		hoppingAmplitudeFilter = nullptr;
-	else
-		hoppingAmplitudeFilter = model.hoppingAmplitudeFilter->clone();
+    if(model.hoppingAmplitudeFilter == nullptr)
+        hoppingAmplitudeFilter = nullptr;
+    else
+        hoppingAmplitudeFilter = model.hoppingAmplitudeFilter->clone();
 }
 
 Model::Model(Model &&model) : Communicator(std::move(model)){
-	temperature = model.temperature;
-	chemicalPotential = model.chemicalPotential;
+    temperature = model.temperature;
+    chemicalPotential = model.chemicalPotential;
 
-	singleParticleContext = std::move(model.singleParticleContext);
-	manyParticleContext = model.manyParticleContext;
-	model.manyParticleContext = nullptr;
+    singleParticleContext = std::move(model.singleParticleContext);
+    manyParticleContext = model.manyParticleContext;
+    model.manyParticleContext = nullptr;
 
-	indexFilter = model.indexFilter;
-	model.indexFilter = nullptr;
+    indexFilter = model.indexFilter;
+    model.indexFilter = nullptr;
 
-	hoppingAmplitudeFilter = model.hoppingAmplitudeFilter;
-	model.hoppingAmplitudeFilter = nullptr;
+    hoppingAmplitudeFilter = model.hoppingAmplitudeFilter;
+    model.hoppingAmplitudeFilter = nullptr;
 }
 
 Model::Model(const string &serialization, Mode mode) : Communicator(true){
-	MyTBTKAssert(
-		validate(serialization, "Model", mode),
-		"Model::Model()",
-		"Unable to parse string as Model '" << serialization << "'.",
-		""
-	);
+    MyTBTKAssert(
+        validate(serialization, "Model", mode),
+        "Model::Model()",
+        "Unable to parse string as Model '" << serialization << "'.",
+        ""
+    );
 
-	switch(mode){
-	case Mode::JSON:
-	{
-		try{
-			nlohmann::json j = nlohmann::json::parse(serialization);
-			temperature = j.at("temperature").get<double>();
-			chemicalPotential = j.at(
-				"chemicalPotential"
-			).get<double>();
-			singleParticleContext = SingleParticleContext(
-				j.at("singleParticleContext").dump(),
-				mode
-			);
+    switch(mode){
+    case Mode::JSON:
+    {
+        try{
+            nlohmann::json j = nlohmann::json::parse(serialization);
+            temperature = j.at("temperature").get<double>();
+            chemicalPotential = j.at(
+                "chemicalPotential"
+            ).get<double>();
+            singleParticleContext = SingleParticleContext(
+                j.at("singleParticleContext").dump(),
+                mode
+            );
 
-			manyParticleContext = nullptr;
+            manyParticleContext = nullptr;
 
-			indexFilter = nullptr;
-			hoppingAmplitudeFilter = nullptr;
-		}
-		catch(nlohmann::json::exception &e){
-			MyTBTKExit(
-				"Model::Model()",
-				"Unable to parse string as Model '"
-				<< serialization << "'.",
-				""
-			);
-		}
+            indexFilter = nullptr;
+            hoppingAmplitudeFilter = nullptr;
+        }
+        catch(nlohmann::json::exception &e){
+            MyTBTKExit(
+                "Model::Model()",
+                "Unable to parse string as Model '"
+                << serialization << "'.",
+                ""
+            );
+        }
 
-		break;
-	}
-	default:
-		MyTBTKExit(
-			"Model::Model()",
-			"Only Serializable::Mode::Debug is supported yet.",
-			""
-		);
-	}
+        break;
+    }
+    default:
+        MyTBTKExit(
+            "Model::Model()",
+            "Only Serializable::Mode::Debug is supported yet.",
+            ""
+        );
+    }
 }
 
 Model::~Model(){
-	if(manyParticleContext != nullptr)
-		delete manyParticleContext;
-	if(indexFilter != nullptr)
-		delete indexFilter;
-	if(hoppingAmplitudeFilter != nullptr)
-		delete hoppingAmplitudeFilter;
+    if(manyParticleContext != nullptr)
+        delete manyParticleContext;
+    if(indexFilter != nullptr)
+        delete indexFilter;
+    if(hoppingAmplitudeFilter != nullptr)
+        delete hoppingAmplitudeFilter;
 }
 
 Model& Model::operator=(const Model &rhs){
-	if(this != &rhs){
-		temperature = rhs.temperature;
-		chemicalPotential = rhs.chemicalPotential;
+    if(this != &rhs){
+        temperature = rhs.temperature;
+        chemicalPotential = rhs.chemicalPotential;
 
-		singleParticleContext = rhs.singleParticleContext;
+        singleParticleContext = rhs.singleParticleContext;
 
-		if(manyParticleContext != nullptr)
-			delete manyParticleContext;
-		if(rhs.manyParticleContext == nullptr){
-			manyParticleContext = nullptr;
-		}
-		else{
-			manyParticleContext = new ManyParticleContext(
-				*rhs.manyParticleContext
-			);
-		}
+        if(manyParticleContext != nullptr)
+            delete manyParticleContext;
+        if(rhs.manyParticleContext == nullptr){
+            manyParticleContext = nullptr;
+        }
+        else{
+            manyParticleContext = new ManyParticleContext(
+                *rhs.manyParticleContext
+            );
+        }
 
-		if(indexFilter != nullptr)
-			delete indexFilter;
-		if(rhs.indexFilter == nullptr){
-			indexFilter = nullptr;
-		}
-		else{
-			indexFilter = rhs.indexFilter->clone();
-		}
+        if(indexFilter != nullptr)
+            delete indexFilter;
+        if(rhs.indexFilter == nullptr){
+            indexFilter = nullptr;
+        }
+        else{
+            indexFilter = rhs.indexFilter->clone();
+        }
 
-		if(hoppingAmplitudeFilter != nullptr)
-			delete hoppingAmplitudeFilter;
-		if(rhs.hoppingAmplitudeFilter == nullptr){
-			hoppingAmplitudeFilter = nullptr;
-		}
-		else{
-			hoppingAmplitudeFilter
-				= rhs.hoppingAmplitudeFilter->clone();
-		}
-	}
+        if(hoppingAmplitudeFilter != nullptr)
+            delete hoppingAmplitudeFilter;
+        if(rhs.hoppingAmplitudeFilter == nullptr){
+            hoppingAmplitudeFilter = nullptr;
+        }
+        else{
+            hoppingAmplitudeFilter
+                = rhs.hoppingAmplitudeFilter->clone();
+        }
+    }
 
-	return *this;
+    return *this;
 }
 
 Model& Model::operator=(Model &&rhs){
-	if(this != &rhs){
-		temperature = rhs.temperature;
-		chemicalPotential = rhs.chemicalPotential;
+    if(this != &rhs){
+        temperature = rhs.temperature;
+        chemicalPotential = rhs.chemicalPotential;
 
-		singleParticleContext = std::move(rhs.singleParticleContext);
+        singleParticleContext = std::move(rhs.singleParticleContext);
 
-		if(manyParticleContext != nullptr)
-			delete manyParticleContext;
-		manyParticleContext = rhs.manyParticleContext;
-		rhs.manyParticleContext = nullptr;
+        if(manyParticleContext != nullptr)
+            delete manyParticleContext;
+        manyParticleContext = rhs.manyParticleContext;
+        rhs.manyParticleContext = nullptr;
 
-		if(indexFilter != nullptr)
-			delete indexFilter;
-		indexFilter = rhs.indexFilter;
-		rhs.indexFilter = nullptr;
+        if(indexFilter != nullptr)
+            delete indexFilter;
+        indexFilter = rhs.indexFilter;
+        rhs.indexFilter = nullptr;
 
-		if(hoppingAmplitudeFilter != nullptr)
-			delete hoppingAmplitudeFilter;
-		hoppingAmplitudeFilter = rhs.hoppingAmplitudeFilter;
-		rhs.hoppingAmplitudeFilter = nullptr;
-	}
+        if(hoppingAmplitudeFilter != nullptr)
+            delete hoppingAmplitudeFilter;
+        hoppingAmplitudeFilter = rhs.hoppingAmplitudeFilter;
+        rhs.hoppingAmplitudeFilter = nullptr;
+    }
 
-	return *this;
+    return *this;
 }
 
 void Model::addModel(const Model &model, const Index &index){
-	for(
-		HoppingAmplitudeSet::ConstIterator iterator
-			= model.getHoppingAmplitudeSet().cbegin();
-		iterator != model.getHoppingAmplitudeSet().cend();
-		++iterator
-	){
-		add(
-			HoppingAmplitude(
-				(*iterator).getAmplitude(),
-				Index(index, (*iterator).getToIndex()),
-				Index(index, (*iterator).getFromIndex())
-			)
-		);
-	}
+    for(
+        HoppingAmplitudeSet::ConstIterator iterator
+            = model.getHoppingAmplitudeSet().cbegin();
+        iterator != model.getHoppingAmplitudeSet().cend();
+        ++iterator
+    ){
+        add(
+            HoppingAmplitude(
+                (*iterator).getAmplitude(),
+                Index(index, (*iterator).getToIndex()),
+                Index(index, (*iterator).getFromIndex())
+            )
+        );
+    }
 }
 
 void Model::construct(){
-	if(getGlobalVerbose() && getVerbose())
-		Streams::out << "Constructing system\n";
+    if(getGlobalVerbose() && getVerbose())
+        Streams::out << "Constructing system\n";
 
-	singleParticleContext.getHoppingAmplitudeSet().construct();
+    singleParticleContext.getHoppingAmplitudeSet().construct();
 
-	int basisSize = getBasisSize();
+    int basisSize = getBasisSize();
 
-	if(getGlobalVerbose() && getVerbose())
-		Streams::out << "\tBasis size: " << basisSize << "\n";
+    if(getGlobalVerbose() && getVerbose())
+        Streams::out << "\tBasis size: " << basisSize << "\n";
 }
 
 ostream& operator<<(ostream &stream, const Model &model){
-	stream << model.toString();
+    stream << model.toString();
 
-	return stream;
+    return stream;
 }
 
 string Model::toString() const{
-	stringstream stream;
-	stream << "Model\n";
-	stream << "\tTemperature: "
-		<< UnitHandler::convertNaturalToBase<Quantity::Temperature>(
-			temperature
-		) << UnitHandler::getUnitString<Quantity::Temperature>()
-		<< " (" << temperature << " n.u.)\n";
-	stream << "\tChemical potential: "
-		<< UnitHandler::convertNaturalToBase<Quantity::Energy>(
-			chemicalPotential
-		) << UnitHandler::getUnitString<Quantity::Energy>() << " ("
-		<< chemicalPotential << " n.u.)\n";
-	switch(singleParticleContext.getStatistics()){
-	case Statistics::FermiDirac:
-		stream << "\tStatistics: Fermi-Dirac\n";
-		break;
-	case Statistics::BoseEinstein:
-		stream << "\tStatistics: Bose-Einstein\n";
-		break;
-	default:
-		MyTBTKExit(
-			"Model::operator<<()",
-			"Unknown statistics.",
-			"This should never happen, contact the developer."
-		);
-	}
-	int basisSize = getBasisSize();
-	if(basisSize == -1){
-		stream << "\tBasis size: Not yet constructed.";
-	}
-	else{
-		stream << "\tBasis size: " << basisSize;
-	}
+    stringstream stream;
+    stream << "Model\n";
+    stream << "\tTemperature: "
+        << UnitHandler::convertNaturalToBase<Quantity::Temperature>(
+            temperature
+        ) << UnitHandler::getUnitString<Quantity::Temperature>()
+        << " (" << temperature << " n.u.)\n";
+    stream << "\tChemical potential: "
+        << UnitHandler::convertNaturalToBase<Quantity::Energy>(
+            chemicalPotential
+        ) << UnitHandler::getUnitString<Quantity::Energy>() << " ("
+        << chemicalPotential << " n.u.)\n";
+    switch(singleParticleContext.getStatistics()){
+    case Statistics::FermiDirac:
+        stream << "\tStatistics: Fermi-Dirac\n";
+        break;
+    case Statistics::BoseEinstein:
+        stream << "\tStatistics: Bose-Einstein\n";
+        break;
+    default:
+        MyTBTKExit(
+            "Model::operator<<()",
+            "Unknown statistics.",
+            "This should never happen, contact the developer."
+        );
+    }
+    int basisSize = getBasisSize();
+    if(basisSize == -1){
+        stream << "\tBasis size: Not yet constructed.";
+    }
+    else{
+        stream << "\tBasis size: " << basisSize;
+    }
 
-	return stream.str();
+    return stream.str();
 }
 
 string Model::serialize(Mode mode) const{
-	switch(mode){
-	case Mode::JSON:
-	{
-		nlohmann::json j;
-		j["id"] = "Model";
-		j["temperature"] = temperature;
-		j["chemicalPotential"] = chemicalPotential;
-		j["singleParticleContext"] = nlohmann::json::parse(
-			singleParticleContext.serialize(mode)
-		);
+    switch(mode){
+    case Mode::JSON:
+    {
+        nlohmann::json j;
+        j["id"] = "Model";
+        j["temperature"] = temperature;
+        j["chemicalPotential"] = chemicalPotential;
+        j["singleParticleContext"] = nlohmann::json::parse(
+            singleParticleContext.serialize(mode)
+        );
 
-		return j.dump();
-	}
-	default:
-		MyTBTKExit(
-			"Model::serialize()",
-			"Only Serializable::Mode::Debug is supported yet.",
-			""
-		);
-	}
+        return j.dump();
+    }
+    default:
+        MyTBTKExit(
+            "Model::serialize()",
+            "Only Serializable::Mode::Debug is supported yet.",
+            ""
+        );
+    }
 }
 
-};	//End of namespace MyTBTK
+};    //End of namespace MyTBTK

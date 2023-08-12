@@ -18,13 +18,13 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/FockStateRule/SumRule.h"
+#include "MyTBTK/FockStateRule/SumRule.h"
 
 #include <algorithm>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace FockStateRule{
 
 SumRule::SumRule(
@@ -161,4 +161,4 @@ void SumRule::print() const{
 }
 
 };	//End of namespace FockStateRule
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

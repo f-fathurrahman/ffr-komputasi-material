@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/BrillouinZone.h"
+#include "MyTBTK/BrillouinZone.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 BrillouinZone::BrillouinZone(
 	const vector<vector<double>> &basisVectors,
@@ -35,4 +35,4 @@ BrillouinZone::BrillouinZone(
 BrillouinZone::~BrillouinZone(){
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

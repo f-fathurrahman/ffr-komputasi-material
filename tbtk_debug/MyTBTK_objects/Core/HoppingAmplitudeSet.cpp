@@ -29,186 +29,186 @@ using namespace std;
 namespace MyTBTK{
 
 HoppingAmplitudeSet::HoppingAmplitudeSet(){
-	isConstructed = false;
+    isConstructed = false;
 }
 
 HoppingAmplitudeSet::HoppingAmplitudeSet(
-	const vector<unsigned int> &capacity
+    const vector<unsigned int> &capacity
 ) :
-	HoppingAmplitudeTree(capacity)
+    HoppingAmplitudeTree(capacity)
 {
-	isConstructed = false;
+    isConstructed = false;
 }
 
 HoppingAmplitudeSet::HoppingAmplitudeSet(
-	const string &serialization,
-	Mode mode
+    const string &serialization,
+    Mode mode
 ) :
-	HoppingAmplitudeTree(
-		extractComponent(
-			serialization,
-			"HoppingAmplitudeSet",
-			"HoppingAmplitudeTree",
-			"hoppingAmplitudeTree",
-			mode
-		),
-		mode
-	)
+    HoppingAmplitudeTree(
+        extractComponent(
+            serialization,
+            "HoppingAmplitudeSet",
+            "HoppingAmplitudeTree",
+            "hoppingAmplitudeTree",
+            mode
+        ),
+        mode
+    )
 {
-	switch(mode){
-	case Mode::Debug:
-	{
-		MyTBTKAssert(
-			validate(serialization, "HoppingAmplitudeSet", mode),
-			"HoppingAmplitudeSet::HoppingAmplitudeSet()",
-			"Unable to parse string as HoppingAmplitudeSet '"
-			<< serialization << "'.",
-			""
-		);
-		string content = getContent(serialization, mode);
+    switch(mode){
+    case Mode::Debug:
+    {
+        MyTBTKAssert(
+            validate(serialization, "HoppingAmplitudeSet", mode),
+            "HoppingAmplitudeSet::HoppingAmplitudeSet()",
+            "Unable to parse string as HoppingAmplitudeSet '"
+            << serialization << "'.",
+            ""
+        );
+        string content = getContent(serialization, mode);
 
-		vector<string> elements = split(content, mode);
+        vector<string> elements = split(content, mode);
 
-		stringstream ss;
-		ss.str(elements.at(1));
-		ss >> isConstructed;
-		ss.clear();
+        stringstream ss;
+        ss.str(elements.at(1));
+        ss >> isConstructed;
+        ss.clear();
 
-		break;
-	}
-	case Mode::JSON:
-	{
-		try{
-			nlohmann::json j = nlohmann::json::parse(serialization);
-			isConstructed = j.at("isConstructed").get<bool>();
-		}
-		catch(nlohmann::json::exception &e){
-			MyTBTKExit(
-				"HoppingAmplitudeSet::HoppingAmplitudeSet()",
-				"Unable to parse string as HoppingAmplitudeSet"
-				<< " '" << serialization << "'.",
-				""
-			);
-		}
+        break;
+    }
+    case Mode::JSON:
+    {
+        try{
+            nlohmann::json j = nlohmann::json::parse(serialization);
+            isConstructed = j.at("isConstructed").get<bool>();
+        }
+        catch(nlohmann::json::exception &e){
+            MyTBTKExit(
+                "HoppingAmplitudeSet::HoppingAmplitudeSet()",
+                "Unable to parse string as HoppingAmplitudeSet"
+                << " '" << serialization << "'.",
+                ""
+            );
+        }
 
-		break;
-	}
-	default:
-		MyTBTKExit(
-			"HoppingAmplitudeSet::HoppingAmplitudeSet()",
-			"Only Serializable::Mode::Debug is supported yet.",
-			""
-		);
-	}
+        break;
+    }
+    default:
+        MyTBTKExit(
+            "HoppingAmplitudeSet::HoppingAmplitudeSet()",
+            "Only Serializable::Mode::Debug is supported yet.",
+            ""
+        );
+    }
 }
 
 HoppingAmplitudeSet::~HoppingAmplitudeSet(){
 }
 
 IndexTree HoppingAmplitudeSet::getIndexTree() const{
-	IndexTree indexTree;
-	for(
-		ConstIterator iterator = cbegin();
-		iterator != cend();
-		++iterator
-	){
-		indexTree.add((*iterator).getFromIndex());
-	}
-	indexTree.generateLinearMap();
+    IndexTree indexTree;
+    for(
+        ConstIterator iterator = cbegin();
+        iterator != cend();
+        ++iterator
+    ){
+        indexTree.add((*iterator).getFromIndex());
+    }
+    indexTree.generateLinearMap();
 
-	return indexTree;
+    return indexTree;
 }
 
 IndexTree HoppingAmplitudeSet::getIndexTree(const Index &subspace) const{
-	IndexTree indexTree;
-	for(
-		ConstIterator iterator = cbegin(subspace);
-		iterator != cend(subspace);
-		++iterator
-	){
-		indexTree.add((*iterator).getFromIndex());
-	}
-	indexTree.generateLinearMap();
+    IndexTree indexTree;
+    for(
+        ConstIterator iterator = cbegin(subspace);
+        iterator != cend(subspace);
+        ++iterator
+    ){
+        indexTree.add((*iterator).getFromIndex());
+    }
+    indexTree.generateLinearMap();
 
-	return indexTree;
+    return indexTree;
 }
 
 void HoppingAmplitudeSet::print(){
-	HoppingAmplitudeTree::print();
+    HoppingAmplitudeTree::print();
 }
 
 string HoppingAmplitudeSet::serialize(Mode mode) const{
-	switch(mode){
-	case Mode::Debug:
-	{
-		stringstream ss;
-		ss << "HoppingAmplitudeSet(";
-		ss << HoppingAmplitudeTree::serialize(mode);
-		ss << "," << Serializable::serialize(isConstructed, mode);
-		ss << ")";
+    switch(mode){
+    case Mode::Debug:
+    {
+        stringstream ss;
+        ss << "HoppingAmplitudeSet(";
+        ss << HoppingAmplitudeTree::serialize(mode);
+        ss << "," << Serializable::serialize(isConstructed, mode);
+        ss << ")";
 
-		return ss.str();
-	}
-	case Mode::JSON:
-	{
-		nlohmann::json j;
-		j["id"] = "HoppingAmplitudeSet";
-		j["hoppingAmplitudeTree"] = nlohmann::json::parse(
-			HoppingAmplitudeTree::serialize(mode)
-		);
-		j["isConstructed"] = isConstructed;
+        return ss.str();
+    }
+    case Mode::JSON:
+    {
+        nlohmann::json j;
+        j["id"] = "HoppingAmplitudeSet";
+        j["hoppingAmplitudeTree"] = nlohmann::json::parse(
+            HoppingAmplitudeTree::serialize(mode)
+        );
+        j["isConstructed"] = isConstructed;
 
-		return j.dump();
-	}
-	default:
-		MyTBTKExit(
-			"HoppingAmplitudeSet::serialize()",
-			"Only Serializable::Mode::Debug is supported yet.",
-			""
-		);
-	}
+        return j.dump();
+    }
+    default:
+        MyTBTKExit(
+            "HoppingAmplitudeSet::serialize()",
+            "Only Serializable::Mode::Debug is supported yet.",
+            ""
+        );
+    }
 }
 
 void HoppingAmplitudeSet::tabulate(
-	complex<double> **amplitudes,
-	int **table,
-	int *numHoppingAmplitudes,
-	int *maxIndexSize
+    complex<double> **amplitudes,
+    int **table,
+    int *numHoppingAmplitudes,
+    int *maxIndexSize
 ) const{
-	(*numHoppingAmplitudes) = 0;
-	(*maxIndexSize) = 0;
-	for(
-		ConstIterator iterator = cbegin();
-		iterator != cend();
-		++iterator
-	){
-		(*numHoppingAmplitudes)++;
+    (*numHoppingAmplitudes) = 0;
+    (*maxIndexSize) = 0;
+    for(
+        ConstIterator iterator = cbegin();
+        iterator != cend();
+        ++iterator
+    ){
+        (*numHoppingAmplitudes)++;
 
-		int indexSize = (*iterator).getFromIndex().getSize();
-		if(indexSize > *maxIndexSize)
-			(*maxIndexSize) = indexSize;
-	}
+        int indexSize = (*iterator).getFromIndex().getSize();
+        if(indexSize > *maxIndexSize)
+            (*maxIndexSize) = indexSize;
+    }
 
-	int tableSize = (*numHoppingAmplitudes)*2*(*maxIndexSize);
-	(*table) = new int[tableSize];
-	for(int n = 0; n < tableSize; n++)
-		(*table)[n] = -1;
-	(*amplitudes) = new complex<double>[(*numHoppingAmplitudes)];
+    int tableSize = (*numHoppingAmplitudes)*2*(*maxIndexSize);
+    (*table) = new int[tableSize];
+    for(int n = 0; n < tableSize; n++)
+        (*table)[n] = -1;
+    (*amplitudes) = new complex<double>[(*numHoppingAmplitudes)];
 
-	int counter = 0;
-	for(
-		ConstIterator iterator = cbegin();
-		iterator != cend();
-		++iterator
-	){
-		for(unsigned int n = 0; n < (*iterator).getFromIndex().getSize(); n++)
-			(*table)[2*(*maxIndexSize)*counter+n] = (*iterator).getFromIndex().at(n);
-		for(unsigned int n = 0; n < (*iterator).getToIndex().getSize(); n++)
-			(*table)[2*(*maxIndexSize)*counter+n+(*maxIndexSize)] = (*iterator).getToIndex().at(n);
-		(*amplitudes)[counter] = (*iterator).getAmplitude();
+    int counter = 0;
+    for(
+        ConstIterator iterator = cbegin();
+        iterator != cend();
+        ++iterator
+    ){
+        for(unsigned int n = 0; n < (*iterator).getFromIndex().getSize(); n++)
+            (*table)[2*(*maxIndexSize)*counter+n] = (*iterator).getFromIndex().at(n);
+        for(unsigned int n = 0; n < (*iterator).getToIndex().getSize(); n++)
+            (*table)[2*(*maxIndexSize)*counter+n+(*maxIndexSize)] = (*iterator).getToIndex().at(n);
+        (*amplitudes)[counter] = (*iterator).getAmplitude();
 
-		counter++;
-	}
+        counter++;
+    }
 }
 
-};	//End of namespace MyTBTK
+};    //End of namespace MyTBTK

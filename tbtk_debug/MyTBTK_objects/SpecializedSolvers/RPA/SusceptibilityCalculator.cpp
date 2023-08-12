@@ -18,9 +18,9 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Functions.h"
-#include "TBTK/RPA/SusceptibilityCalculator.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/RPA/SusceptibilityCalculator.h"
+#include "MyTBTK/UnitHandler.h"
 
 #include <complex>
 #include <iomanip>
@@ -29,7 +29,7 @@ using namespace std;
 
 //const complex<double> i(0, 1);
 
-namespace TBTK{
+namespace MyTBTK{
 
 SusceptibilityCalculator::SusceptibilityCalculator(
 	Algorithm algorithm,
@@ -204,7 +204,7 @@ SusceptibilityCalculator::~SusceptibilityCalculator(){
 									(int)orbital3
 								}
 							);
-							TBTKAssert(
+							MyTBTKAssert(
 								susceptibilityCalculator.susceptibilityTree.get(
 									result,
 									resultIndex
@@ -257,7 +257,7 @@ void SusceptibilityCalculator::generateKPlusQLookupTable(){
 		unsigned int counter = 0;
 		int value;
 		while(fin >> value){
-			TBTKAssert(
+			MyTBTKAssert(
 				counter < mesh.size()*mesh.size(),
 				"SusceptibilityCalculator::generateKPlusQLookupTable()",
 				"Found cache file '" << cacheName << "',"
@@ -270,7 +270,7 @@ void SusceptibilityCalculator::generateKPlusQLookupTable(){
 		}
 		fin.close();
 
-		TBTKAssert(
+		MyTBTKAssert(
 			counter == mesh.size()*mesh.size(),
 			"SusceptibilityCalculator::generateKPlusQLookupTable()",
 			"Found cache file" << cacheName << ","
@@ -283,7 +283,7 @@ void SusceptibilityCalculator::generateKPlusQLookupTable(){
 		return;
 	}
 
-#ifdef TBTK_USE_OPEN_MP
+#ifdef MyTBTK_USE_OPEN_MP
 	#pragma omp parallel for
 #endif
 	for(unsigned int k = 0; k < mesh.size(); k++){
@@ -434,5 +434,5 @@ void SusceptibilityCalculator::cacheSusceptibility(
 	//</Needs proper checking>
 }
 
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK
 

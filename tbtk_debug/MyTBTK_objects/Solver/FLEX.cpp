@@ -18,25 +18,25 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/PropertyExtractor/BlockDiagonalizer.h"
-#include "TBTK/PropertyExtractor/ElectronFluctuationVertex.h"
-#include "TBTK/PropertyExtractor/Greens.h"
-#include "TBTK/PropertyExtractor/MatsubaraSusceptibility.h"
-#include "TBTK/PropertyExtractor/RPASusceptibility.h"
-#include "TBTK/PropertyExtractor/SelfEnergy2.h"
-#include "TBTK/Solver/BlockDiagonalizer.h"
-#include "TBTK/Solver/ElectronFluctuationVertex.h"
-#include "TBTK/Solver/Greens.h"
-#include "TBTK/Solver/MatsubaraSusceptibility.h"
-#include "TBTK/Solver/RPASusceptibility.h"
-#include "TBTK/Solver/SelfEnergy2.h"
-#include "TBTK/Solver/FLEX.h"
+#include "MyTBTK/PropertyExtractor/BlockDiagonalizer.h"
+#include "MyTBTK/PropertyExtractor/ElectronFluctuationVertex.h"
+#include "MyTBTK/PropertyExtractor/Greens.h"
+#include "MyTBTK/PropertyExtractor/MatsubaraSusceptibility.h"
+#include "MyTBTK/PropertyExtractor/RPASusceptibility.h"
+#include "MyTBTK/PropertyExtractor/SelfEnergy2.h"
+#include "MyTBTK/Solver/BlockDiagonalizer.h"
+#include "MyTBTK/Solver/ElectronFluctuationVertex.h"
+#include "MyTBTK/Solver/Greens.h"
+#include "MyTBTK/Solver/MatsubaraSusceptibility.h"
+#include "MyTBTK/Solver/RPASusceptibility.h"
+#include "MyTBTK/Solver/SelfEnergy2.h"
+#include "MyTBTK/Solver/FLEX.h"
 
 #include <complex>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 FLEX::FLEX(
@@ -142,7 +142,7 @@ void FLEX::run(){
 void FLEX::calculateBareGreensFunction(){
 	const vector<unsigned int> &numMeshPoints
 		= momentumSpaceContext.getNumMeshPoints();
-	TBTKAssert(
+	MyTBTKAssert(
 		numMeshPoints.size() == 2,
 		"Solver::FLEX::calculateBAreGreensFunction()()",
 		"Only two-dimensional block indices supported yet, but the"
@@ -527,7 +527,7 @@ void FLEX::calculateGreensFunction(){
 						previousChemicalPotentialStepDirection = -1;
 						break;
 					default:
-						TBTKExit(
+						MyTBTKExit(
 							"Solver::FLEX::calculateGreensFunction()",
 							"Unknown step"
 							<< " direction.",
@@ -556,7 +556,7 @@ void FLEX::calculateGreensFunction(){
 						chemicalPotentialStepMultiplier = 0.5;
 						break;
 					default:
-						TBTKExit(
+						MyTBTKExit(
 							"Solver::FLEX::calculateGreensFunction()",
 							"Unknown step"
 							<< " direction.",
@@ -585,7 +585,7 @@ void FLEX::calculateGreensFunction(){
 void FLEX::convertSelfEnergyIndexStructure(){
 	const vector<unsigned int> &numMeshPoints
 		= momentumSpaceContext.getNumMeshPoints();
-	TBTKAssert(
+	MyTBTKAssert(
 		numMeshPoints.size() == 2,
 		"Solver::FLEX::convertSelfEnergyBlockStructure()",
 		"Only two-dimensional block indices supported yet, but the"
@@ -593,7 +593,7 @@ void FLEX::convertSelfEnergyIndexStructure(){
 		<< "'-dimensional block structure.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		numOrbitals != 0,
 		"Solver::FLEX::convertSelfEnergyIndexStructure()",
 		"'numOrbitals' must be non-zero.",
@@ -684,7 +684,7 @@ void FLEX::calculateConvergenceParameter(){
 	const vector<complex<double>> &oldData = oldGreensFunction.getData();
 	const vector<complex<double>> &newData = greensFunction.getData();
 
-	TBTKAssert(
+	MyTBTKAssert(
 		oldData.size() == newData.size(),
 		"Solver::FLEX::calculateConvergenceParameter()",
 		"Incompatible Green's function data sizes.",
@@ -721,7 +721,7 @@ void FLEX::calculateConvergenceParameter(){
 		break;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Solver::FLEX::calculateConvergenceParameter()",
 			"Unknown norm.",
 			"This should never happen, contact the developer."
@@ -732,7 +732,7 @@ void FLEX::calculateConvergenceParameter(){
 vector<InteractionAmplitude>
 FLEX::generateRPAChargeSusceptibilityInteractionAmplitudes(){
 	vector<InteractionAmplitude> interactionAmplitudes;
-	TBTKAssert(
+	MyTBTKAssert(
 		numOrbitals != 0,
 		"Solver::FLEX::generateRPAChargeSusceptibilityInteractionAmplitudes()",
 		"'numOrbitals' must be non-zero.",
@@ -783,7 +783,7 @@ FLEX::generateRPAChargeSusceptibilityInteractionAmplitudes(){
 vector<InteractionAmplitude>
 FLEX::generateRPASpinSusceptibilityInteractionAmplitudes(){
 	vector<InteractionAmplitude> interactionAmplitudes;
-	TBTKAssert(
+	MyTBTKAssert(
 		numOrbitals != 0,
 		"Solver::FLEX::generateRPASpinSusceptibilityInteractionAmplitudes()",
 		"'numOrbitals' must be non-zero.",
@@ -833,7 +833,7 @@ FLEX::generateRPASpinSusceptibilityInteractionAmplitudes(){
 
 vector<InteractionAmplitude> FLEX::generateU1(){
 	vector<InteractionAmplitude> interactionAmplitudes;
-	TBTKAssert(
+	MyTBTKAssert(
 		numOrbitals != 0,
 		"Solver::FLEX::generateU1()",
 		"'numOrbitals' must be non-zero.",
@@ -868,7 +868,7 @@ vector<InteractionAmplitude> FLEX::generateU1(){
 
 vector<InteractionAmplitude> FLEX::generateU2(){
 	vector<InteractionAmplitude> interactionAmplitudes;
-	TBTKAssert(
+	MyTBTKAssert(
 		numOrbitals != 0,
 		"Solver::FLEX::generateU2()",
 		"'numOrbitals' must be non-zero.",
@@ -918,7 +918,7 @@ vector<InteractionAmplitude> FLEX::generateU2(){
 
 vector<InteractionAmplitude> FLEX::generateU3(){
 	vector<InteractionAmplitude> interactionAmplitudes;
-	TBTKAssert(
+	MyTBTKAssert(
 		numOrbitals != 0,
 		"Solver::FLEX::generateU3()",
 		"'numOrbitals' must be non-zero.",
@@ -968,7 +968,7 @@ vector<InteractionAmplitude> FLEX::generateU3(){
 
 vector<InteractionAmplitude> FLEX::generateU4(){
 	vector<InteractionAmplitude> interactionAmplitudes;
-	TBTKAssert(
+	MyTBTKAssert(
 		numOrbitals != 0,
 		"Solver::FLEX::generateU4()",
 		"'numOrbitals' must be non-zero.",
@@ -1155,4 +1155,4 @@ int FLEX::getUpperBosonicMatsubaraEnergyIndex(unsigned int slice){
 }
 
 }	//End of namespace Solver
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK

@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Lattice/D3/D3TetragonalPrimitive.h"
+#include "MyTBTK/Lattice/D3/D3TetragonalPrimitive.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Lattice{
 namespace D3{
 
@@ -43,4 +43,4 @@ TetragonalPrimitive::~TetragonalPrimitive(){
 
 };	//End of namespace D3
 };	//End of namespace Lattice
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

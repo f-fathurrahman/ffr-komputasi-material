@@ -18,16 +18,16 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Property/IndexDescriptor.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/Property/IndexDescriptor.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 #include <string>
 
-#include "TBTK/json.hpp"
+#include "MyTBTK/json.hpp"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 IndexDescriptor::IndexDescriptor(){
 	format = Format::None;
@@ -43,7 +43,7 @@ IndexDescriptor::IndexDescriptor(const std::vector<int> &ranges){
 }
 
 IndexDescriptor::IndexDescriptor(const IndexTree &indexTree){
-	TBTKAssert(
+	MyTBTKAssert(
 		indexTree.getLinearMapIsGenerated(),
 		"IndexDescriptor::setIndexTree()",
 		"Linear map not constructed for the IndexTree.",
@@ -91,7 +91,7 @@ IndexDescriptor::IndexDescriptor(const IndexDescriptor &indexDescriptor){
 			= indexDescriptor.descriptor.dynamicFormat.size;
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"IndexDescriptor::IndexDescriptor()",
 			"This should never happen.",
 			"Contact the developer."
@@ -131,7 +131,7 @@ IndexDescriptor::IndexDescriptor(IndexDescriptor &&indexDescriptor){
 			= indexDescriptor.descriptor.dynamicFormat.size;
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"IndexDescriptor::IndexDescriptor()",
 			"This should never happen.",
 			"Contact the developer."
@@ -140,7 +140,7 @@ IndexDescriptor::IndexDescriptor(IndexDescriptor &&indexDescriptor){
 }
 
 IndexDescriptor::IndexDescriptor(const std::string &serialization, Mode mode){
-	TBTKAssert(
+	MyTBTKAssert(
 		validate(serialization, "IndexDescriptor", mode),
 		"IndexDescriptor::IndexDescriptor()",
 		"Unable to parse string as IndexDescriptor '" << serialization
@@ -198,20 +198,20 @@ IndexDescriptor::IndexDescriptor(const std::string &serialization, Mode mode){
 					= j.at("size").get<unsigned int>();
 			}
 			else{
-				TBTKExit(
+				MyTBTKExit(
 					"IndexDescriptor::IndexDescriptor",
 					"Unknown Format '" << formatString
 					<< "'.",
 					"The serialization string is either"
 					<< " corrupted or the serialization"
 					<< " was created with a newer version"
-					<< " of TBTK that supports more"
+					<< " of MyTBTK that supports more"
 					<< " formats."
 				);
 			}
 		}
 		catch(nlohmann::json::exception &e){
-			TBTKExit(
+			MyTBTKExit(
 				"IndexDescriptor::IndexDescriptor()",
 				"Unable to parse string as IndexDescriptor '"
 				<< serialization << "'.",
@@ -220,7 +220,7 @@ IndexDescriptor::IndexDescriptor(const std::string &serialization, Mode mode){
 		}
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"IndexDescriptor::IndexDescriptor()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -245,7 +245,7 @@ IndexDescriptor::~IndexDescriptor(){
 			delete descriptor.dynamicFormat.indexedDataTree;
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"IndexDescriptor::~IndexDescriptor()",
 			"This should never happen.",
 			"Contact the developer."
@@ -280,7 +280,7 @@ IndexDescriptor& IndexDescriptor::operator=(const IndexDescriptor &rhs){
 
 			break;
 		default:
-			TBTKExit(
+			MyTBTKExit(
 				"IndexDescriptor::operator=()",
 				"This should never happen.",
 				"Contact the developer."
@@ -316,7 +316,7 @@ IndexDescriptor& IndexDescriptor::operator=(const IndexDescriptor &rhs){
 				= rhs.descriptor.dynamicFormat.size;
 			break;
 		default:
-			TBTKExit(
+			MyTBTKExit(
 				"IndexDescriptor::operator=()",
 				"This should never happen.",
 				"Contact the developer."
@@ -354,7 +354,7 @@ IndexDescriptor& IndexDescriptor::operator=(IndexDescriptor &&rhs){
 
 			break;
 		default:
-			TBTKExit(
+			MyTBTKExit(
 				"IndexDescriptor::operator=()",
 				"This should never happen.",
 				"Contact the developer."
@@ -387,7 +387,7 @@ IndexDescriptor& IndexDescriptor::operator=(IndexDescriptor &&rhs){
 				= rhs.descriptor.dynamicFormat.size;
 			break;
 		default:
-			TBTKExit(
+			MyTBTKExit(
 				"IndexDescriptor::operator=()",
 				"This should never happen.",
 				"Contact the developer."
@@ -437,7 +437,7 @@ bool operator==(
 	}
 	case IndexDescriptor::Format::Dynamic:
 	{
-		TBTKExit(
+		MyTBTKExit(
 			"operator==(const IndexDescriptor &lhs, const"
 			<< " IndexDescriptor &rhs)",
 			"Format::Dynamic not yet implemented.",
@@ -445,7 +445,7 @@ bool operator==(
 		);
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"operator==(const IndexDescriptor &lhs, const"
 			<< " IndexDescriptor &rhs)",
 			"Unknown Format.",
@@ -471,7 +471,7 @@ unsigned int IndexDescriptor::getSize() const{
 	case Format::Dynamic:
 		return descriptor.dynamicFormat.size;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"IndexDescriptor::operator=()",
 			"This should never happen.",
 			"Contact the developer."
@@ -520,7 +520,7 @@ std::string IndexDescriptor::serialize(Mode mode) const{
 			j["size"] = descriptor.dynamicFormat.size;
 			break;
 		default:
-			TBTKExit(
+			MyTBTKExit(
 				"IndexDescriptor::serialize()",
 				"Unknown Format.",
 				"This should never happen, contact the developer."
@@ -530,7 +530,7 @@ std::string IndexDescriptor::serialize(Mode mode) const{
 		return j.dump();
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"IndexDescriptor::serialize()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -538,4 +538,4 @@ std::string IndexDescriptor::serialize(Mode mode) const{
 	}
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

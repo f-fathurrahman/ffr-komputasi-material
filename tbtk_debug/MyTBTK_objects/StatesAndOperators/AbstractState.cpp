@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/AbstractState.h"
+#include "MyTBTK/AbstractState.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 //AbstractState::AbstractState(StateID stateID) : index({}), container({}){
 AbstractState::AbstractState(StateID stateID) : index(), container(){
@@ -62,7 +62,7 @@ void AbstractState::setSpecifiers(const vector<int> &specifiers){
 }
 
 std::string AbstractState::serialize(Mode mode) const{
-	TBTKNotYetImplemented("AbstractState::serialize()");
+	MyTBTKNotYetImplemented("AbstractState::serialize()");
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

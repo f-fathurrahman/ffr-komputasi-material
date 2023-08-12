@@ -18,14 +18,14 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Lattice/D2/OrthorhombicCentered.h"
-#include "TBTK/Streams.h"
+#include "MyTBTK/Lattice/D2/OrthorhombicCentered.h"
+#include "MyTBTK/Streams.h"
 
 #include <cmath>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Lattice{
 namespace D2{
 
@@ -67,4 +67,4 @@ void OrthorhombicCentered::makePrimitive(){
 
 };	//End of namespace D2
 };	//End of namespace Lattice
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

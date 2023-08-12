@@ -33,138 +33,138 @@ SourceAmplitudeSet::SourceAmplitudeSet(){
 }
 
 SourceAmplitudeSet::SourceAmplitudeSet(
-	const string &serialization,
-	Mode mode
+    const string &serialization,
+    Mode mode
 ){
-	switch(mode){
-	case Mode::JSON:
-	{
-		try{
-			nlohmann::json j = nlohmann::json::parse(serialization);
-			sourceAmplitudeTree = IndexedDataTree<
-				SerializableVector<SourceAmplitude>
-			>(
-				j.at("sourceAmplitudeTree").dump(),
-				mode
-			);
-		}
-		catch(nlohmann::json::exception &e){
-			MyTBTKExit(
-				"SourceAmplitudeSet::SourceAmplitudeSet()",
-				"Unable to parse string as SourceAmplitudeSet"
-				<< " '" << serialization << "'.",
-				""
-			);
-		}
+    switch(mode){
+    case Mode::JSON:
+    {
+        try{
+            nlohmann::json j = nlohmann::json::parse(serialization);
+            sourceAmplitudeTree = IndexedDataTree<
+                SerializableVector<SourceAmplitude>
+            >(
+                j.at("sourceAmplitudeTree").dump(),
+                mode
+            );
+        }
+        catch(nlohmann::json::exception &e){
+            MyTBTKExit(
+                "SourceAmplitudeSet::SourceAmplitudeSet()",
+                "Unable to parse string as SourceAmplitudeSet"
+                << " '" << serialization << "'.",
+                ""
+            );
+        }
 
-		break;
-	}
-	default:
-		MyTBTKExit(
-			"SourceAmplitudeSet::SourceAmplitudeSet()",
-			"Only Serializable::Mode::JSON is supported yet.",
-			""
-		);
-	}
+        break;
+    }
+    default:
+        MyTBTKExit(
+            "SourceAmplitudeSet::SourceAmplitudeSet()",
+            "Only Serializable::Mode::JSON is supported yet.",
+            ""
+        );
+    }
 }
 
 SourceAmplitudeSet::~SourceAmplitudeSet(){
 }
 
 SourceAmplitudeSet::Iterator SourceAmplitudeSet::begin(){
-	return SourceAmplitudeSet::Iterator(sourceAmplitudeTree);
+    return SourceAmplitudeSet::Iterator(sourceAmplitudeTree);
 }
 
 SourceAmplitudeSet::ConstIterator SourceAmplitudeSet::begin() const{
-	return SourceAmplitudeSet::ConstIterator(sourceAmplitudeTree);
+    return SourceAmplitudeSet::ConstIterator(sourceAmplitudeTree);
 }
 
 SourceAmplitudeSet::ConstIterator SourceAmplitudeSet::cbegin() const{
-	return SourceAmplitudeSet::ConstIterator(sourceAmplitudeTree);
+    return SourceAmplitudeSet::ConstIterator(sourceAmplitudeTree);
 }
 
 SourceAmplitudeSet::Iterator SourceAmplitudeSet::end(){
-	return SourceAmplitudeSet::Iterator(sourceAmplitudeTree, true);
+    return SourceAmplitudeSet::Iterator(sourceAmplitudeTree, true);
 }
 
 SourceAmplitudeSet::ConstIterator SourceAmplitudeSet::end() const{
-	return SourceAmplitudeSet::ConstIterator(sourceAmplitudeTree, true);
+    return SourceAmplitudeSet::ConstIterator(sourceAmplitudeTree, true);
 }
 
 SourceAmplitudeSet::ConstIterator SourceAmplitudeSet::cend() const{
-	return SourceAmplitudeSet::ConstIterator(sourceAmplitudeTree, true);
+    return SourceAmplitudeSet::ConstIterator(sourceAmplitudeTree, true);
 }
 
 string SourceAmplitudeSet::serialize(Mode mode) const{
-	switch(mode){
-	case Mode::JSON:
-	{
-		nlohmann::json j;
-		j["id"] = "SourceAmplitudeSet";
-		j["sourceAmplitudeTree"] = nlohmann::json::parse(
-			sourceAmplitudeTree.serialize(mode)
-		);
+    switch(mode){
+    case Mode::JSON:
+    {
+        nlohmann::json j;
+        j["id"] = "SourceAmplitudeSet";
+        j["sourceAmplitudeTree"] = nlohmann::json::parse(
+            sourceAmplitudeTree.serialize(mode)
+        );
 
-		return j.dump();
-	}
-	default:
-		MyTBTKExit(
-			"HoppingAmplitudeSet::serialize()",
-			"Only Serializable::Mode::JSON is supported yet.",
-			""
-		);
-	}
+        return j.dump();
+    }
+    default:
+        MyTBTKExit(
+            "HoppingAmplitudeSet::serialize()",
+            "Only Serializable::Mode::JSON is supported yet.",
+            ""
+        );
+    }
 }
 
 /*SourceAmplitudeSet::Iterator::Iterator(
-	IndexedDataTree<std::vector<SourceAmplitude>> &sourceAmplitudeTree,
-	bool end
+    IndexedDataTree<std::vector<SourceAmplitude>> &sourceAmplitudeTree,
+    bool end
 ) :
-	currentSourceAmplitude(0),
-	iterator(end ? sourceAmplitudeTree.end() : sourceAmplitudeTree.begin()),
-	iteratorEnd(sourceAmplitudeTree.end())
+    currentSourceAmplitude(0),
+    iterator(end ? sourceAmplitudeTree.end() : sourceAmplitudeTree.begin()),
+    iteratorEnd(sourceAmplitudeTree.end())
 {
 }
 
 void SourceAmplitudeSet::Iterator::operator++(){
-	if(iterator != iteratorEnd){
-		std::vector<SourceAmplitude> &sourceAmplitudes = *iterator;
-		if(currentSourceAmplitude+1 == sourceAmplitudes.size()){
-			currentSourceAmplitude = 0;
-			++iterator;
-		}
-		else{
-			currentSourceAmplitude++;
-		}
-	}
+    if(iterator != iteratorEnd){
+        std::vector<SourceAmplitude> &sourceAmplitudes = *iterator;
+        if(currentSourceAmplitude+1 == sourceAmplitudes.size()){
+            currentSourceAmplitude = 0;
+            ++iterator;
+        }
+        else{
+            currentSourceAmplitude++;
+        }
+    }
 }
 
 SourceAmplitude& SourceAmplitudeSet::Iterator::operator*(){
-	return (*iterator)[currentSourceAmplitude];
+    return (*iterator)[currentSourceAmplitude];
 }
 
 bool SourceAmplitudeSet::Iterator::operator==(const Iterator &rhs){
-	if(
-		iterator == rhs.iterator
-		&& currentSourceAmplitude == rhs.currentSourceAmplitude
-	){
-		return true;
-	}
-	else{
-		return false;
-	}
+    if(
+        iterator == rhs.iterator
+        && currentSourceAmplitude == rhs.currentSourceAmplitude
+    ){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 bool SourceAmplitudeSet::Iterator::operator!=(const Iterator &rhs){
-	if(
-		iterator != rhs.iterator
-		|| currentSourceAmplitude != rhs.currentSourceAmplitude
-	){
-		return true;
-	}
-	else{
-		return false;
-	}
+    if(
+        iterator != rhs.iterator
+        || currentSourceAmplitude != rhs.currentSourceAmplitude
+    ){
+        return true;
+    }
+    else{
+        return false;
+    }
 }*/
 
-};	//End of namespace MyTBTK
+};    //End of namespace MyTBTK

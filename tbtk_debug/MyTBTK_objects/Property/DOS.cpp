@@ -18,15 +18,15 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Property/DOS.h"
-#include "TBTK/Streams.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Property/DOS.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/UnitHandler.h"
 
-#include "TBTK/json.hpp"
+#include "MyTBTK/json.hpp"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Property{
 
 DOS::DOS(
@@ -60,7 +60,7 @@ DOS::DOS(
 		mode
 	)
 {
-	TBTKAssert(
+	MyTBTKAssert(
 		validate(serialization, "DOS", mode),
 		"DOS::DOS()",
 		"Unable to parse string as DOS '" << serialization << "'.",
@@ -71,7 +71,7 @@ DOS::DOS(
 	case Mode::JSON:
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"DOS::DOS()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -114,7 +114,7 @@ string DOS::serialize(Mode mode) const{
 		return j.dump();
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"DOS::serialize()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -123,4 +123,4 @@ string DOS::serialize(Mode mode) const{
 }
 
 };	//End of namespace Property
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

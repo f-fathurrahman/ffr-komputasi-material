@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/PropertyExtractor/PropertyExtractor.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/PropertyExtractor/PropertyExtractor.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace PropertyExtractor{
 
 PropertyExtractor::PropertyExtractor(
@@ -66,35 +66,35 @@ void PropertyExtractor::setEnergyWindow(
 	int lowerBosonicMatsubaraEnergyIndex,
 	int upperBosonicMatsubaraEnergyIndex
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		abs(lowerFermionicMatsubaraEnergyIndex%2) == 1,
 		"PropertyExtractor::PropertyExtractor::setEnergyWindow()",
 		"'lowerFermionicMatsubaraEnergyIndex="
 		<< lowerFermionicMatsubaraEnergyIndex << "' must be odd.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		abs(upperFermionicMatsubaraEnergyIndex%2) == 1,
 		"PropertyExtractor::PropertyExtractor::setEnergyWindow()",
 		"'upperFermionicMatsubaraEnergyIndex="
 		<< upperFermionicMatsubaraEnergyIndex << "' must be odd.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		abs(lowerBosonicMatsubaraEnergyIndex%2) == 0,
 		"PropertyExtractor::PropertyExtractor::setEnergyWindow()",
 		"'lowerBosonicMatsubaraEnergyIndex="
 		<< lowerBosonicMatsubaraEnergyIndex << "' must be even.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		abs(upperBosonicMatsubaraEnergyIndex%2) == 0,
 		"PropertyExtractor::PropertyExtractor::setEnergyWindow()",
 		"'upperBosonicMatsubaraEnergyIndex="
 		<< upperBosonicMatsubaraEnergyIndex << "' must be even.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		lowerFermionicMatsubaraEnergyIndex
 			<= upperFermionicMatsubaraEnergyIndex,
 		"PropertyExtractor::PropertyExtractor::setEnergyWindow()",
@@ -104,7 +104,7 @@ void PropertyExtractor::setEnergyWindow(
 		<< upperFermionicMatsubaraEnergyIndex<< "'",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		lowerBosonicMatsubaraEnergyIndex
 			<= upperBosonicMatsubaraEnergyIndex,
 		"PropertyExtractor::PropertyExtractor::setEnergyWindow()",
@@ -135,7 +135,7 @@ Property::Density PropertyExtractor::calculateDensity(
 	Index pattern,
 	Index ranges
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::calculateDensity()",
 		"The chosen property extractor does not support this function call.",
 		"See the API for list of supported calls."
@@ -145,7 +145,7 @@ Property::Density PropertyExtractor::calculateDensity(
 Property::Density PropertyExtractor::calculateDensity(
 	vector<Index> patterns
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::calculateDensity()",
 		"The chosen property extractor does not support this function call.",
 		"See the API for list of supported calls."
@@ -156,7 +156,7 @@ Property::Magnetization PropertyExtractor::calculateMagnetization(
 	Index pattern,
 	Index ranges
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::calculateMagnetization()",
 		"The chosen property extractor does not support this function call.",
 		"See the API for list of supported calls."
@@ -166,7 +166,7 @@ Property::Magnetization PropertyExtractor::calculateMagnetization(
 Property::Magnetization PropertyExtractor::calculateMagnetization(
 	vector<Index> patterns
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::calculateMagnetization()",
 		"The chosen property extractor does not support this function call.",
 		"See the API for list of supported calls."
@@ -177,7 +177,7 @@ Property::LDOS PropertyExtractor::calculateLDOS(
 	Index pattern,
 	Index ranges
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::calculateLDOS()",
 		"The chosen property extractor does not support this function call.",
 		"See the API for list of supported calls."
@@ -187,7 +187,7 @@ Property::LDOS PropertyExtractor::calculateLDOS(
 Property::LDOS PropertyExtractor::calculateLDOS(
 	vector<Index> patterns
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::calculateLDOS()",
 		"The chosen property extractor does not support this function call.",
 		"See the API for list of supported calls."
@@ -198,7 +198,7 @@ Property::SpinPolarizedLDOS PropertyExtractor::calculateSpinPolarizedLDOS(
 	Index pattern,
 	Index ranges
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::calculateSpinPolarizedLDOS()",
 		"The chosen property extractor does not support this function call.",
 		"See the API for list of supported calls."
@@ -208,7 +208,7 @@ Property::SpinPolarizedLDOS PropertyExtractor::calculateSpinPolarizedLDOS(
 Property::SpinPolarizedLDOS PropertyExtractor::calculateSpinPolarizedLDOS(
 	vector<Index> patterns
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::calculateSpinPolarizedLDOS()",
 		"The chosen property extractor does not support this function call.",
 		"See the API for list of supported calls."
@@ -219,7 +219,7 @@ complex<double> PropertyExtractor::calculateExpectationValue(
 	Index to,
 	Index from
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::calculateExpectationValue()",
 		"The chosen property extractor does not support this function call.",
 		"See the API for list of supported calls."
@@ -227,7 +227,7 @@ complex<double> PropertyExtractor::calculateExpectationValue(
 }
 
 Property::DOS PropertyExtractor::calculateDOS(){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::calculateDOS()",
 		"The chosen property extractor does not support this function call.",
 		"See the API for list of supported calls."
@@ -256,7 +256,7 @@ Property::DOS PropertyExtractor::sampleDOS(
 	else{
 		sampleSpaceSize = model.getBasisSize();
 	}
-	TBTKAssert(
+	MyTBTKAssert(
 		sampleSpaceSize > 0,
 		"PropertyExtractor::sampleDOS()",
 		"The provided 'patterns' does not match any Index in the"
@@ -294,7 +294,7 @@ Property::DOS PropertyExtractor::sampleDOS(
 }
 
 double PropertyExtractor::calculateEntropy(){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::calculateEntropy()",
 		"The chosen property extractor does not support this function call.",
 		"See the API for list of supported calls."
@@ -350,7 +350,7 @@ IndexTree PropertyExtractor::generateIndexTree(
 					pattern.at(c) = IDX_ALL;
 					break;
 				default:
-					TBTKAssert(
+					MyTBTKAssert(
 						pattern.at(c) >= 0,
 						"PropertyExtractor::generateIndexTree()",
 						"Subindex " << c << " of pattern " << n << " is invalid.",
@@ -420,7 +420,7 @@ IndexTree PropertyExtractor::generateIndexTree(
 			break;
 		}
 		default:
-			TBTKExit(
+			MyTBTKExit(
 				"PropertyExtractor::generateIndexTree()",
 				"Only patterns with one and two component"
 				<< " Indices are supported so far, but the"
@@ -442,4 +442,4 @@ PropertyExtractor::Information::Information(){
 }
 
 };	//End of namesapce PropertyExtractor
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

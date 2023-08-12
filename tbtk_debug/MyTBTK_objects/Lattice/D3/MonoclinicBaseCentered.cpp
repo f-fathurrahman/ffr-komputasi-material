@@ -18,15 +18,15 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Lattice/D3/MonoclinicBaseCentered.h"
-#include "TBTK/Streams.h"
-#include "TBTK/Vector3d.h"
+#include "MyTBTK/Lattice/D3/MonoclinicBaseCentered.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/Vector3d.h"
 
 #include <cmath>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Lattice{
 namespace D3{
 
@@ -78,4 +78,4 @@ void MonoclinicBaseCentered::makePrimitive(){
 
 };	//End of namespace D3
 };	//End of namespace Lattice
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

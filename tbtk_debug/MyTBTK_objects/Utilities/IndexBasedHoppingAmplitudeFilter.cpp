@@ -18,9 +18,9 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/IndexBasedHoppingAmplitudeFilter.h"
+#include "MyTBTK/IndexBasedHoppingAmplitudeFilter.h"
 
-namespace TBTK{
+namespace MyTBTK{
 
 IndexBasedHoppingAmplitudeFilter::IndexBasedHoppingAmplitudeFilter(
 	const AbstractIndexFilter &indexFilter
@@ -95,4 +95,4 @@ bool IndexBasedHoppingAmplitudeFilter::isIncluded(
 	);
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

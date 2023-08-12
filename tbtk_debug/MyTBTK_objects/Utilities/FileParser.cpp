@@ -19,10 +19,10 @@
  *  @author Andreas Theiler
  */
 
-#include "TBTK/FileParser.h"
-#include "TBTK/Geometry.h"
-#include "TBTK/Streams.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/FileParser.h"
+#include "MyTBTK/Geometry.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 #include <fstream>
 #include <iomanip>
@@ -31,7 +31,7 @@
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 ofstream FileParser::fout;
 stringstream FileParser::ssin;
@@ -124,7 +124,7 @@ ParameterSet FileParser::readParameterSet(string fileName){
 			ssin >> name;
 			char equalitySign;
 			ssin >> equalitySign;
-			TBTKAssert(
+			MyTBTKAssert(
 				equalitySign == '=',
 				"FileParser::readParameterSet()",
 				"Expected '=' but found '" << equalitySign << "'.",
@@ -139,7 +139,7 @@ ParameterSet FileParser::readParameterSet(string fileName){
 			ssin >> name;
 			char equalitySign;
 			ssin >> equalitySign;
-			TBTKAssert(
+			MyTBTKAssert(
 				equalitySign == '=',
 				"FileParser::readParameterSet()",
 				"Expected '=' but found '" << equalitySign << "'.",
@@ -154,7 +154,7 @@ ParameterSet FileParser::readParameterSet(string fileName){
 			ssin >> name;
 			char equalitySign;
 			ssin >> equalitySign;
-			TBTKAssert(
+			MyTBTKAssert(
 				equalitySign == '=',
 				"FileParser::readParameterSet()",
 				"Expected '=' but found '" << equalitySign << "'.",
@@ -169,7 +169,7 @@ ParameterSet FileParser::readParameterSet(string fileName){
 			ssin >> name;
 			char equalitySign;
 			ssin >> equalitySign;
-			TBTKAssert(
+			MyTBTKAssert(
 				equalitySign == '=',
 				"FileParser::readParameterSet()",
 				"Expected '=' but found '" << equalitySign << "'.",
@@ -187,7 +187,7 @@ ParameterSet FileParser::readParameterSet(string fileName){
 			ssin >> name;
 			char equalitySign;
 			ssin >> equalitySign;
-			TBTKAssert(
+			MyTBTKAssert(
 				equalitySign == '=',
 				"FileParser::readParameterSet()",
 				"Expected '=' but found '" << equalitySign << "'.",
@@ -198,14 +198,14 @@ ParameterSet FileParser::readParameterSet(string fileName){
 			parameterSet.addBool(name, value);
 		}
 		else{
-			TBTKExit(
+			MyTBTKExit(
 				"FileParser::readParametersSet()",
 				"Expected type but found '" + type + "'.",
 				""
 			);
 		}
 /*		if(!getline(ssin, line)){
-//			TBTKExit(
+//			MyTBTKExit(
 				"FileParser::readAmplitudes()",
 				"Reached end of file while searching for 'Amplitudes:'.",
 				""
@@ -216,7 +216,7 @@ ParameterSet FileParser::readParameterSet(string fileName){
 		if(line.find("Amplitudes:") != string::npos){
 			int mode = readParameter("Mode", "Amplitude");
 			if(mode < 0 || mode > 1){
-				TBTKExit(
+				MyTBTKExit(
 					"FileParser::readAmplitudes()",
 					"Only Amplitude mode 0 and 1 supported.",
 					""
@@ -242,7 +242,7 @@ void FileParser::closeOutput(){
 void FileParser::readInput(string fileName){
 	fstream fin;
 	fin.open(fileName);
-	TBTKAssert(
+	MyTBTKAssert(
 		fin,
 		"FileParser::readInput()",
 		"Unable to open '" + fileName + "'.",
@@ -374,7 +374,7 @@ void FileParser::writeAmplitudes(Model *model, AmplitudeMode amplitudeMode){
 			break;
 		}
 		default:
-			TBTKExit(
+			MyTBTKExit(
 				"FileParser::writeAmplitudes()",
 				"Unsupported amplitudeMode (" << static_cast<int>(amplitudeMode) << ").",
 				""
@@ -495,7 +495,7 @@ void FileParser::removeComments(){
 			}
 			break;
 		default:
-			TBTKExit(
+			MyTBTKExit(
 				"FileParser::removeComments()",
 				"Unknown state.",
 				""
@@ -546,7 +546,7 @@ void FileParser::removeInitialWhiteSpaces(){
 			}
 			break;
 		default:
-			TBTKExit(
+			MyTBTKExit(
 				"FileParser::removeInitialWhiteSpaces()",
 				"Unknown state.",
 				""
@@ -564,7 +564,7 @@ void FileParser::readAmplitudes(Model *model){
 	AmplitudeMode amplitudeMode;
 	string line;
 	while(true){
-		TBTKAssert(
+		MyTBTKAssert(
 			getline(ssin, line),
 			"FileParser::readAmplitudes()",
 			"Reached end of file while searching for 'Amplitudes:'.",
@@ -574,7 +574,7 @@ void FileParser::readAmplitudes(Model *model){
 		if(line.find("Amplitudes:") != string::npos){
 			int mode = readParameter("Mode", "Amplitude");
 			if(mode < 0 || mode > 1){
-				TBTKExit(
+				MyTBTKExit(
 					"FileParser::readAmplitudes()",
 					"Only Amplitude mode 0 and 1 supported.",
 					""
@@ -690,7 +690,7 @@ int FileParser::readParameter(
 ){
 	string line;
 
-	TBTKAssert(
+	MyTBTKAssert(
 		getline(ssin, line),
 		"FileParser::readParameter()",
 		"Expected parameter '" << parameterName << "' for structure '" << parentStructure << "'.",
@@ -698,7 +698,7 @@ int FileParser::readParameter(
 	);
 
 	size_t position = line.find(parameterName);
-	TBTKAssert(
+	MyTBTKAssert(
 		position != string::npos,
 		"FileParser::readAmplitudes()",
 		"Expected parameter '" << parameterName << "' for structure '" << parentStructure << "'.",
@@ -707,7 +707,7 @@ int FileParser::readParameter(
 	line = line.substr(position+4);
 
 	position = line.find("=");
-	TBTKAssert(
+	MyTBTKAssert(
 		position != string::npos,
 		"FileParser::readAmplitudes()",
 		"Expected '=' after " << parameterName << ".",
@@ -729,7 +729,7 @@ HoppingAmplitude* FileParser::readHoppingAmplitude(){
 		return NULL;
 
 	Index *to = readIndex();
-	TBTKAssert(
+	MyTBTKAssert(
 		to != NULL,
 		"FileParser::readHoppingAmplitude()",
 		"Faile to read index.",
@@ -737,7 +737,7 @@ HoppingAmplitude* FileParser::readHoppingAmplitude(){
 	);
 
 	Index *from = readIndex();
-	TBTKAssert(
+	MyTBTKAssert(
 		to != NULL,
 		"FileParser::readHoppingAmplitude()",
 		"Faile to read index.",
@@ -754,7 +754,7 @@ HoppingAmplitude* FileParser::readHoppingAmplitude(){
 Index* FileParser::readIndex(){
 	char c;
 	ssin >> c;
-	TBTKAssert(
+	MyTBTKAssert(
 		c == '[',
 		"FileParser::readIndex()",
 		"Expected '[', found '" << c << "'.",
@@ -777,7 +777,7 @@ Index* FileParser::readIndex(){
 void FileParser::readCoordinates(vector<double> *coordinates, int dimensions){
 	char c;
 	ssin >> c;
-	TBTKAssert(
+	MyTBTKAssert(
 		c == '(',
 		"FileParser::readCoordinates()",
 		"Expected '[', found '" << c << "'.",
@@ -792,7 +792,7 @@ void FileParser::readCoordinates(vector<double> *coordinates, int dimensions){
 			break;
 	}
 
-	TBTKAssert(
+	MyTBTKAssert(
 		dimensions == (int)coordinates->size(),
 		"FileParser::readCoordinates()",
 		"Expected " << dimensions << " coordinates, found " << coordinates->size() << ".",
@@ -803,7 +803,7 @@ void FileParser::readCoordinates(vector<double> *coordinates, int dimensions){
 void FileParser::readSpecifiers(vector<int> *specifiers, int numSpecifiers){
 	char c;
 	ssin >> c;
-	TBTKAssert(
+	MyTBTKAssert(
 		c == '<',
 		"FileParser::readSpecifiers()",
 		"Expected '<', found '" << c << "'.",
@@ -818,7 +818,7 @@ void FileParser::readSpecifiers(vector<int> *specifiers, int numSpecifiers){
 			break;
 	}
 
-	TBTKAssert(
+	MyTBTKAssert(
 		numSpecifiers == (int)specifiers->size(),
 		"FileParser::readSpecifiers()",
 		"Expected " << numSpecifiers << " specifiers, found " << specifiers->size() << ".",
@@ -842,7 +842,7 @@ bool FileParser::readComplex(complex<double> *c){
 
 bool FileParser::readDouble(double *d, char endChar){
 	string word;
-	TBTKAssert(
+	MyTBTKAssert(
 		(ssin >> word),
 		"FileParser::readDouble()",
 		"Reached end of file while trying to read floating point number.",
@@ -855,7 +855,7 @@ bool FileParser::readDouble(double *d, char endChar){
 	*d = strtod(word.c_str(), &p);
 	if(*p == endChar)
 		return 1;
-	TBTKAssert(
+	MyTBTKAssert(
 		*p == 0,
 		"FileParser::readDouble()",
 		"Expected floating point, found '" << word << "'.",
@@ -867,7 +867,7 @@ bool FileParser::readDouble(double *d, char endChar){
 
 bool FileParser::readInt(int *i, char endChar){
 	string word;
-	TBTKAssert(
+	MyTBTKAssert(
 		(ssin >> word),
 		"FileParser::readInt()",
 		"Reached end of file while trying to read integer.",
@@ -880,7 +880,7 @@ bool FileParser::readInt(int *i, char endChar){
 	*i = strtol(word.c_str(), &p, 10);
 	if(*p == endChar)
 		return 1;
-	TBTKAssert(
+	MyTBTKAssert(
 		*p == 0,
 		"FileParser::readInt()",
 		"Expected integer, found '" << word << "'.",

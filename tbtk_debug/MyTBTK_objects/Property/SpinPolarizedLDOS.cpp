@@ -18,14 +18,14 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Property/SpinPolarizedLDOS.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Property/SpinPolarizedLDOS.h"
+#include "MyTBTK/UnitHandler.h"
 
-#include "TBTK/json.hpp"
+#include "MyTBTK/json.hpp"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Property{
 
 SpinPolarizedLDOS::SpinPolarizedLDOS(
@@ -83,7 +83,7 @@ SpinPolarizedLDOS::SpinPolarizedLDOS(
 		mode
 	)
 {
-	TBTKAssert(
+	MyTBTKAssert(
 		validate(serialization, "SpinPolarizedLDOS", mode),
 		"SpinPolarizedLDOS::SpinPolarizedLDOS()",
 		"Unable to parse string as SpinPolarizedLDOS '"
@@ -95,7 +95,7 @@ SpinPolarizedLDOS::SpinPolarizedLDOS(
 	case Mode::JSON:
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"SpinPolarizedLDOS::SpinPolarizedLDOS()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -140,7 +140,7 @@ string SpinPolarizedLDOS::serialize(Mode mode) const{
 		return j.dump();
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"SpinPolarizedLDOS::serialize()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -149,4 +149,4 @@ string SpinPolarizedLDOS::serialize(Mode mode) const{
 }
 
 };	//End of namespace Property
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

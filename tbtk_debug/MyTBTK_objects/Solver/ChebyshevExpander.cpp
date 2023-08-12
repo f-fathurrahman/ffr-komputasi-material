@@ -18,18 +18,18 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Solver/ChebyshevExpander.h"
-#include "TBTK/HALinkedList.h"
-#include "TBTK/Streams.h"
-#include "TBTK/TBTKMacros.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Solver/ChebyshevExpander.h"
+#include "MyTBTK/HALinkedList.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/MyTBTKMacros.h"
+#include "MyTBTK/UnitHandler.h"
 
 #include <iostream>
 #include <cmath>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 namespace{
@@ -72,13 +72,13 @@ vector<complex<double>> ChebyshevExpander::calculateCoefficientsCPU(
 ){
 	const Model &model = getModel();
 
-	TBTKAssert(
+	MyTBTKAssert(
 		scaleFactor > 0,
 		"ChebyshevExpander::calculateCoefficients()",
 		"Scale factor must be larger than zero.",
 		"Use ChebyshevExpander::setScaleFactor() to set scale factor."
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		numCoefficients > 0,
 		"ChebyshevExpander::calculateCoefficients()",
 		"numCoefficients has to be larger than 0.",
@@ -232,13 +232,13 @@ vector<vector<complex<double>>> ChebyshevExpander::calculateCoefficientsCPU(
 	Index from
 ){
 	const Model &model = getModel();
-	TBTKAssert(
+	MyTBTKAssert(
 		scaleFactor > 0,
 		"ChebyshevExpander::calculateCoefficients()",
 		"Scale factor must be larger than zero.",
 		"Use ChebyshevExpander::setScaleFactor() to set scale factor."
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		numCoefficients > 0,
 		"ChebyshevExpander::calculateCoefficients()",
 		"numCoefficients has to be larger than 0.",
@@ -414,19 +414,19 @@ void ChebyshevExpander::calculateCoefficientsWithCutoff(
 ){
 	const Model &model = getModel();
 
-/*	TBTKAssert(
+/*	MyTBTKAssert(
 		model != NULL,
 		"ChebyshevExpander::calculateCoefficientsWithCutoff()",
 		"Model not set.",
 		"Use ChebyshevExpander::setModel() to set model."
 	);*/
-	TBTKAssert(
+	MyTBTKAssert(
 		scaleFactor > 0,
 		"ChebyshevExpander::calculateCoefficientsWithCutoff()",
 		"Scale factor must be larger than zero.",
 		"Use ChebyshevExpander::setScaleFactor() to set scale factor."
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		numCoefficients > 0,
 		"ChebyshevExpander::calculateCoefficientsWithCutoff()",
 		"numCoefficients has to be larger than 0.",
@@ -584,31 +584,31 @@ void ChebyshevExpander::generateLookupTable(
 	double lowerBound,
 	double upperBound
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		numCoefficients > 0,
 		"ChebyshevExpander::generateLookupTable()",
 		"numCoefficients has to be larger than 0.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		energyResolution > 0,
 		"ChebyshevExpander::generateLookupTable()",
 		"energyResolution has to be larger than 0.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		lowerBound < upperBound,
 		"ChebyshevExpander::generateLookupTable()",
 		"lowerBound has to be smaller than upperBound.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		lowerBound >= -scaleFactor,
 		"ChebyshevExpander::generateLookupTable()",
 		"lowerBound has to be larger than -scaleFactor.",
 		"Use ChebyshevExpander::setScaleFactor to set a larger scale factor."
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		upperBound <= scaleFactor,
 		"ChebyshevExpander::generateLookupTable()",
 		"upperBound has to be smaller than scaleFactor.",
@@ -654,7 +654,7 @@ void ChebyshevExpander::generateLookupTable(
 }
 
 void ChebyshevExpander::destroyLookupTable(){
-	TBTKAssert(
+	MyTBTKAssert(
 		generatingFunctionLookupTable != nullptr,
 		"ChebyshevExpander::destroyLookupTable()",
 		"No lookup table generated.",
@@ -673,37 +673,37 @@ vector<complex<double>> ChebyshevExpander::generateGreensFunctionCPU(
 	const vector<complex<double>> &coefficients,
 	Type type
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		numCoefficients > 0,
 		"ChebyshevExpander::generateGreensFunctionCPU()",
 		"numCoefficients has to be larger than 0.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		energyResolution > 0,
 		"ChebyshevExpander::generateGreensFunctionCPU()",
 		"energyResolution has to be larger than 0.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		lowerBound < upperBound,
 		"ChebyshevExpander::generateGreensFunctionCPU()",
 		"lowerBound has to be smaller than upperBound.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		lowerBound >= -scaleFactor,
 		"ChebyshevExpander::generateGreensFunctionCPU()",
 		"lowerBound has to be larger than -scaleFactor.",
 		"Use ChebyshevExpander::setScaleFactor to set a larger scale factor."
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		upperBound <= scaleFactor,
 		"ChebyshevExpander::generateGreensFunctionCPU()",
 		"upperBound has to be smaller than scaleFactor.",
 		"Use ChebyshevExpander::setScaleFactor to set a larger scale factor."
 	);
-/*	TBTKAssert(
+/*	MyTBTKAssert(
 		generatingFunctionLookupTable != nullptr,
 		"ChebyshevExpander::generateGreensFunction()",
 		"Lookup table has not been generated.",
@@ -804,7 +804,7 @@ vector<complex<double>> ChebyshevExpander::generateGreensFunctionCPU(
 		}
 	}
 	else{
-		TBTKExit(
+		MyTBTKExit(
 			"ChebyshevExpander::generateGreensFunction()",
 			"Unknown GreensFunctionType",
 			""
@@ -819,7 +819,7 @@ vector<complex<double>> ChebyshevExpander::generateGreensFunctionCPU(
 //	Property::GreensFunction::Type type
 	Type type
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		generatingFunctionLookupTable != NULL,
 		"ChebyshevExpander::generateGreensFunction()",
 		"Lookup table has not been generated.",
@@ -885,4 +885,4 @@ complex<double> ChebyshevExpander::getMonolopoulosABCDamping(
 }
 
 };	//End of namespace Solver
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

@@ -19,10 +19,10 @@
  */
 
 
-#include "TBTK/ExtensiveBitRegister.h"
-#include "TBTK/Streams.h"
+#include "MyTBTK/ExtensiveBitRegister.h"
+#include "MyTBTK/Streams.h"
 
-namespace TBTK{
+namespace MyTBTK{
 
 ExtensiveBitRegister::ExtensiveBitRegister(){
 	values = nullptr;
@@ -45,4 +45,4 @@ ExtensiveBitRegister::~ExtensiveBitRegister(){
 		delete [] values;
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

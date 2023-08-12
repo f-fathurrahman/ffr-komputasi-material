@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/ParallelepipedCell.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/ParallelepipedCell.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 ParallelepipedCell::ParallelepipedCell(){
 }
@@ -53,7 +53,7 @@ ParallelepipedCell::~ParallelepipedCell(){
 Index ParallelepipedCell::getMajorCellIndex(
 	const vector<double> &coordinates
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		coordinates.size() == getNumDimensions(),
 		"ParallelepipedCell::getCellIndex()",
 		"Incompatible dimensions.",
@@ -87,7 +87,7 @@ Index ParallelepipedCell::getMajorCellIndex(
 		});
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"ParallelepipedCell::getCellIndex()",
 			"Only coordinates with 1-3 components supported.",
 			""
@@ -115,7 +115,7 @@ Index ParallelepipedCell::getMinorCellIndex(
 	const vector<double> &coordinates,
 	const vector<unsigned int> &numMeshPoints
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		coordinates.size() == getNumDimensions(),
 		"ParallelepipedCell::getCellIndex()",
 		"Incompatible dimensions.",
@@ -124,7 +124,7 @@ Index ParallelepipedCell::getMinorCellIndex(
 		<< " cell has " << getNumDimensions() << " dimensions, but coordinate"
 		<< " with " << coordinates.size() << " components supplied."
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		coordinates.size() == numMeshPoints.size(),
 		"ParallelepipedCell::getCellIndex()",
 		"Incompatible dimensions.",
@@ -158,7 +158,7 @@ Index ParallelepipedCell::getMinorCellIndex(
 		});
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"ParallelepipedCell::getCellIndex()",
 			"Only coordinates with 1-3 components supported.",
 			""
@@ -193,7 +193,7 @@ Index ParallelepipedCell::getMinorCellIndex(
 		}
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"ParallelepipedCell::getCellIndex()",
 			"Only SpacePartition::MeshType::Nodal is supported so"
 			<< " far.",
@@ -207,7 +207,7 @@ Index ParallelepipedCell::getMinorCellIndex(
 vector<vector<double>> ParallelepipedCell::getMajorMesh(
 	const std::vector<unsigned int> &numMeshPoints
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		numMeshPoints.size() == getNumDimensions(),
 		"ParallelepipedCell::getMesh()",
 		"Incompatible diemsnions.",
@@ -275,7 +275,7 @@ vector<vector<double>> ParallelepipedCell::getMajorMesh(
 		break;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"ParallelepipedCell::getMesh()",
 			"This should never happen.",
 			"Notify the developer about this bug."
@@ -288,7 +288,7 @@ vector<vector<double>> ParallelepipedCell::getMajorMesh(
 vector<vector<double>> ParallelepipedCell::getMinorMesh(
 	const std::vector<unsigned int> &numMeshPoints
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		numMeshPoints.size() == getNumDimensions(),
 		"ParallelepipedCell::getMesh()",
 		"Incompatible dimensions.",
@@ -361,7 +361,7 @@ vector<vector<double>> ParallelepipedCell::getMinorMesh(
 		break;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"ParallelepipedCell::getMesh()",
 			"This should never happen.",
 			"Notify the developer about this bug."
@@ -375,7 +375,7 @@ vector<double> ParallelepipedCell::getMinorMeshPoint(
 	const std::vector<unsigned int> &meshPoint,
 	const std::vector<unsigned int> &numMeshPoints
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		meshPoint.size() == getNumDimensions(),
 		"ParallelepipedCell::getMinorMeshPoint()",
 		"Incompatible dimensions.",
@@ -385,7 +385,7 @@ vector<double> ParallelepipedCell::getMinorMeshPoint(
 		<< getNumDimensions() << ", while numMeshPoints have "
 		<< meshPoint.size() << " components."
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		numMeshPoints.size() == getNumDimensions(),
 		"ParallelepipedCell::getMinorMeshPoint()",
 		"Incompatible dimensions.",
@@ -396,7 +396,7 @@ vector<double> ParallelepipedCell::getMinorMeshPoint(
 		<< numMeshPoints.size() << " components."
 	);
 	for(unsigned int n = 0; n < meshPoint.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			meshPoint[n] < numMeshPoints[n],
 			"ParallelepipedCell::getMinorMeshPoint()",
 			"Mesh point out of range.",
@@ -441,7 +441,7 @@ vector<double> ParallelepipedCell::getMinorMeshPoint(
 		return {mp.x, mp.y, mp.z};
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"ParallelepipedCell::getMesh()",
 			"This should never happen.",
 			"Notify the developer about this bug."
@@ -449,4 +449,4 @@ vector<double> ParallelepipedCell::getMinorMeshPoint(
 	}
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

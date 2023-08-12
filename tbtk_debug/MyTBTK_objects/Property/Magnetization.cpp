@@ -18,13 +18,13 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Property/Magnetization.h"
+#include "MyTBTK/Property/Magnetization.h"
 
-#include "TBTK/json.hpp"
+#include "MyTBTK/json.hpp"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Property{
 
 Magnetization::Magnetization(const vector<int> &ranges) :
@@ -68,7 +68,7 @@ Magnetization::Magnetization(
 		mode
 	)
 {
-	TBTKAssert(
+	MyTBTKAssert(
 		validate(serialization, "Magnetization", mode)
 ,		"Magnetization::Magnetization()",
 		"Unable to parse string as Magnetization '" << serialization
@@ -90,7 +90,7 @@ string Magnetization::serialize(Mode mode) const{
 		return j.dump();
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Magnetization::serialize()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -99,4 +99,4 @@ string Magnetization::serialize(Mode mode) const{
 }
 
 };	//End of namespace Property
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

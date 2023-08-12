@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/GPUResourceManager.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/GPUResourceManager.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 GPUResourceManager::GPUResourceManager() : Communicator(true){
 	numDevices = 0;
@@ -42,7 +42,7 @@ GPUResourceManager& GPUResourceManager::getInstance(){
 }
 
 int GPUResourceManager::allocateDevice(){
-	TBTKAssert(
+	MyTBTKAssert(
 		numDevices > 0,
 		"GPUResourceManager::allocateDevice()",
 		"No GPU devices available on this machine.",
@@ -89,4 +89,4 @@ void GPUResourceManager::freeDevice(int device){
 #endif
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

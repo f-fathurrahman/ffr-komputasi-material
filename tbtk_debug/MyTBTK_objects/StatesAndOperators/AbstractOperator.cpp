@@ -18,9 +18,9 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/AbstractOperator.h"
+#include "MyTBTK/AbstractOperator.h"
 
-namespace TBTK{
+namespace MyTBTK{
 
 AbstractOperator::AbstractOperator(OperatorID operatorID){
 	this->operatorID = operatorID;
@@ -29,4 +29,4 @@ AbstractOperator::AbstractOperator(OperatorID operatorID){
 AbstractOperator::~AbstractOperator(){
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

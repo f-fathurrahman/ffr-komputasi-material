@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/TBTKMacros.h"
-#include "TBTK/WignerSeitzCell.h"
+#include "MyTBTK/MyTBTKMacros.h"
+#include "MyTBTK/WignerSeitzCell.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 WignerSeitzCell::WignerSeitzCell(){
 }
@@ -42,7 +42,7 @@ WignerSeitzCell::~WignerSeitzCell(){
 Index WignerSeitzCell::getMajorCellIndex(
 	const vector<double> &coordinates
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		coordinates.size() == getNumDimensions(),
 		"ParallelepipedCell::getCellIndex()",
 		"Incompatible dimensions.",
@@ -77,7 +77,7 @@ Index WignerSeitzCell::getMajorCellIndex(
 		});
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"WignerSeitzCell::getCellIndex()",
 			"Only coordinates with 1-3 components supported.",
 			""
@@ -91,7 +91,7 @@ Index WignerSeitzCell::getMinorCellIndex(
 	const vector<double> &coordinates,
 	const vector<unsigned int> &numMeshPoints
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		coordinates.size() == getNumDimensions(),
 		"ParallelepipedCell::getCellIndex()",
 		"Incompatible dimensions.",
@@ -126,7 +126,7 @@ Index WignerSeitzCell::getMinorCellIndex(
 		});
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"WignerSeitzCell::getCellIndex()",
 			"Only coordinates with 1-3 components supported.",
 			""
@@ -152,7 +152,7 @@ Index WignerSeitzCell::getMinorCellIndex(
 vector<vector<double>> WignerSeitzCell::getMajorMesh(
 	const vector<unsigned int> &numMeshPoints
 ) const{
-	TBTKExit(
+	MyTBTKExit(
 		"WignerSeitzCell::getMajorMesh()",
 		"Wigner-Seitz cell does not have a major mesh.",
 		""
@@ -195,7 +195,7 @@ vector<vector<double>> WignerSeitzCell::getMinorMesh(
 
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Parallelepiped::getMesh()",
 			"This should never happed.",
 			"Notify the developer about this bug."
@@ -244,7 +244,7 @@ vector<double> WignerSeitzCell::getMinorMeshPoint(
 		};
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"WignerSeitzCell::getMinorMeshPoint()",
 			"This should never happed.",
 			"Notify the developer about this bug."
@@ -252,4 +252,4 @@ vector<double> WignerSeitzCell::getMinorMeshPoint(
 	}
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

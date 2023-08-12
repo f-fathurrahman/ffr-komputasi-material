@@ -18,16 +18,16 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Functions.h"
-#include "TBTK/Solver/Susceptibility.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/Solver/Susceptibility.h"
+#include "MyTBTK/UnitHandler.h"
 
 #include <complex>
 #include <iomanip>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 Susceptibility::Susceptibility(
@@ -45,4 +45,4 @@ Susceptibility::~Susceptibility(
 }
 
 }	//End namespace Solver
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK

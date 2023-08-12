@@ -18,9 +18,9 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/GPUResourceManager.h"
+#include "MyTBTK/GPUResourceManager.h"
 
-namespace TBTK{
+namespace MyTBTK{
 
 void GPUResourceManager::createDeviceTable(){
 	numDevices = 0;
@@ -29,4 +29,4 @@ void GPUResourceManager::createDeviceTable(){
 void GPUResourceManager::destroyDeviceTable(){
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

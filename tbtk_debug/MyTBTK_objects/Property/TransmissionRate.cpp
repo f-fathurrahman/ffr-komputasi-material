@@ -18,14 +18,14 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Property/TransmissionRate.h"
-#include "TBTK/Streams.h"
+#include "MyTBTK/Property/TransmissionRate.h"
+#include "MyTBTK/Streams.h"
 
-#include "TBTK/json.hpp"
+#include "MyTBTK/json.hpp"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Property{
 
 TransmissionRate::TransmissionRate(
@@ -59,7 +59,7 @@ TransmissionRate::TransmissionRate(
 		mode
 	)
 {
-	TBTKAssert(
+	MyTBTKAssert(
 		validate(serialization, "TransmissionRate", mode),
 		"TransmissionRate::TransmissionRate()",
 		"Unable to parse string as TransmissionRate '" << serialization
@@ -71,7 +71,7 @@ TransmissionRate::TransmissionRate(
 	case Mode::JSON:
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"TransmissionRate::TransmissionRate()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -80,7 +80,7 @@ TransmissionRate::TransmissionRate(
 }
 
 TransmissionRate& TransmissionRate::operator*=(const TransmissionRate &rhs){
-	TBTKAssert(
+	MyTBTKAssert(
 		energyWindowsAreEqual(rhs),
 		"TransmissionRate::operator*=()",
 		"Incompatible energy windows.",
@@ -94,7 +94,7 @@ TransmissionRate& TransmissionRate::operator*=(const TransmissionRate &rhs){
 }
 
 TransmissionRate& TransmissionRate::operator/=(const TransmissionRate &rhs){
-	TBTKAssert(
+	MyTBTKAssert(
 		energyWindowsAreEqual(rhs),
 		"TransmissionRate::operator/=()",
 		"Incompatible energy windows.",
@@ -120,7 +120,7 @@ string TransmissionRate::serialize(Mode mode) const{
 		return j.dump();
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"TransmissionRate::serialize()",
 			"Only Serializable::Mode::JSON is supported yet.",
 			""
@@ -129,4 +129,4 @@ string TransmissionRate::serialize(Mode mode) const{
 }
 
 };	//End of namespace Property
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

@@ -33,49 +33,49 @@ BasisStateSet::BasisStateSet(){
 }
 
 BasisStateSet::BasisStateSet(
-	const string &serialization,
-	Mode mode
+    const string &serialization,
+    Mode mode
 ){
-	MyTBTKNotYetImplemented("BasisStateSet::BasisStateSet()");
+    MyTBTKNotYetImplemented("BasisStateSet::BasisStateSet()");
 }
 
 BasisStateSet::~BasisStateSet(){
-	for(
-		IndexedDataTree<AbstractState*>::Iterator iterator
-			= basisStateTree.begin();
-		iterator != basisStateTree.end();
-		++iterator
-	){
-		delete *iterator;
-	}
+    for(
+        IndexedDataTree<AbstractState*>::Iterator iterator
+            = basisStateTree.begin();
+        iterator != basisStateTree.end();
+        ++iterator
+    ){
+        delete *iterator;
+    }
 }
 
 BasisStateSet::Iterator BasisStateSet::begin(){
-	return BasisStateSet::Iterator(basisStateTree);
+    return BasisStateSet::Iterator(basisStateTree);
 }
 
 BasisStateSet::ConstIterator BasisStateSet::begin() const{
-	return BasisStateSet::ConstIterator(basisStateTree);
+    return BasisStateSet::ConstIterator(basisStateTree);
 }
 
 BasisStateSet::ConstIterator BasisStateSet::cbegin() const{
-	return BasisStateSet::ConstIterator(basisStateTree);
+    return BasisStateSet::ConstIterator(basisStateTree);
 }
 
 BasisStateSet::Iterator BasisStateSet::end(){
-	return BasisStateSet::Iterator(basisStateTree, true);
+    return BasisStateSet::Iterator(basisStateTree, true);
 }
 
 BasisStateSet::ConstIterator BasisStateSet::end() const{
-	return BasisStateSet::ConstIterator(basisStateTree, true);
+    return BasisStateSet::ConstIterator(basisStateTree, true);
 }
 
 BasisStateSet::ConstIterator BasisStateSet::cend() const{
-	return BasisStateSet::ConstIterator(basisStateTree, true);
+    return BasisStateSet::ConstIterator(basisStateTree, true);
 }
 
 string BasisStateSet::serialize(Mode mode) const{
-	MyTBTKNotYetImplemented("BasisStateSet::serialize()");
+    MyTBTKNotYetImplemented("BasisStateSet::serialize()");
 }
 
-};	//End of namespace MyTBTK
+};    //End of namespace MyTBTK

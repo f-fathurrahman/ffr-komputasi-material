@@ -18,14 +18,14 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/NambuSpaceExtender.h"
+#include "MyTBTK/NambuSpaceExtender.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 Model NambuSpaceExtender::extend(const Model &model, Mode mode){
-	TBTKAssert(
+	MyTBTKAssert(
 		mode == Mode::RealSpace,
 		"NambuSpaceExtender::extend()",
 		"Only Mode::RealSpace supported yet.",
@@ -112,4 +112,4 @@ Model NambuSpaceExtender::extend(const Model &model, Mode mode){
 	return newModel;
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

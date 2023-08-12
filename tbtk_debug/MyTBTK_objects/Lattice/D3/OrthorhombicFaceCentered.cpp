@@ -18,14 +18,14 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Lattice/D3/OrthorhombicFaceCentered.h"
-#include "TBTK/Vector3d.h"
+#include "MyTBTK/Lattice/D3/OrthorhombicFaceCentered.h"
+#include "MyTBTK/Vector3d.h"
 
 #include <cmath>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Lattice{
 namespace D3{
 
@@ -71,4 +71,4 @@ void OrthorhombicFaceCentered::makePrimitive(){
 
 };	//End of namespace D3
 };	//End of namespace Lattice
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

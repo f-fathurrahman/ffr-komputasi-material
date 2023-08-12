@@ -18,11 +18,11 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Solver/Solver.h"
+#include "MyTBTK/Solver/Solver.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 Solver::Solver(){
@@ -33,4 +33,4 @@ Solver::~Solver(){
 }
 
 };	//End of namespace Solver
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

@@ -18,16 +18,16 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/PropertyExtractor/MatsubaraSusceptibility.h"
-#include "TBTK/Functions.h"
-#include "TBTK/Streams.h"
-#include "TBTK/Timer.h"
+#include "MyTBTK/PropertyExtractor/MatsubaraSusceptibility.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/Timer.h"
 
 #include <cmath>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace PropertyExtractor{
 
 MatsubaraSusceptibility::MatsubaraSusceptibility(
@@ -49,7 +49,7 @@ Property::Susceptibility MatsubaraSusceptibility::calculateSusceptibility(
 		const Index &pattern = *(patterns.begin() + n);
 
 		vector<Index> indices = pattern.split();
-		TBTKAssert(
+		MyTBTKAssert(
 			indices.size() == 5,
 			"PropertyExtractor::MatsubaraSusceptibility::calculateSusceptibility()",
 			"Invalid pattern '" << pattern.toString() << "'.",
@@ -58,7 +58,7 @@ Property::Susceptibility MatsubaraSusceptibility::calculateSusceptibility(
 			<< " are " << indices.size() << "."
 		);
 		for(unsigned int n = 2; n < indices.size(); n++){
-			TBTKAssert(
+			MyTBTKAssert(
 				indices[n].getSize() == indices[1].getSize(),
 				"PropertyExtractor::MatsubaraSusceptibility::calculateSusceptibility()",
 				"Currently the last four Indices has to have"
@@ -214,7 +214,7 @@ Property::Susceptibility MatsubaraSusceptibility::calculateSusceptibility(
 		const Index &pattern = *(patterns.begin() + n);
 
 		vector<Index> indices = pattern.split();
-		TBTKAssert(
+		MyTBTKAssert(
 			indices.size() == 5,
 			"PropertyExtractor::MatsubaraSusceptibility::calculateSusceptibility()",
 			"Invalid pattern '" << pattern.toString() << "'.",
@@ -223,7 +223,7 @@ Property::Susceptibility MatsubaraSusceptibility::calculateSusceptibility(
 			<< " are " << indices.size() << "."
 		);
 		for(unsigned int n = 2; n < indices.size(); n++){
-			TBTKAssert(
+			MyTBTKAssert(
 				indices[n].getSize() == indices[1].getSize(),
 				"PropertyExtractor::MatsubaraSusceptibility::calculateSusceptibility()",
 				"Currently the last four Indices has to have"
@@ -352,7 +352,7 @@ Property::Susceptibility MatsubaraSusceptibility::calculateSusceptibility(
 	switch(getEnergyType()){
 	case EnergyType::Real:
 	{
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::MatsubaraSusceptibility::calculateSusceptibility()",
 			"Real energies not yet supported.",
 			""
@@ -360,7 +360,7 @@ Property::Susceptibility MatsubaraSusceptibility::calculateSusceptibility(
 	}
 	case EnergyType::Matsubara:
 	{
-		TBTKAssert(
+		MyTBTKAssert(
 			getLowerBosonicMatsubaraEnergyIndex()
 			<= getUpperBosonicMatsubaraEnergyIndex(),
 			"PropertyExtractor::MatsubaraSusceptibility::calculateSusceptibility()",
@@ -391,7 +391,7 @@ Property::Susceptibility MatsubaraSusceptibility::calculateSusceptibility(
 		return susceptibility;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::MatsubaraSusceptibility::MatsubaraSusceptibility()",
 			"Uknown EnergyType.",
 			"This should never happen, contact the developer."
@@ -469,4 +469,4 @@ MatsubaraSusceptibility::SusceptibilityBlockInformation::SusceptibilityBlockInfo
 }
 
 };	//End of namespace PropertyExtractor
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

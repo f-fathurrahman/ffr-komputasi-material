@@ -18,16 +18,16 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/PropertyExtractor/ElectronFluctuationVertex.h"
-#include "TBTK/Functions.h"
-#include "TBTK/Streams.h"
-#include "TBTK/Timer.h"
+#include "MyTBTK/PropertyExtractor/ElectronFluctuationVertex.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/Timer.h"
 
 #include <cmath>
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace PropertyExtractor{
 
 ElectronFluctuationVertex::ElectronFluctuationVertex(
@@ -41,7 +41,7 @@ void ElectronFluctuationVertex::setEnergyWindow(
 	double upperBound,
 	int resolution
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::ElectronFluctuationVertex::setEnergyWindow()",
 		"This function is not supported for this PropertyExtractor.",
 		""
@@ -54,7 +54,7 @@ void ElectronFluctuationVertex::setEnergyWindow(
 	int lowerBosonicMatsubaraEnergyIndex,
 	int upperBosonicMatsubaraEnergyIndex
 ){
-	TBTKExit(
+	MyTBTKExit(
 		"PropertyExtractor::ElectronFluctuationVertex::setEnergyWindow()",
 		"This function is not supported for this PropertyExtractor.",
 		""
@@ -70,7 +70,7 @@ Property::InteractionVertex ElectronFluctuationVertex::calculateInteractionVerte
 		const Index &pattern = *(patterns.begin() + n);
 
 		vector<Index> indices = pattern.split();
-		TBTKAssert(
+		MyTBTKAssert(
 			indices.size() == 5,
 			"PropertyExtractor::ElectronFluctuationVertex::calculateInteractionVertex()",
 			"Invalid pattern '" << pattern.toString() << "'.",
@@ -79,7 +79,7 @@ Property::InteractionVertex ElectronFluctuationVertex::calculateInteractionVerte
 			<< " are " << indices.size() << "."
 		);
 		for(unsigned int n = 2; n < indices.size(); n++){
-			TBTKAssert(
+			MyTBTKAssert(
 				indices[n].getSize() == indices[1].getSize(),
 				"PropertyExtractor::ElectronFLuctuationVertex::calculateInteractionVertex()",
 				"Currently the last four Indices has to have"
@@ -210,7 +210,7 @@ Property::InteractionVertex ElectronFluctuationVertex::calculateInteractionVerte
 		const Index &pattern = *(patterns.begin() + n);
 
 		vector<Index> indices = pattern.split();
-		TBTKAssert(
+		MyTBTKAssert(
 			indices.size() == 5,
 			"PropertyExtractor::ElectronFluctuationVertex::calculateInteractionVertex()",
 			"Invalid pattern '" << pattern.toString() << "'.",
@@ -219,7 +219,7 @@ Property::InteractionVertex ElectronFluctuationVertex::calculateInteractionVerte
 			<< " are " << indices.size() << "."
 		);
 		for(unsigned int n = 2; n < indices.size(); n++){
-			TBTKAssert(
+			MyTBTKAssert(
 				indices[n].getSize() == indices[1].getSize(),
 				"PropertyExtractor::ElectronFluctuationVertex::calculateInteractionVertex()",
 				"Currently the last four Indices has to have"
@@ -389,7 +389,7 @@ Property::InteractionVertex ElectronFluctuationVertex::calculateInteractionVerte
 		return interactionVertex;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"PropertyExtractor::ElectronFluctuationVertex::calculateInteractionVertex()",
 			"Uknown EnergyType.",
 			"This should never happen, contact the developer."
@@ -420,4 +420,4 @@ void ElectronFluctuationVertex::calculateInteractionVertexCallback(
 }
 
 };	//End of namespace PropertyExtractor
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

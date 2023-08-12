@@ -18,15 +18,15 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Array.h"
-#include "TBTK/PadeApproximator.h"
-#include "TBTK/Solver/AnalyticalContinuer.h"
-#include "TBTK/Streams.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/Array.h"
+#include "MyTBTK/PadeApproximator.h"
+#include "MyTBTK/Solver/AnalyticalContinuer.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Solver{
 
 AnalyticalContinuer::AnalyticalContinuer() : Communicator(true){
@@ -44,7 +44,7 @@ Property::GreensFunction AnalyticalContinuer::convert(
 	const Property::GreensFunction &greensFunction,
 	Property::GreensFunction::Type newType
 ) const{
-	TBTKAssert(
+	MyTBTKAssert(
 		greensFunction.getType()
 			== Property::GreensFunction::Type::Matsubara,
 		"Solver::AnalyticalContinuer::convert()",
@@ -74,7 +74,7 @@ Property::GreensFunction AnalyticalContinuer::convert(
 
 			break;
 		default:
-			TBTKExit(
+			MyTBTKExit(
 				"Solver::AnalyticalContinuer::convert()",
 				"Invalid 'newType'. Only conversion to the"
 				<< " retarded and advanced Green's function is"
@@ -104,7 +104,7 @@ Property::GreensFunction AnalyticalContinuer::convert(
 						continue;
 				}
 				else{
-					TBTKExit(
+					MyTBTKExit(
 						"Solver::AnalyticalContinuer::convert()",
 						"Invalid 'newType'. Only"
 						<< " conversion to the"
@@ -172,7 +172,7 @@ Property::GreensFunction AnalyticalContinuer::convert(
 		return newGreensFunction;
 	}
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Solver::AnalyticalContinuer::convert()",
 			"Only Green's functions on the custom format are"
 			<< " supported yet.",
@@ -191,7 +191,7 @@ complex<double> AnalyticalContinuer::getContourDeformation(
 	case Property::GreensFunction::Type::Advanced:
 		return complex<double>(0, -1)*energyInfinitesimal;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"Solver::AnalyticalContinuer::convert()",
 			"Invalid Green's function type. Only contours for the"
 			<< " retarded, and advanced Green's functions are"
@@ -202,4 +202,4 @@ complex<double> AnalyticalContinuer::getContourDeformation(
 }
 
 };	//End of namespace Solver
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

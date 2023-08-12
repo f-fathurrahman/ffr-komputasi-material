@@ -18,12 +18,12 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/TBTKMacros.h"
-#include "TBTK/UnitCell.h"
+#include "MyTBTK/MyTBTKMacros.h"
+#include "MyTBTK/UnitCell.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 UnitCell::UnitCell(
 	initializer_list<initializer_list<double>> latticeVectors,
@@ -33,7 +33,7 @@ UnitCell::UnitCell(
 {
 	unsigned int numCoordinates = latticeVectors.begin()->size();
 	for(unsigned int n = 1; n < latticeVectors.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			(latticeVectors.begin()+n)->size() == numCoordinates,
 			"UnitCell::UnitCell()",
 			"Incmopatible coordinate dimensions. The first lattice"
@@ -62,7 +62,7 @@ UnitCell::UnitCell(
 {
 	unsigned int numCoordinates = latticeVectors.at(0).size();
 	for(unsigned int n = 1; n < latticeVectors.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			latticeVectors.at(n).size() == numCoordinates,
 			"UnitCell::UnitCell()",
 			"Incmopatible coordinate dimensions. The first lattice"
@@ -86,4 +86,4 @@ UnitCell::UnitCell(
 UnitCell::~UnitCell(){
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

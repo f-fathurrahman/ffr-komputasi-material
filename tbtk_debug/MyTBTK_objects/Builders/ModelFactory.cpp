@@ -18,14 +18,14 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/HoppingAmplitudeSet.h"
-#include "TBTK/ModelFactory.h"
-#include "TBTK/Streams.h"
-#include "TBTK/TBTKMacros.h"
+#include "MyTBTK/HoppingAmplitudeSet.h"
+#include "MyTBTK/ModelFactory.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/MyTBTKMacros.h"
 
 using namespace std;
 
-namespace TBTK{
+namespace MyTBTK{
 
 Model* ModelFactory::createSquareLattice(
 	initializer_list<int> size,
@@ -34,7 +34,7 @@ Model* ModelFactory::createSquareLattice(
 ){
 	Model *model = new Model();
 
-	TBTKAssert(
+	MyTBTKAssert(
 		size.size() == periodic.size(),
 		"ModelFactory::createSquareLattice()",
 		"Argument 'size' and argument 'periodic' have different dimensions.",
@@ -52,7 +52,7 @@ Model* ModelFactory::createSquareLattice(
 		createSquareLattice3D(model, size, periodic, t);
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"ModelFactory::createSquareLattice()",
 			"Only 1-3 dimensions supported, but " << size.size() << " dimensions requested.",
 			""
@@ -69,14 +69,14 @@ Model* ModelFactory::createHexagonalLattice(
 ){
 	Model *model = new Model();
 
-	TBTKAssert(
+	MyTBTKAssert(
 		size.size() == periodic.size(),
 		"ModelFactory::createHexagonalLattice()",
 		"Argument 'size' and argument 'periodic' have different dimensions.",
 		""
 	);
 
-	TBTKAssert(
+	MyTBTKAssert(
 		size.size() == 2,
 		"ModelFactory::createHexagonalLattice():",
 		"Only 2 dimensions supported, but " << size.size() << " dimensions requested.",
@@ -138,7 +138,7 @@ Model* ModelFactory::createModel(
 
 	unsigned int numCoordinates = states.at(0)->getCoordinates().size();
 	for(unsigned int n = 1; n < states.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			states.at(n)->getCoordinates().size() == numCoordinates,
 			"ModelFactory::createModel()",
 			"Incompatible coordinate dimensions. First state has "
@@ -151,7 +151,7 @@ Model* ModelFactory::createModel(
 
 	unsigned int numSpecifiers = states.at(0)->getSpecifiers().size();
 	for(unsigned int n = 1; n < states.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			states.at(n)->getSpecifiers().size() == numSpecifiers,
 			"ModelFactory::createModel()",
 			"Incompatible number of specifiers. First state has "
@@ -220,7 +220,7 @@ Model* ModelFactory::createModel(
 
 	unsigned int numCoordinates = states.at(0)->getCoordinates().size();
 	for(unsigned int n = 1; n < states.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			states.at(n)->getCoordinates().size() == numCoordinates,
 			"ModelFactory::createModel()",
 			"Incompatible coordinate dimensions. First state has "
@@ -233,7 +233,7 @@ Model* ModelFactory::createModel(
 
 	unsigned int numSpecifiers = states.at(0)->getSpecifiers().size();
 	for(unsigned int n = 1; n < states.size(); n++){
-		TBTKAssert(
+		MyTBTKAssert(
 			states.at(n)->getSpecifiers().size() == numSpecifiers,
 			"ModelFactory::createModel()",
 			"Incompatible number of specifiers. First state has "
@@ -275,25 +275,25 @@ Model* ModelFactory::createModel(
 ){
 	Model *model = new Model();
 
-	TBTKAssert(
+	MyTBTKAssert(
 		size.size() > 0,
 		"ModelFactory::createModel()",
 		"The argument 'size' must have at least one component.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		unitCell.getLatticeVectors().size() == size.size(),
 		"ModelFactory::createModel()",
 		"The number of lattice vectors in the unit cell must agree with the number of components in the argument 'size'.",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		unitCell.getLatticeVectors().at(0).size() >= size.size(),
 		"ModelFactory::createModel()",
 		"The lattice vectors must at least have the same dimension as the number of components in the argument 'size'",
 		""
 	);
-	TBTKAssert(
+	MyTBTKAssert(
 		size.size() >= periodic.size(),
 		"ModelFactory::createModel()",
 		"The arguments 'size' and 'periodic' must have the same number of components.",
@@ -311,7 +311,7 @@ Model* ModelFactory::createModel(
 		createModel3D(unitCell, size, periodic, includedCells, o);
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"ModelFactory::createModel()",
 			"Only 1-3 dimensions supported, but " << size.size() << " dimensions requested.",
 			""
@@ -336,7 +336,7 @@ void ModelFactory::addSquareGeometry(
 		addSquareGeometry3D(model, size);
 		break;
 	default:
-		TBTKExit(
+		MyTBTKExit(
 			"ModelFactory::addSquareGeometry()",
 			"Only 1-3 dimensions supported, but " << size.size() << " dimensions requested.",
 			""
@@ -349,7 +349,7 @@ void ModelFactory::addHexagonalGeometry(
 	std::initializer_list<int> size
 ){
 	if(size.size() != 2){
-		TBTKExit(
+		MyTBTKExit(
 			"ModelFactory::addSquareGeometry()",
 			"Only 1-3 dimensions supported, but " << size.size() << " dimensions requested.",
 			""
@@ -562,7 +562,7 @@ Model* ModelFactory::createModel1D(
 	const bool *includedCells,
 	const AbstractOperator &o
 ){
-	TBTKNotYetImplemented("ModelFactory::createModel1D()");
+	MyTBTKNotYetImplemented("ModelFactory::createModel1D()");
 }
 
 Model* ModelFactory::createModel2D(
@@ -572,7 +572,7 @@ Model* ModelFactory::createModel2D(
 	const bool *includedCells,
 	const AbstractOperator &o
 ){
-	TBTKNotYetImplemented("ModelFactory::createModel2D()");
+	MyTBTKNotYetImplemented("ModelFactory::createModel2D()");
 }
 
 Model* ModelFactory::createModel3D(
@@ -582,7 +582,7 @@ Model* ModelFactory::createModel3D(
 	const bool *includedCells,
 	const AbstractOperator &o
 ){
-	TBTKNotYetImplemented("ModelFactory::createModel3D()");
+	MyTBTKNotYetImplemented("ModelFactory::createModel3D()");
 }
 
 void ModelFactory::addSquareGeometry1D(
@@ -643,4 +643,4 @@ void ModelFactory::addSquareGeometry3D(
 	}
 }
 
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK

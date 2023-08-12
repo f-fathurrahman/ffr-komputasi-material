@@ -18,9 +18,9 @@
  *  @author Kristofer Björnson
  */
 
-#include "TBTK/Functions.h"
-#include "TBTK/RPA/LindhardSusceptibilityCalculator.h"
-#include "TBTK/UnitHandler.h"
+#include "MyTBTK/Functions.h"
+#include "MyTBTK/RPA/LindhardSusceptibilityCalculator.h"
+#include "MyTBTK/UnitHandler.h"
 
 #include <complex>
 #include <iomanip>
@@ -29,7 +29,7 @@ using namespace std;
 
 //const complex<double> i(0, 1);
 
-namespace TBTK{
+namespace MyTBTK{
 
 LindhardSusceptibilityCalculator::LindhardSusceptibilityCalculator(
 	const RPA::MomentumSpaceContext &momentumSpaceContext
@@ -79,7 +79,7 @@ LindhardSusceptibilityCalculator* LindhardSusceptibilityCalculator::createSlave(
 }
 
 void LindhardSusceptibilityCalculator::precompute(unsigned int numWorkers){
-	TBTKNotYetImplemented("LindhardSusceptibilityCalculator::precompute()");
+	MyTBTKNotYetImplemented("LindhardSusceptibilityCalculator::precompute()");
 /*	Timer::tick("1");
 	const MomentumSpaceContext &momentumSpaceContext = getMomentumSpaceContext();
 	const vector<vector<double>> &mesh = momentumSpaceContext.getMesh();
@@ -217,7 +217,7 @@ void LindhardSusceptibilityCalculator::precompute(unsigned int numWorkers){
 									(int)orbital3
 								}
 							);
-							TBTKAssert(
+							MyTBTKAssert(
 								susceptibilityCalculator.susceptibilityTree.get(
 									result,
 									resultIndex
@@ -591,7 +591,7 @@ complex<double> LindhardSusceptibilityCalculator::calculateSusceptibility(
 	const vector<int> &orbitalIndices,
 	complex<double> energy
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		orbitalIndices.size() == 4,
 		"getSusceptibility()",
 		"Four orbital indices required but " << orbitalIndices.size()
@@ -610,7 +610,7 @@ vector<complex<double>> LindhardSusceptibilityCalculator::calculateSusceptibilit
 	const DualIndex &kDual,
 	const vector<int> &orbitalIndices
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		orbitalIndices.size() == 4,
 		"getSusceptibility()",
 		"Four orbital indices required but " << orbitalIndices.size()
@@ -660,5 +660,5 @@ vector<complex<double>> LindhardSusceptibilityCalculator::calculateSusceptibilit
 	}
 }
 
-}	//End of namesapce TBTK
+}	//End of namesapce MyTBTK
 
