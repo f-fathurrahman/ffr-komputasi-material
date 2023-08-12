@@ -13,20 +13,20 @@
  * limitations under the License.
  */
 
-/** @package TBTKcalc
+/** @package MyTBTKcalc
  *  @file Argument.h
  *  @brief Argument to matplotlib.
  *
  *  @author Kristofer Björnson
  */
 
-#ifndef COM_DAFER45_TBTK_VISUALIZATION_MAT_PLOT_LIB_ARGUMENT
-#define COM_DAFER45_TBTK_VISUALIZATION_MAT_PLOT_LIB_ARGUMENT
+#ifndef COM_DAFER45_MyTBTK_VISUALIZATION_MAT_PLOT_LIB_ARGUMENT
+#define COM_DAFER45_MyTBTK_VISUALIZATION_MAT_PLOT_LIB_ARGUMENT
 
 #include <string>
 #include <map>
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Visualization{
 namespace MatPlotLib{
 
@@ -114,6 +114,6 @@ inline const std::map<std::string, std::string>& Argument::getArgumentMap(
 
 };	//End namespace MatPlotLib
 };	//End namespace Visualization
-};	//End namespace TBTK
+};	//End namespace MyTBTK
 
 #endif

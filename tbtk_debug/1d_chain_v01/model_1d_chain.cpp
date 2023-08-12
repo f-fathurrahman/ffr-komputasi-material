@@ -1,9 +1,9 @@
-#include "TBTK/Solver/Diagonalizer.h"
-#include "TBTK/TBTK.h"
+#include "MyTBTK/Solver/Diagonalizer.h"
+#include "MyTBTK/MyTBTK.h"
 #include <complex>
 
 using namespace std;
-using namespace TBTK;
+using namespace MyTBTK;
 
 complex<double> i(0, 1);
 
@@ -19,6 +19,7 @@ int main(){
 
     // Set up the Model.
     Model model;
+    model.setVerbose(true);
     for(unsigned int x = 0; x < SIZE; x++) {
         model << HoppingAmplitude(t, {x+1}, {x}) + HC;
     }
@@ -27,6 +28,7 @@ int main(){
 
     // Set up the Solver.
     Solver::Diagonalizer solver;
+    solver.setVerbose(true);
     solver.setModel(model);
     solver.run();
     

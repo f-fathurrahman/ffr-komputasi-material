@@ -13,19 +13,19 @@
  * limitations under the License.
  */
 
-/** @package TBTKcalc
+/** @package MyTBTKcalc
  *  @file Argument.h
  *  @brief Argument to matplotlib.
  *
  *  @author Kristofer Björnson
  */
 
-#ifndef COM_DAFER45_TBTK_VISUALIZATION_MAT_PLOT_LIB_COLOR_MAP
-#define COM_DAFER45_TBTK_VISUALIZATION_MAT_PLOT_LIB_COLOR_MAP
+#ifndef COM_DAFER45_MyTBTK_VISUALIZATION_MAT_PLOT_LIB_COLOR_MAP
+#define COM_DAFER45_MyTBTK_VISUALIZATION_MAT_PLOT_LIB_COLOR_MAP
 
-#include "TBTK/Array.h"
+#include "MyTBTK/Array.h"
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Visualization{
 namespace MatPlotLib{
 
@@ -36,6 +36,6 @@ public:
 
 };	//End namespace MatPlotLib
 };	//End namespace Visualization
-};	//End namespace TBTK
+};	//End namespace MyTBTK
 
 #endif

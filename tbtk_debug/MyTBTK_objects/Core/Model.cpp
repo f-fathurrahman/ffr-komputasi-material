@@ -225,7 +225,12 @@ Model& Model::operator=(Model &&rhs){
     return *this;
 }
 
+
+
 void Model::addModel(const Model &model, const Index &index){
+    
+    cout << "Model::addModel is called\n";
+
     for(
         HoppingAmplitudeSet::ConstIterator iterator
             = model.getHoppingAmplitudeSet().cbegin();
@@ -242,6 +247,8 @@ void Model::addModel(const Model &model, const Index &index){
     }
 }
 
+
+
 void Model::construct(){
     if(getGlobalVerbose() && getVerbose())
         Streams::out << "Constructing system\n";
@@ -254,11 +261,16 @@ void Model::construct(){
         Streams::out << "\tBasis size: " << basisSize << "\n";
 }
 
+
+
 ostream& operator<<(ostream &stream, const Model &model){
     stream << model.toString();
 
     return stream;
 }
+
+
+
 
 string Model::toString() const{
     stringstream stream;

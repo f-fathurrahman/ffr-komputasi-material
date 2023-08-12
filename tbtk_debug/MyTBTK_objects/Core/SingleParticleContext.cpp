@@ -101,6 +101,9 @@ SingleParticleContext::SingleParticleContext(
 void SingleParticleContext::generateHoppingAmplitudeSet(
     const HoppingAmplitude::AmplitudeCallback &hoppingAmplitudeCallback
 ){
+
+    cout << "ENTER generateHoppingAmplitudeSet" << endl;
+
     for(
         BasisStateSet::ConstIterator toIterator
             = basisStateSet.cbegin();

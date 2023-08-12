@@ -242,6 +242,9 @@ void HoppingAmplitudeTree::add(HoppingAmplitude ha){
 }
 
 void HoppingAmplitudeTree::_add(HoppingAmplitude &ha, unsigned int subindex){
+
+    cout << "HoppingAmplitudeTree::_add LINE 246 is called\n";
+
     if(subindex < ha.getFromIndex().getSize()){
         //If the current subindex is not the last, the HoppingAmplitude
         //is propagated to the next node level.
@@ -469,6 +472,9 @@ const std::vector<
     Index index,
     unsigned int subindex
 ) const{
+
+    cout << "ENTER _getHoppingAmplitudes" << endl;
+
     if(subindex < index.getSize()){
         //If the current subindex is not the last, continue to the next
         //node level.
@@ -483,6 +489,7 @@ const std::vector<
             index.print();
             exit(1);
         }
+        cout << "EXIT _getHoppingAmplitudes" << endl;
         //Continue to the next node level.
         return children.at(currentIndex)._getHoppingAmplitudes(
             index,

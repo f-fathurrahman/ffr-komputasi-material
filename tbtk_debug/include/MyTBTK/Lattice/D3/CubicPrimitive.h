@@ -13,20 +13,20 @@
  * limitations under the License.
  */
 
-/// @cond TBTK_FULL_DOCUMENTATION
-/** @package TBTKcalc
+/// @cond MyTBTK_FULL_DOCUMENTATION
+/** @package MyTBTKcalc
  *  @file CubicPrimitive.h
  *  @brief Cubic primitive Bravais lattices.
  *
  *  @author Kristofer Björnson
  */
 
-#ifndef COM_DAFER45_TBTK_D3_CUBIC_PRIMITIVE
-#define COM_DAFER45_TBTK_D3_CUBIC_PRIMITIVE
+#ifndef COM_DAFER45_MyTBTK_D3_CUBIC_PRIMITIVE
+#define COM_DAFER45_MyTBTK_D3_CUBIC_PRIMITIVE
 
-#include "TBTK/Lattice/D3/D3TetragonalPrimitive.h"
+#include "MyTBTK/Lattice/D3/D3TetragonalPrimitive.h"
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Lattice{
 namespace D3{
 
@@ -52,7 +52,7 @@ public:
 
 };	//End of namespace D3
 };	//End of namespace Lattice
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK
 
 #endif
 /// @endcond

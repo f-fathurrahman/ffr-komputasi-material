@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-/** @package TBTKcalc
+/** @package MyTBTKcalc
  *  @file PlotSurfaceParameters.h
  *  @brief Parameter container for plotting using the matplotlib function
  *  plot_surface.
@@ -21,15 +21,15 @@
  *  @author Kristofer Björnson
  */
 
-#ifndef COM_DAFER45_TBTK_VISUALIZATION_MAT_PLOT_LIB_PLOT_SURFACE_PARAMETERS
-#define COM_DAFER45_TBTK_VISUALIZATION_MAT_PLOT_LIB_PLOT_SURFACE_PARAMETERS
+#ifndef COM_DAFER45_MyTBTK_VISUALIZATION_MAT_PLOT_LIB_PLOT_SURFACE_PARAMETERS
+#define COM_DAFER45_MyTBTK_VISUALIZATION_MAT_PLOT_LIB_PLOT_SURFACE_PARAMETERS
 
-#include "TBTK/Visualization/MatPlotLib/matplotlibcpp.h"
+#include "MyTBTK/Visualization/MatPlotLib/matplotlibcpp.h"
 
 #include <string>
 #include <utility>
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Visualization{
 namespace MatPlotLib{
 
@@ -187,6 +187,6 @@ inline void PlotSurfaceParameters::clear(){
 
 };	//End namespace MatPlotLib
 };	//End namespace Visualization
-};	//End namespace TBTK
+};	//End namespace MyTBTK
 
 #endif

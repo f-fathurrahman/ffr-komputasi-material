@@ -13,20 +13,20 @@
  * limitations under the License.
  */
 
-/// @cond TBTK_FULL_DOCUMENTATION
-/** @package TBTKcalc
+/// @cond MyTBTK_FULL_DOCUMENTATION
+/** @package MyTBTKcalc
  *  @file OrthorhombicCentered.h
  *  @brief Orthorhombic centered Bravais lattices.
  *
  *  @author Kristofer Björnson
  */
 
-#ifndef COM_DAFER45_TBTK_ORTHORHOMBIC_CENTERED
-#define COM_DAFER45_TBTK_ORTHORHOMBIC_CENTERED
+#ifndef COM_DAFER45_MyTBTK_ORTHORHOMBIC_CENTERED
+#define COM_DAFER45_MyTBTK_ORTHORHOMBIC_CENTERED
 
-#include "TBTK/Lattice/D2/D2OrthorhombicPrimitive.h"
+#include "MyTBTK/Lattice/D2/D2OrthorhombicPrimitive.h"
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Lattice{
 namespace D2{
 
@@ -56,7 +56,7 @@ public:
 
 };	//End of namespace D2
 };	//End of namespace Lattice
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK
 
 #endif
 /// @endcond

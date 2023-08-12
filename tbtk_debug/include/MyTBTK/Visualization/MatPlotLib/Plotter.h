@@ -13,39 +13,39 @@
  * limitations under the License.
  */
 
-/** @package TBTKcalc
+/** @package MyTBTKcalc
  *  @file Plotter.h
  *  @brief Plots data.
  *
  *  @author Kristofer Björnson
  */
 
-#ifndef COM_DAFER45_TBTK_VISUALIZATION_MAT_PLOT_LIB_PLOTTER
-#define COM_DAFER45_TBTK_VISUALIZATION_MAT_PLOT_LIB_PLOTTER
+#ifndef COM_DAFER45_MyTBTK_VISUALIZATION_MAT_PLOT_LIB_PLOTTER
+#define COM_DAFER45_MyTBTK_VISUALIZATION_MAT_PLOT_LIB_PLOTTER
 
-#include "TBTK/AnnotatedArray.h"
-#include "TBTK/Array.h"
-#include "TBTK/Property/Density.h"
-#include "TBTK/Property/DOS.h"
-#include "TBTK/Property/EigenValues.h"
-#include "TBTK/Property/LDOS.h"
-#include "TBTK/Property/Magnetization.h"
-#include "TBTK/Property/SpinPolarizedLDOS.h"
-#include "TBTK/Property/WaveFunctions.h"
-#include "TBTK/Streams.h"
-#include "TBTK/TBTKMacros.h"
-#include "TBTK/Visualization/MatPlotLib/Argument.h"
-#include "TBTK/Visualization/MatPlotLib/ContourfParameters.h"
-#include "TBTK/Visualization/MatPlotLib/matplotlibcpp.h"
-#include "TBTK/Visualization/MatPlotLib/PlotParameters.h"
-#include "TBTK/Visualization/MatPlotLib/PlotSurfaceParameters.h"
+#include "MyTBTK/AnnotatedArray.h"
+#include "MyTBTK/Array.h"
+#include "MyTBTK/Property/Density.h"
+#include "MyTBTK/Property/DOS.h"
+#include "MyTBTK/Property/EigenValues.h"
+#include "MyTBTK/Property/LDOS.h"
+#include "MyTBTK/Property/Magnetization.h"
+#include "MyTBTK/Property/SpinPolarizedLDOS.h"
+#include "MyTBTK/Property/WaveFunctions.h"
+#include "MyTBTK/Streams.h"
+#include "MyTBTK/MyTBTKMacros.h"
+#include "MyTBTK/Visualization/MatPlotLib/Argument.h"
+#include "MyTBTK/Visualization/MatPlotLib/ContourfParameters.h"
+#include "MyTBTK/Visualization/MatPlotLib/matplotlibcpp.h"
+#include "MyTBTK/Visualization/MatPlotLib/PlotParameters.h"
+#include "MyTBTK/Visualization/MatPlotLib/PlotSurfaceParameters.h"
 
 #include <string>
 #include <tuple>
 #include <vector>
 
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Visualization{
 namespace MatPlotLib{
 
@@ -738,7 +738,7 @@ inline void Plotter::setBoundsX(
 	double minX,
 	double maxX
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		minX < maxX,
 		"Plotter::setBoundsX()",
 		"minX has to be smaller than maxX",
@@ -753,7 +753,7 @@ inline void Plotter::setBoundsY(
 	double minY,
 	double maxY
 ){
-	TBTKAssert(
+	MyTBTKAssert(
 		minY < maxY,
 		"Plotter::setBoundsY()",
 		"minY has to be smaller than maxY",
@@ -828,7 +828,7 @@ inline void Plotter::setPlotMethod3D(const std::string &plotMethod3D){
 		this->plotMethod3D = PlotMethod3D::Contourf;
 	}
 	else{
-		TBTKExit(
+		MyTBTKExit(
 			"Plotter::setPlotMethod3D()",
 			"Unknown plot method.",
 			"Must be 'plot_surface' or 'contourf'."
@@ -875,6 +875,6 @@ inline void Plotter::save(const std::string &filename) const{
 
 };	//End namespace MatPlotLib
 };	//End namespace Visualization
-};	//End namespace TBTK
+};	//End namespace MyTBTK
 
 #endif

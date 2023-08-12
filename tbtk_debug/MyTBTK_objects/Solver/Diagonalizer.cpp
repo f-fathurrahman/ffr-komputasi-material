@@ -310,6 +310,8 @@ void Diagonalizer::solve(){
 			&info
 		);
 
+		cout << "info from zhpev = " << info << endl;
+
 		MyTBTKAssert(
 			info == 0,
 			"Diagonalizer:solve()",

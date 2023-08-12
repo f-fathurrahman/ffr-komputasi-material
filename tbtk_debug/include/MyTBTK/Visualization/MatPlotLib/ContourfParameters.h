@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-/** @package TBTKcalc
+/** @package MyTBTKcalc
  *  @file ContourfParameters.h
  *  @brief Parameter container for plotting using the matplotlib function
  *  contourf.
@@ -21,15 +21,15 @@
  *  @author Kristofer Björnson
  */
 
-#ifndef COM_DAFER45_TBTK_VISUALIZATION_MAT_PLOT_LIB_CONTOURF_PARAMETERS
-#define COM_DAFER45_TBTK_VISUALIZATION_MAT_PLOT_LIB_CONTOURF_PARAMETERS
+#ifndef COM_DAFER45_MyTBTK_VISUALIZATION_MAT_PLOT_LIB_CONTOURF_PARAMETERS
+#define COM_DAFER45_MyTBTK_VISUALIZATION_MAT_PLOT_LIB_CONTOURF_PARAMETERS
 
-#include "TBTK/Visualization/MatPlotLib/matplotlibcpp.h"
+#include "MyTBTK/Visualization/MatPlotLib/matplotlibcpp.h"
 
 #include <string>
 #include <utility>
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Visualization{
 namespace MatPlotLib{
 
@@ -151,6 +151,6 @@ inline void ContourfParameters::clear(){
 
 };	//End namespace MatPlotLib
 };	//End namespace Visualization
-};	//End namespace TBTK
+};	//End namespace MyTBTK
 
 #endif

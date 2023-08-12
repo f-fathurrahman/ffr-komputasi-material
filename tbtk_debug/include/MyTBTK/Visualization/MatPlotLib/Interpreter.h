@@ -35,17 +35,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-/// @cond TBTK_FULL_DOCUMENTATION
+/// @cond MyTBTK_FULL_DOCUMENTATION
 #pragma once
 
 //Allow for inclusion in multiple translation units
-#ifndef TBTK_NUMPY_INITIALIZING_TRANSLATION_UNIT
+#ifndef MyTBTK_NUMPY_INITIALIZING_TRANSLATION_UNIT
 #	define NO_IMPORT_ARRAY
 #endif
-#define PY_ARRAY_UNIQUE_SYMBOL TBTK_PY_ARRAY_API
-#define PY_UFUNC_UNIQUE_SYMBOL TBTK_PY_UFUNC_API
+#define PY_ARRAY_UNIQUE_SYMBOL MyTBTK_PY_ARRAY_API
+#define PY_UFUNC_UNIQUE_SYMBOL MyTBTK_PY_UFUNC_API
 
-//The convention of putting third party libraries after TBTK and std libraries
+//The convention of putting third party libraries after MyTBTK and std libraries
 //is here ignored. Pyhton.h has to be included first to avoid warning that
 //_POSIX_C_SOURCE is redefined.
 #include <Python.h>
@@ -85,7 +85,7 @@
 #	define PyInt_FromString PyLong_FromString
 #endif
 
-namespace TBTK {
+namespace MyTBTK {
 namespace Visualization {
 namespace MatPlotLib {
 namespace matplotlibcpp {
@@ -166,5 +166,5 @@ private:
 } // end namespace matplotlibcpp
 } // end namespace MatPlotLib
 } // end namespace Visualization
-} // end namespace TBTK
+} // end namespace MyTBTK
 /// @endcond

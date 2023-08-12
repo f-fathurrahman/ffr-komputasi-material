@@ -304,13 +304,20 @@ private:
 	friend class FileReader;
 };
 
+
+
 inline void Model::add(HoppingAmplitude ha){
+	std::cout << "Model::add LINE 308 is called\n";
 	singleParticleContext.getHoppingAmplitudeSet().add(ha);
 }
+
+
 
 inline int Model::getBasisSize() const{
 	return singleParticleContext.getHoppingAmplitudeSet().getBasisSize();
 }
+
+
 
 inline void Model::generateHoppingAmplitudeSet(
 	const HoppingAmplitude::AmplitudeCallback &hoppingAmplitudeCallback
@@ -320,6 +327,8 @@ inline void Model::generateHoppingAmplitudeSet(
 	);
 }
 
+
+
 inline void Model::generateOverlapAmplitudeSet(
 	const OverlapAmplitude::AmplitudeCallback &overlapAmplitudeCallback
 ){
@@ -328,41 +337,65 @@ inline void Model::generateOverlapAmplitudeSet(
 	);
 }
 
+
+
 inline int Model::getBasisIndex(const Index &index) const{
 	return singleParticleContext.getHoppingAmplitudeSet().getBasisIndex(index);
 }
+
+
 
 inline bool Model::getIsConstructed(){
 	return singleParticleContext.getHoppingAmplitudeSet().getIsConstructed();
 }
 
+
+
 inline void Model::setTemperature(double temperature){
 	this->temperature = temperature;
 }
+
+
+
 
 inline double Model::getTemperature() const{
 	return temperature;
 }
 
+
+
 inline void Model::setChemicalPotential(double chemicalPotential){
 	this->chemicalPotential = chemicalPotential;
 }
+
+
 
 inline double Model::getChemicalPotential() const{
 	return chemicalPotential;
 }
 
+
+
 inline void Model::setStatistics(Statistics statistics){
 	singleParticleContext.setStatistics(statistics);
 }
+
+
+
 
 inline Statistics Model::getStatistics() const{
 	return singleParticleContext.getStatistics();
 }
 
+
+
+
 inline const BasisStateSet& Model::getBasisStateSet() const{
 	return singleParticleContext.getBasisStateSet();
 }
+
+
+
 
 inline const HoppingAmplitudeSet& Model::getHoppingAmplitudeSet() const{
 	return singleParticleContext.getHoppingAmplitudeSet();
@@ -423,6 +456,9 @@ inline Model& Model::operator<<(const AbstractState &basisState){
 }
 
 inline Model& Model::operator<<(const HoppingAmplitude &hoppingAmplitude){
+
+	std::cout << "Model::operator<< LINE 427 is called\n";
+
 	if(
 		hoppingAmplitudeFilter == nullptr
 		|| hoppingAmplitudeFilter->isIncluded(hoppingAmplitude)
@@ -433,7 +469,12 @@ inline Model& Model::operator<<(const HoppingAmplitude &hoppingAmplitude){
 	return *this;
 }
 
+
+
 inline Model& Model::operator<<(const std::tuple<HoppingAmplitude, HoppingAmplitude> &hoppingAmplitudes){
+
+	std::cout << "Model::operator<< LINE 443 is called\n";
+
 	if(
 		hoppingAmplitudeFilter == nullptr
 	){

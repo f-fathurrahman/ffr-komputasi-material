@@ -13,20 +13,20 @@
  * limitations under the License.
  */
 
-/// @cond TBTK_FULL_DOCUMENTATION
-/** @package TBTKcalc
+/// @cond MyTBTK_FULL_DOCUMENTATION
+/** @package MyTBTKcalc
  *  @file D3HexagonalPrimitive.h
  *  @brief Hexagonal primitive Bravais lattices.
  *
  *  @author Kristofer Björnson
  */
 
-#ifndef COM_DAFER45_TBTK_D3_HEXAGONAL_PRIMITIVE
-#define COM_DAFER45_TBTK_D3_HEXAGONAL_PRIMITIVE
+#ifndef COM_DAFER45_MyTBTK_D3_HEXAGONAL_PRIMITIVE
+#define COM_DAFER45_MyTBTK_D3_HEXAGONAL_PRIMITIVE
 
-#include "TBTK/Lattice/D3/TriclinicPrimitive.h"
+#include "MyTBTK/Lattice/D3/TriclinicPrimitive.h"
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Lattice{
 namespace D3{
 
@@ -53,7 +53,7 @@ public:
 
 };	//End of namespace D3
 };	//End of namespace Lattice
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK
 
 #endif
 /// @endcond

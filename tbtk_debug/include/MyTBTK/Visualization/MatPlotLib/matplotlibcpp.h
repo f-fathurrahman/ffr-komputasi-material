@@ -35,10 +35,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-/// @cond TBTK_FULL_DOCUMENTATION
+/// @cond MyTBTK_FULL_DOCUMENTATION
 #pragma once
 
-#include "TBTK/Visualization/MatPlotLib/Interpreter.h"
+#include "MyTBTK/Visualization/MatPlotLib/Interpreter.h"
 
 #include <vector>
 #include <map>
@@ -77,7 +77,7 @@
 #endif
 
 
-namespace TBTK {
+namespace MyTBTK {
 namespace Visualization {
 namespace MatPlotLib {
 namespace matplotlibcpp {
@@ -2034,5 +2034,5 @@ private:
 } // end namespace matplotlibcpp
 } // end namespace MatPlotLib
 } // end namespace Visualization
-} // end namespace TBTK
+} // end namespace MyTBTK
 /// @endcond

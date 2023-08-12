@@ -13,20 +13,20 @@
  * limitations under the License.
  */
 
-/// @cond TBTK_FULL_DOCUMENTATION
-/** @package TBTKcalc
+/// @cond MyTBTK_FULL_DOCUMENTATION
+/** @package MyTBTKcalc
  *  @file D2TetragonalPrimitive.h
  *  @brief Tetragonal primitive Bravais lattices.
  *
  *  @author Kristofer Björnson
  */
 
-#ifndef COM_DAFER45_TBTK_D2_TETRAGONAL_PRIMITIVE
-#define COM_DAFER45_TBTK_D2_TETRAGONAL_PRIMITIVE
+#ifndef COM_DAFER45_MyTBTK_D2_TETRAGONAL_PRIMITIVE
+#define COM_DAFER45_MyTBTK_D2_TETRAGONAL_PRIMITIVE
 
-#include "TBTK/Lattice/D2/D2OrthorhombicPrimitive.h"
+#include "MyTBTK/Lattice/D2/D2OrthorhombicPrimitive.h"
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Lattice{
 namespace D2{
 
@@ -49,7 +49,7 @@ public:
 
 };	//End of namespace D2
 };	//End of namespace Lattice
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK
 
 #endif
 /// @endcond

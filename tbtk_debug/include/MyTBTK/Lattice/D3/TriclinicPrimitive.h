@@ -13,20 +13,20 @@
  * limitations under the License.
  */
 
-/// @cond TBTK_FULL_DOCUMENTATION
-/** @package TBTKcalc
+/// @cond MyTBTK_FULL_DOCUMENTATION
+/** @package MyTBTKcalc
  *  @file TriclinicPrimitive.h
  *  @brief Triclinic primitive Bravais lattices.
  *
  *  @author Kristofer Björnson
  */
 
-#ifndef COM_DAFER45_TBTK_TRICLINIC_PRIMITIVE
-#define COM_DAFER45_TBTK_TRICLINIC_PRIMITIVE
+#ifndef COM_DAFER45_MyTBTK_TRICLINIC_PRIMITIVE
+#define COM_DAFER45_MyTBTK_TRICLINIC_PRIMITIVE
 
-#include "TBTK/Lattice/BravaisLattice.h"
+#include "MyTBTK/Lattice/BravaisLattice.h"
 
-namespace TBTK{
+namespace MyTBTK{
 namespace Lattice{
 namespace D3{
 
@@ -57,7 +57,7 @@ public:
 
 };	//End of namespace D3
 };	//End of namespace Lattice
-};	//End of namespace TBTK
+};	//End of namespace MyTBTK
 
 #endif
 /// @endcond
