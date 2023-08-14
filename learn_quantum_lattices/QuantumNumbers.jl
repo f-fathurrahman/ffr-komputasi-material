@@ -7,7 +7,7 @@ using Printf: @printf, @sprintf
 using Random: MersenneTwister, seed!, shuffle!
 using ..Toolkit: Combinations, HomoNamedVector, VectorSpace, VectorSpaceCartesian, VectorSpaceEnumerative, VectorSpaceStyle
 
-import ..QuantumLattices: ⊕, ⊗, decompose, dimension, expand, permute
+import ..MyQuantumLattices: ⊕, ⊗, decompose, dimension, expand, permute
 import ..Toolkit: shape
 
 export AbelianNumber, AbelianNumbers, regularize, regularize!, periods, @abeliannumber

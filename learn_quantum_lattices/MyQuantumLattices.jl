@@ -1,4 +1,4 @@
-module QuantumLattices
+module MyQuantumLattices
 
 import LinearAlgebra: ishermitian, rank, mul!, ⋅
 

@@ -4,7 +4,7 @@ using Formatting: FormatSpec, fmt
 using Printf: @printf
 using StaticArrays: SVector
 
-import QuantumLattices: ⊕, ⊗
+import MyQuantumLattices: ⊕, ⊗
 
 # Utilities
 export atol, rtol, Float

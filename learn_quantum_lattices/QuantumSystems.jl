@@ -5,13 +5,13 @@ using Printf: @printf, @sprintf
 using SparseArrays: SparseMatrixCSC
 using StaticArrays: SVector
 using ..DegreesOfFreedom: wildcard, AbstractCompositeIndex, Component, CompositeIID, CompositeIndex, CompositeInternal, Coupling, Hilbert, IIDSpace, Index, SimpleIID, SimpleInternal, Term, TermAmplitude, TermCoupling, TermModulate, @indexes
-using ..QuantumLattices: decompose, dtype, kind
+using ..MyQuantumLattices: decompose, dtype, kind
 using ..QuantumOperators: ID, LaTeX, Operator, OperatorProd, Operators, latexformat
 using ..Spatials: Bond, Point, rcoordinate
 using ..Toolkit: atol, efficientoperations, rtol, Float, VectorSpace, VectorSpaceCartesian, VectorSpaceStyle, decimaltostr, delta, getcontent, rawtype
 
 import ..DegreesOfFreedom: MatrixCoupling, diagonalizablefields, iidtype, isdefinite, sitestructure, statistics
-import ..QuantumLattices: ⊗, ⋅, expand, expand!, permute, rank
+import ..MyQuantumLattices: ⊗, ⋅, expand, expand!, permute, rank
 import ..QuantumOperators: latexname, matrix, optype, script
 import ..Toolkit: shape
 

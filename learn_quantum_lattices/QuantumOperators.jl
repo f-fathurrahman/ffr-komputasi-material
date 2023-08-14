@@ -5,7 +5,7 @@ using Printf: @printf, @sprintf
 using ..Toolkit: atol, efficientoperations, rtol, contentorder, decimaltostr, fulltype, getcontent, parameterpairs, parametertype, promoteparameters, rawtype, reparameter
 
 import LaTeXStrings: latexstring
-import ..QuantumLattices: ⊗, ⋅, add!, div!, dtype, id, ishermitian, mul!, permute, rank, sub!, value
+import ..MyQuantumLattices: ⊗, ⋅, add!, div!, dtype, id, ishermitian, mul!, permute, rank, sub!, value
 import ..Toolkit: contentnames, dissolve, isparameterbound, parameternames
 
 export ID, Operator, OperatorPack, OperatorProd, Operators, OperatorSum, OperatorUnit, LaTeX, QuantumOperator

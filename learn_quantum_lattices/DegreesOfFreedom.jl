@@ -3,13 +3,13 @@ module DegreesOfFreedom
 using Printf: @printf, @sprintf
 using SparseArrays: SparseMatrixCSC, nnz
 using StaticArrays: SVector
-using ..QuantumLattices: add!, decompose, dimension, dtype
+using ..MyQuantumLattices: add!, decompose, dimension, dtype
 using ..QuantumOperators: ID, LinearTransformation, Operator, OperatorPack, Operators, OperatorSum, OperatorUnit, valuetolatextext, valuetostr
 using ..Spatials: Bond, Point
 using ..Toolkit: atol, efficientoperations, rtol, CompositeDict, CompositeTuple, Float, NamedContainer, VectorSpace, VectorSpaceCartesian, VectorSpaceDirectProducted, VectorSpaceDirectSummed, VectorSpaceStyle, commontype, concatenate, decimaltostr, fulltype, parametertype, rawtype, reparameter
 
 import LaTeXStrings: latexstring
-import ..QuantumLattices: ⊕, ⊗, expand, expand!, kind, id, ishermitian, rank, reset!, update!, value
+import ..MyQuantumLattices: ⊕, ⊗, expand, expand!, kind, id, ishermitian, rank, reset!, update!, value
 import ..QuantumOperators: idtype, optype, script
 import ..Spatials: icoordinate, rcoordinate
 import ..Toolkit: contentnames, getcontent, isparameterbound, parameternames, shape

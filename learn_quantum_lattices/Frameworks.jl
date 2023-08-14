@@ -11,7 +11,7 @@ using ..QuantumOperators: Operators, LinearFunction, LinearTransformation, Trans
 using ..Spatials: AbstractLattice, Bond, Neighbors, bonds!, isintracell
 using ..Toolkit: atol, efficientoperations, rtol, decimaltostr
 
-import ..QuantumLattices: add!, expand, expand!, id, reset!, update, update!
+import ..MyQuantumLattices: add!, expand, expand!, id, reset!, update, update!
 import ..Spatials: save
 import ..Toolkit: contentnames, getcontent
 

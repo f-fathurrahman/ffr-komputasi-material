@@ -1,27 +1,35 @@
-module ExactDiagonalization
+module MyExactDiagonalization
 
 using Arpack: eigs
 using Base.Iterators: product
 using LinearAlgebra: Eigen
 using Printf: @printf, @sprintf
-using QuantumLattices: expand, id, rank
-using QuantumLattices: plain, Boundary, Hilbert, Metric, OperatorUnitToTuple, Table, Term
-using QuantumLattices: Frontend, Image, OperatorGenerator
-using QuantumLattices: LinearTransformation, MatrixRepresentation, Operator, OperatorPack, Operators, OperatorSum, OperatorUnit, idtype
-using QuantumLattices: Fock, FockTerm, Spin, SpinTerm, iscreation
-using QuantumLattices: AbstractLattice, Neighbors, bonds
-using QuantumLattices: Combinations, DuplicatePermutations, VectorSpace, VectorSpaceEnumerative, VectorSpaceStyle, reparameter
+
+using MyQuantumLattices: expand, id, rank
+using MyQuantumLattices: plain, Boundary, Hilbert, Metric, OperatorUnitToTuple, Table, Term
+using MyQuantumLattices: Frontend, Image, OperatorGenerator
+using MyQuantumLattices: LinearTransformation, MatrixRepresentation, Operator, OperatorPack, Operators, OperatorSum, OperatorUnit, idtype
+using MyQuantumLattices: Fock, FockTerm, Spin, SpinTerm, iscreation
+using MyQuantumLattices: AbstractLattice, Neighbors, bonds
+using MyQuantumLattices: Combinations, DuplicatePermutations, VectorSpace, VectorSpaceEnumerative, VectorSpaceStyle, reparameter
+
 using SparseArrays: SparseMatrixCSC, spzeros
 
 import LinearAlgebra: eigen
-import QuantumLattices: ⊕, ⊗, add!, dtype, kind, matrix, update!
-import QuantumLattices: contentnames, getcontent, parameternames
-import QuantumLattices: statistics
-import QuantumLattices: Parameters
 
+import MyQuantumLattices: ⊕, ⊗, add!, dtype, kind, matrix, update!
+import MyQuantumLattices: contentnames, getcontent, parameternames
+import MyQuantumLattices: statistics
+import MyQuantumLattices: Parameters
+
+# Exported symbols
 export BinaryBases, BinaryBasis, BinaryBasisRange, Sector, TargetSpace
 export ED, EDKind, EDMatrix, EDMatrixRepresentation, SectorFilter
 export productable, sumable
+
+
+
+
 
 """
     abstract type Sector <: OperatorUnit
@@ -29,6 +37,13 @@ export productable, sumable
 A sector of the Hilbert space which form the bases of an irreducible representation of the Hamiltonian of a quantum lattice system.
 """
 abstract type Sector <: OperatorUnit end
+
+
+
+
+
+
+
 
 """
     TargetSpace{S<:Sector} <: VectorSpace{S}
@@ -53,6 +68,12 @@ function add!(target::TargetSpace, another::TargetSpace)
     return target
 end
 
+
+
+
+
+
+
 """
     ⊕(sector::Sector, sectors::Union{Sector, TargetSpace}...) -> TargetSpace
     ⊕(target::TargetSpace, sectors::Union{Sector, TargetSpace}...) -> TargetSpace
@@ -70,6 +91,13 @@ end
     return result
 end
 
+
+
+
+
+
+
+
 """
     TargetSpace(sector::Sector, sectors::Sector...)
 
@@ -82,6 +110,16 @@ Construct a target space from sectors.
     end
     return result
 end
+
+
+
+
+
+
+
+
+
+
 
 # Binary bases commonly used in canonical fermionic and hardcore bosonic quantum lattice systems
 """
@@ -127,6 +165,7 @@ end
 Get a new basis with the specified single-particle state occupied. 
 """
 @inline Base.one(basis::BinaryBasis, state::Integer) = BinaryBasis(basis.rep | one(basis.rep)<<(state-1))
+
 
 """
     isone(basis::BinaryBasis, state::Integer) -> Bool
@@ -268,7 +307,12 @@ end
 
 Judge whether two sets of binary bases could be direct summed.
 
-Strictly speaking, two sets of binary bases could be direct summed if and only if they have no intersection. The time complexity to check the intersection is O(n log n), which costs a lot when the dimension of the binary bases is huge. It is also possible to judge whether they could be direct summed by close investigations on their ids, i.e. the single-particle states and occupation number. It turns out that this is a multi-variable pure integer linear programming problem. In the future, this function would be implemented based on this observation. At present, the direct summability should be handled by the users in priori.
+Strictly speaking, two sets of binary bases could be direct summed if and only if they have no intersection. The 
+time complexity to check the intersection is O(n log n), which costs a lot when the dimension of the binary bases 
+is huge. It is also possible to judge whether they could be direct summed by close investigations on their ids, 
+i.e. the single-particle states and occupation number. It turns out that this is a multi-variable pure integer 
+linear programming problem. In the future, this function would be implemented based on this observation. At 
+present, the direct summability should be handled by the users in priori.
 """
 @inline sumable(bs₁::BinaryBases, bs₂::BinaryBases) = true
 
@@ -355,6 +399,13 @@ function matrix(ops::Operators, braket::NTuple{2, BinaryBases}, table; dtype=val
     return result
 end
 
+
+
+
+
+
+
+
 # Generic exact diagonalization method
 """
     EDMatrix{S<:Sector, M<:SparseMatrixCSC} <: OperatorPack{M, Tuple{S, S}}
@@ -401,6 +452,11 @@ function (representation::EDMatrixRepresentation)(m::Operator; kwargs...)
     end
     return result
 end
+
+
+
+
+
 
 """
     EDMatrixRepresentation(target::TargetSpace, table)
