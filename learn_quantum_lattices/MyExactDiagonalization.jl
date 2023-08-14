@@ -225,6 +225,22 @@ function BinaryBasis{I}(states; filter=index->true) where {I<:Unsigned}
     return BinaryBasis(rep)
 end
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 """
     BinaryBasisRange{I<:Unsigned} <: VectorSpace{BinaryBasis{I}}
 
@@ -236,6 +252,21 @@ end
 @inline Base.issorted(bbr::BinaryBasisRange) = true
 @inline Base.length(bbr::BinaryBasisRange) = length(bbr.slice)
 @inline Base.getindex(bbr::BinaryBasisRange, i::Integer) = BinaryBasis(bbr.slice[i])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 """
     BinaryBases{B<:BinaryBasis, T<:AbstractVector{B}} <: Sector
@@ -343,6 +374,8 @@ Construct a set of binary bases that preserves the particle number conservation.
 @inline BinaryBases(nstate::Integer, nparticle::Integer) = BinaryBases(1:nstate, Val(nparticle))
 @inline BinaryBases(states, nparticle::Integer) = BinaryBases(states, Val(nparticle))
 function BinaryBases(states, ::Val{N}) where N
+    println("Constructing BinaryBases in line: ", @__LINE__)
+    println("N = ", N)
     com = Combinations{N}(sort!(collect(states); rev=true))
     I = typeof(Unsigned(first(states)))
     table = Vector{BinaryBasis{I}}(undef, length(com))
@@ -351,6 +384,12 @@ function BinaryBases(states, ::Val{N}) where N
     end
     return BinaryBases([(BinaryBasis{I}(states), Float64(N))], table)
 end
+
+
+
+
+
+
 
 # CSC-formed sparse matrix representation of an operator
 """
@@ -538,13 +577,23 @@ end
 
 Construct the exact diagonalization method for a quantum lattice system.
 """
-function ED(lattice::AbstractLattice, hilbert::Hilbert, terms::Tuple{Vararg{Term}}, targetspace::TargetSpace; neighbors::Union{Nothing, Int, Neighbors}=nothing, boundary::Boundary=plain)
+function ED(lattice::AbstractLattice,
+    hilbert::Hilbert,
+    terms::Tuple{Vararg{Term}},
+    targetspace::TargetSpace;
+    neighbors::Union{Nothing, Int, Neighbors}=nothing,
+    boundary::Boundary=plain
+)
+    println("Constructing ED in line: ", @__LINE__)
     k = EDKind(typeof(terms))
+    println("k = ", k)
     isnothing(neighbors) && (neighbors = maximum(term->term.bondkind, terms))
     H = OperatorGenerator(terms, bonds(lattice, neighbors), hilbert; half=false, boundary=boundary)
     mr = EDMatrixRepresentation(targetspace, Table(hilbert, Metric(k, hilbert)))
     return ED{typeof(k)}(lattice, H, mr)
 end
+
+
 
 """
     matrix(ed::ED, sector::Sector; kwargs...) -> EDMatrix

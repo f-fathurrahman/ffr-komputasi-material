@@ -23,6 +23,7 @@ hilbert = Hilbert(site=>Fock{:f}(1, 2) for site=1:length(lattice))
 
 # define the binary bases of the a half-filled system on the above cluster
 bases = BinaryBases(1:12, 6) ⊗ BinaryBases(13:24, 6)
+# 12 sites, max: 24 electrons, half-filled: 12 electrons
 
 # define the terms, i.e. the nearest-neighbor hopping and the Hubbard interaction
 t = Hopping(:t, -1.0, 1)
