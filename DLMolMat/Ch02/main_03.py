@@ -1,3 +1,6 @@
+# Linear model, using JAX
+# Stochastic gradient descent with batching
+
 # Silent TF_CPP messages
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3" 
@@ -84,3 +87,4 @@ plt.grid(True)
 plt.title("Batched Loss Curve")
 plt.savefig("IMG_loss_progress_02.png", dpi=150)
 plt.show()
+
