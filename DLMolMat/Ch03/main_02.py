@@ -7,10 +7,18 @@ import numpy as np
 import pandas as pd
 
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use("seaborn-v0_8-darkgrid")
+
+# This is quite slow
+#plt.rcParams.update({
+#    "text.usetex": True,
+#    "font.size": 12}
+#)
 
 import jax
 import jax.numpy as jnp
-from jax.example_libraries import optimizers
+from jax.example_libraries import optimizers # not required ?
 
 np.random.seed(1234)
 # Pandas will also use this as random number state
@@ -71,12 +79,46 @@ for i in range(2000):
 print("Last train loss = ", loss_progress[-1])
 print("Last test loss  = ", test_loss_progress[-1])
 
-plt.clf()
 plt.plot(loss_progress, label="Training Loss")
 plt.plot(test_loss_progress, label="Testing Loss")
 plt.xlabel("Step")
 plt.yscale("log")
 plt.legend()
 plt.ylabel("Loss")
-plt.savefig("IMG_01.png", dpi=150)
+plt.savefig("IMG_training.png", dpi=150)
+plt.show()
+
+# Evaluate the model on training data
+yhat = x @ w + b
+plt.plot(y, y, ":", linewidth=0.2)
+plt.plot(y, x @ w + b, "o")
+plt.xlim(min(y), max(y))
+plt.ylim(min(y), max(y))
+plt.text(min(y) + 1, max(y) - 2, f"correlation = {np.corrcoef(y, yhat)[0,1]:.3f}")
+plt.text(min(y) + 1, max(y) - 3, f"loss = {np.sqrt(np.mean((y - yhat)**2)):.3f}")
+plt.title("Training Data")
+plt.gca().set_aspect("equal", "box")
+plt.savefig("IMG_model_vs_training_data_01.png", dpi=150)
+plt.show()
+
+# Evaluate the model on testing data
+yhat = test_x @ w + b
+#plt.plot(test_y, test_y, ":", linewidth=0.2)
+plt.plot(test_y, test_y, ":")
+plt.plot(test_y, yhat, "o")
+plt.xlim(min(test_y), max(test_y))
+plt.ylim(min(test_y), max(test_y))
+plt.text(
+    min(test_y) + 1,
+    max(test_y) - 2,
+    f"correlation = {np.corrcoef(test_y, yhat)[0,1]:.3f}",
+)
+plt.text(
+    min(test_y) + 1,
+    max(test_y) - 3,
+    f"loss = {np.sqrt(np.mean((test_y - yhat)**2)):.3f}",
+)
+plt.title("Testing Data")
+plt.gca().set_aspect("equal", "box")
+plt.savefig("IMG_model_vs_testing_data_01.png", dpi=150)
 plt.show()
