@@ -12,6 +12,8 @@ import jax
 import jax.numpy as jnp
 from jax.example_libraries import optimizers
 
+np.random.seed(1234)
+# Pandas will also use this as random number state
 
 # Load data
 # Original: https://dataverse.harvard.edu/api/access/datafile/3407241
@@ -37,6 +39,10 @@ y = train["Solubility"].values
 test_x = test[feature_names].values
 test_y = test["Solubility"].values
 
+# Should be close to 0 and 1
+print("x mean = ", np.mean(x, axis=0))
+print("x std  = ", np.std(x, axis=0, ddof=1))
+
 
 # define our loss function
 @jax.jit
@@ -58,9 +64,12 @@ for i in range(2000):
     b -= eta * grad[1]
     loss_progress.append(loss(w, b, x, y))
     test_loss_progress.append(loss(w, b, test_x, test_y))
+
+print("Last train loss = ", loss_progress[-1])
+print("Last test loss  = ", test_loss_progress[-1])
+
 plt.plot(loss_progress, label="Training Loss")
 plt.plot(test_loss_progress, label="Testing Loss")
-
 plt.xlabel("Step")
 plt.yscale("log")
 plt.legend()
