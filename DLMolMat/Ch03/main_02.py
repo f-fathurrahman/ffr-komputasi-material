@@ -85,7 +85,7 @@ plt.xlabel("Step")
 plt.yscale("log")
 plt.legend()
 plt.ylabel("Loss")
-plt.savefig("IMG_training.png", dpi=150)
+plt.savefig("IMG_training.png")
 plt.show()
 
 # Evaluate the model on training data
@@ -98,7 +98,7 @@ plt.text(min(y) + 1, max(y) - 2, f"correlation = {np.corrcoef(y, yhat)[0,1]:.3f}
 plt.text(min(y) + 1, max(y) - 3, f"loss = {np.sqrt(np.mean((y - yhat)**2)):.3f}")
 plt.title("Training Data")
 plt.gca().set_aspect("equal", "box")
-plt.savefig("IMG_model_vs_training_data_01.png", dpi=150)
+plt.savefig("IMG_model_vs_training_data_01.png")
 plt.show()
 
 # Evaluate the model on testing data
@@ -120,5 +120,5 @@ plt.text(
 )
 plt.title("Testing Data")
 plt.gca().set_aspect("equal", "box")
-plt.savefig("IMG_model_vs_testing_data_01.png", dpi=150)
+plt.savefig("IMG_model_vs_testing_data_01.png")
 plt.show()
