@@ -1,0 +1,37 @@
+---
+title: "Draft for Various Things"
+author: ""
+format:
+  revealjs:
+    smaller: false
+    width: 1920
+    height: 1080
+    margin: 0.1
+---
+
+
+## Machine learning by problems
+
+- Supervised learning
+  - regression
+  - classifications
+
+- Unsupervised learning
+  - clustering
+  - dimensionality reduction
+
+- Reinforcement learning
+
+
+## Machine learning by models or algorithms
+
+- Linear models:
+  - ordinary least squares
+  - logistic regression
+  - k-means clustering
+
+- Nonlinear models
+  - tree-based models
+  - kernel methods
+  - neural networks
+

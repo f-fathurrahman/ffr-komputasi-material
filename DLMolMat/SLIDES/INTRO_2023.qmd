@@ -1,0 +1,69 @@
+---
+title: "TF4063 Engineering Data Science"
+author: ""
+format:
+  revealjs:
+    smaller: true
+---
+
+## Instructors (Academic Year 2023)
+
+- Miranti Indar Mandasari, Ph.D (MIM)
+
+- Fadjar Fathurrahman, Ph.D (FF)
+
+
+## Several topics
+
+- Introduction to data science and related fields
+
+- Introduction to machine learning
+
+  - supervised learning: regression and classification
+  - unsupervised learning: clustering, dimensionality reduction, ...
+
+- Introduction to neural networks and deep learning
+
+
+## Prerequisites and Tools
+
+- You are expected to have a laptop or PC near to you (individual or groups)
+
+- Previous courses/topics: engineering mathematics, linear algebra, calculus,
+  statistics, numerical methods, ...
+
+- Programming languages: Python, C/C++, MATLAB, R, Julia, bash, ...
+
+- Libraries:
+  - Scikit Learn
+  - TensorFlow + Keras
+  - Pytorch
+  - JAX
+  - ....
+
+
+## Some applications or case studies
+
+- speech processing (MIM)
+
+- materials science (FF)
+
+- ...
+
+We usually prefer case studies that does not require large computational resources
+
+Your actual interests might be different but we will try to
+use general concepts or methods.
+
+
+
+## Resources
+
+- [Scikit Learn documentation](https://scikit-learn.org/stable/)
+
+- [Deep Learning for Molecules and Materials](https://dmol.pub/)
+
+- [Dive to Deep Learning](https://d2l.ai/)
+
+- ...
+

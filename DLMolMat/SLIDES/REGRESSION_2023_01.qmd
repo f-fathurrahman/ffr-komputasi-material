@@ -1,0 +1,106 @@
+---
+title: "Introduction to Regression"
+author: ""
+format:
+  revealjs:
+    smaller: true
+---
+
+## What we will do
+
+- Using JAX to do simple linear regression
+- Finding the model's parameters via loss function minization
+- Using gradient descent method
+- Batching
+- Feature standardization
+- Analyzing model performance
+
+## (My) Setup (using terminal-based workflow)
+
+- Using `conda` Python package manager.
+- Create a dedicated environment for this course. I named it `DLMOLMAT`.
+- After the environment is created and activated we can use install the required
+  packages, either using `conda` or `pip`.
+- I installed CPU-only version of TensorFlow, JAX, and PyTorch.
+
+```
+conda create -n DLMOLMAT python=3.11
+conda activate DLMOLMAT
+pip install package_name
+```
+
+- If we have time, we will explore GPU usage later (using NVIDIA CUDA framework).
+- Other package managers such as `pipenv` or `poetry` can be used.
+
+
+## Setup: alternative
+
+- You can use Google Colab and `pip` to install the required packages.
+
+```
+!pip install "jax[cpu]"
+```
+
+- GPU version of TensorFlow, JAX, and PyTorch can be used.
+
+Google Colab is actually using Ubuntu:
+```
+!lsb_release -a
+```
+
+Example output
+```
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 22.04.2 LTS
+Release:	22.04
+Codename:	jammy
+```
+
+`!` is used in front of shell command that we want to use.
+
+
+## Use notebooks or scripts?
+
+- You may choose your preferred workflow
+- I usually use notebooks for data exploration.
+  For model building I usually use simple **text editor + scripts** and **terminal**.
+- You also can use VS Code for this (can handle both scripts + terminal and notebooks).
+  Make sure that the correct environment is activated in VS Code.
+
+
+
+
+## Reference
+
+Explore [https://dmol.pub/ml/introduction.html](https://dmol.pub/ml/introduction.html)
+until 2.3.9 (analyzing model performance)
+
+
+## Some questions
+
+- What is the data that we use?
+- What is the target? What are the features?
+- What is the model used in the notebook (the mathematical equation)?
+- What are the parameters of the model? How many?
+- How do we find the parameters?
+- What is the loss function used?
+- Is your result perfectly the same as the one presented in the original notebook
+  (are the plots exactly the same?) Try to run your notebooks multiple times.
+  Are the results the same?
+- What is the main purpose of JAX here? Is usage of JAX mandatory here?
+  Can I use other packages? Can I implement this with only NumPy and standard
+  packages?
+- ...
+
+
+
+## Additional tasks or exploration
+
+- Try implementing the analytic solution to the linear regression problem
+  (you can use Numpy)
+
+- Use ScikitLearn to do the linear regression
+
+- Use PyTorch and TensorFlow instead of JAX
+
