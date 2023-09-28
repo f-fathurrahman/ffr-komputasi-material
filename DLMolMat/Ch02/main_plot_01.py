@@ -21,9 +21,6 @@ plt.rcParams.update({
     "savefig.dpi": 150
 })
 
-np.random.seed(1234)
-# Pandas will also use this as random number state
-
 # Load data
 # Original: https://dataverse.harvard.edu/api/access/datafile/3407241
 soldata = pd.read_csv("../DATASET/curated-solubility-dataset.csv")
