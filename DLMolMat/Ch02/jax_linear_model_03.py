@@ -1,6 +1,9 @@
 import numpy as np
+
 import jax
+jax.config.update("jax_enable_x64", True)
 import jax.numpy as jnp
+
 
 # Define the model
 def linear_model(x, w, b):
@@ -19,23 +22,14 @@ def loss_wrapper(w, b, data):
     y = linear_model(features, w, b)
     return loss(y, labels)
 
-# loss grad is a new function
-loss_grad = jax.grad(loss_wrapper, (0, 1))
+w_true = np.array([0.1])
+b_true = 0.3
 
-# Some test
-x = np.array([1.0, 0, 2.5])
-w = np.array([0.2, -0.5, 0.4])
-b = 4.3
+Ndata = 20
+x = np.linspace(-5.0, 5.0, Ndata)
+y = np.zeros(Ndata)
+for i in range(Ndata):
+    y[i] = linear_model(x[i], w_true, b_true)
 
-w_true = np.array([0.1, 0.3, 0.4])
-b_true = 0.1
-
-#y_true = x**2 + 1.1
-y_true = w_true[0]*x[0] + w_true[1]*x[1] + w_true[2]*x[2] + b_true
-
-y_pred = linear_model(x, w, b)
-print("y_pred = ", y_pred)
-
-dLdx, dLdb = loss_grad(w, b, (x, y_true))
-print("loss grad dLdx = ", dLdx)
-print("loss grad dLdb = ", dLdb)
+print("y = ", y)
+print("y.shape = ", y.shape)

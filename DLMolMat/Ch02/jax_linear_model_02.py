@@ -22,19 +22,24 @@ def loss_wrapper(w, b, data):
 # loss grad is a new function
 loss_grad = jax.grad(loss_wrapper, (0, 1))
 
-# Some test
-x = np.array([1.0, 0, 2.5])
-w = np.array([0.2, -0.5, 0.4])
-b = 4.3
-
 w_true = np.array([0.1, 0.3, 0.4])
 b_true = 0.1
 
-#y_true = x**2 + 1.1
+# Some data
+x = np.array([1.0, 0.1, 2.5]) # we only have one instance
+
+# The target, generated using true model parameter
 y_true = w_true[0]*x[0] + w_true[1]*x[1] + w_true[2]*x[2] + b_true
+print("y_true = ", y_true)
+
+# Guess the value of parameters
+w = np.array([0.1, 0.3, 0.4])
+b = 0.1
 
 y_pred = linear_model(x, w, b)
 print("y_pred = ", y_pred)
+
+print("loss = ", loss_wrapper(w, b, (x, y_true)))
 
 dLdx, dLdb = loss_grad(w, b, (x, y_true))
 print("loss grad dLdx = ", dLdx)
