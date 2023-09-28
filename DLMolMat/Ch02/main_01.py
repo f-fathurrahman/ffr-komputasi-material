@@ -9,7 +9,8 @@ import seaborn as sns
 soldata = pd.read_csv("../DATASET/curated-solubility-dataset.csv")
 
 # Plot histogram
-sns.distplot(soldata.Solubility)
+sns.displot(soldata.Solubility)
+#sns.distplot(soldata.Solubility)
 plt.show()
 
 
@@ -33,6 +34,6 @@ for i in range(len(feature_names), len(axs)):
     fig.delaxes(axs[i])
 
 plt.tight_layout()
-plt.savefig("IMG_grid_plot_01.png", dpi=200)
-plt.savefig("IMG_grid_plot_01.pdf")
+plt.savefig("IMG_grid_plot_01.png", dpi=300)
+#plt.savefig("IMG_grid_plot_01.pdf")
 #plt.show()
