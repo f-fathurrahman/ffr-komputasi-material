@@ -1,0 +1,78 @@
+---
+title: "Introduction to Machine Learning"
+author: ""
+format:
+  revealjs:
+    smaller: true
+---
+
+## Resources
+
+There are many resources and articles about machine learning on the web.
+
+I will specifically use the following:
+
+- Deep Learning for Molecules and Materials [dmol.pub](https://dmol.pub)
+  We will only try to cover the machine learning part.
+
+
+## Additional resources
+
+- https://dataminingbook.info/
+
+- https://scikit-learn.org/stable/tutorial/index.html
+
+- https://github.com/ageron/handson-ml3
+
+- https://theoryandpractice.org/stats-ds-book/data-science-topics.html
+
+
+
+
+## Definition
+
+From Wikipedia:
+
+> Machine learning (ML) is an umbrella term for solving problems for which development of
+> algorithms by human programmers would be cost-prohibitive, and instead the problems are
+> solved by helping machines "discover" their  "own" algorithms, without needing to be
+> explicitly told what to do by any human-developed algorithms
+
+
+## Machine learning by problems
+
+- Supervised learning
+  - regression
+  - classifications
+
+- Unsupervised learning
+  - clustering
+  - dimensionality reduction
+  - Generative modeling
+
+- Reinforcement learning
+
+
+
+## Machine learning by models or algorithms
+
+- Linear models:
+  - ordinary least squares (OLS) and generalized least squares 
+  - logistic regression
+  - k-means clustering
+
+- Nonlinear models
+  - tree-based models
+  - kernel methods
+  - neural networks and deep learning
+
+
+## Related fields
+
+- artificial intelligence
+- data mining
+- business and predictive analytics
+- econometrics
+- statistical modeling and computational statistics
+- data-driven modeling
+

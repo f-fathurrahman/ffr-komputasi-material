@@ -1,0 +1,286 @@
+---
+title: "Tutorial: Regression"
+author: ""
+format:
+  revealjs:
+    smaller: true
+    width: 1200
+    height: 600
+    theme: dark
+---
+
+
+## Our plan for today {.smaller}
+
+We will explore:
+[https://dmol.pub/ml/introduction.html](https://dmol.pub/ml/introduction.html)
+and try to answers some questions that are mentioned previous week.
+
+
+
+## What is the data that we use?
+
+We will use the AqSolDB database (filename `curated-solubility-dataset.csv`)
+which can be downloaded from the link provided in the text.
+
+We can use Pandas to load the data
+```python
+import pandas as pd
+# Original: https://dataverse.harvard.edu/api/access/datafile/3407241
+soldata = pd.read_csv("../DATASET/curated-solubility-dataset.csv")
+```
+
+This data can be classified as tabular data.
+
+
+## What is the target? What are the features?
+
+
+Check out the column names:
+```
+>>> soldata.columns
+Index(['ID', 'Name', 'InChI', 'InChIKey', 'SMILES', 'Solubility', 'SD',
+       'Ocurrences', 'Group', 'MolWt', 'MolLogP', 'MolMR', 'HeavyAtomCount',
+       'NumHAcceptors', 'NumHDonors', 'NumHeteroatoms', 'NumRotatableBonds',
+       'NumValenceElectrons', 'NumAromaticRings', 'NumSaturatedRings',
+       'NumAliphaticRings', 'RingCount', 'TPSA', 'LabuteASA', 'BalabanJ',
+       'BertzCT'],
+      dtype='object')
+```
+
+What are the data types of each column?
+
+
+We want to predict `Solubility` (target)
+as function of other quantities in the table (features).
+The features are:
+```python
+features_start_at = list(soldata.columns).index("MolWt")
+feature_names = soldata.columns[features_start_at:]
+```
+
+You can find more information about the meaning of the columns in the original
+paper describing the database.
+
+
+## About the target
+
+- What is the datatype of target?
+
+- If it is numerical: `float` or `int` ?
+
+Another possible datatype for target is *categorical* data.
+Usually it is used as the *class label*.
+In this case we have a **classification** instead of regression problem. 
+
+
+
+## Visualize the data
+
+You can use the code provided in the text.
+
+- Plot the histogram of `Solubility`
+- Plot `Solubility` vs each features in a grid plot
+
+I prefer to plot them in different figures: one plot for one feature.
+
+Tips: You might want to increase the dpi for your saved plot
+```python
+plt.rcParams.update({
+    "font.size": 12,
+    "savefig.dpi": 150
+})
+```
+There are many setting in `rcParams`. You might want to customize it.
+
+
+## The model
+
+We will use a linear model, which is described by the following equation:
+$$
+y = \mathbf{w} \cdot \mathbf{x} + b
+$$
+where $\mathbf{x}$ is the feature vector.
+The parameters for our model are the vector $\mathbf{w}$ and the scalar $b$.
+Sometimes, $b$ is also included in the definition of $\mathbf{w}$ so that we only
+have $\mathbf{w}$ as the model parameter.
+
+We also can write our model as:
+$$
+y = w_1 x_{1} + w_2 x_2 + \cdots + b
+$$
+
+
+
+## How to find the parameters? 
+
+There are several ways to find the parameters of our model.
+
+We will use a common method: by *minimizing* a certain quantity called
+*loss function*.
+
+The process of finding the suitable model parameters for our data is
+often called as the *training* process.
+
+## Loss function
+
+Loss function is usually calculated as difference between the actual data $y_{i}$
+or target with our model prediction $\tilde{y}_{i}$. The loss is summed over all
+$N$ data and averaged.
+$$
+L = \frac{1}{N} \sum_{i=1}^{N} F({y_{i}}, {\tilde{y_{i}}})
+$$
+
+In many cases, $F$ is choosen to be simply a squared difference between target and model prediction.
+$$
+L = \frac{1}{N} \sum_{i=1}^{N} \left( y_{i} - \tilde{y_{i}} \right)^2
+$$
+
+This method of choosing parameters by minimizing squared loss is called
+*least squares method*.
+
+
+## Loss function
+
+Now our loss function can be written as
+$$
+L = \frac{1}{N} \sum_{i=1}^{N} \left[ y_{i} - f(\mathbf{x},\mathbf{w},b) \right]
+$$
+where $f$ is the linear model $f = \mathbf{w} \cdot \mathbf{x} + b$.
+
+To minimize $L$, we need to find the $w_i$ and $b$ which satisfy:
+$$
+\begin{align}
+\frac{\partial L}{\partial w_{i}} = 0 \\
+\frac{\partial L}{\partial b} = 0
+\end{align}
+$$
+
+
+## Analytic solution
+
+For some problems, we may have analytic solution. In our case, we do have analytic solution:
+$$
+\mathbf{w} = (\mathbf{X}^{\mathsf{T}} \mathbf{X} )^{-1} \mathbf{X}^{\mathsf{T}} \mathbf{y}
+$$
+where we have arranged feature vectors into a matrix $\mathbf{X}$ and
+scalar $b$ is included in the definition of vector $\mathbf{w}$.
+
+This equation has been implemented in many packages. 
+In Numpy, this is implemented in `np.linalg.lstsq` function.
+
+We will not use this analytic solution. For now, we will use a simple
+method to minimize the loss function *numerically*.
+
+
+## Gradient descent
+
+In gradient descent method, we use gradient information to update parameter
+value iteratively.
+$$
+\begin{align}
+w_{i} & \leftarrow w_{i} - \eta \frac{\partial L}{\partial w_i} \\
+b & \leftarrow b - \eta \frac{\partial L}{\partial b}
+\end{align}
+$$
+The parameter $\eta$ is known as *learning rate*.
+
+$\eta$ is adjustable and it may affect the results of our model.
+It is somewhat affecting our model, but not as directly as the model parameters
+$\mathbf{w}$ and $b$ in our model. 
+
+$\eta$ is an example of *hyperparameter*: any parameter that might affect the quality of
+but not optimized directly in the training process.
+
+## Model and loss function
+
+Here's the code that is used in the text:
+```python
+# Define the model
+def linear_model(x, w, b):
+    return jnp.dot(x, w) + b
+
+def loss(y, labels):
+    return jnp.mean((y - labels)**2)
+```
+
+Note that we are using `jax.numpy` (aliased to `jnp`) instead of `numpy`.
+
+Try playing with these functions, especially `linear_model` function.
+
+Verify the operations of `jnp.dot`:
+
+- if both `x` and `w` are vectors
+- if `x` is matrix and `w` is vector
+
+
+## Calculating the gradients
+
+To call `loss` we need to calculate `y` from the model using the current value
+of parameters `w` and `b`. This process is wrapped in the `loss_wrapper` function.
+
+```python
+# w and b are the model parameters
+# data is tuple containing input (index-0) and
+# targets or labels (index-1)
+def loss_wrapper(w, b, data):
+    features = data[0]
+    labels = data[1]
+    y = linear_model(features, w, b)
+    return loss(y, labels)
+
+# compute the gradients using jax.grad
+loss_grad = jax.grad(loss_wrapper, (0, 1))
+```
+
+`loss_grad` is a new function. The arguments are the same as
+`loss_wrapper`.
+
+We only need to calculate gradients of `loss_wrapper` with respect to
+the first parameter (index-0) and second parameter (index-1).
+
+
+## Training loop (minimization)
+
+Visualize loss function value during minimization
+
+Try to vary learning rate and number of iterations
+
+
+
+## Batching
+
+In batching, rather than using all data at once (we did it in the previous
+training loop), we only take a small batch of data. So, the gradient will be
+updated using only this batch of data.
+
+The data will be divided into small groups or batches, each group will contain
+only `batch_size` data. Then, we will loop over all previous small groups
+or batches until all batches are covered, i.e. we use all data. The loop over
+batches until all batches or data are covered once is called *one epoch*.
+This terminology is often used in neural network training.
+
+What are the advantages of using batches?
+
+Are there any disadvantages? What are they, if any?
+
+
+
+## Feature standardization
+
+Before entering the model, the features are often standardized or normalized.
+
+```python
+fstd = np.std(features, axis=0) # calculate stdev
+fmean = np.mean(features, axis=0) # calculate mean
+std_features = (features - fmean) / fstd # standardize
+```
+
+Many packages have utilities to perform feature standardization, please
+check each packages documentation.
+
+
+
+
+
+

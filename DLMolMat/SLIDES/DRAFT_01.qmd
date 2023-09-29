@@ -35,3 +35,13 @@ format:
   - kernel methods
   - neural networks
 
+
+
+## Additional resources
+
+https://dataminingbook.info/
+
+https://github.com/ageron/handson-ml3
+
+https://theoryandpractice.org/stats-ds-book/data-science-topics.html
+
