@@ -58,3 +58,27 @@ print("RMSE training: ", RMSE)
 y_pred = model.predict(test_X)
 RMSE = np.sqrt(np.mean((y_pred - test_y)**2))
 print("RMSE test: ", RMSE)
+
+
+y_pred_all = model.predict(X_all)
+
+plt.clf()
+plt.plot([-100, 100], [-100, 100])
+plt.scatter(y_all, y_pred_all, s=4, alpha=0.7)
+plt.xlabel("Measured Solubility $y$")
+plt.ylabel("Predicted Solubility $\hat{y}$")
+plt.xlim(-13.5, 2)
+plt.ylim(-13.5, 2)
+plt.gca().set_aspect("equal", "box")
+plt.savefig("IMG_main_MLP_parity_plot.png", dpi=150)
+plt.show()
+
+# slice correlation between predict/labels
+# from correlation matrix
+corr_coef = np.corrcoef(y_all, y_pred_all)[0, 1]
+# take off-diagonal element
+print("corr_coef all data = ", corr_coef)
+
+res = np.corrcoef(y_all, y_pred_all)
+print("Full corr_coef = ")
+print(res)
