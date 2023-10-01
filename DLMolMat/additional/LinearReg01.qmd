@@ -1,0 +1,316 @@
+---
+title: Regresi linear sederhana
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .qmd
+      format_name: quarto
+      format_version: '1.0'
+      jupytext_version: 1.15.2
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+```{python}
+import numpy as np
+```
+
+Kita akan mulai pembahasan kita dengan meninjau permasalahan
+regresi linear (lagi).
+
+```{python}
+import matplotlib.pyplot as plt
+import matplotlib
+```
+
+```{python}
+matplotlib.rcParams.update({
+    "axes.grid" : True,
+    "grid.color": "gray",
+    "grid.linestyle": "--"
+})
+```
+
+```{python}
+import matplotlib_inline
+matplotlib_inline.backend_inline.set_matplotlib_formats("svg")
+```
+
+```{python}
+matplotlib.style.use("dark_background")
+```
+
+Misalkan kita telah mengetahui bahwa data kita berasal dari fungsi
+berikut:
+$$
+f(x) = 2x + 1
+$$
+
+```{python}
+def f_true(x):
+    return 2*x + 1
+```
+
+$$
+y = f(x) + \epsilon
+$$
+$\epsilon \sim \mathcal{N}(0,\sigma)$
+
+Pada kenyataannya, fungsi ini akan dipengaruhi oleh noise. Kita akan mensimulasikan noise ini dengan bilangan acak yang terdistribusi normal dengan rata-rata 0 dan deviasi standard `A_noise`. Anda dapat mencoba mengubah-ubah nilai `A_noise` ini.
+
+Selain itu, kita juga memilih nilai titik-titik $x$ berada pada interval $[-5,5]$ dengan jarak pisah yang seragam. Kita dapat menggunakan fungsi `np.linspace` untuk keperluan ini.
+
+```{python}
+np.random.seed(1234)
+x = np.linspace(-5.0, 5.0, 10)
+A_noise = 2.4 # standard deviation or amplitude of noise
+y = f_true(x) + A_noise*np.random.randn(len(x))
+plt.scatter(x, y);
+plt.grid(True)
+```
+
+Berikut adalah "data" yang kita miliki:
+
+```{python}
+import pandas as pd
+pd.DataFrame( list(zip(x, y)) )
+```
+
+```{python}
+list(zip(x, y))
+```
+
+Misalkan sekarang kita ingin mencocokkan fungsi linear $\hat{f}(x)$ untuk data ini:
+$$
+\hat{f}(x) = w_0 + w_1 x
+$$
+dengan $w_0$ dan $w_1$ adalah parameter model.
+
+**Bagaimana cara memilih parameter model yang baik?**
+
+**Bagaimana membedakan antara model yang baik dan yang tidak atau kurang baik?**
+
+Sekarang permasalahan yang dihadapi adalah bagaimana memilih parameter
+model yang terbaik. Sebelum itu, kita perlu mendefinisikan suatu kuantitas
+atau metrik atau ukuran yang dapat dijadikan indikator seberapa baik model untuk dataset yang diberikan.
+Salah satu metrik yang dapat digunakan adalah beda kuadrat antara prediksi
+model dan data target. Untuk data ke-$n$ dapat dituliskan sebagai berikut.
+$$
+\mathcal{L}_n \equiv \left( y_n - f(x_n; w_0, w_1) \right)^2
+$$
+
+Dengan merata-ratakan kontribusi dari seluruh data, dapat diperoleh
+$$
+\mathcal{L} = \frac{1}{N} \sum_{n=1}^{N} \mathcal{L}_n =
+\frac{1}{N} \sum_{n=1}^{N} \left( y_n - f(x_n; w_0, w_1) \right)^2
+\label{eq:loss_function_01}
+$$
+Kuantitas ini dikenal sebagai fungsi rugi atau *loss function*.
+Perhatikan bahwa fungsi rugi selalu bernilai positif atau sama dengan nol.
+Jika kuantitas ini bernilai nol maka model yang digunakan dapat memberikan
+prediksi yang tepat sama dengan data target. Secara praktis hal ini jarang
+ditemui. Meskipun demikian, kita ingin fungsi rugi bernilai sekecil mungkin
+sehingga prediksi model tidak jauh berbeda dengan target.
+Untuk menemukan nilai fungsi rugi yang sekecil mungkin kita dapat melakukan
+proses yang dikenal sebagai minimisasi atau optimasi fungsi.
+
+We can find the parameters $(w_{0},w_{1})$ by using minimization procedures:
+$$
+\arg\min_{w_{0},w_{1}} \frac{1}{N} \sum_{n=1}^{N} \mathcal{L}_{n}
+$$
+
+For our particular case of Eq. \eqref{eq:loss_function_01}, we can found this analytically,
+i.e. calculating the first derivatives of $\mathcal{L}$ with
+respect to $w_0$ and $w_1$, equating
+them to zero, and solve the resulting equations for $w_0$ and $w_1$.
+For more general cases, we can use various numerical optimization procedures such as
+gradient descent methods.
+
+We begin by writing our loss function as:
+$$
+\begin{align*}
+\mathcal{L} & = \frac{1}{N} \sum_{n=1}^{N} \left( t_n - (w_0 + w_1 x_{n}) \right)^2 \\
+& = \frac{1}{N} \sum_{n=1}^{N} \left( w_1^2 x_n^2 + 2w_{1}x_{n}(w_0 - t_n) + w_0^2 - 2w_0 t_n + t_n^2 \right)
+\end{align*}
+$$
+
+Now we find the first derivatives of $\mathcal{L}$ with respect to
+$w_0$, $w_1$ and equating them to zero.
+$$
+\begin{align*}
+\frac{\partial\mathcal{L}}{\partial w_1} & = 2w_1 \frac{1}{N} \left( \sum_{n=1}^{N} x_n^2 \right) +
+\frac{2}{N} \left( \sum_{n=1}^{N} x_{n} (w_0 - t_n) \right) = 0 \\
+\frac{\partial \mathcal{L}}{\partial w_0} & = 2w_0 + 2w_1 \frac{1}{N} \left( \sum_{n=1}^{N} x_n \right) -
+\frac{2}{N} \left( \sum_{n=1}^{N} t_n \right) = 0
+\end{align*}
+$$
+
+We obtain
+$$
+\begin{align}
+\begin{split}
+w_{1} & = \frac{\overline{xy} - \overline{x}\overline{y}}{\overline{x^2} - \overline{x}^2} \\
+w_{0} & = \overline{y} - w_{1} \overline{x}
+\end{split}
+\end{align}
+$$
+where symbols with overline denotes their average value, for examples
+$$
+\begin{align*}
+\overline{x} & = \frac{1}{N} \sum_{n=1}^{N} x_{n} \\
+\overline{y} & = \frac{1}{N} \sum_{n=1}^{N} y_{n}
+\end{align*}
+$$
+
+```{python}
+ybar = np.mean(y)
+xbar = np.mean(x)
+xybar = np.mean(x*y)
+x2bar = np.mean(x**2)
+  
+w1 = (xybar - xbar*ybar)/(x2bar - xbar**2)
+w0 = ybar - w1*xbar
+  
+print("Model parameters:")
+print("w0 = %18.10e" % w0)
+print("w1 = %18.10e" % w1)
+  
+y_pred = w0 + w1*x
+  
+plt.clf()
+plt.plot(x, y, marker="o", linewidth=0, label="data")
+plt.plot(x, y_pred, marker="x", label="linear-fit")
+plt.grid(True)
+plt.legend()
+plt.xlabel("x")
+plt.ylabel("y");
+```
+
+Bandingkan hasil dari $w_0$ dan $w_1$ yang sudah diperoleh dengan model yang sebenarnya.
+Apakah mereka sama persis, cukup berdekatan, atau sangat jauh berbeda?
+
+# Notasi vektor matriks
+
+We will rewrite our previous problem in matrix and vector notation. This will
+give us more flexibility and enable us to generalize to more complex situations.
+We start by defining inputs and model parameters as vectors.
+$$
+\mathbf{x}_{n} = \begin{bmatrix}
+1 \\
+x_{n}
+\end{bmatrix}
+,\,\,\,%
+\mathbf{w} = \begin{bmatrix}
+w_{0} \\
+w_{1}
+\end{bmatrix}
+$$
+
+Using this definition, we can write our previous linear model in Eq.
+\eqref{eq:model_linear_01} as:
+$$
+f(x_n; w_0, w_1) = \mathbf{w}^{\mathsf{T}} \mathbf{x}_{n}
+\label{eq:model_linear_02}
+$$
+
+The expression for loss function, Eq. \eqref{eq:loss_function_01}, becomes
+$$
+\mathcal{L} = \frac{1}{N} \sum_{n=1}^{N} \left( t_{n} - \mathbf{w}^{\mathsf{T}}
+\mathbf{x}_{n} \right)^2
+\label{eq:loss_function_02}
+$$
+
+We now arrange several input vector into a matrix:
+$$
+\mathbf{X} = \begin{bmatrix}
+\mathbf{x}^{\mathsf{T}}_{1} \\
+\mathbf{x}^{\mathsf{T}}_{2} \\
+\vdots \\
+\mathbf{x}^{\mathsf{T}}_{N}
+\end{bmatrix} =
+\begin{bmatrix}
+1 & x_{1} \\
+1 & x_{2} \\
+\vdots & \vdots \\
+1 & x_{N} \\
+\end{bmatrix}
+$$
+
+As with inputs, we now define target vectors as
+$$
+\mathbf{y} = \begin{bmatrix}
+y_1 \\
+y_2 \\
+\vdots \\
+y_N
+\end{bmatrix}
+$$
+
+With this definition we can write the loss function as
+$$
+\mathcal{L} = \frac{1}{N} \left( \mathbf{t} - \mathbf{Xw} \right)^{\mathsf{T}}
+\left( \mathbf{t} - \mathbf{Xw} \right)
+$$
+
+To find the best value of $\mathbf{w}$ we can follow similar procedure that we have used
+in the previous part. We need to find the solution of
+$\dfrac{\partial \mathcal{L}}{\partial \mathbf{w}} = \mathbf{0}$
+
+\begin{align}
+\mathcal{L} & = \frac{1}{N} \left(
+\mathbf{y}^{\mathsf{T}} \mathbf{y} +
+\left(\mathbf{Xw}\right)^{\mathsf{T}} \mathbf{Xw} -
+\mathbf{y}\mathbf{Xw} -
+\left(\mathbf{Xw}\right)^{\mathsf{T}} \mathbf{y}
+\right) \\
+& = \frac{1}{N} \left(
+\mathbf{w}^{\mathsf{T}} \mathbf{X}^{\mathsf{T}} \mathbf{X} \mathbf{w} -
+2 \mathbf{w}^{\mathsf{T}} \mathbf{X}^{\mathsf{T}}\mathbf{y} +
+\mathbf{y}^{\mathsf{T}} \mathbf{y}
+\right)
+\end{align}
+
+Equating these to zeros we have
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial \mathbf{w}} =
+\frac{2}{N} \left( \mathbf{X}^{\mathsf{T}} \mathbf{Xw} - \mathbf{X}^{\mathsf{T}}\mathbf{y} \right) = 0
+\end{equation}
+So we have
+\begin{equation}
+\mathbf{X}^{\mathsf{T}} \mathbf{Xw} = \mathbf{X}^{\mathsf{T}} \mathbf{y}
+\end{equation}
+or
+\begin{equation}
+\mathbf{w} = \left(\mathbf{X}^{\mathsf{T}}\mathbf{X} \right)^{-1} \mathbf{X}^{\mathsf{T}} \mathbf{y}
+\end{equation}
+
+```{python}
+Ndata = len(x)
+# Build the input matrix or design matrix
+X = np.zeros((Ndata,2))
+X[:,0] = 1.0
+X[:,1] = x
+  
+# Calculate the model parameters
+XtX = X.T @ X
+XtXinv = np.linalg.inv(XtX)
+w = XtXinv @ X.T @ y
+  
+print("Model parameters:")
+print("w0 = %18.10e" % w[0])
+print("w1 = %18.10e" % w[1])
+  
+t_pred = X @ w
+```
+
+Alternatif, menggunakan fungsi `np.linalg.lstsq`:
+
+```{python}
+res = np.linalg.lstsq(X, y, rcond=-1)
+```
+
+```{python}
+res
+```
