@@ -1,5 +1,10 @@
 ---
 title: Regresi linear sederhana
+lang: id
+language:
+  id:
+    crossref-eq-prefix: "Persamaan"
+    section-title-abstract: "Abstrak"
 jupyter:
   jupytext:
     text_representation:
@@ -17,8 +22,10 @@ jupyter:
 import numpy as np
 ```
 
+# Regresi linear
+
 Kita akan mulai pembahasan kita dengan meninjau permasalahan
-regresi linear (lagi).
+regresi linear.
 
 ```{python}
 import matplotlib.pyplot as plt
@@ -47,7 +54,7 @@ berikut:
 $$
 f(x) = 2x + 1
 $$
-
+Fungsi ini akan didefinisikan dengan menggunakn kode Python berikut:
 ```{python}
 def f_true(x):
     return 2*x + 1
@@ -58,9 +65,12 @@ y = f(x) + \epsilon
 $$
 $\epsilon \sim \mathcal{N}(0,\sigma)$
 
-Pada kenyataannya, fungsi ini akan dipengaruhi oleh noise. Kita akan mensimulasikan noise ini dengan bilangan acak yang terdistribusi normal dengan rata-rata 0 dan deviasi standard `A_noise`. Anda dapat mencoba mengubah-ubah nilai `A_noise` ini.
+Pada kenyataannya, fungsi ini akan dipengaruhi oleh noise. Kita akan mensimulasikan noise
+ini dengan bilangan acak yang terdistribusi normal dengan rata-rata 0 dan deviasi
+standard `A_noise`. Anda dapat mencoba mengubah-ubah nilai `A_noise` ini.
 
-Selain itu, kita juga memilih nilai titik-titik $x$ berada pada interval $[-5,5]$ dengan jarak pisah yang seragam. Kita dapat menggunakan fungsi `np.linspace` untuk keperluan ini.
+Selain itu, kita juga memilih sampel titik-titik $x$ berada pada interval $[-5,5]$ dengan
+jarak pisah yang seragam. Kita dapat menggunakan fungsi `np.linspace` untuk keperluan ini.
 
 ```{python}
 np.random.seed(1234)
@@ -85,7 +95,7 @@ list(zip(x, y))
 Misalkan sekarang kita ingin mencocokkan fungsi linear $\hat{f}(x)$ untuk data ini:
 $$
 \hat{f}(x) = w_0 + w_1 x
-$$
+$$ {#eq-model-linear-01}
 dengan $w_0$ dan $w_1$ adalah parameter model.
 
 **Bagaimana cara memilih parameter model yang baik?**
@@ -105,8 +115,7 @@ Dengan merata-ratakan kontribusi dari seluruh data, dapat diperoleh
 $$
 \mathcal{L} = \frac{1}{N} \sum_{n=1}^{N} \mathcal{L}_n =
 \frac{1}{N} \sum_{n=1}^{N} \left( y_n - f(x_n; w_0, w_1) \right)^2
-\label{eq:loss_function_01}
-$$
+$$ {#eq-loss-function-01}
 Kuantitas ini dikenal sebagai fungsi rugi atau *loss function*.
 Perhatikan bahwa fungsi rugi selalu bernilai positif atau sama dengan nol.
 Jika kuantitas ini bernilai nol maka model yang digunakan dapat memberikan
@@ -116,19 +125,26 @@ sehingga prediksi model tidak jauh berbeda dengan target.
 Untuk menemukan nilai fungsi rugi yang sekecil mungkin kita dapat melakukan
 proses yang dikenal sebagai minimisasi atau optimasi fungsi.
 
-We can find the parameters $(w_{0},w_{1})$ by using minimization procedures:
+Secara umu, kita dapat mencari parameter $(w_{0},w_{1})$ dengan menggunakan prosedur minimisasi
+yang secara matematis dapat dituliskan sebagai berikut.
 $$
 \arg\min_{w_{0},w_{1}} \frac{1}{N} \sum_{n=1}^{N} \mathcal{L}_{n}
 $$
 
-For our particular case of Eq. \eqref{eq:loss_function_01}, we can found this analytically,
-i.e. calculating the first derivatives of $\mathcal{L}$ with
-respect to $w_0$ and $w_1$, equating
-them to zero, and solve the resulting equations for $w_0$ and $w_1$.
-For more general cases, we can use various numerical optimization procedures such as
-gradient descent methods.
+Untuk kasus khusus fungsi rugi pada Persamaan (@eq-loss-function-01), kita dapat
+menemukannya secara analitik dengan menggunakan prinsip kalkulus: cari turunan pertama
+dari  $\mathcal{L}$ terhadap $w_0$ dan $w_1$, kemudian mencari solusi dari:
+$$
+\begin{align*}
+\frac{\partial\mathcal{L}}{\partial w_0} & = 0 \\
+\frac{\partial\mathcal{L}}{\partial w_1} & = 0
+\end{align*}
+$$
+Untuk fungsi rugi yang lebih umum, biasanya ekspresi yang dihasilkan tidak mudah
+untuk diselesaikan secara analitik. Pada kasus ini biasanya digunakan
+metode numerik seperti metode penurunan gradien (*gradient descent*).
 
-We begin by writing our loss function as:
+Kita mulai dengan menuliskan fungsi rugi (@eq-loss-function-01) sebagai
 $$
 \begin{align*}
 \mathcal{L} & = \frac{1}{N} \sum_{n=1}^{N} \left( t_n - (w_0 + w_1 x_{n}) \right)^2 \\
@@ -136,8 +152,8 @@ $$
 \end{align*}
 $$
 
-Now we find the first derivatives of $\mathcal{L}$ with respect to
-$w_0$, $w_1$ and equating them to zero.
+Kemudian cari turunan dari $\mathcal{L}$ terhadap
+$w_0$, $w_1$ dan menyamakan mereka dengan nol:
 $$
 \begin{align*}
 \frac{\partial\mathcal{L}}{\partial w_1} & = 2w_1 \frac{1}{N} \left( \sum_{n=1}^{N} x_n^2 \right) +
@@ -147,7 +163,7 @@ $$
 \end{align*}
 $$
 
-We obtain
+Dengan menyelesaikan persamaan ini diperoleh:
 $$
 \begin{align}
 \begin{split}
@@ -155,8 +171,8 @@ w_{1} & = \frac{\overline{xy} - \overline{x}\overline{y}}{\overline{x^2} - \over
 w_{0} & = \overline{y} - w_{1} \overline{x}
 \end{split}
 \end{align}
-$$
-where symbols with overline denotes their average value, for examples
+$$ {#eq-w0-w1-analitik}
+di mana notasi *overline* digunakan untuk menyatakan nilai rata-rata:
 $$
 \begin{align*}
 \overline{x} & = \frac{1}{N} \sum_{n=1}^{N} x_{n} \\
@@ -164,6 +180,9 @@ $$
 \end{align*}
 $$
 
+Kode Python berikut ini mengimplementasikan perhitungan pada Persamaan (@eq-w0-w1-analitik).
+Selain itu, kode ini juga menghitung hasil prediksi yang diperoleh dengan model linear
+pada Persamaan (@eq-model-linear-01) dan membuat plot perbandingan dengan data.
 ```{python}
 ybar = np.mean(y)
 xbar = np.mean(x)
@@ -193,9 +212,13 @@ Apakah mereka sama persis, cukup berdekatan, atau sangat jauh berbeda?
 
 # Notasi vektor matriks
 
-We will rewrite our previous problem in matrix and vector notation. This will
-give us more flexibility and enable us to generalize to more complex situations.
-We start by defining inputs and model parameters as vectors.
+Pada bagian ini, kita akan menuliskan kembali permasalahan regresi linear
+pada bagian sebelum dengan menggunakan notasi matriks dan vektor. Notasi ini
+akan memungkinkan kita untuk menuliskan solusi $w_0$ dan $w_1$ menjadi lebih
+kompak dan dapat diperumum untuk masalah regresi linear yang lebih luas.
+
+Kita mulai dengan mendefinisikan vektor input dan vektor parameter atau
+bobot sebagai berikut.
 $$
 \mathbf{x}_{n} = \begin{bmatrix}
 1 \\
@@ -208,21 +231,22 @@ w_{1}
 \end{bmatrix}
 $$
 
-Using this definition, we can write our previous linear model in Eq.
-\eqref{eq:model_linear_01} as:
+Dengan menggunakan definisi ini, model linear pada (@eq-model-linear-01)
+menjadi
 $$
 f(x_n; w_0, w_1) = \mathbf{w}^{\mathsf{T}} \mathbf{x}_{n}
-\label{eq:model_linear_02}
-$$
+\label{}
+$$ {#eq-model-linear-02}
 
-The expression for loss function, Eq. \eqref{eq:loss_function_01}, becomes
+Ekspresi untuk fungsi rugi, (@eq-loss-function-01),
+menjadi:
 $$
 \mathcal{L} = \frac{1}{N} \sum_{n=1}^{N} \left( t_{n} - \mathbf{w}^{\mathsf{T}}
 \mathbf{x}_{n} \right)^2
 \label{eq:loss_function_02}
 $$
 
-We now arrange several input vector into a matrix:
+Vektor input dapat disusun menjadi suatu matriks:
 $$
 \mathbf{X} = \begin{bmatrix}
 \mathbf{x}^{\mathsf{T}}_{1} \\
@@ -238,7 +262,7 @@ $$
 \end{bmatrix}
 $$
 
-As with inputs, we now define target vectors as
+Kita juga dapat mendefinisikan vektor target sebagai
 $$
 \mathbf{y} = \begin{bmatrix}
 y_1 \\
@@ -248,16 +272,13 @@ y_N
 \end{bmatrix}
 $$
 
-With this definition we can write the loss function as
+Dengan definisi ini, kita dapat menuliskan fungsi rugi menjadi:
 $$
 \mathcal{L} = \frac{1}{N} \left( \mathbf{t} - \mathbf{Xw} \right)^{\mathsf{T}}
 \left( \mathbf{t} - \mathbf{Xw} \right)
 $$
-
-To find the best value of $\mathbf{w}$ we can follow similar procedure that we have used
-in the previous part. We need to find the solution of
-$\dfrac{\partial \mathcal{L}}{\partial \mathbf{w}} = \mathbf{0}$
-
+Dengan mengalikan suku-suku dalam tanda kurung diperoleh:
+$$
 \begin{align}
 \mathcal{L} & = \frac{1}{N} \left(
 \mathbf{y}^{\mathsf{T}} \mathbf{y} +
@@ -271,21 +292,30 @@ $\dfrac{\partial \mathcal{L}}{\partial \mathbf{w}} = \mathbf{0}$
 \mathbf{y}^{\mathsf{T}} \mathbf{y}
 \right)
 \end{align}
+$$
 
-Equating these to zeros we have
-\begin{equation}
-\frac{\partial \mathcal{L}}{\partial \mathbf{w}} =
-\frac{2}{N} \left( \mathbf{X}^{\mathsf{T}} \mathbf{Xw} - \mathbf{X}^{\mathsf{T}}\mathbf{y} \right) = 0
-\end{equation}
-So we have
-\begin{equation}
-\mathbf{X}^{\mathsf{T}} \mathbf{Xw} = \mathbf{X}^{\mathsf{T}} \mathbf{y}
-\end{equation}
-or
-\begin{equation}
+Turunan dari $\mathcal{L}$ terhadap $\mathbf{w}$ adalah
+$$
+\frac{\partial \mathcal{L}}{\partial \mathbf{w}} = \frac{2}{N}
+\mathbf{X}^{\mathsf{T}} \mathbf{X} \mathbf{w} -
+\frac{2}{N} \mathbf{X}^{\mathsf{T}} \mathbf{y} = \mathbf{0}
+$$
+
+Untuk menentukan nilai terbaik dari $\mathbf{w}$ kita dapat menggunakan
+prosedur yang sama, yaitu dengan mencari solusi dari
+$$
+\dfrac{\partial \mathcal{L}}{\partial \mathbf{w}} = \mathbf{0}
+$$
+sehingga diperoleh
+$$
+\mathbf{X}^{\mathsf{T}} \mathbf{Xw} = \mathbf{X}^{\mathsf{T}}\mathbf{y} 
+$$
+Dengan menyelesaikan persamaan ini untuk $\mathbf{w}$ akhirnya diperoleh
+$$
 \mathbf{w} = \left(\mathbf{X}^{\mathsf{T}}\mathbf{X} \right)^{-1} \mathbf{X}^{\mathsf{T}} \mathbf{y}
-\end{equation}
+$$ {#eq-w-vektor}
 
+Kode Python berikut akan mengimplementasikan Persamaan (@eq-w-vektor) untuk regresi linear.
 ```{python}
 Ndata = len(x)
 # Build the input matrix or design matrix
@@ -304,6 +334,9 @@ print("w1 = %18.10e" % w[1])
   
 t_pred = X @ w
 ```
+Konfirmasi bahwa solusi $w_0$ dan $w_1$ yang diperoleh sama dengan solusi dari
+Persamaan (@eq-w0-w1-analitik).
+
 
 Alternatif, menggunakan fungsi `np.linalg.lstsq`:
 
