@@ -1,7 +1,19 @@
 import pandas as pd
-import matplotlib.pyplot as plt
+
 import tensorflow as tf
+#tf.keras.backend.set_floatx("float64")
+
 import numpy as np
+
+import matplotlib.pyplot as plt
+import matplotlib
+
+matplotlib.style.use("seaborn-v0_8-darkgrid")
+plt.rcParams.update({
+    "font.size": 12,
+    "savefig.dpi": 150
+})
+
 
 # Original: https://dataverse.harvard.edu/api/access/datafile/3407241
 soldata = pd.read_csv("../DATASET/curated-solubility-dataset.csv")
@@ -17,14 +29,19 @@ full_data = tf.data.Dataset.from_tensor_slices(
 )
 N = len(soldata)
 test_N = int(0.1 * N)
-test_data = full_data.take(test_N).batch(16)
-train_data = full_data.skip(test_N).batch(16)
+test_data = full_data.take(test_N).batch(32)
+train_data = full_data.skip(test_N).batch(32)
 
 
 # Build a neural network
 
 # Hidden layer, only need to define output dimension
-hidden_layer = tf.keras.layers.Dense(32, activation="tanh")
+#hidden_layer = tf.keras.layers.Dense(32, activation="tanh")
+#hidden_layer = tf.keras.layers.Dense(64, activation="tanh")
+#hidden_layer = tf.keras.layers.Dense(64, activation="relu")
+#hidden_layer = tf.keras.layers.Dense(200, activation="relu")
+hidden_layer = tf.keras.layers.Dense(200, activation="tanh")
+
 
 # Last layer. We want to output one number
 output_layer = tf.keras.layers.Dense(1)
@@ -37,9 +54,11 @@ model.add(output_layer)
 # Try our model on several datapoints
 res = model(soldata[feature_names].values[:3])
 print(res)
+# Note that this is evaluated using current value of parameters in the model
 
 # Prepare the model for training
 model.compile(optimizer="SGD", loss="mean_squared_error")
+#model.compile(optimizer="Adam", loss="mean_squared_error")
 
 # Train the model
 model.fit(train_data, epochs=50)
@@ -54,6 +73,7 @@ test_y = soldata["Solubility"].values[:test_N]
 yhat = np.squeeze(model.predict(test_data))
 test_y = soldata["Solubility"].values[:test_N]
 
+plt.clf()
 plt.plot(test_y, yhat, ".")
 plt.plot(test_y, test_y, "-")
 plt.xlabel("Measured Solubility $y$")
@@ -68,4 +88,7 @@ plt.text(
     max(test_y) - 3,
     f"loss = {np.sqrt(np.mean((test_y - yhat)**2)):.3f}",
 )
-plt.savefig("IMG_01_solubility_01.pdf")
+
+plt.gca().set_aspect("equal", "box")
+plt.savefig("IMG_01_solubility_01.png")
+plt.show()
