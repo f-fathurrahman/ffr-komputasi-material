@@ -1,3 +1,5 @@
+# Using all data
+
 import pandas as pd
 
 import tensorflow as tf
@@ -55,22 +57,11 @@ soldata[feature_names] /= soldata[feature_names].std()
 # Prepare data for Keras
 full_data = tf.data.Dataset.from_tensor_slices(
     (soldata[feature_names].values, soldata["Solubility"].values)
-)
-N = len(soldata)
-test_N = int(0.1 * N)
-test_data = full_data.take(test_N).batch(32)
-train_data = full_data.skip(test_N).batch(32)
+).take(len(soldata)).batch(32)
 
 
 # Build a neural network
-
-# Hidden layer, only need to define output dimension
-#hidden_layer = tf.keras.layers.Dense(32, activation="tanh")
-#hidden_layer = tf.keras.layers.Dense(64, activation="tanh")
-#hidden_layer = tf.keras.layers.Dense(64, activation="relu")
-#hidden_layer = tf.keras.layers.Dense(200, activation="relu")
-hidden_layer = tf.keras.layers.Dense(32, activation="tanh")
-
+hidden_layer = tf.keras.layers.Dense(32, activation="relu")
 
 # Last layer. We want to output one number
 output_layer = tf.keras.layers.Dense(1)
@@ -81,28 +72,19 @@ model.add(hidden_layer)
 model.add(output_layer)
 
 # Try our model on several datapoints
-print("Try calling model:")
+print("Try evaluation data:")
 res = model(soldata[feature_names].values[:3])
 print(res)
-# Note that this is evaluated using current value of parameters in the model
 
 print(model.summary())
 
-
 # Prepare the model for training
-model.compile(optimizer="SGD", loss="mean_squared_error")
-#model.compile(optimizer="Adam", loss="mean_squared_error")
+model.compile(optimizer="Adam", loss="mean_squared_error")
 
 # Train the model
-model.fit(train_data, epochs=50)
+model.fit(full_data, epochs=50)
 
-
-test_y = soldata["Solubility"].values[:test_N]
-evaluate_performance(model, test_data, test_y,
-    filename="IMG_sol_01_test.png", title="Model Performance on Test Data")
-
-
-train_y = soldata["Solubility"].values[test_N:]
-evaluate_performance(model, train_data, train_y,
-    filename="IMG_sol_01_train.png", title="Model Performance on Train Data")
+y = soldata["Solubility"].values
+evaluate_performance(model, full_data, y,
+    filename="IMG_sol_03_full.png", title="Model Performance on Full Data")
 
