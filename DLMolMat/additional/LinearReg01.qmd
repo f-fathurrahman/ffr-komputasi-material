@@ -104,7 +104,8 @@ dengan $w_0$ dan $w_1$ adalah parameter model.
 
 Sekarang permasalahan yang dihadapi adalah bagaimana memilih parameter
 model yang terbaik. Sebelum itu, kita perlu mendefinisikan suatu kuantitas
-atau metrik atau ukuran yang dapat dijadikan indikator seberapa baik model untuk dataset yang diberikan.
+atau metrik atau ukuran yang dapat dijadikan indikator seberapa baik model
+untuk dataset yang diberikan.
 Salah satu metrik yang dapat digunakan adalah beda kuadrat antara prediksi
 model dan data target. Untuk data ke-$n$ dapat dituliskan sebagai berikut.
 $$
@@ -117,6 +118,7 @@ $$
 \frac{1}{N} \sum_{n=1}^{N} \left( y_n - f(x_n; w_0, w_1) \right)^2
 $$ {#eq-loss-function-01}
 Kuantitas ini dikenal sebagai fungsi rugi atau *loss function*.
+
 Perhatikan bahwa fungsi rugi selalu bernilai positif atau sama dengan nol.
 Jika kuantitas ini bernilai nol maka model yang digunakan dapat memberikan
 prediksi yang tepat sama dengan data target. Secara praktis hal ini jarang
@@ -125,7 +127,8 @@ sehingga prediksi model tidak jauh berbeda dengan target.
 Untuk menemukan nilai fungsi rugi yang sekecil mungkin kita dapat melakukan
 proses yang dikenal sebagai minimisasi atau optimasi fungsi.
 
-Secara umu, kita dapat mencari parameter $(w_{0},w_{1})$ dengan menggunakan prosedur minimisasi
+Secara umu, kita dapat mencari parameter $(w_{0},w_{1})$ dengan menggunakan
+prosedur minimisasi
 yang secara matematis dapat dituliskan sebagai berikut.
 $$
 \arg\min_{w_{0},w_{1}} \frac{1}{N} \sum_{n=1}^{N} \mathcal{L}_{n}
@@ -148,7 +151,8 @@ Kita mulai dengan menuliskan fungsi rugi (@eq-loss-function-01) sebagai
 $$
 \begin{align*}
 \mathcal{L} & = \frac{1}{N} \sum_{n=1}^{N} \left( t_n - (w_0 + w_1 x_{n}) \right)^2 \\
-& = \frac{1}{N} \sum_{n=1}^{N} \left( w_1^2 x_n^2 + 2w_{1}x_{n}(w_0 - t_n) + w_0^2 - 2w_0 t_n + t_n^2 \right)
+& = \frac{1}{N} \sum_{n=1}^{N} \left( w_1^2 x_n^2 + 2w_{1}x_{n}(w_0 - t_n) +
+w_0^2 - 2w_0 t_n + t_n^2 \right)
 \end{align*}
 $$
 
@@ -347,3 +351,28 @@ res = np.linalg.lstsq(X, y, rcond=-1)
 ```{python}
 res
 ```
+
+Coba bandingkan hasil yang diperoleh dari `np.linalg.lstsq`
+dengan hasil dari Persamaan (@eq-w0-w1-analitik). 
+
+
+# Penggunaan Scikit Learn
+
+
+Kelas `LinearRegression`:
+
+```python
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
+model.fit(x, y)
+
+# Evaluate model performance
+R2_score = model.score(x, y)
+print("R2_score on training data: ", R2_score)
+
+# Prediction on training data
+y_pred = model.predict(x)
+RMSE = np.sqrt(np.mean((y_pred - y)**2))
+print("RMSE training: ", RMSE)
+```
+
