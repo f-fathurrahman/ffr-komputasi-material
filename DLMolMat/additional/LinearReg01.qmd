@@ -3,8 +3,8 @@ title: Regresi linear sederhana
 lang: id
 language:
   id:
-    crossref-eq-prefix: "Persamaan"
-    section-title-abstract: "Abstrak"
+    crossref-eq-prefix: Persamaan
+    section-title-abstract: Abstrak
 jupyter:
   jupytext:
     text_representation:
@@ -22,6 +22,9 @@ jupyter:
 import numpy as np
 ```
 
+Materi ini diadaptasi dari
+- Simon Rogers dan Mark Girolami. First Course in Machine Learning (2nd Ed). Bab 1
+
 # Regresi linear
 
 Kita akan mulai pembahasan kita dengan meninjau permasalahan
@@ -32,7 +35,17 @@ import matplotlib.pyplot as plt
 import matplotlib
 ```
 
+Bagian ini opsional (untuk membuat format default dari Matplotlib berupa svg)
+
 ```{python}
+import matplotlib_inline
+matplotlib_inline.backend_inline.set_matplotlib_formats("svg")
+```
+
+Bagian ini opsional:
+
+```{python}
+matplotlib.style.use("dark_background")
 matplotlib.rcParams.update({
     "axes.grid" : True,
     "grid.color": "gray",
@@ -40,24 +53,20 @@ matplotlib.rcParams.update({
 })
 ```
 
-```{python}
-import matplotlib_inline
-matplotlib_inline.backend_inline.set_matplotlib_formats("svg")
-```
-
-```{python}
-matplotlib.style.use("dark_background")
-```
-
 Misalkan kita telah mengetahui bahwa data kita berasal dari fungsi
 berikut:
 $$
 f(x) = 2x + 1
 $$
-Fungsi ini akan didefinisikan dengan menggunakn kode Python berikut:
+Fungsi ini akan didefinisikan dengan menggunakan kode Python berikut:
+
 ```{python}
 def f_true(x):
     return 2*x + 1
+```
+
+```{python}
+f_true(1.1)
 ```
 
 $$
@@ -67,16 +76,17 @@ $\epsilon \sim \mathcal{N}(0,\sigma)$
 
 Pada kenyataannya, fungsi ini akan dipengaruhi oleh noise. Kita akan mensimulasikan noise
 ini dengan bilangan acak yang terdistribusi normal dengan rata-rata 0 dan deviasi
-standard `A_noise`. Anda dapat mencoba mengubah-ubah nilai `A_noise` ini.
+standard $\sigma$ (atau amplitudo `A_noise`). Anda dapat mencoba mengubah-ubah nilai `A_noise` ini.
 
 Selain itu, kita juga memilih sampel titik-titik $x$ berada pada interval $[-5,5]$ dengan
 jarak pisah yang seragam. Kita dapat menggunakan fungsi `np.linspace` untuk keperluan ini.
 
 ```{python}
-np.random.seed(1234)
-x = np.linspace(-5.0, 5.0, 10)
+np.random.seed(1234) # nilai awal random generator
+Npoints = 10
+x = np.linspace(-5.0, 5.0, Npoints)
 A_noise = 2.4 # standard deviation or amplitude of noise
-y = f_true(x) + A_noise*np.random.randn(len(x))
+y = f_true(x) + A_noise*np.random.randn(Npoints)
 plt.scatter(x, y);
 plt.grid(True)
 ```
@@ -86,10 +96,6 @@ Berikut adalah "data" yang kita miliki:
 ```{python}
 import pandas as pd
 pd.DataFrame( list(zip(x, y)) )
-```
-
-```{python}
-list(zip(x, y))
 ```
 
 Misalkan sekarang kita ingin mencocokkan fungsi linear $\hat{f}(x)$ untuk data ini:
@@ -187,6 +193,7 @@ $$
 Kode Python berikut ini mengimplementasikan perhitungan pada Persamaan (@eq-w0-w1-analitik).
 Selain itu, kode ini juga menghitung hasil prediksi yang diperoleh dengan model linear
 pada Persamaan (@eq-model-linear-01) dan membuat plot perbandingan dengan data.
+
 ```{python}
 ybar = np.mean(y)
 xbar = np.mean(x)
@@ -200,7 +207,7 @@ print("Model parameters:")
 print("w0 = %18.10e" % w0)
 print("w1 = %18.10e" % w1)
   
-y_pred = w0 + w1*x
+y_pred = w0 + w1*x # garis lurus
   
 plt.clf()
 plt.plot(x, y, marker="o", linewidth=0, label="data")
@@ -320,6 +327,7 @@ $$
 $$ {#eq-w-vektor}
 
 Kode Python berikut akan mengimplementasikan Persamaan (@eq-w-vektor) untuk regresi linear.
+
 ```{python}
 Ndata = len(x)
 # Build the input matrix or design matrix
@@ -328,8 +336,8 @@ X[:,0] = 1.0
 X[:,1] = x
   
 # Calculate the model parameters
-XtX = X.T @ X
-XtXinv = np.linalg.inv(XtX)
+XtX = X.T @ X   # @ adalah operator perkalian matriks pada Numpy
+XtXinv = np.linalg.inv(XtX) # hitung inverse:
 w = XtXinv @ X.T @ y
   
 print("Model parameters:")
@@ -338,9 +346,17 @@ print("w1 = %18.10e" % w[1])
   
 t_pred = X @ w
 ```
+
+```{python}
+X
+```
+
+```{python}
+y
+```
+
 Konfirmasi bahwa solusi $w_0$ dan $w_1$ yang diperoleh sama dengan solusi dari
 Persamaan (@eq-w0-w1-analitik).
-
 
 Alternatif, menggunakan fungsi `np.linalg.lstsq`:
 
@@ -352,12 +368,18 @@ res = np.linalg.lstsq(X, y, rcond=-1)
 res
 ```
 
+```{python}
+w, *_ = np.linalg.lstsq(X, y, rcond=-1)
+```
+
+```{python}
+w
+```
+
 Coba bandingkan hasil yang diperoleh dari `np.linalg.lstsq`
 dengan hasil dari Persamaan (@eq-w0-w1-analitik). 
 
-
 # Penggunaan Scikit Learn
-
 
 Kelas `LinearRegression`:
 
@@ -376,3 +398,30 @@ RMSE = np.sqrt(np.mean((y_pred - y)**2))
 print("RMSE training: ", RMSE)
 ```
 
+```{python}
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
+model.fit(X, y);
+```
+
+```{python}
+model.intercept_   # w0
+```
+
+```{python}
+model.coef_  # w1
+```
+
+```{python}
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
+model.fit(x[:,np.newaxis], y);
+```
+
+```{python}
+model.coef_ # w1
+```
+
+```{python}
+model.intercept_ # w0
+```
