@@ -18,33 +18,33 @@ jupyter:
     name: python3
 ---
 
-```{python}
-import numpy as np
-```
 
 Materi ini diadaptasi dari
+
 - Simon Rogers dan Mark Girolami. First Course in Machine Learning (2nd Ed). Bab 1
 
 # Regresi linear
 
-Kita akan mulai pembahasan kita dengan meninjau permasalahan
+Kita akan mulai pembahasan kita dengan meninjau kembali permasalahan
 regresi linear.
 
 ```{python}
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 ```
 
-Bagian ini opsional (untuk membuat format default dari Matplotlib berupa svg)
+Bagian ini opsional (untuk membuat agar format default dari Matplotlib adalah SVG)
 
 ```{python}
 import matplotlib_inline
 matplotlib_inline.backend_inline.set_matplotlib_formats("svg")
 ```
 
-Bagian ini opsional:
+Bagian ini juga opsional:
 
 ```{python}
+#matplotlib.style.use("ggplot")
 matplotlib.style.use("dark_background")
 matplotlib.rcParams.update({
     "axes.grid" : True,
@@ -69,20 +69,29 @@ def f_true(x):
 f_true(1.1)
 ```
 
-$$
-y = f(x) + \epsilon
-$$
-$\epsilon \sim \mathcal{N}(0,\sigma)$
-
 Pada kenyataannya, fungsi ini akan dipengaruhi oleh noise. Kita akan mensimulasikan noise
 ini dengan bilangan acak yang terdistribusi normal dengan rata-rata 0 dan deviasi
-standard $\sigma$ (atau amplitudo `A_noise`). Anda dapat mencoba mengubah-ubah nilai `A_noise` ini.
+standard $\sigma$ (atau amplitudo `A_noise`).
+Anda dapat mencoba mengubah-ubah nilai `A_noise` ini.
+Secara matematis dapat dituliskan sebagai
+$$
+\begin{align}
+y = f(x) + \epsilon \\
+\epsilon \sim \mathcal{N}(0,\sigma)
+\end{align}
+$$
+
 
 Selain itu, kita juga memilih sampel titik-titik $x$ berada pada interval $[-5,5]$ dengan
 jarak pisah yang seragam. Kita dapat menggunakan fungsi `np.linspace` untuk keperluan ini.
 
 ```{python}
-np.random.seed(1234) # nilai awal random generator
+xx = np.random.randn(5000)
+plt.hist(xx, bins=50);
+```
+
+```{python}
+np.random.seed(1234) # nilai awal random generator, useful for reproducibility
 Npoints = 10
 x = np.linspace(-5.0, 5.0, Npoints)
 A_noise = 2.4 # standard deviation or amplitude of noise
@@ -103,10 +112,6 @@ $$
 \hat{f}(x) = w_0 + w_1 x
 $$ {#eq-model-linear-01}
 dengan $w_0$ dan $w_1$ adalah parameter model.
-
-**Bagaimana cara memilih parameter model yang baik?**
-
-**Bagaimana membedakan antara model yang baik dan yang tidak atau kurang baik?**
 
 Sekarang permasalahan yang dihadapi adalah bagaimana memilih parameter
 model yang terbaik. Sebelum itu, kita perlu mendefinisikan suatu kuantitas
@@ -221,7 +226,7 @@ plt.ylabel("y");
 Bandingkan hasil dari $w_0$ dan $w_1$ yang sudah diperoleh dengan model yang sebenarnya.
 Apakah mereka sama persis, cukup berdekatan, atau sangat jauh berbeda?
 
-# Notasi vektor matriks
+# Notasi vektor dan matriks
 
 Pada bagian ini, kita akan menuliskan kembali permasalahan regresi linear
 pada bagian sebelum dengan menggunakan notasi matriks dan vektor. Notasi ini
@@ -254,7 +259,6 @@ menjadi:
 $$
 \mathcal{L} = \frac{1}{N} \sum_{n=1}^{N} \left( t_{n} - \mathbf{w}^{\mathsf{T}}
 \mathbf{x}_{n} \right)^2
-\label{eq:loss_function_02}
 $$
 
 Vektor input dapat disusun menjadi suatu matriks:
@@ -285,8 +289,8 @@ $$
 
 Dengan definisi ini, kita dapat menuliskan fungsi rugi menjadi:
 $$
-\mathcal{L} = \frac{1}{N} \left( \mathbf{t} - \mathbf{Xw} \right)^{\mathsf{T}}
-\left( \mathbf{t} - \mathbf{Xw} \right)
+\mathcal{L} = \frac{1}{N} \left( \mathbf{y} - \mathbf{Xw} \right)^{\mathsf{T}}
+\left( \mathbf{y} - \mathbf{Xw} \right)
 $$
 Dengan mengalikan suku-suku dalam tanda kurung diperoleh:
 $$
@@ -328,23 +332,14 @@ $$ {#eq-w-vektor}
 
 Kode Python berikut akan mengimplementasikan Persamaan (@eq-w-vektor) untuk regresi linear.
 
+`np.hstack` juga dapat digunakan untuk membangun matrix $\mathbf{X}$ 
+
 ```{python}
 Ndata = len(x)
 # Build the input matrix or design matrix
 X = np.zeros((Ndata,2))
 X[:,0] = 1.0
 X[:,1] = x
-  
-# Calculate the model parameters
-XtX = X.T @ X   # @ adalah operator perkalian matriks pada Numpy
-XtXinv = np.linalg.inv(XtX) # hitung inverse:
-w = XtXinv @ X.T @ y
-  
-print("Model parameters:")
-print("w0 = %18.10e" % w[0])
-print("w1 = %18.10e" % w[1])
-  
-t_pred = X @ w
 ```
 
 ```{python}
@@ -352,16 +347,41 @@ X
 ```
 
 ```{python}
-y
+# Calculate the model parameters
+XtX = X.T @ X   # @ adalah operator perkalian matriks pada Numpy
+XtXinv = np.linalg.inv(XtX) # hitung inverse:
+w = XtXinv @ X.T @ y
+
+print("Model parameters:")
+print("w0 = %18.10e" % w[0])
+print("w1 = %18.10e" % w[1])
+  
+y_pred = X @ w
 ```
 
 Konfirmasi bahwa solusi $w_0$ dan $w_1$ yang diperoleh sama dengan solusi dari
 Persamaan (@eq-w0-w1-analitik).
 
+```{python}
+plt.clf()
+plt.plot(x, y, marker="o", linewidth=0, label="data")
+plt.plot(x, y_pred, marker="x", label="linear-fit")
+plt.grid(True)
+plt.legend()
+plt.xlabel("x")
+plt.ylabel("y");
+```
+
+# Regresi linear dengan `np.linalg.lstsq`
+
 Alternatif, menggunakan fungsi `np.linalg.lstsq`:
 
 ```{python}
-res = np.linalg.lstsq(X, y, rcond=-1)
+X
+```
+
+```{python}
+res = np.linalg.lstsq(X, y, rcond=None)
 ```
 
 ```{python}
@@ -379,7 +399,7 @@ w
 Coba bandingkan hasil yang diperoleh dari `np.linalg.lstsq`
 dengan hasil dari Persamaan (@eq-w0-w1-analitik). 
 
-# Penggunaan Scikit Learn
+# Regresi linear pada Scikit Learn
 
 Kelas `LinearRegression`:
 
@@ -399,6 +419,10 @@ print("RMSE training: ", RMSE)
 ```
 
 ```{python}
+X
+```
+
+```{python}
 from sklearn.linear_model import LinearRegression
 model = LinearRegression()
 model.fit(X, y);
@@ -410,6 +434,10 @@ model.intercept_   # w0
 
 ```{python}
 model.coef_  # w1
+```
+
+```{python}
+x[:,np.newaxis]
 ```
 
 ```{python}
@@ -425,3 +453,309 @@ model.coef_ # w1
 ```{python}
 model.intercept_ # w0
 ```
+
+```{python}
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
+model.fit(x.reshape(-1,1), y);
+```
+
+```{python}
+x.reshape(-1,1)
+```
+
+```{python}
+model.predict(x[:,np.newaxis])
+```
+
+```{python}
+y
+```
+
+```{python}
+np.mean( (model.predict(x[:,np.newaxis]) - y)**2 )
+```
+
+# Ekstensi untuk model linear lain
+
+Bagaimana jika kita ingin menggunakan model yang lain? Misalnya:
+$$
+y = w_0 + w_1 x^{(1)} + w_2 x^{(2)}
+$$
+atau
+$$
+y = w_0 + w_1 x + w_2 x^2 
+$$
+
+Dapat ditunjukkan bahwa Persamaan (@eq-w-vektor) juga dapat digunakan untuk model-model
+tersebut. Yang diperlukan ada ekstensi dari definisi $\mathbf{X}$ dan $\mathbf{w}$
+
+Misalnya pada kasus model:
+$$
+y = w_0 + w_1 x^{(1)} + w_2 x^{(2)}
+$$
+dengan $x^{(1)}$ dan $x^{(2)}$ adalah dua variabel input atau fitur. Definisi dari matriks
+$\mathbf{X}$ adalah:
+$$
+\mathbf{X} =
+\begin{bmatrix}
+1 & x^{(1)}_{1} & x^{(2)}_{1} \\
+1 & x^{(1)}_{2} & x^{(2)}_{2} \\
+\vdots & \vdots & \vdots \\
+1 & x^{(1)}_{N} & x^{(2)}_{N}
+\end{bmatrix}
+$$
+dan vektor $\mathbf{w}$ sekarang terdiri dari tiga elemen:
+$$
+\mathbf{w} = \begin{bmatrix}
+w_{0} \\
+w_{1} \\
+w_{2}
+\end{bmatrix}
+$$
+Pada kasus ini kita memiliki dua variabel fitur yaitu $x^{(1)}$ dan $x^{(2)}$.
+
+Begitu pula untuk kasus model
+$$
+y = w_0 + w_1 x + w_2 x^2 
+$$ {#eq-quadratic-polynom}
+Permasalah pencocokan data pada persamaan ini sering disebut sebagai regresi kuadrat
+karena menggunakan persamaan kuadrat. Meskipun demikian, pada literatur pembelajaran
+mesin, model ini masing tergolong model linear, karena parameternya $w_0$, $w_1$,
+dan $w_2$ memiliki pangkat satu.
+
+Untuk model pada @eq-quadratic-polynom kita dapat mendefinisikan matriks input
+sebagai:
+$$
+\mathbf{X} =
+\begin{bmatrix}
+1 & x_{1} & x^{2}_{1} \\
+1 & x_{2} & x^{2}_{2} \\
+\vdots & \vdots & \vdots \\
+1 & x_{N} & x^{2}_{N}
+\end{bmatrix}
+$$
+Perhatikan bahwa kolom ketiga $x^{2}_{i}$ dapat dianggap sebagai "fitur baru"
+atau "fitur tambahan"
+yang dibuat dari "input" atau "fitur awal/asli".
+Secara umum, kita dapat membuat fitur-fitur baru dari fitur yang sudah ada
+yang bisa berupa kombinasi linear ataupun fungsi atau transformasi dari fitur asli.
+Dalam beberapa kasus, bisa saja model dengan fitur baru dapat memiliki performa
+yang lebih baik daripada fitur asli.
+Hal ini merupakan salah satu bentuk dari rekayasa fitur (*feature engineering*).
+
+## Tugas (1)
+
+Buat data sintetik yang dihasilkan `f_true` dengan model yang lebih
+kompleks seperti polinomial (plus random noise).
+
+- Gunakan Persamaan (@eq-w-vektor) atau `np.linalg.lstsq` atau
+`LinearRegression` pada `sklearn`. Bandingkan hasil yang Anda peroleh dengan
+nilai parameter asli pada `f_true`.
+
+### Menggunakan lstsq
+
+```{python}
+def f_true(x):
+    return 3*x**2 + 2*x + 1
+
+np.random.seed(1234) # nilai awal random generator, useful for reproducibility
+Npoints = 10
+x = np.linspace(-5.0, 5.0, Npoints)
+A_noise = 2.4 # standard deviation or amplitude of noise
+y = f_true(x) + A_noise*np.random.randn(Npoints)
+plt.scatter(x, y);
+plt.grid(True)
+```
+
+```{python}
+x
+```
+
+```{python}
+Ndata = len(x)
+X = np.zeros((Ndata,3))
+X[:,0] = 1.0
+X[:,1] = x
+X[:,2] = x**2
+```
+
+```{python}
+X
+```
+
+```{python}
+w, *_ = np.linalg.lstsq(X, y, rcond=-1)
+w
+```
+
+```{python}
+NptsDense = 100
+xdense = np.linspace(-5,5,NptsDense)
+Xdense = np.zeros((NptsDense,3))
+Xdense[:,0] = 1
+Xdense[:,1] = xdense
+Xdense[:,2] = xdense**2
+```
+
+```{python}
+ydense = Xdense @ w
+```
+
+```{python}
+plt.plot(xdense, ydense, color="blue", label="model")
+plt.scatter(x, y, label="data")
+plt.legend()
+```
+
+### Menggunakan sklear
+
+```{python}
+def f_true(x):
+    return 3*x**2 + 2*x + 1
+
+np.random.seed(1234) # nilai awal random generator, useful for reproducibility
+Npoints = 10
+x = np.linspace(-5.0, 5.0, Npoints)
+A_noise = 2.4 # standard deviation or amplitude of noise
+y = f_true(x) + A_noise*np.random.randn(Npoints)
+plt.scatter(x, y);
+plt.grid(True)
+```
+
+```{python}
+model = LinearRegression()
+```
+
+Catatan: bisa juga menggunakan `PolynomialFeatures`. Di sini kita akan lakukan secara manual.
+
+```{python}
+X = np.zeros((Ndata,2))
+X[:,0] = x
+X[:,1] = x**2
+```
+
+```{python}
+model.fit(X, y);
+```
+
+```{python}
+model.coef_
+```
+
+```{python}
+model.intercept_
+```
+
+```{python}
+NptsDense = 100
+xdense = np.linspace(-5,5,NptsDense)
+Xdense = np.zeros((NptsDense,2))
+Xdense[:,0] = xdense
+Xdense[:,1] = xdense**2
+```
+
+```{python}
+ydense = model.predict(Xdense)
+```
+
+```{python}
+plt.plot(xdense, ydense, color="magenta", label="model")
+plt.scatter(x, y, label="data");
+```
+
+```{python}
+MSE_loss = np.mean( (y - model.predict(X))**2 )
+print("MSE loss = ", MSE_loss)
+```
+
+## Tugas (2)
+
+Buat data sintetik dengan menggunakan polinomial derajat tiga ditambah
+dengan random noise. Gunakan data $x$ pada rentang $[-5,5]$, misalnya.
+Gunakan misalnya 20 titik data.
+
+- Lakukan regresi dengan menggunakan model dengen polinomial berderajat
+  1 sampai 9 dan hitung rugi atau loss pada setiap model dengan menggunakan
+  (@eq-loss-function-01). Buat plot data vs hasil prediksi dari polinomial
+  yang digunakan.
+  
+- Buat plot dengan sumbu-$x$ adalah derajat polinomial
+  dan sumbu-$y$ adalah loss yang dihitung. Catatan:
+  Loss dihitung dengan menggunakan parameter yang paling optimal, yaitu parameter
+  yang diperoleh dari (@eq-w-vektor).
+  Pada polinomial derajat berapakah nilai loss yang diperoleh paling kecil?
+  Apakah polinomial derajat tiga memiliki nilai loss yang paling rendah?
+
+# Data latih dan data uji
+
+Pada pembelajaran mesin kita biasanya lebih tertarik pada prediksi model untuk
+data di luar data training. Oleh karena itu, biasanya data yang kita miliki dibagi
+sedikitnya menjadi dua kelompok:
+
+- data latih (*training dataset*): data ini digunakan untuk mendapatkan parameter
+  model, misalnya parameter $\mathbf{w}$ pada model linear.
+
+- data uji (*test dataset*): data ini digunakan untuk mengevaluasi performa model
+
+Pada kasus jaringan saraf tiruan, sering juga digunakan satu set data lain yaitu
+data validasi (*validation dataset*) yang digunakan pada waktu pelatihan jaringan saraf tiruan
+(ANN) untuk mengevaluasi
+progress model pada saat pelatihan.
+
+## Tugas (3)
+
+Tinjau kembali Tugas (2). Sekarang untuk dari 20 titik yang ada,
+pilih titik-titik yang berada pada $-1 \leq x \leq 1$ sebagai data uji
+dan titik yang lain adalah data latih.
+
+Anda dapat menggunakan kode berikut.
+```python
+import numpy as np
+Npoints = 20
+x = np.linspace(-5.0, 5.0, Npoints)
+idx1 = x <= 1
+idx2 = x >= -1
+idx_test = idx1 & idx2 # combine the condition
+idx_train = ~idx_test # Other data is training data
+
+x_train = x[idx_train]
+x_test = x[idx_test]
+
+# do similarly for y
+# [....]
+```
+
+Ulangi yang Anda lakukan pada Tugas (2):
+
+- $\mathbf{w}$ sekarang dicari dengan hanya menggunakan data latih atau
+  training data.
+
+- Loss sekarang dihitung dengan menggunakan data uji
+
+- Plot loss terhadap orde polinomial yang digunakan. Polinomial orde berapakah yang
+  menghasilkan loss paling kecil?
+
+## Penggunaan sklearn
+
+Pada soal sebelumnya kita telah memilih daerah $-1 \leq x \leq 1$ sebagai data uji.
+Untuk kasus yang lebih umum, biasanya data uji ini dipilih secara acak.
+Pada `sklearn` kita dapat menggunakan fungsi `train_test_split`. Contoh:
+
+```python
+import numpy as np
+from sklearn.model_selection import train_test_split
+X, y = np.arange(10).reshape((5, 2)), range(5)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.33, random_state=42)
+```
+
+## Pemilihan model (*model selection*)
+
+Permasalahan pemilihan orde polinomial merupakan salah satu contoh
+pemilihan model. Pemilihan model dapat dilakukan berdasarkan beberapa
+kriteria. Pada kasus regresi, salah satu kriteria yang dapat digunakan
+adalah nilai dari fungsi _loss_ pada data uji.
+Metode lain yang juga sering digunakan adalah metode validasi silang
+(_cross validation_).
+
