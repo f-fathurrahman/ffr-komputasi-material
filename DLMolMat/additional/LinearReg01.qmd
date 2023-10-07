@@ -18,7 +18,6 @@ jupyter:
     name: python3
 ---
 
-
 Materi ini diadaptasi dari
 
 - Simon Rogers dan Mark Girolami. First Course in Machine Learning (2nd Ed). Bab 1
@@ -436,8 +435,32 @@ model.intercept_   # w0
 model.coef_  # w1
 ```
 
+Kita juga bisa menggunakan vektor `x` langsung ketika memanggil `model.fit()`. Tetapi `x` perlu disesuaikan dimensinya atay *shape*-nya.
+
+```{python}
+x.shape
+```
+
+```{python}
+xnew = x.reshape(-1,1)
+```
+
+```{python}
+xnew.shape
+```
+
+```{python}
+x
+```
+
 ```{python}
 x[:,np.newaxis]
+```
+
+```{python}
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
+model.fit(xnew, y);
 ```
 
 ```{python}
@@ -464,6 +487,16 @@ model.fit(x.reshape(-1,1), y);
 x.reshape(-1,1)
 ```
 
+Untuk membuat prediksi dari data baru atau data latih, kita dapat menggunakan metode `predict`:
+
+```{python}
+model.predict([[-5]])
+```
+
+```{python}
+y[0]
+```
+
 ```{python}
 model.predict(x[:,np.newaxis])
 ```
@@ -471,6 +504,8 @@ model.predict(x[:,np.newaxis])
 ```{python}
 y
 ```
+
+Hitung mean square error:
 
 ```{python}
 np.mean( (model.predict(x[:,np.newaxis]) - y)**2 )
@@ -562,7 +597,7 @@ def f_true(x):
 np.random.seed(1234) # nilai awal random generator, useful for reproducibility
 Npoints = 10
 x = np.linspace(-5.0, 5.0, Npoints)
-A_noise = 2.4 # standard deviation or amplitude of noise
+A_noise = 5.0 # standard deviation or amplitude of noise
 y = f_true(x) + A_noise*np.random.randn(Npoints)
 plt.scatter(x, y);
 plt.grid(True)
@@ -590,7 +625,7 @@ w
 ```
 
 ```{python}
-NptsDense = 100
+NptsDense = 100 # jumlah lebih banyak daripada jumlah titik data
 xdense = np.linspace(-5,5,NptsDense)
 Xdense = np.zeros((NptsDense,3))
 Xdense[:,0] = 1
@@ -599,16 +634,16 @@ Xdense[:,2] = xdense**2
 ```
 
 ```{python}
-ydense = Xdense @ w
+ydense = Xdense @ w # perkalian matriks
 ```
 
 ```{python}
 plt.plot(xdense, ydense, color="blue", label="model")
 plt.scatter(x, y, label="data")
-plt.legend()
+plt.legend();
 ```
 
-### Menggunakan sklear
+### Menggunakan sklearn
 
 ```{python}
 def f_true(x):
@@ -617,7 +652,7 @@ def f_true(x):
 np.random.seed(1234) # nilai awal random generator, useful for reproducibility
 Npoints = 10
 x = np.linspace(-5.0, 5.0, Npoints)
-A_noise = 2.4 # standard deviation or amplitude of noise
+A_noise = 5.0 # standard deviation or amplitude of noise
 y = f_true(x) + A_noise*np.random.randn(Npoints)
 plt.scatter(x, y);
 plt.grid(True)
@@ -636,15 +671,19 @@ X[:,1] = x**2
 ```
 
 ```{python}
+X
+```
+
+```{python}
 model.fit(X, y);
 ```
 
 ```{python}
-model.coef_
+model.coef_ # w1 dan w3
 ```
 
 ```{python}
-model.intercept_
+model.intercept_ # w0
 ```
 
 ```{python}
@@ -668,6 +707,14 @@ plt.scatter(x, y, label="data");
 MSE_loss = np.mean( (y - model.predict(X))**2 )
 print("MSE loss = ", MSE_loss)
 ```
+
+```{python}
+model.score(X, y)
+```
+
+Untuk `sklearn`, kita juga bisa menggunakan `PolynomialFeatures` untuk mendapatkan fitur polinomial.
+
+`StandardScaler` juga dapat digunakan untuk melakukan standardisasi fitur.
 
 ## Tugas (2)
 
@@ -758,4 +805,3 @@ kriteria. Pada kasus regresi, salah satu kriteria yang dapat digunakan
 adalah nilai dari fungsi _loss_ pada data uji.
 Metode lain yang juga sering digunakan adalah metode validasi silang
 (_cross validation_).
-
