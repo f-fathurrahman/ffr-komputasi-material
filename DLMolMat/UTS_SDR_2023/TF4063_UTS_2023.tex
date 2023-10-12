@@ -22,6 +22,12 @@
 \usepackage{setspace}
 \onehalfspacing
 
+\hyphenation{li-ne-ar}
+\hyphenation{mi-sal-nya}
+\hyphenation{va-li-da-ti-on}
+\hyphenation{re-gu-la-ri-sa-si}
+\hyphenation{ge-ne-ra-tor}
+
 \begin{document}
 
 
@@ -54,6 +60,7 @@ polinomial dan amplitudo \textit{noise} yang Anda gunakan).
 Gunakan kode yang Anda buat sendiri (hanya menggunakan Numpy)
 untuk mengimplementasikan
 solusi analitik dari regresi linear dan dengan menggunakan sklearn.
+Gunakan seluruh data sebagai data latih.
 Apakah implementasi yang Anda buat memberikan
 koefisien yang sama dengan hasil dari sklearn? Bandingkan hasil yang diperoleh
 jika Anda menggunakan standardisasi fitur dan tanpa standardisasi fitur. Jelaskan
@@ -62,15 +69,16 @@ hasil-hasil yang Anda peroleh.
 %
 \item Lakukan regresi linear dengan menggunakan sklearn (kelas
 \pyinline{LinearRegression}) pada dataset
-\texttt{aqsoldb} menggunakan seluruh data. Buat plot paritas dan tampilkan
-koefisien determinasi $R^{2}$ dan hitung RMSE (\textit{root mean square error})
+\texttt{aqsoldb} menggunakan seluruh data. Buat plot paritas serta tampilkan
+koefisien determinasi $R^{2}$ dan RMSE (\textit{root mean square error})
 yang diperoleh.
 %
 %
 \item Baca dokumentasi mengenai kelas \texttt{MLPRegressor} pada sklearn.
-Gunakan kelas ini untuk melakukan regresi pada dataset \texttt{aqsoldb}.
-Buat plot paritas dan tampilkan
-koefisien determinasi yang diperoleh. Bandingkan hasil yang Anda peroleh pada soal
+Gunakan kelas ini untuk melakukan regresi pada dataset \texttt{aqsoldb}
+yang telah digunakan di kelas.
+Buat plot paritas serta tampilkan
+koefisien determinasi dan RMSE yang diperoleh. Bandingkan hasil yang Anda peroleh pada soal
 sebelumnya (menggunakan model linear).
 Catatan:
   \begin{itemize}
@@ -78,11 +86,12 @@ Catatan:
   cara, misalnya, mengubah-ubah parameter \pyinline{hidden_layer_sizes}.
   \item Gunakan fitur dan \textit{preprocessing} yang sama seperti pada
   soal sebelumnya.
+  \item Gunakan seluruh data sebagai data latih
   \end{itemize}
 %
 %
 \item Pada dua soal sebelumnya, Anda menggunakan seluruh dataset yang ada pada
-proses pelatihan atau \textit{fitting}.
+proses pelatihan atau \textit{fitting} untuk mendapatkan parameter model.
 Pada soal ini, Anda akan melakukan perbandingan antara model linear
 (\pyinline{LinearRegression}) dan nonlinear (\pyinline{MLPRegressor}) pada
 dataset yang sudah dibagi menjadi data latih dan data uji. Gunakan
@@ -93,6 +102,7 @@ namun sekarang plot paritas, $R^{2}$ dan RMSE ditampilkan untuk
 masing-masing untuk data latih dan data uji.
 Catatan: Pastikan data uji dan data latih yang digunakan
 untuk \pyinline{LinearRegression} dan \pyinline{MLPRegressor} adalah sama.
+Jelaskan mengenai hasil yang Anda peroleh.
 %
 %
 \item Berikan penjelasan mengenai mengenai validasi silang $k$-lipatan
@@ -120,11 +130,11 @@ Referensi: Rogers dan Girolami.
 CRC Press. 2017.
 %
 %
-\item Cari \textit{dataset} di internet (baik dari Kaggle, artikel ilmiah,
+\item Cari dataset di internet (baik dari Kaggle, artikel ilmiah,
 ataupun sumber lain) untuk masalah regresi dan aplikasikan model linear
 dan non-linear (boleh menggunakan
 model nonlinear selain \pyinline{MLPRegressor}). Berikan penjelasan singkat
-mengenai \textit{dataset} yang dipilih, misalnya sumber data (jika ada),
+mengenai dataset yang dipilih, misalnya sumber data (jika ada),
 penjelasan mengenai kolom data, dan sebagainya.
 Pisahkan data menjadi data latih dan data uji, kemudian tampilkan
 performa dari model yang dilatih (dapat menggunakan plot paritas, koefisien
