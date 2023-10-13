@@ -73,6 +73,7 @@ for deg in range(1,10):
 
 # sort the dictionary
 losses = sorted(losses.items(), key=lambda x: x[1])
+# losses is now a list
 
 print()
 print("Three lowest losses:")
