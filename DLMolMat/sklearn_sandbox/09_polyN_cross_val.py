@@ -34,7 +34,6 @@ from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import cross_val_score
 
-losses = {}
 for deg in range(1,10):
     model = make_pipeline(
         PolynomialFeatures(deg),
