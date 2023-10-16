@@ -6,12 +6,14 @@ from matplotlib import pyplot as plt
 NITER = 500000
 NTAU = 10
 DTAU = 0.1
+
 ##################################
 ### Calculation of the action  ###
 ##################################
 #When you change the action, you should also change dH/dx, specified in "calc_delh".
 def calc_action(x):
     return 0.5*x*x
+
 ######################################
 ### Calculation of the Hamiltonian ###
 ######################################
@@ -19,12 +21,14 @@ def calc_hamiltonian(x,p):
     ham = calc_action(x)
     ham += 0.5*p*p
     return ham
+
 #############################
 ### Calculation of dH/dx  ###
 #############################
 def calc_delh(x):
     delh = x
     return delh
+
 #############################
 ### Molecular evolution  ###
 #############################
@@ -47,8 +51,9 @@ def Molecular_Dynamics(x):
     x += p*0.5e0*DTAU
 
     # calculate Hamiltonian again ##
-    ham_fin=calc_hamiltonian(x,p)
-    return x,ham_init,ham_fin
+    ham_fin = calc_hamiltonian(x,p)
+    return x, ham_init, ham_fin
+
 #####################################
 ### Set the initial configuration ###
 #####################################
@@ -62,20 +67,24 @@ data_for_plot = []
 #################
 ### Main Loop ###
 #################
-for iter in range(NITER):
-    backup_x=x
-    x,ham_init,ham_fin = Molecular_Dynamics(x)
+for i in range(NITER):
+    
+    backup_x = x
+    
+    x, ham_init, ham_fin = Molecular_Dynamics(x)
+    
     metropolis = np.random.uniform(0,1)
-    if(np.exp(ham_init-ham_fin) > metropolis):#accept
+
+    if np.exp(ham_init-ham_fin) > metropolis:
         naccept += 1
-    else:#reject
+    else:
         x = backup_x
     ###################
     ### data output ###
     ###################
-    sum_xx=sum_xx+x*x
+    sum_xx = sum_xx + x*x
     # output x, <x^2>, acceptance
-    print(x,sum_xx/(iter+1),naccept/(iter+1))
+    #print(x,sum_xx/(iter+1), naccept/(iter+1))
 
     # save configuration for plot
     data_for_plot.append(x)

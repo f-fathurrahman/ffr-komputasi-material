@@ -1,8 +1,7 @@
-# modified by efefer
-
 import numpy as np
-# seed of random numbers is the system time by default
+from numba import jit
 
+@jit(nopython=True)
 def do_sim(NITER):
     n_in = 0
     for i in range(NITER):
@@ -13,11 +12,13 @@ def do_sim(NITER):
     pi_approx = 4 * n_in/NITER
     return pi_approx
 
+# warm up
+_ = do_sim(1)
 
 import time
 start = time.perf_counter()
 pi_approx = do_sim(1_000_000)
 end = time.perf_counter()
-print("Elapsed (standard) = {}s".format((end - start)))
+print("Elapsed (Numba) = {}s".format((end - start)))
 
 print("pi_approx = %.10f" % pi_approx)

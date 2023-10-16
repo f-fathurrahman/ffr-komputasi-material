@@ -1,8 +1,9 @@
 import numpy as np
 from matplotlib import pyplot as plt
-# seed of random numbers is the system time by default
 
+from numba import jit
 
+@jit(nopython=True)
 def do_sim(NITER):
     STEP_SIZE_x = 0.5
     STEP_SIZE_y = 0.5
@@ -19,13 +20,13 @@ def do_sim(NITER):
     for i in range(NITER):
         backup_x = x
         backup_y = y
-        action_init = 0.5*(x*x + y*y + x*y)
+        action_init = 0.5*(x*x + y*y - x*y)
         dx = np.random.uniform(-STEP_SIZE_x, STEP_SIZE_x)
         dy = np.random.uniform(-STEP_SIZE_y, STEP_SIZE_y)
         #
         x += dx
         y += dy
-        action_fin = 0.5*(x*x + y*y + x*y)
+        action_fin = 0.5*(x*x + y*y - x*y)
 
         # Metropolis test ###
         metropolis = np.random.uniform(0,1)
@@ -47,11 +48,15 @@ def do_sim(NITER):
     return data_x, data_y
 
 
+# warm up
+_, _ = do_sim(1)
+
+
 import time
 start = time.perf_counter()
 data_x, data_y = do_sim(1_000_000)
 end = time.perf_counter()
-print("Elapsed (standard) = {}s".format((end - start)))
+print("Elapsed (Numba) = {}s".format((end - start)))
 
 
 # make 2D plot
@@ -60,7 +65,7 @@ print("Elapsed (standard) = {}s".format((end - start)))
 z1 = np.arange(-5, 5, 0.1)
 z2 = np.arange(-5, 5, 0.1)
 X,Y = np.meshgrid( z1, z2 )
-Z = np.exp(-(X**2 + Y**2 + X*Y)/2) # analytical distrib
+Z = np.exp(-(X**2 + Y**2 - X*Y)/2) # analytical distrib
 plt.contour(X, Y, Z,colors=['white'])
 
 # plot 2D histogram
@@ -68,4 +73,3 @@ plt.xlabel("$x$")
 plt.ylabel("$y$")
 plt.hist2d(data_x, data_y, bins=100, density=True)
 plt.show()
-

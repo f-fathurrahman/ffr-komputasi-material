@@ -4,10 +4,12 @@ from matplotlib import pyplot as plt
 # Numpy has Gaussian random number generator, so we don't use Box-Muller
 
 NITER = 10000
-A = [[1,0,1.0,1.0],
-     [1.0,2.0,1.0],
-     [1.0,1.0,2.0]]
-A = np.array(A)
+A = np.array([
+    [1.0, 1.0, 1.0],
+    [1.0, 2.0, 1.0],
+    [1.0, 1.0, 2.0]
+])
+
 #####################################
 ### Set the initial configuration ###
 #####################################
@@ -23,24 +25,24 @@ data1=[]
 data2=[]
 data3=[]
 
-for iter in range(NITER):
+for i in range(NITER):
     #update x
     sigma = 1.0/np.sqrt(A[0][0])
     mu = -A[0][1]/A[0][0]*y-A[0][2]/A[0][0]*z
     r = np.random.randn()
-    x = sigma*r+mu
+    x = sigma*r + mu
     #update y
     sigma = 1.0/np.sqrt(A[1][1])
-    mu = -A[1][0]/A[1][1]*x-A[1][2]/A[1][1]*z
+    mu = -A[1][0]/A[1][1]*x - A[1][2]/A[1][1]*z
     r = np.random.randn()
-    y = sigma*r+mu
+    y = sigma*r + mu
     #update z
     sigma = 1.0/np.sqrt(A[2][2])
     mu = -A[2][0]/A[2][2]*x-A[2][1]/A[2][2]*y
     r = np.random.randn()
-    z = sigma*r+mu
+    z = sigma*r + mu
     #output x,y,z
-    print(x,y,z)
+    #print(x,y,z)
     data1.append(x)
     data2.append(y)
     data3.append(z)
@@ -48,7 +50,7 @@ for iter in range(NITER):
 ############
 ### plot ###
 ############
-plt.figure(figsize=(15,5))
+plt.figure(figsize=(9,3))
 plt.axes().set_aspect('equal')
 ##
 ax1 = plt.subplot(1, 3, 1)
