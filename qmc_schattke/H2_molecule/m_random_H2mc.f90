@@ -175,7 +175,8 @@ function RANF() result(Z)
        end function RANF
 
 
-      SUBROUTINE ZBQLINI(SEED)
+SUBROUTINE ZBQLINI(SEED)
+
 !   To initialize the random number generator - either
 !   repeatably or nonrepeatably. Need double precision
 !   variables because integer storage can't handle the
