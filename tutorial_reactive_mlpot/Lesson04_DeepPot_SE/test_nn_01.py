@@ -1,22 +1,39 @@
 import math
 from typing import Sequence, Tuple
 
+import numpy as np
+
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
 from torch import Tensor
-from torch.utils.data import TensorDataset, DataLoader
+from torch import nn
 import pytorch_lightning as pl
-from pytorch_lightning import loggers as pl_loggers
 
 
-class Sequential(nn.Sequential):
+def load_data():
+    ds = np.DataSource(None)
+    coord = np.array(np.load(ds.open("../DATASET/DeepPot/input_coord.npy", "rb")), dtype="float32")
+    atom_types = np.loadtxt(ds.open("../DATASET/DeepPot/type.raw", "r"), dtype=int)
+    elems = np.unique(atom_types).tolist()
+    atom_types = np.array([[elems.index(i) for i in atom_types]])
+    atom_types = atom_types.repeat(len(coord), axis=0)
+    grad = np.array(np.load(ds.open("../DATASET/DeepPot/input_grad.npy", "rb")), dtype="float32")
+
+    # Now, convert them to Tensor
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    coord = torch.from_numpy(coord).to(device)
+    atom_types = torch.from_numpy(atom_types).to(device)
+    grad = torch.from_numpy(grad).to(device)
+    return coord, atom_types, grad
+
+
+
+class MySequential(nn.Sequential):
     def forward(self, input: Tuple[Tensor, Tensor]) -> Tuple[Tensor, Tensor]:
         for module in self:
             input = module(input)
         return input
 
-class Dense(nn.Module):
+class MyDense(nn.Module):
     def __init__(self, num_channels: int, in_features: int, out_features: int, bias: bool = True, activation: bool = False, residual: bool = False) -> None:
         super().__init__()
         self.num_channels = num_channels
@@ -68,6 +85,7 @@ class Dense(nn.Module):
         )
 
 
+
 def local_environment(coords: Tensor) -> Tuple[Tensor, Tensor]:
     num_batches, num_channels, _ = coords.size()
     rij = coords[:, :, None] - coords[:, None]
@@ -92,10 +110,10 @@ class Feature(nn.Module):
         self.neuron = neuron
         self.axis_neuron = axis_neuron
 
-        layers = [Dense(n_types * n_types, 1, neuron[0], activation=True)]
+        layers = [MyDense(n_types * n_types, 1, neuron[0], activation=True)]
         for i in range(len(neuron)-1):
-            layers.append(Dense(n_types * n_types, neuron[i], neuron[i+1], activation=True, residual=True))
-        self.local_embedding = Sequential(*layers)
+            layers.append(MyDense(n_types * n_types, neuron[i], neuron[i+1], activation=True, residual=True))
+        self.local_embedding = MySequential(*layers)
 
     def forward(self, coords: Tensor, atom_types: Tensor) -> Tensor:
         num_batches, num_channels, _ = coords.size()
@@ -122,11 +140,11 @@ class Feature(nn.Module):
 class Fitting(nn.Module):
     def __init__(self, n_types: int, in_features: int, neuron: Sequence[int] = [240, 240, 240]) -> None:
         super().__init__()
-        layers = [Dense(n_types, in_features, neuron[0], activation=True)]
+        layers = [MyDense(n_types, in_features, neuron[0], activation=True)]
         for i in range(len(neuron)-1):
-            layers.append(Dense(n_types, neuron[i], neuron[i+1], activation=True, residual=True))
-        layers.append(Dense(n_types, neuron[-1], 1))
-        self.fitting_net = Sequential(*layers)
+            layers.append(MyDense(n_types, neuron[i], neuron[i+1], activation=True, residual=True))
+        layers.append(MyDense(n_types, neuron[-1], 1))
+        self.fitting_net = MySequential(*layers)
 
     def forward(self, input : Tuple[Tensor, Tensor]) -> Tensor:
         output, _ = self.fitting_net(input)
@@ -152,7 +170,7 @@ class DeepPot(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         qm_coord, atom_types, grad = batch
         ene_pred, grad_pred = self(qm_coord, atom_types[0])
-        loss = F.mse_loss(grad_pred, grad)
+        loss = nn.functional.mse_loss(grad_pred, grad)
         self.log('train_loss', loss)
         return loss
 
@@ -165,63 +183,11 @@ class DeepPot(pl.LightningModule):
         return [optimizer], [scheduler]
 
 
-
-import numpy as np
-
-ds = np.DataSource(None)
-coord = np.array(np.load(ds.open("../DATASET/DeepPot/input_coord.npy", "rb")), dtype="float32")
-atom_types = np.loadtxt(ds.open("../DATASET/DeepPot/type.raw", "r"), dtype=int)
-
-elems = np.unique(atom_types).tolist()
-atom_types = np.array([[elems.index(i) for i in atom_types]])
-atom_types = atom_types.repeat(len(coord), axis=0)
-
-grad = np.array(np.load(ds.open("../DATASET/DeepPot/input_grad.npy", "rb")), dtype="float32")
-
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-coord = torch.from_numpy(coord).to(device)
-atom_types = torch.from_numpy(atom_types).to(device)
-grad = torch.from_numpy(grad).to(device)
-
-dataset = TensorDataset(coord, atom_types, grad)
-train_loader = DataLoader(dataset, batch_size=32)
-
+# Model
 descriptor = Feature(4, neuron=[25, 50], axis_neuron=4)
 fitting_net = Fitting(4, descriptor.output_length, neuron=[120, 120])
 model = DeepPot(descriptor, fitting_net, learning_rate=5e-4)
-csv_logger = pl_loggers.CSVLogger('logs_csv/')
-trainer = pl.Trainer(max_epochs=500, logger=csv_logger, accelerator='auto')
-trainer.fit(model, train_loader)
-model.to(device)
 
-
-_, grad_pred = model(coord, atom_types[0])
-
-
-
-import matplotlib.pyplot as plt
-
-f1 = -grad.cpu().detach().numpy().reshape(-1)
-f2 = -grad_pred.cpu().detach().numpy().reshape(-1)
-fig, ax = plt.subplots()
-
-ax.plot(f1, f2, linestyle='none', marker='.',color='springgreen')
-ax.set_aspect('equal', adjustable='box')
-ax.plot([np.max(f1), np.min(f1)], [np.max(f2), np.min(f2)] , color="k", linewidth=1.5)
-ax.set_xlabel(r'Reference Force (kcal/mol/$\AA$)',size=14)
-ax.set_ylabel(r'Predicted Force (kcal/mol/$\AA$)',size=14)
-ax.text(-20, 18, 'RMSD: %.3f' % np.sqrt(np.mean((f1 - f2)**2)), size=14)
-plt.show()
-
-
-
-import pandas as pd
-loss = pd.read_csv("logs_csv/lightning_logs/version_0/metrics.csv")
-
-fig, ax = plt.subplots()
-ax.semilogy(loss["epoch"], loss["train_loss"],color='dodgerblue')
-ax.set_xlabel("Epoch",size=14)
-ax.set_ylabel("Training Errors",size=14)
-plt.show()
+# Data
+coord, atom_types, grad = load_data()
 
