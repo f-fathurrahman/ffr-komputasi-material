@@ -1,20 +1,25 @@
+!--------------
 module m_random
-  use m_highlevel
-  use m_midlevel
-!  controls the sequence of random numbers,
-!  allows for use of different random generators
-       implicit none
-       public :: FILLG95, FILLTAO, RANF, AUTOCORR
-       public :: GENRAN, INITRAN, ZBQLINI, ZBQLU01
-!   integer,parameter,public    :: MRAN=10001,ISEED=1820459103
-       integer,parameter,public    :: MRAN=10001,ISEED=1720459103
-       integer,public              :: MCPRE,MCMAX,MAXA,MAXZ
-       integer,parameter,public    :: MAKF=1000
-       integer,public              :: IRAN,IFRAN,ISEED0,ISEED1,SEED
-       real(dp),dimension(MRAN),public :: FRAN
-       character(40), public       :: RANDNAME
-       real(dp),private :: B=4.294967291D9,C=0.0D0
-       real(dp),dimension(43),private :: ZBQLIX
+!--------------
+
+use m_highlevel
+use m_midlevel
+
+implicit none
+
+public :: FILLG95, FILLTAO, RANF, AUTOCORR
+public :: GENRAN, INITRAN, ZBQLINI, ZBQLU01
+
+integer, parameter, public :: MRAN=10001,ISEED=1720459103
+integer, public :: MCPRE,MCMAX,MAXA,MAXZ
+integer, parameter, public :: MAKF=1000
+integer, public :: IRAN,IFRAN,ISEED0,ISEED1,SEED
+real(dp), dimension(MRAN), public :: FRAN
+character(40), public :: RANDNAME
+
+
+real(dp),private :: B=4.294967291D9,C=0.0D0
+real(dp),dimension(43),private :: ZBQLIX
        data  ZBQLIX /8.001441D7,5.5321801D8, &
      &  1.69570999D8,2.88589940D8,2.91581871D8,1.03842493D8, &
      &  7.9952507D7,3.81202335D8,3.11575334D8,4.02878631D8, &
@@ -29,14 +34,13 @@ module m_random
      &  2.63576576D8/
 
 
-contains
+  contains
 
 
+!-------------------
 subroutine INITRAN()
-       integer                     :: ia
-       real(dp)                    :: aver,vari
-       real(dp),dimension(MAKF)    :: corr
-       real(dp),dimension(MCMAX)   :: rn
+!-------------------
+  implicit none
 !  RANDNAME = name of the random generator, see main program
 !   RANDNAME="random generator from REC_PJN           "
 !   RANDNAME="random generator from TAO               "
@@ -70,113 +74,136 @@ subroutine INITRAN()
 !    do ia = 1,MAKF
 !      write (30,*)ia,corr(ia)
 !    end do
-      end subroutine INITRAN
+end subroutine
 
 
-       subroutine GENRAN(rannumb)
-        real(dp),intent(out) :: rannumb
 
-        real(dp) :: dum
+!-------------------------
+subroutine GENRAN(rannumb)
+!-------------------------
+  implicit none
+  real(dp), intent(out) :: rannumb
+  !
+  select case (RANDNAME)
+  !
+  case("random generator from TAO               ")
+    rannumb = FRAN(IFRAN)
+    IFRAN = IFRAN + 1
+    if (IFRAN .gt. MRAN) THEN
+      IRAN=IRAN+MRAN
+      call FILLTAO()
+    end if
+  !
+  case("random generator from G95               ")
+    rannumb = FRAN(IFRAN)
+    IFRAN = IFRAN + 1
+    if( IFRAN .gt. MRAN ) THEN
+      IRAN = IRAN + MRAN
+      call FILLG95()
+    end if
+  !
+  case("random generator from REC_PJN           ")
+    rannumb = ZBQLU01()
+  !
+  case("random generator from F90/95            ")
+    call random_number(rannumb)
+  !
+  case default
+    write(*,*)'No random generator!'
+    stop
+  end select
 
-        select case (RANDNAME)
-         case("random generator from TAO               ")
-           rannumb = FRAN(IFRAN)
-           IFRAN = IFRAN + 1
-           if (IFRAN .gt. MRAN) THEN
-             IRAN=IRAN+MRAN
-             call FILLTAO()
-           end if
-         case("random generator from G95               ")
-           rannumb = FRAN(IFRAN)
-           IFRAN = IFRAN + 1
-           if (IFRAN .gt. MRAN) THEN
-             IRAN=IRAN+MRAN
-             call FILLG95()
-           end if
-         case("random generator from REC_PJN           ")
-           rannumb = ZBQLU01(dum)
-         case("random generator from F90/95            ")
-           call random_number(rannumb)
-         case default
-           write(*,*)'No random generator!'
-           stop
-        end select
-       end subroutine GENRAN
+end subroutine
 
 
+
+!-------------------
 subroutine FILLG95()
+!------------------
+  implicit none
   integer :: i
-!    ISEED1 = ISEED
-        do i=1,MRAN
-         FRAN(i) = rand()
-        end do
-        IFRAN = 1
-end subroutine FILLG95
+  do i=1,MRAN
+    FRAN(i) = rand()
+  end do
+  IFRAN = 1
+end subroutine
 
 
+!-------------------
 subroutine FILLTAO()
-        integer :: i
-        ISEED1 = ISEED0
-        do i=1,MRAN
+!-------------------
+  implicit none
+  integer :: i
+  ISEED1 = ISEED0
+  do i=1,MRAN
 !  below from the book, "An Introduction to Computational Physics"
 !  written by Tao Pang and published and copyrighted
 !  by Cambridge University Press in 1997
-         FRAN(i)  = RANF()
-        end do
-        ISEED0 = ISEED1
-        IFRAN = 1
-       end subroutine FILLTAO
-       
+    FRAN(i)  = RANF()
+  end do
+  ISEED0 = ISEED1
+  IFRAN = 1
+end subroutine FILLTAO
+
+
+
+!------------------------------------------       
 subroutine AUTOCORR(mc,mx,x,aver,vari,corr)
-!   mc = no of MC steps
-!   mx = no of points for autocorrelation function
-        integer,intent(in)                    :: mc,mx
-        real(dp),dimension(mx),intent(in)     :: x
-        real(dp),intent(out)                  :: aver,vari
-        real(dp),dimension(mx), intent(out)   :: corr
-        integer :: i,k,n
-        aver = x(1)
-        do n=2,mc
-         vari = ((n-2)*vari)/(n-1) + (x(n)-aver)**2/n
-         aver = ((n-1)*aver)/n + x(n)/n
-        end do
-!   correct variance for small number of events
-        vari = (vari*mc)/(mc-1)
-        write (35,*)'hello from AUTO'
-        corr = 0._dp
-         do k=1,mx-1
-          do i=1,mc-k
-            corr(k) = corr(k) + (x(i)-aver)*(x(i+k)-aver)
-          end do
-          corr(k) = corr(k)/(vari*(mc-k-1))
-         end do
-!    write (50,*) 'no. events mx = ',mx,'  average = ', aver,
-! &      '  variance =',vari
-!    do k=1,mx-1
-!      write (50,*) k,corr(k)
-!    end do
-       end subroutine AUTOCORR
+!------------------------------------------
+  implicit none
+! mc = no of MC steps
+! mx = no of points for autocorrelation function
+  integer,intent(in)                    :: mc,mx
+  real(dp),dimension(mx),intent(in)     :: x
+  real(dp),intent(out)                  :: aver,vari
+  real(dp),dimension(mx), intent(out)   :: corr
+  integer :: i,k,n
+  aver = x(1)
+  do n=2,mc
+    vari = ((n-2)*vari)/(n-1) + (x(n)-aver)**2/n
+    aver = ((n-1)*aver)/n + x(n)/n
+  end do
+  ! correct variance for small number of events
+  vari = (vari*mc)/(mc-1)
+  write (35,*)'hello from AUTO'
+  corr = 0._dp
+  do k=1,mx-1
+    do i=1,mc-k
+      corr(k) = corr(k) + (x(i)-aver)*(x(i+k)-aver)
+    end do
+    corr(k) = corr(k)/(vari*(mc-k-1))
+  end do
+  ! write (50,*) 'no. events mx = ',mx,'  average = ', aver, '  variance =',vari
+  ! do k=1,mx-1
+  !   write (50,*) k,corr(k)
+  ! end do
+end subroutine
 
 
+!------------------------
 function RANF() result(Z)
-        real(dp) :: Z
-        integer,parameter :: ia=16807,ic=2147483647,iq=127773,ir=2836
-        integer :: ih,il,it
-!  IC = 2**31-1 exists for 32 bit chips
-        ih = ISEED1/iq
-        il = MOD(ISEED1,iq)
-        it = ia*il-ir*ih
-        if (it.GT.0) then
-          ISEED1 = it
-        else
-          ISEED1 = ic+it
-        end if
-        Z = ISEED1/FLOAT(ic)
-       end function RANF
+!------------------------
+  implicit none
+  real(dp) :: Z
+  integer,parameter :: ia=16807,ic=2147483647,iq=127773,ir=2836
+  integer :: ih,il,it
+  ! IC = 2**31-1 exists for 32 bit chips
+  ih = ISEED1/iq
+  il = MOD(ISEED1,iq)
+  it = ia*il-ir*ih
+  if (it.GT.0) then
+    ISEED1 = it
+  else
+    ISEED1 = ic+it
+  end if
+  Z = real(ISEED1, kind=dp)/real(ic, kind=dp)
+end function RANF
 
 
+!-----------------------
 SUBROUTINE ZBQLINI(SEED)
-
+!-----------------------
+  implicit none
 !   To initialize the random number generator - either
 !   repeatably or nonrepeatably. Need double precision
 !   variables because integer storage can't handle the
@@ -195,8 +222,7 @@ SUBROUTINE ZBQLINI(SEED)
 !		it finds an available handle). If this causes problems,
 !           (which will only happen if handles 80 through 99 are
 !           already in use), decrease the default value.
-      INTEGER LFLNO
-      PARAMETER (LFLNO=80)
+  INTEGER, parameter :: LFLNO=80
 
 !	ZBQLIX	Seed array for the random number generator. Defined
 !		in ZBQLBD01
@@ -204,37 +230,30 @@ SUBROUTINE ZBQLINI(SEED)
 !	FILNO	File handle used for temporary file
 !	INIT	Indicates whether generator has already been initialised
 
-      INTEGER SEED,SS,MM,HH,DD,FILNO,I
-      DOUBLE PRECISION TMPVAR1,DSS,DMM,DHH,DDD
+  INTEGER :: SEED, I
+  DOUBLE PRECISION :: TMPVAR1
 
-      IF (SEED.EQ.0) THEN
-       write(*,*)'SEED=0 not allowed in this package'
-       stop
-      ELSE
-       TMPVAR1 = DMOD(DBLE(SEED),B)
-      ENDIF
-      ZBQLIX(1) = TMPVAR1
-      DO 100 I = 2,43
-       TMPVAR1 = ZBQLIX(I-1)*3.0269D4
-       TMPVAR1 = DMOD(TMPVAR1,B)
-       ZBQLIX(I) = TMPVAR1
- 100  CONTINUE
-
- !1    FORMAT(//5X,'****WARNING**** You have called routine ZBQLINI ',
- !    +'more than',/5X,'once. I''m ignoring any subsequent calls.',//)
- !2    FORMAT(//5X,'**** ERROR **** In routine ZBQLINI, I couldn''t',
- !    +' find an',/5X,
- !    +'available file number. To rectify the problem, decrease the ',
- !    +'value of',/5X,
- !    +'the parameter LFLNO at the start of this routine (in file ',
- !    +'random_rec_pjn.f)',/5X,
- !    +'and recompile. Any number less than 100 should work.')
+  IF( SEED .EQ. 0) THEN
+    write(*,*)'SEED=0 not allowed in this package'
+    stop
+  ELSE
+    TMPVAR1 = DMOD(DBLE(SEED),B)
+  ENDIF
+  
+  ZBQLIX(1) = TMPVAR1
+  DO I = 2,43
+    TMPVAR1 = ZBQLIX(I-1)*3.0269D4
+    TMPVAR1 = DMOD(TMPVAR1,B)
+    ZBQLIX(I) = TMPVAR1
+  enddo
 
 end subroutine ZBQLINI
 
 
-FUNCTION ZBQLU01(DUMMY)
-
+!----------------------
+FUNCTION ZBQLU01()
+!----------------------
+  implicit none
 !   Returns a uniform random number between 0 & 1, using
 !   a Marsaglia-Zaman type subtract-with-borrow generator.
 !   Uses double precision, rather than integer, arithmetic
@@ -251,37 +270,38 @@ FUNCTION ZBQLU01(DUMMY)
 !   the output was identical up to the 16th decimal place
 !   after 10^10 calls, so we're probably OK ...
 
-      DOUBLE PRECISION ZBQLU01,DUMMY,X,B2,BINV
-      INTEGER CURPOS,ID22,ID43
+  DOUBLE PRECISION ZBQLU01,X,B2,BINV
+  INTEGER CURPOS,ID22,ID43
 
-      SAVE CURPOS,ID22,ID43
-      DATA CURPOS,ID22,ID43 /1,22,43/
+  SAVE CURPOS,ID22,ID43
+  DATA CURPOS,ID22,ID43 /1,22,43/
 
-      B2 = B
-      BINV = 1.0D0/B
- 5    X = ZBQLIX(ID22) - ZBQLIX(ID43) - C
-      IF (X.LT.0.0D0) THEN
-       X = X + B
-       C = 1.0D0
-      ELSE
-       C = 0.0D0
-      ENDIF
-      ZBQLIX(ID43) = X
+  B2 = B
+  BINV = 1.0D0/B
+
+5 X = ZBQLIX(ID22) - ZBQLIX(ID43) - C
+  IF(X .LT. 0.0D0) THEN
+    X = X + B
+    C = 1.0D0
+  ELSE
+    C = 0.0D0
+  ENDIF
+  ZBQLIX(ID43) = X
 
 ! Update array pointers. Do explicit check for bounds of each to
 ! avoid expense of modular arithmetic. If one of them is 0 the others
 ! won't be
 
-      CURPOS = CURPOS - 1
-      ID22 = ID22 - 1
-      ID43 = ID43 - 1
-      IF (CURPOS.EQ.0) THEN
-       CURPOS=43
-      ELSEIF (ID22.EQ.0) THEN
-       ID22 = 43
-      ELSEIF (ID43.EQ.0) THEN
-       ID43 = 43
-      ENDIF
+  CURPOS = CURPOS - 1
+  ID22 = ID22 - 1
+  ID43 = ID43 - 1
+  IF (CURPOS.EQ.0) THEN
+    CURPOS=43
+  ELSEIF (ID22.EQ.0) THEN
+    ID22 = 43
+  ELSEIF (ID43.EQ.0) THEN
+    ID43 = 43
+  ENDIF
 
 ! The integer arithmetic there can yield X=0, which can cause
 ! problems in subsequent routines (e.g. ZBQLEXP). The problem
@@ -289,13 +309,16 @@ FUNCTION ZBQLU01(DUMMY)
 ! be continuous - hence if X is 0, go back and generate another
 ! X and return X/B^2 (etc.), which will be uniform on (0,1/B).
 
-      IF (X.LT.BINV) THEN
-       B2 = B2*B
-       GOTO 5
-      ENDIF
+  IF (X.LT.BINV) THEN
+    B2 = B2*B
+    GOTO 5
+  ENDIF
 
-      ZBQLU01 = X/B2
+  ZBQLU01 = X/B2
 
-      end function ZBQLU01
+end function ZBQLU01
+
+
+
 
 end module
