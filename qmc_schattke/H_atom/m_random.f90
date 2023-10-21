@@ -34,17 +34,13 @@ data  ZBQLIX /8.001441D7,5.5321801D8, &
   
 
 
-contains
+  contains
 
 
 !------------------------
 subroutine INITRAN()
 !------------------------
-  integer                     :: ia
-    
-  real(dp)                    :: aver,vari
-  real(dp),dimension(MAKF)    :: corr
-  real(dp),dimension(MCMAX)   :: rn
+  implicit none
     
   RANDNAME="random generator from REC_PJN           "
     
@@ -69,63 +65,59 @@ subroutine INITRAN()
     stop
   end select
 
-!  Test on autocorrelation
-!        do ia = 1,MCMAX
-!          call GENRAN(rn(ia))
-!        end do
-!        call AUTOCORR(MCMAX,MAKF,rn,aver,vari,corr)
-!        do ia = 1,MAKF
-!          write (30,*)ia,corr(ia)
-!        end do
 end subroutine INITRAN
 
 
-  !-------------------------
-  subroutine GENRAN(rannumb)
-  !-------------------------
-    
-    ! ffr: this use string randname to switch between different algorithms
-    ! TODO: use integer switch instead (?)
+!-------------------------
+subroutine GENRAN(rannumb)
+!-------------------------
+  implicit none
+  !  
+  ! ffr: this use string randname to switch between different algorithms
+  ! TODO: use integer switch instead (?)
+  !
+  real(dp), intent(out) :: rannumb
+  real(dp) :: dum
+  !
+  select case(RANDNAME)
+  case("random generator from TAO               ")
+    rannumb = FRAN(IFRAN)
+    IFRAN = IFRAN + 1
+    if (IFRAN .gt. MRAN) THEN
+      IRAN=IRAN+MRAN
+      call FILLTAO
+    endif
+  case("random generator from G95               ")
+    rannumb = FRAN(IFRAN)
+    IFRAN = IFRAN + 1
+    if (IFRAN .gt. MRAN) THEN
+      IRAN=IRAN+MRAN
+      call FILLG95
+    endif
+  case("random generator from REC_PJN           ")
+    rannumb = ZBQLU01(dum)
+  case("random generator from F90/95            ")
+    call random_number(rannumb)
+  case default
+    write(*,*)'No random generator!'
+    stop
+  end select
+  !
+  return  
+end subroutine GENRAN
 
-    real(dp), intent(out) :: rannumb
-    real(dp) :: dum
 
-    select case(RANDNAME)
-    case("random generator from TAO               ")
-      rannumb = FRAN(IFRAN)
-      IFRAN = IFRAN + 1
-      if (IFRAN .gt. MRAN) THEN
-        IRAN=IRAN+MRAN
-        call FILLTAO
-      end if
-    case("random generator from G95               ")
-      rannumb = FRAN(IFRAN)
-      IFRAN = IFRAN + 1
-      if (IFRAN .gt. MRAN) THEN
-        IRAN=IRAN+MRAN
-        call FILLG95
-      end if
-    case("random generator from REC_PJN           ")
-      rannumb = ZBQLU01(dum)
-    case("random generator from F90/95            ")
-      call random_number(rannumb)
-    case default
-      write(*,*)'No random generator!'
-      stop
-    end select
-    
-    return  
-  end subroutine GENRAN
-
-
-  subroutine FILLG95()
-    integer :: i
-    do i=1,MRAN
-      ! below the g95 random generator which does not seem ok
-      FRAN(i) = rand()
-    end do
-    IFRAN = 1
-  end subroutine FILLG95
+!-------------------
+subroutine FILLG95()
+!-------------------
+  implicit none
+  integer :: i
+  do i=1,MRAN
+    ! below the g95 random generator which does not seem ok
+    FRAN(i) = rand()
+  enddo
+  IFRAN = 1
+end subroutine FILLG95
 
 
 subroutine FILLTAO()
@@ -136,7 +128,7 @@ subroutine FILLTAO()
 !  written by Tao Pang and published and copyrighted
 !  by Cambridge University Press in 1997
     FRAN(i)  = RANF()
-  end do
+  enddo
   ISEED0 = ISEED1
   IFRAN = 1
 end subroutine FILLTAO
@@ -155,7 +147,7 @@ subroutine AUTOCORR(mc,mx,x,aver,vari,corr)
   do n=2,mc
    vari = ((n-2)*vari)/(n-1) + (x(n)-aver)**2/n
    aver = ((n-1)*aver)/n + x(n)/n
-  end do
+  enddo
   ! correct variance for small number of events
       vari = (vari*mc)/(mc-1)
       write (35,*)'hello from AUTO'
@@ -163,73 +155,36 @@ subroutine AUTOCORR(mc,mx,x,aver,vari,corr)
        do k=1,mx-1
         do i=1,mc-k
           corr(k) = corr(k) + (x(i)-aver)*(x(i+k)-aver)
-        end do
+        enddo
         corr(k) = corr(k)/(vari*(mc-1))
-       end do
-!        write (50,*) 'no. events mx = ',mx,'  average = ', aver,
-!     &      '  variance =',vari
-!        do k=1,mx-1
-!          write (50,*) k,corr(k)
-!        end do
+       enddo
 end subroutine AUTOCORR
   
 
+!------------------------
 function RANF() result(Z)
+!------------------------
+  implicit none
   real :: Z
   integer,parameter :: ia=16807,ic=2147483647,iq=127773,ir=2836
   integer :: ih,il,it
 !  IC = 2**31-1 exists for 32 bit chips
   ih = ISEED1/iq
   il = MOD(ISEED1,iq)
-  it = ia*il-ir*ih
-  if (it.GT.0) then
+  it = ia*il - ir*ih
+  if( it > 0 ) then
     ISEED1 = it
   else
-    ISEED1 = ic+it
-  end if
-  Z = ISEED1/FLOAT(ic)
+    ISEED1 = ic + it
+  endif
+  Z = real(ISEED1)/real(ic)
 end function RANF
 
-!
-!-----------------------------------------------------------------------
-!      end module random
-!***************below from***********************************************
-!********   AUTHORS: Richard Chandler       ***********
-!********        (richard@stats.ucl.ac.uk)  ***********
-!********        Paul Northrop          ***********
-!********        (northrop@stats.ox.ac.uk)  ***********
-!********   LAST MODIFIED: 26/8/03          ***********
-!*******************************************************************
-!      module random_rec_pjn
-!
-!       Initializes seed array etc. for random number generator.
-!       The values below have themselves been generated using the
-!       NAG generator. The initialization and
-!       a subroutine for uniform random numbers in (0,1] is
-!       contained.
-!
-!      integer :: SEED
-!      DOUBLE PRECISION :: B=4.294967291D9,C=0.0D0
-!      DOUBLE PRECISION,dimension(43) :: ZBQLIX
-!      data  ZBQLIX /8.001441D7,5.5321801D8,
-!     &  1.69570999D8,2.88589940D8,2.91581871D8,1.03842493D8,
-!     &  7.9952507D7,3.81202335D8,3.11575334D8,4.02878631D8,
-!     &  2.49757109D8,1.15192595D8,2.10629619D8,3.99952890D8,
-!     &  4.12280521D8,1.33873288D8,7.1345525D7,2.23467704D8,
-!     &  2.82934796D8,9.9756750D7,1.68564303D8,2.86817366D8,
-!     &  1.14310713D8,3.47045253D8,9.3762426D7 ,1.09670477D8,
-!     &  3.20029657D8,3.26369301D8,9.441177D6,3.53244738D8,
-!     &  2.44771580D8,1.59804337D8,2.07319904D8,3.37342907D8,
-!     &  3.75423178D8,7.0893571D7 ,4.26059785D8,3.95854390D8,
-!     &  2.0081010D7,5.9250059D7,1.62176640D8,3.20429173D8,
-!     &  2.63576576D8/
-!
-!
-!     contains
-!******************************************************************
-      
 
-  SUBROUTINE ZBQLINI(SEED)
+!-----------------------
+SUBROUTINE ZBQLINI(SEED)
+!-----------------------
+  implicit none
 !       To initialize the random number generator - either
 !       repeatably or nonrepeatably. Need double precision
 !       variables because integer storage can't handle the
@@ -258,8 +213,8 @@ end function RANF
 !   FILNO   File handle used for temporary file
 !   INIT    Indicates whether generator has already been initialised
 !
-  INTEGER :: SEED,SS,MM,HH,DD,FILNO,I
-  real(dp) :: TMPVAR1,DSS,DMM,DHH,DDD
+  INTEGER :: SEED,I
+  real(dp) :: TMPVAR1
 
   IF( SEED .EQ. 0) THEN
     write(*,*)'SEED=0 not allowed in this package'
@@ -275,22 +230,13 @@ end function RANF
     ZBQLIX(I) = TMPVAR1
   enddo
 
-  ! XXX: Need this?
-
- 1    FORMAT(//5X,'****WARNING**** You have called routine ZBQLINI ', &
-     & 'more than',/5X,'once. I''m ignoring any subsequent calls.',//)
- 
- 2    FORMAT(//5X,'**** ERROR **** In routine ZBQLINI, I couldn''t', &
-     & ' find an',/5X, &
-     & 'available file number. To rectify the problem, decrease the ', &
-     & 'value of',/5X, &
-     & 'the parameter LFLNO at the start of this routine (in file ', &
-     & 'random_rec_pjn.f)',/5X, &
-     'and recompile. Any number less than 100 should work.')
 end subroutine ZBQLINI
 
 
+!----------------------
 FUNCTION ZBQLU01(DUMMY)
+!----------------------
+  implicit none
 !
 !  Returns a uniform random number between 0 & 1, using
 !  a Marsaglia-Zaman type subtract-with-borrow generator.
