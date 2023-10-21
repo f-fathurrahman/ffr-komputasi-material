@@ -41,39 +41,31 @@ real(dp),dimension(43),private :: ZBQLIX
 subroutine INITRAN()
 !-------------------
   implicit none
-!  RANDNAME = name of the random generator, see main program
-!   RANDNAME="random generator from REC_PJN           "
-!   RANDNAME="random generator from TAO               "
-!   RANDNAME="random generator from G95               "
-!   RANDNAME="random generator from F90/95            "
-       select case (RANDNAME)
-         case("random generator from TAO               ")
-           write(35,*)'random generator from TAO               '
-           ISEED0 = ISEED
-           call FILLTAO
-         case("random generator from G95               ")
-           write(35,*)'random generator from G95               '
-           call srand(ISEED)
-           call FILLG95
-         case("random generator from REC_PJN           ")
-           write(35,*)'random generator from REC_PJN           '
-           SEED = 11 ! or some other integer
-           call ZBQLINI(SEED)
-         case("random generator from F90/95            ")
-           write(35,*)'random generator from F90/95            '
-!  no further initialization for repeatable runs
-         case default
-           write(35,*)'No random generator! Stop!'
-           stop
-        end select
-!  Test on autocorrelation
-!    do ia = 1,MCMAX
-!      call GENRAN(rn(ia))
-!    end do
-!    call AUTOCORR(MCMAX,MAKF,rn,aver,vari,corr)
-!    do ia = 1,MAKF
-!      write (30,*)ia,corr(ia)
-!    end do
+  ! RANDNAME = name of the random generator, see main program
+  ! RANDNAME="random generator from REC_PJN           "
+  ! RANDNAME="random generator from TAO               "
+  ! RANDNAME="random generator from G95               "
+  ! RANDNAME="random generator from F90/95            "
+  select case (RANDNAME)
+  case("random generator from TAO               ")
+    write(*,*) 'random generator from TAO               '
+    ISEED0 = ISEED
+    call FILLTAO()
+  case("random generator from G95               ")
+    write(*,*) 'random generator from G95               '
+    call srand(ISEED)
+    call FILLG95()
+  case("random generator from REC_PJN           ")
+    write(*,*) 'random generator from REC_PJN           '
+    SEED = 11 ! or some other integer
+    call ZBQLINI(SEED)
+  case("random generator from F90/95            ")
+    write(*,*) 'random generator from F90/95            '
+   ! no further initialization for repeatable runs
+  case default
+    write(*,*) 'No random generator! Stop!'
+    stop
+  end select
 end subroutine
 
 

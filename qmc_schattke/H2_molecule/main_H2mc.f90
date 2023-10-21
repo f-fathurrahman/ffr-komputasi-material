@@ -205,7 +205,7 @@ PROGRAM H2MOL
               qj = exp(-VJDI(IE))
               !
               ! Calculate single particle wavefunction part
-              call DETUPD(DNEW(IES),DOLD(IES))
+              call DETUPD(DNEW(IES), DOLD(IES))
               qd = DNEW(IES)/DOLD(IES)
               ! Test on acceptance
               q = (qd*qj)**2

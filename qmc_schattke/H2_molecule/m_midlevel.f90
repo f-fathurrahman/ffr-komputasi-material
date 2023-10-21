@@ -24,7 +24,7 @@ real(dp), dimension(3,NK), public :: RK
 real(dp), dimension(3,NE), public :: RE,RNEU
 
 ! QJC acceptance ratio for James and Coolidge series
-real :: QJC
+real(dp) :: QJC ! ffr: change to real(dp)
 
 ! MCSCHRITT = .true. if step is accepted
 ! SWIRHO = .true. if density is calculated
