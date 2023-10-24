@@ -1,0 +1,23 @@
+---
+title: Monte Carlo Kuantum untuk Atom Hidrogen
+author: Fadjar Fathurrahman
+output: html
+---
+
+
+Sistem dengan satu elektron.
+
+Perhitungan nilai ekspektasi energi:
+$$
+E = \frac{\left\langle \psi \left| \widehat{H} \right| \psi \right\rangle}{\left\langle \psi | \psi \right\rangle}
+$$
+atau:
+$$
+\frac{\int_{R^3} \mathrm{d}^3\mathbf{r} \psi(r) \widehat{H} \psi(r)}{\int_{R^3} \mathrm{d}^3\mathbf{r} |\psi(r)|^2}
+$$
+Fungsi gelombang $\psi(r)$ dianggap bernilai real.
+
+Gunakan ansatz:
+$$
+\psi(r) = (1 + cr)\exp(-\alpha r)
+$$
