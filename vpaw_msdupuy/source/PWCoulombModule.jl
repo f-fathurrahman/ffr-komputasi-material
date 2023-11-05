@@ -64,10 +64,10 @@ end
 function coulomb(p::PWSolverCoulomb, X, V)
     mult = multiplier(2p.N1)
     function chi(r)
-        if r > 1.
-            return 0.
+        if r > 1.0
+            return 0.0
         else
-            return exp(-r^6/(1-r^6))
+            return exp(-r^6/(1 - r^6))
         end
     end
     V_rad = zeros(ComplexF64, (4p.N1+1,4p.N1+1,4p.N1+1))

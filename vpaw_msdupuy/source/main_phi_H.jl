@@ -5,23 +5,6 @@ using FastConv
 using DelimitedFiles
 
 
-# X1, X2: coordinates of the atoms
-function V_H2(x,y,z, X1, X2)
-   return -1/sqrt((x-X1[1])^2+(y-X1[2])^2+(z-X1[3])^2) - 1/sqrt((x-X2[1])^2+(y-X2[2])^2+(z-X2[3])^2)
-end
-
-function H2_test(N,L,R,Z)
-   X1 = [(L+R)/2,L/2,L/2]
-   X2 = [(L-R)/2,L/2,L/2]
-   X = zeros(3,2)
-   X[:,1] = X1
-   X[:,2] = X2
-   V(r) = -Z/r
-   p = PWSolverCoulomb(N,L,X,Z,V)
-   psi, E, res = PWCoulombModule.energy(p, phi_H2(p,X1,X2,Z), tol=1e-10, maxiter=400)
-   return psi, E
-end
-
 # Coulomb potential with cut-off to get smoothness at boundary of the box
 function H2_test_cutoff(N,L,R,Z;a=0.5*L-R,b=0.5*(L-R))
    @test a<b && L>=3R
@@ -41,8 +24,7 @@ function H2_test_cutoff(N,L,R,Z;a=0.5*L-R,b=0.5*(L-R))
    X[:,2] = X2
    V(r) = -Z/r*cut_off(r,a,b)
    p = pw_coulomb.params(N,L,X,Z,V)
-   psi, E, res = pw_coulomb.energy(p,phi_H2(p,X1,X2,Z),
-   tol=1e-10, maxiter=400)
+   psi, E, res = pw_coulomb.energy(p,phi_H2(p,X1,X2,Z), tol=1e-10, maxiter=400)
    return psi, E
 end
 
@@ -82,21 +64,21 @@ function herm(N,L,Z)
 end
 
 
-   function test_V_symmetric()
-      X = zeros(3,1)
-      X[:,1] = [2.5,2.5,2.5]
-      p = params(5,5.,X,3.)
-      p.V_grid = fftshift(p.V_grid)
-      V_transpose = zeros(ComplexF64,(4p.N1+1,4p.N1+1,4p.N1+1))
-      for i1 in 1:4p.N1+1
-         for i2 in 1:4p.N2+1
+function test_V_symmetric()
+    X = zeros(3,1)
+    X[:,1] = [2.5,2.5,2.5]
+    p = params(5,5.,X,3.)
+    p.V_grid = fftshift(p.V_grid)
+    V_transpose = zeros(ComplexF64,(4p.N1+1,4p.N1+1,4p.N1+1))
+    for i1 in 1:4p.N1+1
+        for i2 in 1:4p.N2+1
             for i3 in 1:4p.N3+1
-               V_transpose[i1,i2,i3] = p.V_grid[4p.N1+2-i1,4p.N2+2-i2,4p.N3+2-i3]
+                V_transpose[i1,i2,i3] = p.V_grid[4p.N1+2-i1,4p.N2+2-i2,4p.N3+2-i3]
             end
-         end
-      end
-      return norm(p.V_grid - conj.(V_transpose),Inf)
-   end
+        end
+    end
+    return norm(p.V_grid - conj.(V_transpose),Inf)
+end
 
 # #test for V = -Z/|x| and check if the solution is radial
 # function energy_check(V, N1, N2, N3, L1, L2, L3, seed)
