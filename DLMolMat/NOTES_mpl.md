@@ -18,3 +18,11 @@ matplotlib.rcParams.update({
     "grid.linestyle" : "--"
 })
 ```
+
+Use svg in notebook
+```python
+import matplotlib_inline
+matplotlib_inline.backend_inline.set_matplotlib_formats("svg")
+```
+
+
