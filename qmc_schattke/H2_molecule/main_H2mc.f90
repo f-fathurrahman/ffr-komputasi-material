@@ -121,8 +121,8 @@ PROGRAM H2MOL
             if( k > NES1 ) s = 2
             do i = 1,3
               call GENRAN(rannumb)
-              rd = (rannumb-0.5)
-              RE(i,k) = RK(i,k)+rd
+              rd = (rannumb - 0.5)
+              RE(i,k) = RK(i,k) + rd
               RNEU(i,k) = RE(i,k)
               call ORBWAV(RE(1:3,k),hpsi)
               DOLD(s) = hpsi(1,k)
@@ -257,7 +257,7 @@ PROGRAM H2MOL
               qj = exp(-VJDI(IE))
               !
               ! Calculate single particle wavefunction part
-              call DETUPD(DNEW(IES),DOLD(IES))
+              call DETUPD(DNEW(IES), DOLD(IES))
               qd =  DNEW(IES)/DOLD(IES)
               ! Test on acceptance
               q = (qd*qj)**2
@@ -312,16 +312,16 @@ PROGRAM H2MOL
             LOCVIR = LOCVIR/DBLE(NE)
             LOCVEL = LOCVEL/DBLE(NE)
             LOCENVEL = LOCENVEL/DBLE(NE)
-            ERWEN = DBLE(IMC-1)/DBLE(IMC)*ERWEN+LOCEN/DBLE(IMC)
-            ERWKIN = DBLE(IMC-1)/DBLE(IMC)*ERWKIN+LOKIN/DBLE(IMC)
-            ERWPOT = DBLE(IMC-1)/DBLE(IMC)*ERWPOT+LOCPOT/DBLE(IMC)
-            ERWWW = DBLE(IMC-1)/DBLE(IMC)*ERWWW+LOCWW/DBLE(IMC)
-            ERWLKD = DBLE(IMC-1)/DBLE(IMC)*ERWLKD+LOCLKD/DBLE(IMC)
-            ERWVIR = DBLE(IMC-1)/DBLE(IMC)*ERWVIR+LOCVIR/DBLE(IMC)
-            ERWVELEL = DBLE(IMC-1)/DBLE(IMC)*ERWVELEL+LOCVEL/DBLE(IMC)
-            ERWENVEL = DBLE(IMC-1)/DBLE(IMC)*ERWENVEL+LOCENVEL/DBLE(IMC)
-            maxenarr = max (maxenarr,LOCEN)
-            minenarr = min (minenarr,LOCEN)
+            ERWEN = DBLE(IMC-1)/DBLE(IMC)*ERWEN + LOCEN/DBLE(IMC)
+            ERWKIN = DBLE(IMC-1)/DBLE(IMC)*ERWKIN + LOKIN/DBLE(IMC)
+            ERWPOT = DBLE(IMC-1)/DBLE(IMC)*ERWPOT + LOCPOT/DBLE(IMC)
+            ERWWW = DBLE(IMC-1)/DBLE(IMC)*ERWWW + LOCWW/DBLE(IMC)
+            ERWLKD = DBLE(IMC-1)/DBLE(IMC)*ERWLKD + LOCLKD/DBLE(IMC)
+            ERWVIR = DBLE(IMC-1)/DBLE(IMC)*ERWVIR + LOCVIR/DBLE(IMC)
+            ERWVELEL = DBLE(IMC-1)/DBLE(IMC)*ERWVELEL + LOCVEL/DBLE(IMC)
+            ERWENVEL = DBLE(IMC-1)/DBLE(IMC)*ERWENVEL + LOCENVEL/DBLE(IMC)
+            maxenarr = max(maxenarr,LOCEN)
+            minenarr = min(minenarr,LOCEN)
             !
             if( IMC > 1 ) then
               VAREN = DBLE(IMC-1)/DBLE(IMC)*VAREN + 1/DBLE(IMC-1)*(ERWEN-LOCEN)**2

@@ -12,10 +12,10 @@ implicit none
 
 public :: ORBWAV,ORBDER,ORBLCAOWAV,ORBLCAODER,ORBPRODWAV
 public :: ORBPRODDER,ORBPRODPWAV,ORBPRODPDER
-integer,parameter,public :: NORBM=1
-integer,public       :: NORB
-real(kind=dp),public :: CKPOINT
-real(kind=dp),public :: WAVEC,ALPHA
+integer, parameter, public :: NORBM=1
+integer, public :: NORB
+real(dp), public :: CKPOINT
+real(dp), public :: WAVEC,ALPHA
 character(40), public :: ORBNAME
        
 
@@ -72,12 +72,12 @@ subroutine ORBLCAOWAV(r,psi)
 ! linear combination of phi.
 ! Up spin runs from IE=1,NES1, down spin from IE=NES1+1,NE
 ! Should be tabulated later when we use determinants!
-  real(dp),intent(in),dimension(3) :: r
-  real(dp),intent(out),dimension(NORB,NK) :: psi
+  real(dp), intent(in), dimension(3) :: r
+  real(dp), intent(out), dimension(NORB,NK) :: psi
   integer :: k
   real(dp) :: s,sx
-  real(dp),dimension(3) :: rad
-  real(dp),dimension(NK) :: phi
+  real(dp), dimension(3) :: rad
+  real(dp), dimension(NK) :: phi
   
   do k=1,NK
     rad(1:3) = r(1:3) - RK(1:3,k)
@@ -99,9 +99,9 @@ subroutine ORBLCAODER(r,psi,pgr,pla)
 !-----------------------------------
   implicit none
   ! Gradient, Laplacian, and wave function
-  real(dp),intent(in),dimension(3) :: r
-  real(dp),intent(out),dimension(NORB,NK) :: psi,pla
-  real(dp),intent(out),dimension(3,NORB,NK) :: pgr
+  real(dp), intent(in), dimension(3) :: r
+  real(dp), intent(out), dimension(NORB,NK) :: psi,pla
+  real(dp), intent(out), dimension(3,NORB,NK) :: pgr
   integer :: i,k
   real(dp) :: s,sx
   real(dp),dimension(3) :: rad,rx
@@ -123,8 +123,8 @@ subroutine ORBLCAODER(r,psi,pgr,pla)
   enddo
   
   ! Associate single particle wavefunction with electron, here 1 to 1
-  psi(1:NORB,1)=phi(1)+CKPOINT*phi(2) ! LCAO
-  psi(1:NORB,2)=CKPOINT*phi(1)+phi(2) ! LCAO
+  psi(1:NORB,1) = phi(1) + CKPOINT*phi(2) ! LCAO
+  psi(1:NORB,2) = CKPOINT*phi(1) + phi(2) ! LCAO
   do i = 1,3
     pgr(i,1:NORB,1) = (grp(i,1)*phi(1) + CKPOINT*grp(i,2)*phi(2))/psi(1:NORB,1)
     pgr(i,1:NORB,2) = (CKPOINT*grp(i,1)*phi(1) + grp(i,2)*phi(2))/psi(1:NORB,2)
