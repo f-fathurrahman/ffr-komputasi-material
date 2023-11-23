@@ -1,3 +1,5 @@
+using Pkg;
+Pkg.activate("../")
 push!(LOAD_PATH, pwd())
 
 using FFTW
@@ -40,4 +42,7 @@ function H_test(N, L, Z)
     return psi, E
 end
 
-H_test(50, 10.0, 1.0)
+N = 5
+L = 10.0
+Z = 1.0
+H_test(5, 10.0, 1.0)

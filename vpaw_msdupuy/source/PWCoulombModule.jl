@@ -12,7 +12,7 @@ using Combinatorics
 using FFTW
 using LinearAlgebra
 import Eigensolvers
-
+import Logging: @info
 
 """
 Type PWSolverCoulomb contains all info for PW calculations
@@ -41,17 +41,28 @@ mutable struct PWSolverCoulomb
         # end
         p = new(N,N,N,(2N+1)^3,(2N+1,2N+1,2N+1),L,L,L,V)
         p.V_grid = zeros(ComplexF64,(4N+1,4N+1,4N+1)) #larger grid for convolution
+        #
+        @info("Building V_grid")
         for i in 1:size(X,2)
-            p.V_grid += coulomb(p,X[:,i],V)
+            p.V_grid += coulomb(p, X[:,i], V)
         end
+        @info("Finished building V_grid")
+        #
+        @info("Building kinetic operator")
         p.kin = zeros(2N+1,2N+1,2N+1)
         for i3 in 1:(2p.N3+1), i2 in 1:(2p.N2+1), i1 in 1:(2p.N1+1)
             p.kin[i1,i2,i3] = 2*pi^2*((fft_mode(i1,p.N1)/p.L1)^2 + (fft_mode(i2,p.N2)/p.L2)^2 + (fft_mode(i3,p.N3)/p.L3)^2)
         end
+        @info("Finished building kinetic operator")
+        #
         p.fft_plan = plan_fft(zeros(ComplexF64,(4p.N1+1,4p.N2+1,4p.N3+1)))
+        println("End of PWSolverCoulomb constructor")
         return p
     end
 end # PWSolverCoulomb
+
+
+
 
 #returns FFT multiplier to have consistent FFT with regard to the plane-wave cut-off
 function multiplier(N)
@@ -73,28 +84,25 @@ function coulomb(p::PWSolverCoulomb, X, V)
     V_rad = zeros(ComplexF64, (4p.N1+1,4p.N1+1,4p.N1+1))
     V_fft = zeros(ComplexF64, (4mult*p.N1+1,4mult*p.N1+1,4mult*p.N1+1))
     # radial part
-    for i3 in 1:(4p.N1+1)
-        for i2 in 1:i3
-            for i1 in 1:i2
-                k_vec = fft_mode.([i1,i2,i3],[2p.N1,2p.N2,2p.N3])
-                k = norm(k_vec) :: Float64
-                let k=k # otherwise type not inferred...
-                    integrand(r) = chi(r)*sin(2pi*k*r/p.L1)
-                    Test.@inferred integrand(1.0)
-                    if k==0.
-                        V_rad[i1,i2,i3] = 4pi/(p.L1^3)*QuadGK.quadgk(r -> V(r)*chi(r)*r^2,0,1)[1]
-                    else
-                        V_rad[i1,i2,i3] = 2/(k*p.L1^2)*QuadGK.quadgk(r -> V(r)*chi(r)*sin(2pi*k*r/p.L1)*r, 0, 1, atol=1e-8, order=10)[1]
-                        #remplissage du reste de la matrice
-                        P = unique(permutations([i1,i2,i3]))
-                        for Pj in P[2:end] #Warning assuming that P[1]==[i1,i2,i3]
-                            k_vec = fft_mode.(Pj,[2p.N1,2p.N1,2p.N1])
-                            V_rad[Pj...] = exp(-2*im*pi*dot(k_vec,X)/p.L1)*V_rad[i1,i2,i3]
-                        end
-                        k_vec = fft_mode.([i1,i2,i3],[2p.N1,2p.N1,2p.N1])
-                        V_rad[i1,i2,i3] = exp(-2*im*pi*dot(k_vec,X)/p.L1)*V_rad[i1,i2,i3]
-                    end
+    for i3 in 1:(4p.N1+1), i2 in 1:i3, i1 in 1:i2
+        k_vec = fft_mode.([i1,i2,i3],[2p.N1,2p.N2,2p.N3])
+        k = norm(k_vec)::Float64
+        #???
+        let k=k # otherwise type not inferred...
+            integrand(r) = chi(r)*sin(2pi*k*r/p.L1)
+            Test.@inferred integrand(1.0)
+            if k==0.
+                V_rad[i1,i2,i3] = 4pi/(p.L1^3)*QuadGK.quadgk(r -> V(r)*chi(r)*r^2,0,1)[1]
+            else
+                V_rad[i1,i2,i3] = 2/(k*p.L1^2)*QuadGK.quadgk(r -> V(r)*chi(r)*sin(2pi*k*r/p.L1)*r, 0, 1, atol=1e-8, order=10)[1]
+                #remplissage du reste de la matrice
+                P = unique(permutations([i1,i2,i3]))
+                for Pj in P[2:end] #Warning assuming that P[1]==[i1,i2,i3]
+                    k_vec = fft_mode.(Pj,[2p.N1,2p.N1,2p.N1])
+                    V_rad[Pj...] = exp(-2*im*pi*dot(k_vec,X)/p.L1)*V_rad[i1,i2,i3]
                 end
+                k_vec = fft_mode.([i1,i2,i3],[2p.N1,2p.N1,2p.N1])
+                V_rad[i1,i2,i3] = exp(-2*im*pi*dot(k_vec,X)/p.L1)*V_rad[i1,i2,i3]
             end
         end
     end
@@ -183,13 +191,20 @@ end
 
 #solves the eigenproblem with psi0
 function energy(p::PWSolverCoulomb, psi0; args...)
+    @info "Entering PWSolverCoulomb.energy"
+    #
+    @info "Hamiltonian"
     H(psi) = reshape(ham(p, reshape(psi,p.size_psi)),p.Ntot)
+    #
+    @info "Preconditioner"
     function P(psi)
        meankin = sum(p.kin[i]*abs2(psi[i]) for i = 1:p.Ntot) / (norm(psi)^2)
        return psi ./ (.2*meankin .+ p.kin[:]) # this should be tuned but works more or less
     end
+
     #return Eigensolvers.eig_lanczos(H, psi0[:], m=5, Imax = 1000)
     return Eigensolvers.eig_pcg(H, psi0[:], P=P; args...)
+    @info "Exiting PWSolverCoulomb.energy"
 end
 
 
