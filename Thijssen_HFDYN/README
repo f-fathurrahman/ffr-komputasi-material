@@ -1,0 +1,11 @@
+The programs elec_md.f and nucl_md.f correspond to sections
+9.3.1 and 9.3.2 respectively.
+The first program outputs the energies during the md simulation 
+to the screen.
+The second one outputs the distances between the nuclei to a file 
+"distances". It furthermore outputs energy, force between the 
+nuclei, and distance to the screen.
+
+Both programs are created using the Makefile.
+
+

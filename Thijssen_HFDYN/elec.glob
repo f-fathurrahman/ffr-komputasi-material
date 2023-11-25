@@ -1,0 +1,36 @@
+
+      IMPLICIT NONE
+
+      INTEGER N, NSize
+
+C N is the number of basis functions per nucleus, and NSize is
+C the total number of basis functions
+      PARAMETER (N=4, NSize=8)
+
+C Dist is the distance between the two nuclei, Alpha is the
+C set of Gaussian coefficitnets of the basis functions,
+C DensMat is the density matrix, SMatrix is the overlap matrix,
+C Hamilton is the Hamiltonian,  GMatrix is the contraction of
+C the 2-electron matrix elements and the density matrix,
+C FMatrix is the Fock matrix, ExpArray is a set help variables,
+C QMatrix contains the 2-electron matrix elements and 
+C FFac is a variable stored for convenience
+      DOUBLE PRECISION Dist, PI,
+     .       Alpha(NSize), 
+     .       DensMat(NSize,NSize), SMatrix(NSize,NSize), 
+     .       Hamilton(NSize,NSize), GMatrix(NSize,NSize), 
+     .       FMatrix (NSize, NSize), ExpArray(NSize, NSize),
+     .       QMatrix(NSize,NSize,NSize,NSize), FFac
+
+C TypeMatrix classifies different cases of relative values
+C of r,s,t and u.
+      INTEGER TypeMatrix(NSize,NSize,NSize,NSize)
+
+      COMMON Dist, PI, 
+     .       Alpha, DensMat, SMatrix, Hamilton,
+     .       GMatrix, FMatrix, ExpArray, QMatrix, FFac, 
+     .       TypeMatrix
+  
+
+
+     
