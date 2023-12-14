@@ -1,0 +1,115 @@
+\documentclass[a4paper,11pt]{article} % screen setting
+
+\usepackage[a4paper]{geometry}
+%\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=7.5cm}
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+\usepackage{minted}
+
+\newminted{julia}{breaklines}
+\newminted{python}{breaklines}
+
+\newminted{bash}{breaklines}
+\newminted{text}{breaklines}
+
+\newcommand{\txtinline}[1]{\mintinline[breaklines]{text}{#1}}
+\newcommand{\jlinline}[1]{\mintinline[breaklines]{julia}{#1}}
+\newcommand{\pyinline}[1]{\mintinline[breaklines]{python}{#1}}
+
+\usepackage{hyperref}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\hyphenation{li-ne-ar}
+\hyphenation{mi-sal-nya}
+\hyphenation{va-li-da-ti-on}
+\hyphenation{re-gu-la-ri-sa-si}
+\hyphenation{ge-ne-ra-tor}
+
+\begin{document}
+
+
+\title{Ujian Akhir Semester \\
+TF4063 Sains Data dan Rekayasa}
+\author{}
+\date{15 Desember 2023}
+\maketitle
+
+
+Kerjakan dengan menggunakan Jupyter Notebook.
+Jika Anda lebih memilih untuk menggunakan
+script Python, sertakan juga penjelasan dalam bentuk file pdf.
+
+Anda dapat mengerjakan tugas ini secara individu atau berkelompok (dua atau tiga orang).
+Jika pengerjaan dilakukan secara berkelompok, berikan informasi mengenai kontribusi dari
+masing-masing anggota.
+
+Gabungkan semua berkas yang digunakan dalam satu folder dengan format\\
+\texttt{NIM1\_NIM2\_NIM3\_NamaNamaAnggota}\\
+dan dikompresi dalam satu file zip dengan format\\
+\texttt{NIM1\_NIM2\_NIM3\_NamaNamaAnggota.zip}.
+
+Jadikan salah satu NIM sebagai \textit{seed} untuk pembangkit bilangan acak
+(\textit{random number generator}) jika diperlukan.
+
+Jawaban dikumpulkan pada MS Teams paling lambat tanggal 23 Desember 2023.
+
+\begin{enumerate}
+%
+%
+\item Jelaskan mengenai beberapa metrik-metrik yang sering digunakan dalam
+klasifikasi dan berikan implementasi sederhana dari perhitungan
+metrik tersebut dalam bentuk fungsi Python.
+%
+%
+\item Jelaskan mengenai \textit{confusion matrix} dan
+kurva \textit{receiver-operating characteristic} dalam konteks klasifikasi.
+%
+%
+\item Salah satu dataset yang sering digunakan untuk menguji model klasifikasi
+adalah dataset \textit{iris}.
+Pada
+scikit-learn Anda dapat menggunakan fungsi \pyinline{datasets.load_iris()}
+atau Anda dapat menggunakan sumber lain untuk mendapatkan dataset ini.
+Pilih hanya dua
+kelas saja dari dataset tersebut dan gunakan model regresi logistik
+pada Bab 4 dari \url{dmol.pub} untuk membangun model klasifikasi dari dua kelas data yang
+Anda pilih. Lengkapi jawaban Anda dengan visualisasi dan penjelasan singkat mengenai
+hasil yang Anda peroleh.
+%
+%
+\item Salah satu dataset lain yang juga sering digunakan untuk menguji
+model klasifikasi adalah \textit{mnist handwritten digits}. Pada
+scikit-learn Anda dapat menggunakan fungsi \pyinline{datasets.load_digits()} atau
+Anda juga dapat menggunakan sumber lain untuk mendapatkan dataset ini.
+Ulangi soal sebelumnya
+namun menggunakan dataset ini.
+%
+%
+\item Buat data sintetik yang memiliki struktur klaster tertentu
+jika divisualisasikan pada dua dimensi (ada dua dimensi atau fiture "penting").
+Anda dapat memilih sendiri jumlah data yang Anda akan buat.
+Kemudian tambahkan beberapa fitur acak lain, misalnya lima fitur sehingga
+data yang Anda miliki sekarang memiliki, misalnya 7 fitur. Anda dapat menukar
+kolom atau fitur secara acak sehingga fitur yang penting tidak lagi berada
+pada dua fitur pertama.
+  \begin{enumerate}
+    \item Buat \textit{pairplot} dari data yang Anda buat. Berikan penjelasan
+    mengenai \textit{pairplot} tersebut: apakah Anda dapat mengidentifikasi
+    dimensi penting dari \textit{pairplot} tersebut?
+    \item Lakukan prosedur \textit{principal component analysis} (PCA) pada
+    data yang Anda buat dan visualisasikan nilai eigen yang Anda dapatkan
+    \item Lakukan reduksi dimensi (atau proyeksi) pada data yang Anda peroleh
+    dengan menggunakan beberapa eigenvektor dominan (yang memiliki
+    nilai eigen terbesar) yang Anda peroleh dari PCA. Lakukan juga visualisasi
+    pada data yang sudah tereduksi ini.
+  \end{enumerate}
+\end{enumerate}
+
+\end{document}
+
+
+
