@@ -1,10 +1,13 @@
 \documentclass[a4paper,11pt]{article} % screen setting
 
 \usepackage[a4paper]{geometry}
-%\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=7.5cm}
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
 
 \setlength{\parskip}{\smallskipamount}
 \setlength{\parindent}{0pt}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
 
 \usepackage{minted}
 
@@ -55,7 +58,7 @@ dan dikompresi dalam satu file zip dengan format\\
 Jadikan salah satu NIM sebagai \textit{seed} untuk pembangkit bilangan acak
 (\textit{random number generator}) jika diperlukan.
 
-Jawaban dikumpulkan pada MS Teams paling lambat tanggal 23 Desember 2023.
+Jawaban dikumpulkan pada MS Teams paling lambat tanggal 26 Desember 2023.
 
 \begin{enumerate}
 %
@@ -72,7 +75,7 @@ kurva \textit{receiver-operating characteristic} dalam konteks klasifikasi.
 \item Salah satu dataset yang sering digunakan untuk menguji model klasifikasi
 adalah dataset \textit{iris}.
 Pada
-scikit-learn Anda dapat menggunakan fungsi \pyinline{datasets.load_iris()}
+\pyinline{scikit-learn} Anda dapat menggunakan fungsi \pyinline{datasets.load_iris()}
 atau Anda dapat menggunakan sumber lain untuk mendapatkan dataset ini.
 Pilih hanya dua
 kelas saja dari dataset tersebut dan gunakan model regresi logistik
@@ -85,14 +88,44 @@ hasil yang Anda peroleh.
 model klasifikasi adalah \textit{mnist handwritten digits}. Pada
 scikit-learn Anda dapat menggunakan fungsi \pyinline{datasets.load_digits()} atau
 Anda juga dapat menggunakan sumber lain untuk mendapatkan dataset ini.
-Ulangi soal sebelumnya
-namun menggunakan dataset ini.
+Ulangi soal sebelumnya namun menggunakan dataset ini.
+%
+%
+\item Dataset untuk klasifikasi citra yang juga sering digunakan adalah
+\pyinline{Fashion MNIST}. Dataset ini juga dapat diperoleh langsung
+melalui TensorFlow dan Keras.
+  \begin{enumerate}
+    \item Jelaskan secara singkat mengenai dataset ini: ada berapa kelas
+    yang tersedia, format atau ukuran data, dan sebagainya
+    \item Buat model klasifikasi \textit{multiclass} dengan menggunakan
+    jaringan saraf tiruan \textit{multilayer} pada data \pyinline{Fashion MNIST}.
+    Jelaskan secara detil mengenai protokol atau langkah-langkah yang Anda gunakan untuk
+    membuat model dan mengevaluasi performa dari model. Buat beberapa model (minimal tiga)
+    dengan \textit{hyperparameter} yang berbeda dan bandingkan hasilnya.
+  \end{enumerate}
+%
+%
+\item Sama dengan soal sebelumnya, namun dengan menambahkan \textit{convolution layer}
+dan jenis \textit{layer} lain (\pyinline{MaxPooling} atau yang lain) pada model Anda.
+%
+%
+\item Pada saat ini, ada banyak model-model \textit{neural network}
+yang siap digunakan tanpa perlu dilakukan
+pelatihan atau hanya perlu pelatihan tambahan (tidak dari awal). Sebagai contoh
+dalam bidang \textit{computer vision} dua model populer adalah
+\pyinline{ResNet50} \footnote{Misalnya: \url{https://keras.io/api/applications/#usage-examples-for-image-classification-models}}
+dan
+\pyinline{YOLO}\footnote{Misalnya: \url{https://keras.io/examples/vision/yolov8/}}
+Pilih salah satu dari model-model yang sudah dilatih ini kemudian jelaskan secara
+singkat mengenai metodologi yang digunakan (jumlah parameter, data latih, arsitektur,
+dan sebagainya). Lengkapi jawaban Anda dengan contoh pemakaian model tersebut (dengan
+kode).
 %
 %
 \item Buat data sintetik yang memiliki struktur klaster tertentu
 jika divisualisasikan pada dua dimensi (ada dua dimensi atau fiture "penting").
 Anda dapat memilih sendiri jumlah data yang Anda akan buat.
-Kemudian tambahkan beberapa fitur acak lain, misalnya lima fitur sehingga
+Kemudian tambahkan beberapa fitur acak lain, misalnya 5 fitur tambahan sehingga
 data yang Anda miliki sekarang memiliki, misalnya 7 fitur. Anda dapat menukar
 kolom atau fitur secara acak sehingga fitur yang penting tidak lagi berada
 pada dua fitur pertama.
@@ -107,6 +140,43 @@ pada dua fitur pertama.
     nilai eigen terbesar) yang Anda peroleh dari PCA. Lakukan juga visualisasi
     pada data yang sudah tereduksi ini.
   \end{enumerate}
+%
+%
+\item Jelaskan mengenai \textit{singular value decomposition} (SVD):
+\begin{equation*}
+\mathbf{X} = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^{*}
+\end{equation*}
+dan hubungannya dengan PCA.
+%
+%
+\item Salah satu kegunaan dari SVD adalah untuk aproksimasi
+\textit{rank}-rendah (\textit{low rank approximation}) yang
+optimal terhadap suatu matriks $\mathbf{X}$. Aproksimasi ini
+dapat ditulis sebagai:
+\begin{equation}
+\tilde{\mathbf{X}} = \sum_{k=1}^{r} \sigma_{k} \mathbf{u}_{k} \mathbf{v}^{*}_{k}
+= \sigma_{1} \mathbf{u}_{1} \mathbf{v}^{*}_{1} +
+\sigma_{2} \mathbf{u}_{2} \mathbf{v}^{*}_{2} + \cdots
+\sigma_{r} \mathbf{u}_{r} \mathbf{v}_{r}
+\label{eq:svd02}
+\end{equation}
+di mana $\tilde{\mathbf{X}}$ adalah aproksimasi rank-$r$ dari matriks
+$\mathbf{X}$, $\sigma_{k}$ adalah nilai singular ke-$k$ dari $\mathbf{X}$,
+$\mathbf{u}_{k}$ dan $\mathbf{v}_{k}$ adalah kolom
+ke-$k$ dari matriks $\mathbf{U}$ dan $\mathbf{V}$.
+%
+Sebagai data untuk matriks $\mathbf{X}$ Anda dapat menggunakan (misalnya)
+citra berikut \footnote{Sumber:
+\url{https://cdn.idntimes.com/content-images/community/2022/08/esradvpwoaqeech-16ed39a1a24ecefe857d22d6e29c1e14-cd868cde743721fb2ddda744c2ef3684.jpg}}:
+
+{\centering
+\includegraphics[scale=0.5]{images/kucing01.png}
+\par}
+
+Untuk mengaplikasikan Persamaan \eqref{eq:svd02}, Anda perlu terlebih dahulu
+mengubah citra awal menjadi \textit{grayscale}.
+Variasikan nilai $r$ pada Persamaan \eqref{eq:svd02} dan buat plot citra aproksimasi
+yang diperoleh
 \end{enumerate}
 
 \end{document}
