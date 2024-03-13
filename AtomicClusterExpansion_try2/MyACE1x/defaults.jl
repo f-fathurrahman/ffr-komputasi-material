@@ -215,25 +215,37 @@ end
 
 function _radial_basis(kwargs)
    rbasis = kwargs[:rbasis]
+   println("rbasis = ", rbasis)
 
    if rbasis isa MyACE1.ScalarBasis
       return rbasis
 
    elseif rbasis == :legendre
+      #
       Deg, maxdeg, maxn = _get_degrees(kwargs)
+      println("Deg = $(Deg)")
+      println("typeof(Deg) = ", typeof(Deg))
+      println("maxdeg = $(maxdeg) maxn = $(maxn)")
+      # NOTE: originally Deg and maxdeg are not used again below
+      #
       cor_order = _get_order(kwargs)
+      #println("cor_order = ", cor_order)
+      #
       envelope = kwargs[:envelope]
+      println("envelope = ", envelope)
       if envelope isa Tuple && envelope[1] == :x
          pin = envelope[2]
          pcut = envelope[3]
          if (kwargs[:pure2b] || kwargs[:pure])
             maxn += (pin + pcut) * (cor_order-1)
          end
+         println("maxn now = ", maxn)
       else
          error("I can't construct the radial basis automatically without knowing the envelope.")
       end
 
       trans_ace = _transform(kwargs)
+      println("typeof(trans_ace) = ", typeof(trans_ace))
 
       Rn_basis = transformed_jacobi(maxn, trans_ace; pcut = pcut, pin = pin)
       # println("pcut is", pcut, "pin is", pin, "trans_ace is", trans_ace)
@@ -303,11 +315,18 @@ end
 
 
 function mb_ace_basis(kwargs)
+
+   # Extract some information from kwargs
    elements = kwargs[:elements]
    cor_order = _get_order(kwargs)
    Deg, maxdeg, maxn = _get_degrees(kwargs)
-   rbasis = _radial_basis(kwargs)
    pure2b = kwargs[:pure2b]
+   
+   println()
+   println("-------------------------")
+   println("Initializing radial basis")
+   println("-------------------------")
+   rbasis = _radial_basis(kwargs)
 
    if pure2b && kwargs[:pure]
       # error("Cannot use both `pure2b` and `pure` options.")
@@ -316,6 +335,16 @@ function mb_ace_basis(kwargs)
    end
 
    if pure2b
+      println()
+      println("------------------")
+      println("Using pure2b basis")
+      println("------------------")
+      #
+      println("Deg = ", Deg)
+      println("maxdeg = ", maxdeg)
+      println("cor_order = ", cor_order)
+      println("delete2b = ", kwargs[:delete2b])
+      #
       rpibasis = Pure2b.pure2b_basis(species = AtomicNumber.(elements),
                               Rn=rbasis,
                               D=Deg,
@@ -323,6 +352,7 @@ function mb_ace_basis(kwargs)
                               order=cor_order,
                               delete2b = kwargs[:delete2b])
    elseif kwargs[:pure]
+      println("Using pure basis")
       dirtybasis = MyACE1.ace_basis(species = AtomicNumber.(elements),
                                rbasis=rbasis,
                                D=Deg,
@@ -331,6 +361,7 @@ function mb_ace_basis(kwargs)
       _rem = kwargs[:delete2b] ? 1 : 0
       rpibasis = MyACE1x.Purify.pureRPIBasis(dirtybasis; remove = _rem)
    else
+      println("Pass here 334 in @__FILE__")
       rpibasis = MyACE1.ace_basis(species = AtomicNumber.(elements),
                                rbasis=rbasis,
                                D=Deg,
@@ -342,9 +373,14 @@ function mb_ace_basis(kwargs)
 end
 
 function ace_basis(; kwargs...)
+   #
    kwargs = _clean_args(kwargs)
+   println("kwargs of ace_basis = ")
+   println(kwargs)
+   #
    rpiB = mb_ace_basis(kwargs)
    pairB = _pair_basis(kwargs)
+   #
    return MyJuLIP.MLIPs.IPSuperBasis([pairB, rpiB]);
 end
 

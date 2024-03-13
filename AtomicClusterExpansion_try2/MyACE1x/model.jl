@@ -54,9 +54,11 @@ function acemodel(;  kwargs...)
    Eref = get(kwargs, :Eref, nothing)
    Vref = get(kwargs, :Vref, nothing)
    
+   println("Eref = ", Eref)
+   println("Vref = ", Vref)
+
    # construct the basis 
    basis = ace_basis(; kwargs...)
-
 
    if Vref == nothing && Eref != nothing 
       Vref = MyJuLIP.OneBody(Eref...)

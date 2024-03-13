@@ -1,8 +1,12 @@
 Pkg.activate("ACESUITE", shared=true)
-push!(LOAD_PATH, "./MyJuLIP")
-push!(LOAD_PATH, "./MyACEbase")
-push!(LOAD_PATH, "./MyACE1")
-push!(LOAD_PATH, "./MyACE1x")
-push!(LOAD_PATH, "./MyACEfit")
-push!(LOAD_PATH, "./MyACEmd")
-push!(LOAD_PATH, "./MyACEpotentials")
+
+using Revise
+
+# Guard against multiple push!
+!( "./MyJuLIP" in LOAD_PATH) && push!(LOAD_PATH, "./MyJuLIP")
+!("./MyACEbase" in LOAD_PATH) && push!(LOAD_PATH, "./MyACEbase")
+!("./MyACE1" in LOAD_PATH) && push!(LOAD_PATH, "./MyACE1")
+!("./MyACE1x" in LOAD_PATH) && push!(LOAD_PATH, "./MyACE1x")
+!("./MyACEfit" in LOAD_PATH) && push!(LOAD_PATH, "./MyACEfit")
+!("./MyACEmd" in LOAD_PATH) && push!(LOAD_PATH, "./MyACEmd")
+!("./MyACEpotentials" in LOAD_PATH) && push!(LOAD_PATH, "./MyACEpotentials")
