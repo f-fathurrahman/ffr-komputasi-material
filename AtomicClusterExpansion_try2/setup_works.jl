@@ -1,0 +1,8 @@
+Pkg.activate("ACESUITE", shared=true)
+push!(LOAD_PATH, "./MyJuLIP")
+push!(LOAD_PATH, "./MyACEbase")
+push!(LOAD_PATH, "./MyACE1")
+push!(LOAD_PATH, "./MyACE1x")
+push!(LOAD_PATH, "./MyACEfit")
+push!(LOAD_PATH, "./MyACEmd")
+push!(LOAD_PATH, "./MyACEpotentials")
