@@ -43,12 +43,13 @@ w = np.random.normal(size=feature_dim)
 b = 0.0
 
 loss_progress = []
-eta = 1e-6
+eta = 1e-6 # learning rate
 batch_size = 32
 N = len(labels)  # number of data points
 data = (features, labels)
 # compute how much data fits nicely into a batch and drop extra data
 new_N = len(labels) // batch_size * batch_size
+# // hasil dibulatkan ke integer
 
 # the -1 means that numpy will compute
 # what that dimension should be
@@ -56,6 +57,7 @@ batched_features = features[:new_N].reshape((-1, batch_size, feature_dim))
 batched_labels = labels[:new_N].reshape((-1, batch_size))
 # to make it random, we'll iterate over the batches randomly
 
+print("INFO: with batch, no feature standardization, learning rate = ", eta)
 indices = np.arange(new_N // batch_size)
 for epoch in range(10):
     np.random.shuffle(indices)
@@ -66,7 +68,7 @@ for epoch in range(10):
         w -= eta * grad[0]
         b -= eta * grad[1]
         # we still compute loss on whole dataset, but not every step
-    #
+    # Calculate loss after one epoch
     loss_val = loss_wrapper(w, b, (batched_features, batched_labels))
     print("%5d %18.10f" % (epoch, loss_val))
     loss_progress.append(loss_val)

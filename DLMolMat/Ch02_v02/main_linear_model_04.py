@@ -40,10 +40,14 @@ np.random.seed(1234)
 w = np.random.normal(size=feature_dim)
 b = 0.0
 
+fstd = np.std(features, axis=0) # stdev
+fmean = np.mean(features, axis=0) # mean
+std_features = (features - fmean) / fstd
+
 loss_progress = []
-eta = 1e-6
-data = (features, labels)
-print("INFO: no batch, no feature standardization, learning rate = ", eta)
+eta = 1e-2
+data = (std_features, labels)
+print("INFO: no batch, with feature standardization, learning rate = ", eta)
 for i in range(10):
     dLdw, dLdb = loss_grad(w, b, data)
     w -= eta * dLdw
@@ -52,4 +56,4 @@ for i in range(10):
     print("%5d %18.10f" % (i, loss_val))
     loss_progress.append(loss_val)
 plt.plot(loss_progress, marker="o")
-plt.savefig("IMG_training_01.png", dpi=150)
+plt.savefig("IMG_training_04.pdf", dpi=150)

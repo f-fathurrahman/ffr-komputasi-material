@@ -58,6 +58,7 @@ batched_features = std_features[:new_N].reshape((-1, batch_size, feature_dim))
 batched_labels = labels[:new_N].reshape((-1, batch_size))
 # to make it random, we'll iterate over the batches randomly
 
+print("INFO: with batch, with feature standardization, learning rate = ", eta)
 indices = np.arange(new_N // batch_size)
 for epoch in range(10):
     np.random.shuffle(indices)
