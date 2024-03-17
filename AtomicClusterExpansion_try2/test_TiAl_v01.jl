@@ -1,6 +1,6 @@
 using MyACEpotentials
 
-train = read_extxyz("datasets/TiAl_tutorial.xyz")
+data = read_extxyz("datasets/TiAl_tutorial.xyz")
 # we don't need other data, only train
 
 model = acemodel(
@@ -9,4 +9,5 @@ model = acemodel(
     Eref = [:Ti => -1586.0195, :Al => -105.5954]
 )
 
-acefit!(model, train)
+acefit!(model, data);
+errors = MyACEpotentials.linear_errors(data, model)
