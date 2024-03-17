@@ -1,12 +1,12 @@
 import sys
-sys.path.append('../')
 import numpy as np
 from ase.io import read
 import cace
 #from cace import data
 
-atoms = read('../datasets/water.xyz','0')
-config = cace.data.config_from_atoms(atoms, energy_key ='TotEnergy', forces_key='force')
+#atoms = read("../datasets/water.xyz","0")
+atoms = read("dataset", "0")
+config = cace.data.config_from_atoms(atoms, energy_key ="TotEnergy", forces_key="force")
 
 edge_index, shifts, unit_shifts = cace.data.get_neighborhood(
                                   positions=config.positions,
