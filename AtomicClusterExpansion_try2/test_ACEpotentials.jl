@@ -1,3 +1,3 @@
-Pkg.activate("ACESUITE", shared=true)
-push!(LOAD_PATH, "MyJuLIP")
-push!(LOAD_PATH, )
+include("setup_works.jl")
+
+using MyACEpotentials
