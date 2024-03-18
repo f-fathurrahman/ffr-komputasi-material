@@ -22,14 +22,14 @@ def generate_data(noise_amplitude=1.0):
     print("Generating data with noise_amplitude = ", noise_amplitude)
     Ndata = 10
     x1 = np.linspace(-5.0, 5.0, Ndata)
-    x2 = np.linspace(-5.0, 5.0, Ndata)
+    x2 = np.linspace(-5.0, 5.0, Ndata) + np.random.randn(Ndata)
     y = true_model(x1, x2) + noise_amplitude*np.random.randn(Ndata)
     return x1, x2, y
 
 
 
 
-x1, x2, y = generate_data(noise_amplitude=0.0)
+x1, x2, y = generate_data(noise_amplitude=0.2)
 
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import PolynomialFeatures, StandardScaler
@@ -48,6 +48,6 @@ model.fit(X, y)
 ypred = model.predict(X)
 mse = np.mean((y - ypred)**2)
 print("mse = ", mse)
-print("R2 = ", model.score(x[:,np.newaxis], y))
+print("R2 = ", model.score(X, y))
 
 
