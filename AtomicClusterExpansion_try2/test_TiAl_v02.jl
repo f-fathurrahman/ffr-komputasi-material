@@ -8,7 +8,8 @@ data = read_extxyz("datasets/TiAl_tutorial.xyz")
 # rcut = 5.5 : this is a typical cutoff radius for metals
 model = acemodel(
     elements = [:Ti, :Al],
-    order = 3, totaldegree = 6,
+    order = 3,
+    totaldegree = 6,
     rcut = 5.5,
     Eref = [:Ti => -1586.0195, :Al => -105.5954]
 )
