@@ -261,6 +261,11 @@ end
 
 
 function _pair_basis(kwargs)
+
+   println("-------------------------")
+   println("ENTER MyACE1x._pair_basis")
+   println("-------------------------")
+
    rbasis = kwargs[:pair_basis]
    elements = kwargs[:elements]
 
@@ -268,6 +273,9 @@ function _pair_basis(kwargs)
       return rbasis
 
    elseif rbasis == :legendre
+      
+      @info "Using legendre as radial basis"
+
       if kwargs[:pair_degree] == :totaldegree
          Deg, maxdeg, maxn = _get_degrees(kwargs)
       elseif kwargs[:pair_degree] isa Integer
@@ -275,6 +283,7 @@ function _pair_basis(kwargs)
       else
          error("Cannot determine `maxn` for pair basis from information provided.")
       end
+      @info "maxn = $maxn"
 
       allrcut = _get_all_rcut(kwargs; _rcut = kwargs[:pair_rcut])
       if allrcut isa Number
@@ -309,12 +318,22 @@ function _pair_basis(kwargs)
       end
    end
 
+   println("-------------------------")
+   println("EXIT MyACE1x._pair_basis")
+   println("Will return PolyPairBasis")
+   println("-------------------------")
+
+
    return PolyPairBasis(rbases, elements)
 end
 
 
 
 function mb_ace_basis(kwargs)
+
+   println("------------------")
+   println("ENTER mb_ace_basis")
+   println("------------------")
 
    # Extract some information from kwargs
    elements = kwargs[:elements]
@@ -369,20 +388,41 @@ function mb_ace_basis(kwargs)
                                N = cor_order, )
    end
 
+   println("------------------")
+   println("EXIT mb_ace_basis")
+   println("Will return rpibasis")
+   println("------------------")
+
    return rpibasis
 end
 
+
+
+
+
 function ace_basis(; kwargs...)
+   println("---------------------------")
+   println("*** ENTER MyACE1x.ace_basis")
+   println("---------------------------")
    #
-   kwargs = _clean_args(kwargs)
-   println("kwargs of ace_basis = ")
-   println(kwargs)
+   kwargs = _clean_args(kwargs) # convert to NamedTuple
+   println("kwargs of ace_basis = ", kwargs)
    #
    rpiB = mb_ace_basis(kwargs)
    pairB = _pair_basis(kwargs)
    #
+   println("--------------------------")
+   println("*** EXIT MyACE1x.ace_basis")
+   println("***")
+   println("*** will return MyJuLIP.MLIPs.IPSuperBasis")
+   println("--------------------------")
+
    return MyJuLIP.MLIPs.IPSuperBasis([pairB, rpiB]);
 end
+
+
+
+
 
 
 # ---------------------------------------------------------------

@@ -36,17 +36,25 @@ _getJ(pB::PolyPairBasis, i::Integer, i0::Integer) = pB.J[i0, i]
 
 zlist(pB::PolyPairBasis) = pB.zlist
 
-PolyPairBasis(J, species) = 
-         PolyPairBasis(J, ZList(species; static=true))
+function PolyPairBasis(J, species)
+   @info "This PolyPairBasis constructor is called 40"
+   return PolyPairBasis(J, ZList(species; static=true))
+end
 
-PolyPairBasis(J::ScalarBasis, species::SZList) =
-         PolyPairBasis( [J for i = 1:length(species), j = 1:length(species)], species)
+function PolyPairBasis(J::ScalarBasis, species::SZList)
+   @info "This PolyPairBasis constructor is called 44"
+   return PolyPairBasis( [J for i = 1:length(species), j = 1:length(species)], species)
+end
 
-PolyPairBasis(J::AbstractMatrix, species::SZList) =    
-         PolyPairBasis(SMatrix{length(species), length(species)}(J), species)
+function PolyPairBasis(J::AbstractMatrix, species::SZList)
+   @info "This PolyPairBasis constructor is called 48"
+   return PolyPairBasis(SMatrix{length(species), length(species)}(J), species)
+end
 
-PolyPairBasis(J::SMatrix{NZ, NZ, TJ}, zlist::SZList{NZ}) where {NZ, TJ <: ScalarBasis} =
-         PolyPairBasis(zlist, J, get_bidx0(J, zlist))
+function PolyPairBasis(J::SMatrix{NZ, NZ, TJ}, zlist::SZList{NZ}) where {NZ, TJ <: ScalarBasis}
+   @info "This PolyPairBasis constructor is called 53"
+   return PolyPairBasis(zlist, J, get_bidx0(J, zlist))
+end
 
 function get_bidx0(J::SMatrix, zlist::SZList{NZ}) where {NZ}
    bidx0 = fill(zero(Int), (NZ, NZ))

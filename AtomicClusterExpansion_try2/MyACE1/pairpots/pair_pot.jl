@@ -19,6 +19,7 @@ struct PolyPairPot{T,TJ,NZ, NCO} <: PairPotential
    committee::Union{Nothing, Vector{SVector{NCO, T}}}
 end
 
+# macro @pot is defined in JuLIP
 @pot PolyPairPot
 
 PolyPairPot(pB::PolyPairBasis, coeffs::Vector, committee=nothing) = 
