@@ -98,14 +98,18 @@ function MyACE1.rand_radial(J::OrthPolyBasis)
    return rand(J.tdf)
 end
 
-function OrthPolyBasis(N::Integer,
-                       pcut::Integer,
-                       tcut::T,
-                       pin::Integer,
-                       tin::T,
-                       tdf::AbstractVector{T},
-                       ww::AbstractVector{T} = ones(T, length(tdf))
-                       ) where {T <: AbstractFloat}
+function OrthPolyBasis(
+   N::Integer,
+   pcut::Integer,
+   tcut::T,
+   pin::Integer,
+   tin::T,
+   tdf::AbstractVector{T},
+   ww::AbstractVector{T} = ones(T, length(tdf))
+) where {T <: AbstractFloat}
+
+   @info "Enter OrthPolyBasis constructor 111"
+
    @assert pcut >= 0  && pin >= 0
    @assert N > 2
 

@@ -23,6 +23,62 @@ This is initialized by call to `ACE1x.mb_ace_basis(kwargs)`
 `RPIBasis` is defined in `ACE1`.
 
 
+## Pair Basis
+
+Type of pair basis is `MyACE1.PairPotentials.PolyPairBasis` which full names are quite
+long (it includes type parameters).
+The fields of PolyPairBasis:
+```julia
+# typeof(pairB) |> fieldnames
+(:zlist, :J, :bidx0)
+```
+
+`zlist` contains species information (their atomic numbers)
+
+`bidx0` is a `SMatrix` of size (Nspecies,Nspecies) containing indices (of what???).
+
+`J` is the actual pair basis, which is a `SMatrix` of size (Nspecies,Nspecies).
+
+The element type of `J` is `ACE1.OrthPolys.TransformedPolys`.
+
+```julia
+# pairB.J |> eltype
+MyACE1.OrthPolys.TransformedPolys{Float64, MyACE1.Transforms.Agnesi2Transform{Float64, Int64}, MyACE1.OrthPolys.OrthPolyBasis{Float64}, MyACE1.OrthPolys.PolyEnvelope{Float64}}
+```
+
+The fields of `TransformedPolys` are
+
+```julia
+# julia> pairB.J[1,1] |> typeof |> fieldnames
+(:J, :trans, :rl, :ru, :envelope)
+```
+
+There is `J` again.
+```julia
+# julia> pairB.J[1,1].J |> typeof
+MyACE1.OrthPolys.OrthPolyBasis{Float64}
+
+# julia> pairB.J[1,1].trans |> typeof
+MyACE1.Transforms.Agnesi2Transform{Float64, Int64}
+
+# julia> pairB.J[1,1].rl |> typeof
+Float64
+
+# julia> pairB.J[1,1].ru |> typeof
+Float64
+
+# julia> pairB.J[1,1].envelope |> typeof
+MyACE1.OrthPolys.PolyEnvelope{Float64}
+```
+
+Fields of `OrthPolyBasis` are simple.
+
+`evaluate!` is imported from JuLIP.
+
+
+## MB basis (?)
+
+
 
 
 
