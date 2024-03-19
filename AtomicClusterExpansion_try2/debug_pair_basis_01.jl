@@ -91,3 +91,4 @@ pairB = debug_pair_basis(
 
 @info "Pass here 92" # to prevent print out?
 
+# TODO: investigate pairB.J.data
