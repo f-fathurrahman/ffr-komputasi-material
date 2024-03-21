@@ -134,11 +134,18 @@ read_dict(::Val{:MyACE1_RPIBasis}, D::Dict) =
 # ------------------------------------------------------------------------
 
 
-RPIBasis(basis1p::OneParticleBasis, N::Integer,
-         D::AbstractDegree, maxdeg::Real, constants=false) =
-   RPIBasis(PIBasis(basis1p, N, D, maxdeg; filter = RPIFilter(constants)))
+function RPIBasis(
+   basis1p::OneParticleBasis, N::Integer,
+   D::AbstractDegree, maxdeg::Real, constants=false
+)
+   @info "RPIBasis constructor 141"
+   return RPIBasis(PIBasis(basis1p, N, D, maxdeg; filter = RPIFilter(constants)))
+end
 
 function RPIBasis(pibasis::PIBasis)
+
+   @info "This RPIBasis is called 143"   
+
    basis1p = pibasis.basis1p
 
    # construct the cg matrices
@@ -153,7 +160,7 @@ function RPIBasis(pibasis::PIBasis)
       push!(Bz0inds, (idx0+1):(idx0+len))
       idx0 += len
    end
-
+   # This will call the default constructor
    return RPIBasis(pibasis, A2Bmaps, tuple(Bz0inds...))
 end
 

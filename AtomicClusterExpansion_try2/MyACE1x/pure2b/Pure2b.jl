@@ -65,6 +65,9 @@ end
 
 function extended_rpibasis(species, Rn, D, maxdeg, order, 
                            constants::Bool)
+
+   @info "extended_rpibasis is called 69"
+
    # compute a first PIBasis                         
    B1p = BasicPSH1pBasis(Rn; species = species, D = D)
    pibasis = PIBasis(B1p, order, D, maxdeg; filter = RPIFilter(constants))
@@ -221,6 +224,8 @@ function pure2b_basis(; species = nothing, Rn = nothing,
                         delete2b = false)
    # @assert D.chc == 0 
    # @assert D.csp == 1 
+
+   @info "**** pure2b_basis is called"
 
    # construct the extended PI Basis    
    pibasis_x = extended_rpibasis(species, Rn, D, maxdeg, order, 

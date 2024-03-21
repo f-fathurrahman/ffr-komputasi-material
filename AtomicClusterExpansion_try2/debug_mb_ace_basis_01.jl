@@ -45,3 +45,5 @@ rpibasis = MyACE1x.Pure2b.pure2b_basis(
     order=cor_order,
     delete2b = kwargs[:delete2b]
 );
+
+@info "\n*** Script ended normally"
