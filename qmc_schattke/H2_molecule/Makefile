@@ -37,6 +37,10 @@ lib: $(OBJ)
 main: lib
 	$(F90) $(F90_OPTS) main_H2mc.f90 -o main.x libmain.a $(LIBS)
 
+# Main executable
+debug_main_01: lib
+	$(F90) $(F90_OPTS) debug_main_01.f90 -o debug_main_01.x libmain.a $(LIBS)
+
 clean:
 	rm -rfv *.o *.mod *.x libmain.a
 
