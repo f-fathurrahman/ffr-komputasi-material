@@ -193,6 +193,8 @@ julia> rpibasis.pibasis.basis1p.J.trans |> show_fields
 
 How more informations are added to `OrthPolyBasis` until we get `RPIBasis` ?
 
+`InnerPIBasis` is quite complicated. It has some Dict fields that quite incomprehensible (?).
+
 
 # Some questions
 
