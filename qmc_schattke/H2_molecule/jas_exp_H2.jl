@@ -1,33 +1,21 @@
 
-function jas_exp_H2!(vj, vjd, v, vd)
-
-    #=
-    use m_highlevel, only: DP, Nelectrons, NelectronsPerSpin, EMACH
-    use m_midlevel, only: IE, RE, RNEU, RK
-    use m_jastrow, only: gam, QJC, DIST, DISTNEU, LAPJASOLD, LAPJAS
-    use m_jastrow, only: DKX, CJAS, BETA1, BETA2, GRJAS, GRJASOLD
-    =#
+function jas_exp_H2!(
+    global_vars,
+    idx_electron,
+    vj, vjd, v, vd
+)
 
     # Updates the distances from the active electron to all others
     # and determines Jastrow exponent and derivatives for atoms:
-    # u=F/2/(1+r/F)*(delta_{s,-s'}+1/2*delta_{s,s'})
+    # u = F/2/(1+r/F)*( delta_{s,-s'} + 1/2*delta_{s,s'} )
     # In addition, the wave function of Kolos and Roothaan
     # (James and Coolidge)
     # (Rev.Mod..Phys.32,219(1960)) is programmed as part of the Jastrow
-    # factor. It has to be combined with product ansatz of orbital wave.
+    # factor. It has to be combined with "product ansatz" of orbital wave.
     
-    #real(dp), intent(out), dimension(Nelectrons):: vj,vjd,v,vd
-    #integer :: k,kie,ii
-    #real(dp) :: as,jasu,jasdif,u2d,woo,won,u3,u4,u2do
-    #real(dp) :: jasup,jasdifp
-    #real(dp) :: g1mrn,g1mro,g1lmn,g1lmo,g2ln,g2lo,g2mn,g2mo,lapln, laplo,lapmn,lapmo
-    #real(dp), dimension(3) :: u1d,u1do,jc1dn,jc1do,u1dp,u1dpo
-    #real(dp), dimension(3) :: rran,rrbn,rrao,rrbo
-    #real(dp) :: rhn,rho,jasjcn,jasjco,jasujcn,jasujco,jc2dn,jc2do
-    #real(dp), dimension(2) :: ran,rbn,rao,rbo,lan,lao,mun,muo
-    #real(dp), dimension(12) :: a,xn,xo,zn,zo
-    #real(dp), dimension(3,12) :: yn,yo
-    
+    R_electrons = global_vars.R_electrons
+    R_electrons_new = global_vars.R_electrons_new
+
     a = zeros(Float64, 12)
     # Without series expansion comment 12 lines of constants from KR
     # Constants from Kolos and Roothaan
@@ -43,13 +31,7 @@ function jas_exp_H2!(vj, vjd, v, vd)
     a[10] = -0.126629
     a[11] = +0.132561
     a[12] = +0.248411
-    # For the 5 term series of JC comment the last 12 lines and
-    # uncomment the following 5 constants from James and Coolidge
-    # a(1)=2.23779_dp
-    # a(2)=0.80483_dp
-    # a(3)=-0.27997_dp
-    # a(4)=-0.60985_dp
-    # a(5)=0.19917_dp
+
     jasu = 0.0
     jasup = 0.0
     jasdif = 0.0
@@ -58,64 +40,70 @@ function jas_exp_H2!(vj, vjd, v, vd)
     u2do = 0.0
     u3 = 0.0
     u4 = 0.0
+
     u1d   = zeros(Float64, 3)
     u1dp  = zeros(Float64, 3)
     u1do  = zeros(Float64, 3)
     u1dpo = zeros(Float64, 3)
-    
-    # This is accessing some global variables
+    dR = zeros(Float64, 4, Nelectrons, Nelectrons)
+    dR_new = zeros(Float64, 4, Nelectrons, Nelectrons)
+
+    EMACH = 1.0e-8 # a quite small number
+
     for k in 1:Nelectrons
-        if k == IE
+        if k == idx_electron
             continue
         end
         
         as = 0.5     # for equal spins
         
-        if ( (IE <= NelectronsPerSpin) && (k > NelectronsPerSpin) ) || ( (IE >  NelectronsPerSpin) && (k <= NelectronsPerSpin) ) 
+        # This check whether idx_electron and k are of different spin
+        cond1 = (idx_electron <= NelectronsPerSpin) && (k > NelectronsPerSpin)
+        cond2 = (idx_electron >  NelectronsPerSpin) && (k <= NelectronsPerSpin)
+        if (cond1 || cond2)
             as = 1.0
         end
-        
-        DIST[1:3,IE,k] = re[1:3,IE] - RE[1:3,k]
-        DISTNEU[1:3,IE,k] = RNEU[1:3,IE] - RE[1:3,k]
-        woo = max(2.0/3.0*EMACH, sqrt(sum(DIST(1:3,IE,k)^2)))
-        won = max(2.0/3.0*EMACH, sqrt(sum(DISTNEU(1:3,IE,k)^2)))
-        DIST[4,IE,k] = woo
-        DISTNEU[4,IE,k] = won
+        #
+        dR[1:3,idx_electron,k] .= R_electrons[1:3,idx_electron] .- R_electrons[1:3,k]
+        dR_new[1:3,idx_electron,k] .= R_electrons_new[1:3,idx_electron] .- R_electrons[1:3,k]
+        # Restrict lower limit of the length
+        woo = max(2.0/3.0*EMACH, sqrt( sum(dR[1:3,idx_electron,k].^2)) )
+        won = max(2.0/3.0*EMACH, sqrt( sum(dR_new[1:3,idx_electron,k].^2)) )
+        dR[4,idx_electron,k] = woo
+        dR_new[4,idx_electron,k] = won
         #
         jasdif += CJAS*( as/2.0/(1.0 + won/CJAS) - as/2.0/(1.0 + woo/CJAS) ) +
-                  BETA1*( exp(-BETA2*won^2) - exp(-BETA2*woo^2) )
+                  β1*( exp(-β2*won^2) - exp(-β2*woo^2) )
     
-        jasdifp += sum( ( RNEU[1:3,IE] + RE[1:3,k] - RK[1:3,2] )^2 ) -
-                   sum( ( RE[1:3,IE] + RE[1:3,k] - RK[1:3,2] )^2 )
+        jasdifp += sum( ( R_electrons_new[1:3,idx_electron] + R_electrons[1:3,k] - R_atoms[1:3,2] )^2 ) -
+                   sum( ( R_electrons[1:3,idx_electron] + R_electrons[1:3,k] - R_atoms[1:3,2] )^2 )
         
-        jasu += as*CJAS/2.0/(1.0 + won/CJAS) + BETA1*exp(-BETA2*won^2)
+        jasu += as*CJAS/2.0/(1.0 + won/CJAS) + β1*exp(-β2*won^2)
     
-        jasup += sum( (RNEU[1:3,IE] + RE[1:3,k] - RK[1:3,2])^2 )
+        jasup += sum( (R_electrons_new[1:3,idx_electron] + R_electrons[1:3,k] - R_atoms[1:3,2])^2 )
     
-        u1d[1:3] .-= as*DISTNEU[1:3,IE,k] / won / (1.0 + won/CJAS)^2/2.0 -
-                     2.0*DISTNEU[1:3,IE,k]*BETA1*BETA2*exp(-BETA2*won^2)
+        u1d[1:3] .-= as*dR_new[1:3,idx_electron,k] / won / (1.0 + won/CJAS)^2/2.0 .-
+                     2.0*dR_new[1:3,idx_electron,k]*β1*β2*exp(-β2*won^2)
     
-        u1dp[1:3] = RNEU[1:3,IE] + RE[1:3,k] - RK[1:3,2]
-        u1do[1:3] .-= as*DIST[1:3,IE,k] / woo / (1.0 + woo/CJAS)^2/2.0 -
-                      2.0*DIST[1:3,IE,k]*BETA1*BETA2*exp(-BETA2*woo^2)
-        u1dpo[1:3] = RE[1:3,IE] + RE[1:3,k] - RK[1:3,2]
+        u1dp[1:3] = R_electrons_new[1:3,idx_electron] + R_electrons[1:3,k] - R_atoms[1:3,2]
+        u1do[1:3] .-= as*dR[1:3,idx_electron,k] / woo / (1.0 + woo/CJAS)^2/2.0 .-
+                      2.0*dR[1:3,idx_electron,k]*β1*β2*exp(-β2*woo^2)
+        u1dpo[1:3] = R_electrons[1:3,idx_electron] + R_electrons[1:3,k] - R_atoms[1:3,2]
     
-        u2d -= as/won/(1.0 + won/CJAS)^3 + 
-               BETA1*BETA2*exp(-BETA2*won^2)*(4.0*BETA2*won^2 - 6.0)
+        u2d -= as/won/(1.0 + won/CJAS)^3 + β1*β2*exp(-β2*won^2)*(4.0*β2*won^2 - 6.0)
   
-        u2do -= as/woo/(1.0+woo/CJAS)^3 +
-                BETA1*BETA2*exp(-BETA2*woo^2)*(4.0*BETA2*woo^2 - 6.0)
+        u2do -= as/woo/(1.0+woo/CJAS)^3 + β1*β2*exp(-β2*woo^2)*(4.0*β2*woo^2 - 6.0)
         
         u3 += 1.0/won
         u4 += 1.0/won - 1.0/woo
     end
   
-    jasu += jasup*GAM/2.0
-    jasdif += jasdifp*GAM/2.0
-    u1d += u1dp*GAM
-    u1do += u1dpo*GAM
-    u2d += 3.0*GAM
-    u2do += 3.0*GAM
+    jasu += jasup*γ/2.0
+    jasdif += jasdifp*γ/2.0
+    u1d += u1dp*γ
+    u1do += u1dpo*γ
+    u2d += 3.0*γ
+    u2do += 3.0*γ
     
     # For an additional Jastrow factor: psi_J=J*sum_{ii=1}^5 a(ii)*x(ii):
     # The basis functions x(ii) are formulated in terms of
@@ -123,101 +111,101 @@ function jas_exp_H2!(vj, vjd, v, vd)
     # by the first two letters; the letters a and b denote the two protons and
     # the letters n and o are appended to refer to new and old;
     # the suffixes 1 and 2 are displayed by the
-    # index IE and kie of the actual electron which might have been moved
+    # index idx_electron and kie of the actual electron which might have been moved
     # and the other second electron which keeps its old position, resp..
     kie = 2
-    if IE == 2
-        kie=1
+    if idx_electron == 2
+        kie = 1
     end
     
-    rhn = 2.0*DISTNEU[4,IE,kie]/DKX
-    rho = 2.0*DIST[4,IE,kie]/DKX
+    rhn = 2.0*dR_new[4,idx_electron,kie]/DKX
+    rho = 2.0*dR[4,idx_electron,kie]/DKX
     
-    ran[IE] = max(EMACH, sqrt(sum( (RNEU[1:3,IE] - RK[1:3,1])^2 )))
-    rao[IE] = max(EMACH, sqrt(sum( (RE[1:3,IE]   - RK[1:3,1])^2 )))
-    rbn[IE] = max(EMACH, sqrt(sum( (RNEU[1:3,IE] - RK[1:3,2])^2 )))
-    rbo[IE] = max(EMACH, sqrt(sum( (RE[1:3,IE]   - RK[1:3,2])^2 )))
+    ran[idx_electron] = max(EMACH, sqrt(sum( (R_electrons_new[1:3,idx_electron] - R_atoms[1:3,1])^2 )))
+    rao[idx_electron] = max(EMACH, sqrt(sum( (R_electrons[1:3,idx_electron]   - R_atoms[1:3,1])^2 )))
+    rbn[idx_electron] = max(EMACH, sqrt(sum( (R_electrons_new[1:3,idx_electron] - R_atoms[1:3,2])^2 )))
+    rbo[idx_electron] = max(EMACH, sqrt(sum( (R_electrons[1:3,idx_electron]   - R_atoms[1:3,2])^2 )))
     
-    lan[IE] = ( ran[IE] + rbn[IE] )/DKX
-    lao[IE] = ( rao[IE] + rbo[IE] )/DKX
-    mun[IE] = ( ran[IE] - rbn[IE] )/DKX
-    muo[IE] = ( rao[IE] - rbo[IE] )/DKX
+    lan[idx_electron] = ( ran[idx_electron] + rbn[idx_electron] )/DKX
+    lao[idx_electron] = ( rao[idx_electron] + rbo[idx_electron] )/DKX
+    mun[idx_electron] = ( ran[idx_electron] - rbn[idx_electron] )/DKX
+    muo[idx_electron] = ( rao[idx_electron] - rbo[idx_electron] )/DKX
   
-    rao[kie] = max(EMACH, sqrt(sum( (RE[1:3,kie] - RK[1:3,1])^2 )))
-    rbo[kie] = max(EMACH, sqrt(sum( (RE[1:3,kie] - RK[1:3,2])^2 )))
+    rao[kie] = max(EMACH, sqrt(sum( (R_electrons[1:3,kie] - R_atoms[1:3,1])^2 )))
+    rbo[kie] = max(EMACH, sqrt(sum( (R_electrons[1:3,kie] - R_atoms[1:3,2])^2 )))
     lao[kie] = (rao[kie] + rbo[kie])/DKX
     muo[kie] = (rao[kie] - rbo[kie])/DKX
     
-    # Accepted step: new coordinates for IE and old for kie
+    # Accepted step: new coordinates for idx_electron and old for kie
     xn[1] = 2.0
-    xn[2] = mun[IE]^2+muo[kie]^2
-    xn[3] = 2.0*mun[IE]*muo[kie]
-    xn[4] = lan[IE]+lao[kie]
+    xn[2] = mun[idx_electron]^2 + muo[kie]^2
+    xn[3] = 2.0*mun[idx_electron]*muo[kie]
+    xn[4] = lan[idx_electron] + lao[kie]
     xn[5] = 2.0*rhn
-    xn[6] = (lan[IE]+lao[kie])*mun[IE]*muo[kie]
-    xn[7] = lan[IE]*muo[kie]^2+lao[kie]*mun[IE]^2
-    xn[8] = lao[kie]^2+lan[IE]^2
+    xn[6] = (lan[idx_electron] + lao[kie])*mun[idx_electron]*muo[kie]
+    xn[7] = lan[idx_electron]*muo[kie]^2 + lao[kie]*mun[idx_electron]^2
+    xn[8] = lao[kie]^2 + lan[idx_electron]^2
     xn[9] = 2.0*rhn^2
-    xn[10] = 2.0*lan[IE]*lao[kie]
-    xn[11] = 2.0*mun[IE]^2*muo[kie]^2
-    xn[12] = (muo[kie]^2 + mun[IE]^2)*rhn
+    xn[10] = 2.0*lan[idx_electron]*lao[kie]
+    xn[11] = 2.0*mun[idx_electron]^2*muo[kie]^2
+    xn[12] = (muo[kie]^2 + mun[idx_electron]^2)*rhn
     
-    # Not accepted step: old coordinates for both IE and kie
+    # Not accepted step: old coordinates for both idx_electron and kie
     xo[1] = 2.0
-    xo[2] = muo[IE]^2 + muo[kie]^2
-    xo[3] = 2.0*muo[IE]*muo[kie]
-    xo[4] = lao[IE] + lao[kie]
+    xo[2] = muo[idx_electron]^2 + muo[kie]^2
+    xo[3] = 2.0*muo[idx_electron]*muo[kie]
+    xo[4] = lao[idx_electron] + lao[kie]
     xo[5] = 2.0*rho
-    xo[6] = (lao[IE] + lao[kie])*muo[IE]*muo[kie]
-    xo[7] = lao[IE]*muo[kie]^2 + lao[kie]*muo[IE]^2
-    xo[8] = lao[kie]^2 + lao[IE]^2
+    xo[6] = (lao[idx_electron] + lao[kie])*muo[idx_electron]*muo[kie]
+    xo[7] = lao[idx_electron]*muo[kie]^2 + lao[kie]*muo[idx_electron]^2
+    xo[8] = lao[kie]^2 + lao[idx_electron]^2
     xo[9] = 2.0*rho^2
-    xo[10] = 2.0*lao[IE]*lao[kie]
-    xo[11] = 2.0*muo[IE]^2*muo[kie]^2
-    xo[12] = (muo[kie]^2 + muo[IE]^2)*rho
+    xo[10] = 2.0*lao[idx_electron]*lao[kie]
+    xo[11] = 2.0*muo[idx_electron]^2*muo[kie]^2
+    xo[12] = (muo[kie]^2 + muo[idx_electron]^2)*rho
     
-    #The 1st derivative (new and old) is denoted by yn(3,12) and yo(3,12)
-    rran[1:3] = ( RNEU[1:3,IE] - RK[1:3,1])/DKX/ran[IE]
-    rrbn[1:3] = ( RNEU[1:3,IE] - RK[1:3,2])/DKX/rbn[IE]
-    rrao[1:3] = ( RE[1:3,IE] - RK[1:3,1])/DKX/rao[IE]
-    rrbo[1:3] = ( RE[1:3,IE] - RK[1:3,2])/DKX/rbo[IE]
+    # The 1st derivative (new and old) is denoted by yn(3,12) and yo(3,12)
+    @. rran[1:3] = ( R_electrons_new[1:3,idx_electron] - R_atoms[1:3,1])/DKX/ran[idx_electron]
+    @. rrbn[1:3] = ( R_electrons_new[1:3,idx_electron] - R_atoms[1:3,2])/DKX/rbn[idx_electron]
+    @. rrao[1:3] = ( R_electrons[1:3,idx_electron] - R_atoms[1:3,1])/DKX/rao[idx_electron]
+    @. rrbo[1:3] = ( R_electrons[1:3,idx_electron] - R_atoms[1:3,2])/DKX/rbo[idx_electron]
     
     #Accepted step
     yn[1:3,1]  = 0.0
-    yn[1:3,2]  = 2.0*mun[IE]*(rran - rrbn)
+    yn[1:3,2]  = 2.0*mun[idx_electron]*(rran - rrbn)
     yn[1:3,3]  = 2.0*muo[kie]*(rran - rrbn)
     yn[1:3,4]  = rran + rrbn
-    yn[1:3,5]  = 4.0*DISTNEU[1:3,IE,kie]/DISTNEU[4,IE,kie]/DKX
-    yn[1:3,6]  = (rran + rrbn)*mun[IE]*muo[kie] + (lan[IE] + lao[kie])*(rran - rrbn)*muo[kie]
-    yn[1:3,7]  = (rran + rrbn)*muo[kie]^2 + 2.0*lao[kie]*mun[IE]*(rran - rrbn)
-    yn[1:3,8]  = 2.0*lan[IE]*(rran + rrbn)
-    yn[1:3,9]  = 16.0*DISTNEU[1:3,IE,kie]/DKX^2
+    yn[1:3,5]  = 4.0*dR_new[1:3,idx_electron,kie]/dR_new[4,idx_electron,kie]/DKX
+    yn[1:3,6]  = (rran + rrbn)*mun[idx_electron]*muo[kie] + (lan[idx_electron] + lao[kie])*(rran - rrbn)*muo[kie]
+    yn[1:3,7]  = (rran + rrbn)*muo[kie]^2 + 2.0*lao[kie]*mun[idx_electron]*(rran - rrbn)
+    yn[1:3,8]  = 2.0*lan[idx_electron]*(rran + rrbn)
+    yn[1:3,9]  = 16.0*dR_new[1:3,idx_electron,kie]/DKX^2
     yn[1:3,10] = 2.0*(rran + rrbn)*lao[kie]
-    yn[1:3,11] = 4.0*(rran - rrbn)*mun[IE]*muo[kie]^2
+    yn[1:3,11] = 4.0*(rran - rrbn)*mun[idx_electron]*muo[kie]^2
   
-    yn[1:3,12] = 2.0*mun[IE]*(rran - rrbn)*rhn + 
-                 (muo[kie]^2 + mun[IE]^2)*2.0*DISTNEU[1:3,IE,kie] / DISTNEU[4,IE,kie]/DKX
-  !
+    yn[1:3,12] = 2.0*mun[idx_electron]*(rran - rrbn)*rhn + 
+                 (muo[kie]^2 + mun[idx_electron]^2)*2.0*dR_new[1:3,idx_electron,kie] / dR_new[4,idx_electron,kie]/DKX
+
     # Not accepted step
     yo[1:3,1] = 0.0
-    yo[1:3,2] = 2.0*muo[IE]*(rrao-rrbo)
+    yo[1:3,2] = 2.0*muo[idx_electron]*(rrao-rrbo)
     yo[1:3,3] = 2.0*muo[kie]*(rrao-rrbo)
     yo[1:3,4] = rrao + rrbo
-    yo[1:3,5] = 4.0*DIST(1:3,IE,kie)/DIST(4,IE,kie)/DKX     
-    yo[1:3,6] = (rrao + rrbo)*muo[IE]*muo[kie] + (lao[IE] + lao[kie])*(rrao - rrbo)*muo[kie]
-    yo[1:3,7] = (rrao+rrbo)*muo[kie]^2 + 2.0*lao[kie]*muo[IE]*(rrao-rrbo)
-    yo[1:3,8] = 2.0*lao[IE]*(rrao + rrbo)
-    yo[1:3,9] = 16.0*DIST[1:3,IE,kie]/DKX^2
+    yo[1:3,5] = 4.0*dR(1:3,idx_electron,kie)/dR(4,idx_electron,kie)/DKX     
+    yo[1:3,6] = (rrao + rrbo)*muo[idx_electron]*muo[kie] + (lao[idx_electron] + lao[kie])*(rrao - rrbo)*muo[kie]
+    yo[1:3,7] = (rrao+rrbo)*muo[kie]^2 + 2.0*lao[kie]*muo[idx_electron]*(rrao-rrbo)
+    yo[1:3,8] = 2.0*lao[idx_electron]*(rrao + rrbo)
+    yo[1:3,9] = 16.0*dR[1:3,idx_electron,kie]/DKX^2
     yo[1:3,10] = 2.0*(rrao + rrbo)*lao[kie]
-    yo[1:3,11] = 4.0*(rrao - rrbo)*muo[IE]*muo[kie]^2
+    yo[1:3,11] = 4.0*(rrao - rrbo)*muo[idx_electron]*muo[kie]^2
   
-    yo[1:3,12] = 2.0*muo[IE]*(rrao - rrbo)*rho +
-            (muo[kie]^2+muo[IE]^2)*2.0*DIST[1:3,IE,kie]/DIST[4,IE,kie]/DKX
+    yo[1:3,12] = 2.0*muo[idx_electron]*(rrao - rrbo)*rho +
+            (muo[kie]^2+muo[idx_electron]^2)*2.0*dR[1:3,idx_electron,kie]/dR[4,idx_electron,kie]/DKX
     
     # The 2nd derivative (new and old) is denoted by zn(5) and zo(5)
-    g1mrn = dot( DISTNEU[1:3,IE,kie], (rran[1:3] - rrbn[1:3]) ) * 4.0/DKX^2/rhn
+    g1mrn = dot( dR_new[1:3,idx_electron,kie], (rran[1:3] - rrbn[1:3]) ) * 4.0/DKX^2/rhn
   
-    g1mro = dot( DIST[1:3,IE,kie], (rrao[1:3] - rrbo[1:3]) ) * 4.0/DKX^2/rho
+    g1mro = dot( dR[1:3,idx_electron,kie], (rrao[1:3] - rrbo[1:3]) ) * 4.0/DKX^2/rho
   
     g1lmn = dot(rran,rrbn)*DKX^2
     g1lmo = dot(rrao,rrbo)*DKX^2
@@ -226,38 +214,38 @@ function jas_exp_H2!(vj, vjd, v, vd)
     g2lo = 2.0*(1.0 + g1lmo)/DKX^2
     g2mn = 2.0*(1.0 - g1lmn)/DKX^2
     g2mo = 2.0*(1.0 - g1lmo)/DKX^2
-    lapln = 2.0*(1.0/ran[IE] + 1.0/rbn[IE])/DKX
-    laplo = 2.0*(1.0/rao[IE] + 1.0/rbo[IE])/DKX
-    lapmn = 2.0*(1.0/ran[IE] - 1.0/rbn[IE])/DKX
-    lapmo = 2.0*(1.0/rao[IE] - 1.0/rbo[IE])/DKX
+    lapln = 2.0*(1.0/ran[idx_electron] + 1.0/rbn[idx_electron])/DKX
+    laplo = 2.0*(1.0/rao[idx_electron] + 1.0/rbo[idx_electron])/DKX
+    lapmn = 2.0*(1.0/ran[idx_electron] - 1.0/rbn[idx_electron])/DKX
+    lapmo = 2.0*(1.0/rao[idx_electron] - 1.0/rbo[idx_electron])/DKX
   
     # Accepted step
     zn[1] = 0.0
-    zn[2] = 2.0*(g2mn + mun[IE]*lapmn)
+    zn[2] = 2.0*(g2mn + mun[idx_electron]*lapmn)
     zn[3] = 2.0*muo[kie]*lapmn
     zn[4] = lapln
     zn[5] = 16.0/rhn/DKX^2
-    zn[6] = muo[kie]*(lapln*mun[IE] + lapmn*(lan[IE] + lao[kie]))
-    zn[7] = lapln*muo[kie]^2 + 2.0*lao[kie]*(g2mn + mun[IE]*lapmn)
-    zn[8] = 2.0*(g2ln + lan[IE]*lapln)
+    zn[6] = muo[kie]*(lapln*mun[idx_electron] + lapmn*(lan[idx_electron] + lao[kie]))
+    zn[7] = lapln*muo[kie]^2 + 2.0*lao[kie]*(g2mn + mun[idx_electron]*lapmn)
+    zn[8] = 2.0*(g2ln + lan[idx_electron]*lapln)
     zn[9] = 48.0/DKX^2
     zn[10] = 2.0*lao[kie]*lapln
-    zn[11] = 4.0*muo[kie]^2*(g2mn + mun[IE]*lapmn)
-    zn[12] = 2.0*rhn*(g2mn+mun[IE]*lapmn) + 4.0*mun[IE]*g1mrn + 8.0*(mun[IE]^2 + muo[kie]^2)/rhn/DKX^2
+    zn[11] = 4.0*muo[kie]^2*(g2mn + mun[idx_electron]*lapmn)
+    zn[12] = 2.0*rhn*(g2mn+mun[idx_electron]*lapmn) + 4.0*mun[idx_electron]*g1mrn + 8.0*(mun[idx_electron]^2 + muo[kie]^2)/rhn/DKX^2
 
     # Not accepted step
     zo[1] = 0.0
-    zo[2] = 2.0*(g2mo+muo[IE]*lapmo)
+    zo[2] = 2.0*(g2mo+muo[idx_electron]*lapmo)
     zo[3] = 2.0*muo[kie]*lapmo
     zo[4] = laplo
     zo[5] = 16.0/rho/DKX^2
-    zo[6] = muo[kie]*(laplo*muo[IE]+lapmo*(lao[IE]+lao[kie]))
-    zo[7] = laplo*muo[kie]^2+2.0*lao[kie]*(g2mo+muo[IE]*lapmo)
-    zo[8] = 2.0*(g2lo+lao[IE]*laplo)
+    zo[6] = muo[kie]*(laplo*muo[idx_electron]+lapmo*(lao[idx_electron]+lao[kie]))
+    zo[7] = laplo*muo[kie]^2+2.0*lao[kie]*(g2mo+muo[idx_electron]*lapmo)
+    zo[8] = 2.0*(g2lo+lao[idx_electron]*laplo)
     zo[9] = 48.0/DKX^2
     zo[10] = 2.0*lao[kie]*laplo
-    zo[11] = 4.0*muo[kie]^2*(g2mo+muo[IE]*lapmo)
-    zo[12] = 2.0*rho*(g2mo + muo[IE]*lapmo) + 4.0*muo[IE]*g1mro + 8.0*(muo[IE]^2+muo[kie]^2)/rho/DKX^2
+    zo[11] = 4.0*muo[kie]^2*(g2mo+muo[idx_electron]*lapmo)
+    zo[12] = 2.0*rho*(g2mo + muo[idx_electron]*lapmo) + 4.0*muo[idx_electron]*g1mro + 8.0*(muo[idx_electron]^2+muo[kie]^2)/rho/DKX^2
     
     jasjcn = 0.0
     jasjco = 0.0
@@ -293,15 +281,15 @@ function jas_exp_H2!(vj, vjd, v, vd)
     jc1do[1:3] = jc1do[1:3]/jasjco
     jc2dn = jc2dn/jasjcn
     jc2do = jc2do/jasjco
-    vjd[IE] = jasdif + jasujcn - jasujco
-    vj[IE] = jasu + jasujcn
-    GRJAS[1:3,IE] = - u1d[1:3] + jc1dn[1:3]
-    LAPJAS[IE] = -u2d + sum(u1d[1:3]^2) + jc2dn - 2.0*dot(jc1dn[1:3],u1d[1:3])
-    GRJASOLD[1:3,IE] = - u1do[1:3] + jc1do[1:3]
+    vjd[idx_electron] = jasdif + jasujcn - jasujco
+    vj[idx_electron] = jasu + jasujcn
+    GRJAS[1:3,idx_electron] = - u1d[1:3] + jc1dn[1:3]
+    LAPJAS[idx_electron] = -u2d + sum(u1d[1:3]^2) + jc2dn - 2.0*dot(jc1dn[1:3],u1d[1:3])
+    GRJASOLD[1:3,idx_electron] = - u1do[1:3] + jc1do[1:3]
 
-    LAPJASOLD[IE] = -u2do + sum(u1do[1:3]^2) + jc2do - 2.0*dot( jc1do[1:3], u1do[1:3] )
-    v[IE] = u3
-    vd[IE] = u4
+    LAPJASOLD[idx_electron] = -u2do + sum(u1do[1:3]^2) + jc2do - 2.0*dot( jc1do[1:3], u1do[1:3] )
+    v[idx_electron] = u3
+    vd[idx_electron] = u4
 
     return
 end

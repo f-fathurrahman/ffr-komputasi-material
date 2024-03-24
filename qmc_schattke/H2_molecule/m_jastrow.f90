@@ -14,26 +14,27 @@ public :: JEXP,JASEXP,JASEXPATOM,JASEXPH2,DETUPD
 public :: DENSITY,ERGLOC,CHARGE,VIRIAL
 
 
-! NE number electrons
-! NES1 number electrons per spin
-! IE=1,NE index of electron
+! Nelectrons number electrons
+! NelectronsPerSpin number electrons per spin
+! IE=1,Nelectrons index of electron
 ! IES=1,2 index of spin 1=up, 2=down
 integer, parameter, public :: NDIVMX=101, MCMAXMAX=20000000
 integer, public :: NDIV
 real(dp), public:: LENGTH,DKX,CJAS,BETA1,BETA2,GAM
   
-real(dp), dimension(NE), public :: VJAS,VJDI,LAPJAS, &
+real(dp), dimension(Nelectrons), public :: VJAS,VJDI,LAPJAS, &
     & V2POT,V2PDI,V1POT,LAPJASOLD,VELEN,VELENOLD
   
-real(dp), dimension(2), public :: DNEW,DOLD
-real(dp), dimension(NE,2), public :: LAPDET
-real(dp), dimension(3,NE,2), public :: GRDET
+real(dp), public :: DNEW(2), DOLD(2) ! 2 = number of electrons?
+real(dp), public :: LAPDET(Nelectrons,2)
+real(dp), public :: GRDET(3,Nelectrons,2)
   
-real(dp), dimension(3,NE), public:: GRJAS, GRJASOLD
+real(dp), public:: GRJAS(3,Nelectrons), GRJASOLD(3,Nelectrons)
 
-real(dp), dimension(4,NE,NE), public :: DIST,DISTNEU
+real(dp), public :: DIST(4,Nelectrons,Nelectrons)
+real(dp), public :: DISTNEU(4,Nelectrons,Nelectrons)
 real(dp), dimension(NDIVMX,NDIVMX,NDIVMX), public :: RHO
-real(dp), dimension(NE*NK+1), public :: CHA
+real(dp), dimension(Nelectrons*Natoms+1), public :: CHA
 real(dp), dimension(MCMAXMAX), public :: ENARR
 
 
@@ -44,7 +45,7 @@ real(dp), dimension(MCMAXMAX), public :: ENARR
 subroutine JEXP(vj,vjd,v,vd)
 !---------------------------
   implicit none
-  real(dp), intent(out), dimension(NE):: vj,vjd,v,vd
+  real(dp), intent(out), dimension(Nelectrons):: vj,vjd,v,vd
   call JASEXPH2(vj,vjd,v,vd)
 end subroutine JEXP
 
@@ -54,7 +55,7 @@ subroutine JASEXP(vj,vjd,v,vd)
   implicit none
   ! Updates the distances from the active electron to all others
   ! and determines Jastrow exponent and derivatives
-  real(dp), intent(out), dimension(NE):: vj,vjd,v,vd
+  real(dp), intent(out), dimension(Nelectrons):: vj,vjd,v,vd
   integer :: k,n
   real(dp) :: as,jasu,jasdif,u2d,u2do,woo,won,u3,u4
   real(dp), dimension(3) :: u1d,u1do
@@ -67,15 +68,15 @@ subroutine JASEXP(vj,vjd,v,vd)
   u3 = 0.0d0
   u4 = 0.0d0
   !
-  ielek: do k = 1,NE
+  ielek: do k = 1,Nelectrons
     !
     if(k .eq. IE) then
       cycle ielek
     endif
     !
     as = 0.5d0     ! for equal spins
-    if( ( (IE .le. NES1) .and. (k .gt. NES1) ) .or. &
-     &  ( (IE .gt. NES1) .and. (k .le. NES1) ) ) then
+    if( ( (IE .le. NelectronsPerSpin) .and. (k .gt. NelectronsPerSpin) ) .or. &
+     &  ( (IE .gt. NelectronsPerSpin) .and. (k .le. NelectronsPerSpin) ) ) then
       as = 1.0d0
     endif
     !
@@ -124,7 +125,7 @@ subroutine JASEXPATOM(vj,vjd,v,vd)
 ! Updates the distances from the active electron to all others
 ! and determines Jastrow exponent and derivatives for atoms:
 ! u=F/2/(1+r/F)*(delta_{s,-s'}+1/2*delta_{s,s'})
-  real(dp),intent(out),dimension(NE):: vj,vjd,v,vd
+  real(dp),intent(out),dimension(Nelectrons):: vj,vjd,v,vd
   integer :: k,n
   real(dp) :: as,jasu,jasdif,u2d,woo,won,u3,u4,u2do
   real(dp),dimension(3) :: u1d,u1do
@@ -138,7 +139,7 @@ subroutine JASEXPATOM(vj,vjd,v,vd)
   u3 = 0.0d0
   u4 = 0.0d0
   
-  ielekat: do k=1,NE
+  ielekat: do k=1,Nelectrons
     !
     if( k .eq. IE ) then
       cycle ielekat
@@ -146,8 +147,8 @@ subroutine JASEXPATOM(vj,vjd,v,vd)
     !
     as = 0.5d0   ! for equal spins
     !
-    if( ((IE .le. NES1) .and. (k .gt. NES1)) .or. &
-     &       ( (IE .gt. NES1) .and. (k .le. NES1)) ) as=1.0d0
+    if( ((IE .le. NelectronsPerSpin) .and. (k .gt. NelectronsPerSpin)) .or. &
+     &       ( (IE .gt. NelectronsPerSpin) .and. (k .le. NelectronsPerSpin)) ) as=1.0d0
     !
     ! what's this?     
     if( k .eq. IE ) then
@@ -215,7 +216,7 @@ subroutine JASEXPH2(vj,vjd,v,vd)
 ! (James and Coolidge)
 ! (Rev.Mod..Phys.32,219(1960)) is programmed as part of the Jastrow
 ! factor. It has to be combined with product ansatz of orbital wave.
-  real(dp), intent(out), dimension(NE):: vj,vjd,v,vd
+  real(dp), intent(out), dimension(Nelectrons):: vj,vjd,v,vd
   integer :: k,kie,ii
   real(dp) :: as,jasu,jasdif,u2d,woo,won,u3,u4,u2do
   real(dp) :: jasup,jasdifp
@@ -263,7 +264,7 @@ subroutine JASEXPH2(vj,vjd,v,vd)
   u3 = 0.d0
   u4 = 0.d0
 
-  ielekat: do k=1,NE
+  ielekat: do k=1,Nelectrons
     !
     if( k .eq. IE ) then
       cycle ielekat
@@ -271,8 +272,8 @@ subroutine JASEXPH2(vj,vjd,v,vd)
     !
     as = 0.5d0     ! for equal spins
     !
-    if( ( (IE.le.NES1).and.(k.gt.NES1)) .or. &
-     &       ((IE.gt.NES1).and.(k.le.NES1))) as=1.0d0
+    if( ( (IE.le.NelectronsPerSpin).and.(k.gt.NelectronsPerSpin)) .or. &
+     &       ((IE.gt.NelectronsPerSpin).and.(k.le.NelectronsPerSpin))) as=1.0d0
   
     DIST(1:3,IE,k) = RE(1:3,IE) - RE(1:3,k)
     DISTNEU(1:3,IE,k) = RNEU(1:3,IE) - RE(1:3,k)
@@ -511,7 +512,7 @@ subroutine DETUPD(dne,dno)
   real(dp), intent(out) :: dne
   real(dp), intent(in)  :: dno ! not used?
   ! Local variables
-  real(dp), dimension(NORB,NE) :: psi
+  real(dp), dimension(NORB,Nelectrons) :: psi
   real(dp), dimension(3) :: r
   !
   r(1:3) = RNEU(1:3,IE)
@@ -532,8 +533,8 @@ subroutine ERGLOC(lk,lp,lko)
   ! Local potential energy lp of electron IE with spin IES
   real(dp),intent(out) :: lk,lp,lko
   ! local variables
-  real(dp),dimension(NORB,NK) :: psi,pla
-  real(dp),dimension(3,NORB,NK) :: pgr
+  real(dp),dimension(NORB,Natoms) :: psi,pla
+  real(dp),dimension(3,NORB,Natoms) :: pgr
   real(dp),dimension(3) :: r,p1,p2
   r(1:3)=RE(1:3,IE)
   call ORBDER(r,psi,pgr,pla)
@@ -562,14 +563,14 @@ subroutine DENSITY(rh)
   integer :: nx,ny,nz,ie
   real(dp) :: dl
   
-  if (dble((NDIV-1)/2) .ne. dble(NDIV-1)/2.0d0) then
+  if (dble((NDIV-1)/2) /= dble(NDIV-1)/2.0d0) then
     write(*,*) 'NDIV not odd: stop'
     stop
   endif
   
   rh = 0.0d0
   dl = LENGTH/dble(NDIV-1)
-  do ie = 1,NE
+  do ie = 1,Nelectrons
     nx = 1 + (NDIV-1)/2 + int(RE(1,IE)/dl)
     ny = 1 + (NDIV-1)/2 + int(RE(2,IE)/dl)
     nz = 1 + (NDIV-1)/2 + int(RE(3,IE)/dl)
@@ -589,11 +590,11 @@ subroutine CHARGE(r,c)
   implicit none
   ! Madelung charge counting, c=charge on atom,r=sphere radius
   real(dp),intent(in) :: r
-  real(dp),intent(inout),dimension(NK*NE+1) :: c
+  real(dp),intent(inout),dimension(Natoms*Nelectrons+1) :: c
   integer :: i
   real(dp),dimension(2) :: d1,d2
   !
-  do i=1,NE
+  do i=1,Nelectrons
     d1(i) =sqrt( sum(RE(1:3,i) - RK(1:3,1) )**2)
     d2(i) =sqrt( sum(RE(1:3,i) - RK(1:3,2) )**2)
   enddo

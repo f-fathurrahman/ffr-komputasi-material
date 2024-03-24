@@ -106,6 +106,33 @@ end
 
     initial_electron_positions!(global_vars)
 
+    VJAS = zeros(Float64, Nelectrons)
+    V2POT = zeros(Float64, Nelectrons)
+
+    # WIll be used in Jastrow calculations
+    DIST = zeros(Float64, 4, Nelectrons, Nelectrons)
+    DISTNEU = zeros(Float64, Nelectrons, Nelectrons)
+    
+    for iel in 1:Nelectrons
+        #
+        DIST[1:4,iel,iel] .= 0.0
+        DISTNEU[1:4,iel,iel] .= 0.0
+        #
+        for kel in 1:Nelectrons
+            if kel == iel
+                continue
+            end
+            DISTNEU[1:3,iel,kel] .= R_electrons_new[1:3,iel] - R_electrons_new[1:3,kel]
+            DIST[1:3,iel,kel] = DISTNEU[1:3,iel,kel]
+            #
+            DISTNEU[4,iel,kel] = sqrt(sum((RNEU[1:3,i] .- RNEU[1:3,k]).^2))
+            DIST[4,iel,kel] = DISTNEU[4,i,k]
+            # take care below for differing Jastrow factor definitions
+            VJAS[iel] += 1.0/DISTNEU[4,iel,kel]*(1.0 - exp(-DISTNEU[4,iel,kel]/CJAS))
+            V2POT[iel] += 1.0/DISTNEU[4,iel,kel]
+        end
+    end
+
 #    return
 #end
 #debug_main()

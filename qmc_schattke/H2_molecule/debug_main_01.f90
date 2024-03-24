@@ -9,7 +9,6 @@ PROGRAM debug_H2MOL
   implicit none
   integer, parameter :: NALPHA=1,NWAVEC=0
   real(dp) :: STEPMAX
-  real(dp) :: DALPHA,ALPHA0,ALPHA1,DWAVEC,WAVEC0,WAVEC1
   real(dp) :: q,qj,qd,rannumb
   real(dp) :: LOCEN,LOKIN,ERWEN,VAREN,ERWKIN,VARKIN,ERWPOT
   real(dp) :: VARPOT,LOCPOT,LOP1,LOP2,LOK,LOP,LOCWW,ERWWW,VARWW,TOTALEN
@@ -20,7 +19,7 @@ PROGRAM debug_H2MOL
   
   character(10) :: PRONAME
   ! Local variables
-  integer :: n1,n3,i,k,nx,ny,nz,n5,n6,s
+  integer :: i,k,nx,ny,nz,n5,n6, s
   real(dp) :: w,rd
   real(dp) :: minenarr,maxenarr,eminalpha
   real(kind=dp), dimension(NORBM,Nelectrons) :: hpsi
@@ -42,7 +41,7 @@ PROGRAM debug_H2MOL
     stop
   endif
 
-  LENGTH = 10.0_dp ! size of arb. box to display positions
+  LENGTH = 10.0d0 ! size of arb. box to display positions
 
   ! Original values
   !MCPRE = 100000
@@ -86,19 +85,8 @@ PROGRAM debug_H2MOL
   eminalpha = 0.0d0
 
   ! Parameter scan ALPHA and WAVEC
-  ! ALPHA0 = 0.678571428571_dp ! KR
-  ALPHA0 = 0.679d0 !0.68d0
-  ! ALPHA0 = 0.535714285714_dp ! JC
-  ALPHA1 = 0.700_dp
-  WAVEC0 = +0.0_dp
-  WAVEC1 = +5.0_dp
-  DALPHA = (ALPHA1 - ALPHA0)/dble(NALPHA)
-  DWAVEC = (WAVEC1 - WAVEC0)/dble(NWAVEC+1)
-
-  n1 = 1
-  n3 = 1  !
-  ALPHA = ALPHA0 + (n1-1)*DALPHA
-  WAVEC = WAVEC0 + (n3-1)*DWAVEC
+  ALPHA = 0.679d0
+  WAVEC = 0.1d0 
   write(*,*) 'alpha = ', alpha
   write(*,*) 'wavec = ', wavec
 
@@ -112,7 +100,7 @@ PROGRAM debug_H2MOL
   ! Random initial electron positions
   do k = 1,Nelectrons
     s = 1 ! what's this?
-    if( k > NES1 ) s = 2
+    if( k > NelectronsPerSpin ) s = 2
     write(*,*)
     write(*,*) 'Before: k = ', k, ' rneu = ', rneu(1:3,k)
     do i = 1,3
@@ -121,10 +109,10 @@ PROGRAM debug_H2MOL
       write(*,*) 'k, i = ', k, i
       RE(i,k) = RK(i,k) + rd ! relative from nucleus
       RNEU(i,k) = RE(i,k) ! also assign RNEU <= RE
-      call ORBWAV( RE(1:3,k), hpsi ) ! evaluate psi at this position
-      DOLD(s) = hpsi(1,k) ! save to DOLD
-       ! 1= index of orbital
     enddo
+    call ORBWAV( RE(1:3,k), hpsi ) ! evaluate psi at this position
+    DOLD(s) = hpsi(1,k) ! save to DOLD
+     ! 1= index of orbital
     write(*,*) 'After: k = ', k, ' rneu = ', rneu(1:3,k)
   enddo
   write(*,*) 'DOLD = ', DOLD
@@ -162,7 +150,7 @@ PROGRAM debug_H2MOL
 
   enddo ! loop over Nelectrons
 
-  stop 'DEBUG STOP HERE ...'
+  !stop 'DEBUG STOP HERE ...'
 
 
   !
@@ -203,7 +191,7 @@ PROGRAM debug_H2MOL
     lelpre: do IE = 1,Nelectrons
       ! 
       IES = 1
-      if( IE > NES1 ) IES = 2
+      if( IE > NelectronsPerSpin ) IES = 2
       !
       do i=1,3
         ! Shift position at random within +-STEPMAX/2
@@ -258,7 +246,7 @@ PROGRAM debug_H2MOL
       !endif
       !
       IES = 1
-      if( IE > NES1 ) IES=2
+      if( IE > NelectronsPerSpin ) IES=2
       !
       do i=1,3
         ! Shift position at random within +-STEPMAX/2

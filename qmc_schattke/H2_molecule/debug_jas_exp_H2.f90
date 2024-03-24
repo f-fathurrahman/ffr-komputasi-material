@@ -1,7 +1,7 @@
 !------------------------------------
 subroutine JAS_EXP_H2(vj, vjd, v, vd)
 !------------------------------------
-  use m_highlevel, only: DP, Nelectrons, NES1, EMACH
+  use m_highlevel, only: DP, Nelectrons, NelectronsPerSpin, EMACH
   use m_midlevel, only: IE, RE, RNEU, RK
   use m_jastrow, only: gam, QJC, DIST, DISTNEU, LAPJASOLD, LAPJAS
   use m_jastrow, only: DKX, CJAS, BETA1, BETA2, GRJAS, GRJASOLD
@@ -69,8 +69,8 @@ subroutine JAS_EXP_H2(vj, vjd, v, vd)
     !
     as = 0.5d0     ! for equal spins
     !
-    if( ( (IE.le.NES1).and.(k.gt.NES1)) .or. &
-     &       ((IE.gt.NES1).and.(k.le.NES1))) as=1.0d0
+    if( ( (IE.le.NelectronsPerSpin).and.(k.gt.NelectronsPerSpin)) .or. &
+     &       ((IE.gt.NelectronsPerSpin).and.(k.le.NelectronsPerSpin))) as=1.0d0
   
     DIST(1:3,IE,k) = RE(1:3,IE) - RE(1:3,k)
     DISTNEU(1:3,IE,k) = RNEU(1:3,IE) - RE(1:3,k)

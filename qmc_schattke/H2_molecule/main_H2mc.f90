@@ -7,7 +7,7 @@ PROGRAM H2MOL
   use m_orbital
 
   implicit none
-  integer, parameter :: NALPHA=10,NWAVEC=0
+  integer, parameter :: NALPHA=1,NWAVEC=0
   real(dp) :: STEPMAX
   real(dp) :: DALPHA,ALPHA0,ALPHA1,DWAVEC,WAVEC0,WAVEC1
   real(dp) :: q,qj,qd,rannumb
@@ -15,7 +15,7 @@ PROGRAM H2MOL
   real(dp) :: VARPOT,LOCPOT,LOP1,LOP2,LOK,LOP,LOCWW,ERWWW,VARWW,TOTALEN
   real(dp) :: LOKOLD,LOCLKD,LKDETAIL,LOCVIR,ERWLKD,VIR,ERWVIR,FORCE
   real(dp) :: ERWVELEL,VARVELEL,LOCVEL,VEL,LOCENVEL,ERWENVEL,VARENVEL,TOTENVEL
-  real(kind=dp),dimension(NEMAX*NKMAX+1)        :: AVCHA
+  real(kind=dp),dimension(NelectronsMax*NatomsMax+1)        :: AVCHA
   real(kind=dp),dimension(NDIVMX,NDIVMX,NDIVMX) :: AVRHO
   
   character(10) :: PRONAME
@@ -24,7 +24,7 @@ PROGRAM H2MOL
   real(dp) :: w,rd
   real(dp) :: minenarr,maxenarr,eminalpha
   ! erwenx,varenx
-  real(kind=dp),dimension(NORBM,NE)    :: hpsi
+  real(kind=dp),dimension(NORBM,Nelectrons)    :: hpsi
 
   PRONAME="H2MOL"
   ! RANDNAME="random generator from REC_PJN           "
@@ -35,14 +35,14 @@ PROGRAM H2MOL
   ! ORBNAME ="orbital composition from product_p      "
   ORBNAME ="orbital composition from product        "
   
-  write(*,'(1x,2a)') 'Program ',PRONAME
+  write(*,'(1x,2a)') 'Program ', PRONAME
   write(*,'(1x,a)') RANDNAME
   write(*,'(1x,a)') ORBNAME
 
-  ! Number electrons NE and nuclei NK
+  ! Number electrons Nelectrons and nuclei Natoms
   NORB = 1
-  if( (NE .gt. NEMAX) .or. (NK .gt. NKMAX)) then
-    write (*,*)'NE or NK= ',NE,NK,' larger than= ',NEMAX,NKMAX
+  if( (Nelectrons .gt. NelectronsMax) .or. (Natoms .gt. NatomsMax)) then
+    write (*,*)'Nelectrons or Natoms= ',Nelectrons, Natoms, ' larger than= ',NelectronsMax, NatomsMax
     stop
   endif
   LENGTH = 10.0_dp ! size of arb. box to display positions
@@ -68,13 +68,14 @@ PROGRAM H2MOL
   ! atom separation; set CKPOINT to zero to enforce atomic limit.
   ldkx: do n5=10,10,1
     !
+    ! Set up atomic coordinates
     DKX = 1.40_dp + (n5 - 10)*0.1_dp       ! distance of both H2 nuclei
     RK(1:3,1:2) = 0.0_dp
     RK(1,2) = DKX
 
     ! Maximum step width, KONTUZ: Always check with acceptance ratio!
     STEPMAX = 1.00_dp
-    write(*,'(1x,a,2f12.3)')'DKX, STEPMAX = ',DKX,STEPMAX
+    write(*,'(1x,a,2f12.3)') 'DKX, STEPMAX = ',DKX,STEPMAX
 
     ! Gaussian localization at nuclei
     BETA1 = 0.01_dp
@@ -103,11 +104,15 @@ PROGRAM H2MOL
       DWAVEC = (WAVEC1-WAVEC0)/dble(NWAVEC+1)
 
       lalpha1: do n1 = 1,NALPHA+1
+        write(*,*) 'Loop lalpha1: n1 = ', n1
         !
         lwavec1: do n3 = 1,NWAVEC+1
+          write(*,*) 'Loop lwavec1: n3 = ', n3
           !
           ALPHA = ALPHA0 + (n1-1)*DALPHA
           WAVEC = WAVEC0 + (n3-1)*DWAVEC
+          write(*,*) 'alpha = ', alpha
+          write(*,*) 'wavec = ', wavec
           !
           ! Maximum step width, KONTUZ: Always check with acceptance ratio!
           STEPMAX = 1.00_dp
@@ -116,9 +121,9 @@ PROGRAM H2MOL
           CALL INITRAN()
           !
           ! Random initial electron positions
-          do k = 1,NE
+          do k = 1,Nelectrons
             s = 1
-            if( k > NES1 ) s = 2
+            if( k > NelectronsPerSpin ) s = 2
             do i = 1,3
               call GENRAN(rannumb)
               rd = (rannumb - 0.5)
@@ -130,17 +135,17 @@ PROGRAM H2MOL
           enddo
           !
           ! Compute initial distances
-          VJAS(1:NE) = 0._dp
-          VJDI(1:NE) = 0._dp
-          V2POT(1:NE) = 0._dp
-          V2PDI(1:NE) = 0._dp
+          VJAS(1:Nelectrons) = 0._dp
+          VJDI(1:Nelectrons) = 0._dp
+          V2POT(1:Nelectrons) = 0._dp
+          V2PDI(1:Nelectrons) = 0._dp
           !
-          do i = 1,NE
+          do i = 1,Nelectrons
             !
             DISTNEU(1:4,i,i)=0._dp
             DIST(1:4,i,i)=0._dp
             !
-            lothers: do k = 1,NE
+            lothers: do k = 1,Nelectrons
               !
               if( k == i ) cycle lothers
               !
@@ -154,7 +159,7 @@ PROGRAM H2MOL
               V2POT(i) = V2POT(i) + 1._dp/DISTNEU(4,i,k)
             enddo lothers
           !
-          enddo ! loop over NE
+          enddo ! loop over Nelectrons
           !
           ! Counts the acceptance number
           MCOUNT = 0
@@ -162,8 +167,8 @@ PROGRAM H2MOL
           ! Observables
           RHO(1:NDIV,1:NDIV,1:NDIV) = 0._dp
           AVRHO(1:NDIV,1:NDIV,1:NDIV) = 0._dp
-          CHA(1:NKMAX*NEMAX+1) = 0._dp
-          AVCHA(1:NKMAX*NEMAX+1) = 0._dp
+          CHA(1:NatomsMax*NelectronsMax+1) = 0._dp
+          AVCHA(1:NatomsMax*NelectronsMax+1) = 0._dp
           LOCEN = 0._dp
           LOKIN = 0._dp
           LOCPOT = 0._dp
@@ -186,22 +191,24 @@ PROGRAM H2MOL
           maxenarr = 0._dp
           !
           ! MC loop: prerun for thermalizing
-          lprerun:do IMC=1,MCPRE
+          write(*,*)
+          write(*,*) 'Begin lpreprun'
+          lprerun:do IMC = 1,MCPRE
             !            
-            lelpre:do IE=1,NE
+            lelpre:do IE = 1,Nelectrons
               ! 
               IES = 1
-              if( IE > NES1 ) IES=2
+              if( IE > NelectronsPerSpin ) IES = 2
               !
               do i=1,3
                 ! Shift position at random within +-STEPMAX/2
                 call GENRAN(rannumb)
-                rd = (rannumb-0.5)*STEPMAX
-                RNEU(i,IE) = RE(i,IE)+rd
+                rd = (rannumb - 0.5)*STEPMAX
+                RNEU(i,IE) = RE(i,IE) + rd
               enddo
               !
               ! Jastrow factor exponent -0.5*sum_k u_ik without term k=i
-              call JEXP(VJAS,VJDI,V2POT,V2PDI)
+              call JEXP(VJAS, VJDI, V2POT, V2PDI)
               qj = exp(-VJDI(IE))
               !
               ! Calculate single particle wavefunction part
@@ -227,27 +234,32 @@ PROGRAM H2MOL
             enddo lelpre
           !
           enddo lprerun
+          write(*,*)
+          write(*,*) 'End of lprerun'
           !
           !
           MCOUNT = 0
           !
           ! MC loop: main run after thermalizing
+          write(*,*)
+          write(*,*) 'Begin lmainrun'
+          write(*,*)
           lmainrun: do IMC=1,MCMAX
             !
-            lelmai: do IE=1,NE
+            lelmai: do IE=1,Nelectrons
               !
               !if( mod(imc, 10000) == 0 ) then
               !  write(*,*) 'imc = ', imc
               !endif
               !
               IES = 1
-              if( IE > NES1 ) IES=2
+              if( IE > NelectronsPerSpin ) IES=2
               !
               do i=1,3
                 ! Shift position at random within +-STEPMAX/2
                 call GENRAN(rannumb)
                 rd = (rannumb-0.5)*STEPMAX
-                RNEU(i,IE) = RE(i,IE)+rd
+                RNEU(i,IE) = RE(i,IE) + rd
               enddo
               !
               ! Calculate with u_12=CJAS**2/r_12*(1-exp(-r_12/CJAS))*(1.0,0.5)
@@ -291,7 +303,7 @@ PROGRAM H2MOL
               !
               ! Factor 0.5 is correct, LOCPOT=0.5 sum_ik v_ik, sum i appears as
               ! loop over electrons IE with contributions that are summed
-              ! and divided by NE, thus energy per electron is calculated
+              ! and divided by Nelectrons, thus energy per electron is calculated
               LOCEN = LOCEN + LOK + LOP
               LOKIN = LOKIN + LOK
               LOCPOT = LOCPOT + LOP1
@@ -304,14 +316,14 @@ PROGRAM H2MOL
             enddo lelmai
             !
             ! energy per particle
-            LOCEN = LOCEN/DBLE(NE)
-            LOKIN = LOKIN/DBLE(NE)
-            LOCPOT = LOCPOT/DBLE(NE)
-            LOCWW = LOCWW/DBLE(NE)
-            LOCLKD = LOCLKD/DBLE(NE)
-            LOCVIR = LOCVIR/DBLE(NE)
-            LOCVEL = LOCVEL/DBLE(NE)
-            LOCENVEL = LOCENVEL/DBLE(NE)
+            LOCEN = LOCEN/DBLE(Nelectrons)
+            LOKIN = LOKIN/DBLE(Nelectrons)
+            LOCPOT = LOCPOT/DBLE(Nelectrons)
+            LOCWW = LOCWW/DBLE(Nelectrons)
+            LOCLKD = LOCLKD/DBLE(Nelectrons)
+            LOCVIR = LOCVIR/DBLE(Nelectrons)
+            LOCVEL = LOCVEL/DBLE(Nelectrons)
+            LOCENVEL = LOCENVEL/DBLE(Nelectrons)
             ERWEN = DBLE(IMC-1)/DBLE(IMC)*ERWEN + LOCEN/DBLE(IMC)
             ERWKIN = DBLE(IMC-1)/DBLE(IMC)*ERWKIN + LOKIN/DBLE(IMC)
             ERWPOT = DBLE(IMC-1)/DBLE(IMC)*ERWPOT + LOCPOT/DBLE(IMC)
@@ -350,7 +362,8 @@ PROGRAM H2MOL
             ! Madelung charge counting
             if( SWICHA ) then
               call CHARGE(DKX/2.d0,CHA)
-              AVCHA(1:NK*NE+1) = DBLE(IMC-1)/DBLE(IMC)*AVCHA(1:NK*NE+1) + CHA(1:NK*NE+1)/DBLE(IMC)
+              AVCHA(1:Natoms*Nelectrons+1) = DBLE(IMC-1)/DBLE(IMC)*AVCHA(1:Natoms*Nelectrons+1) + &
+                & CHA(1:Natoms*Nelectrons+1)/DBLE(IMC)
             endif
             CHA = 0.d0
           !
@@ -376,7 +389,7 @@ PROGRAM H2MOL
           write(*,'(1x,A,ES14.5)') 'FORCE = ', FORCE
           !
           write(*,'(1x,A,I9)') 'main run: MCMAX = ', MCMAX
-          write(*,'(1x,A,F14.5)') 'main run: Acceptance ratio (%) = ', 100.*DBLE(MCOUNT)/DBLE(NE*MCMAX)
+          write(*,'(1x,A,F14.5)') 'main run: Acceptance ratio (%) = ', 100.*DBLE(MCOUNT)/DBLE(Nelectrons*MCMAX)
           !
           ! Output density on file
           if( SWIRHO ) then
@@ -406,7 +419,7 @@ PROGRAM H2MOL
         write(*,'(1x,A,F18.10)') 'TOTENVEL (eV) = ', TOTENVEL
         write(*,'(1x,A,F18.10)') 'SIGMA (eV)   = ', 2.d0*sqrt(VARENVEL/MCMAX)*HARTREE
         !
-        write(*,'(1x,A,5F7.3)') 'AVCHA (1,2),(2,1),(1v2,0),(0,1v2),(0,0) = ', AVCHA(1:NK*NE+1)
+        write(*,'(1x,A,5F7.3)') 'AVCHA (1,2),(2,1),(1v2,0),(0,1v2),(0,0) = ', AVCHA(1:Natoms*Nelectrons+1)
         Eminalpha = min(Eminalpha, TOTALEN)
         write(*,*)
       enddo lalpha1
