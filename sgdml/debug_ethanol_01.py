@@ -6,16 +6,22 @@ from my_sgdml.solvers.analytic import Analytic
 from my_sgdml.utils import ui
 from my_sgdml.train import GDMLTrain
 
-from debug_desc_from_R import debug_desc_from_R
-
 np.random.seed(1234)
 
+#if 'glob' not in globals():  # Don't allow more than one instance of this class.
+#    glob = {}
+#else:
+#    global glob
+#    print(glob)
+
 dataset = np.load("DATASET/ethanol_dft.npz")
+#dataset = np.load("DATASET/benzene2017_dft.npz")
 for k in dataset.keys():
     print("key = ", k)
 n_train = 200
 
 gdml_train = GDMLTrain(max_processes=1)
+# global variable glob is here?
 
 print("Create task")
 task = gdml_train.create_task(dataset, n_train,
@@ -29,7 +35,7 @@ desc = Desc(n_atoms, max_processes=gdml_train._max_processes)
 
 n_perms = task['perms'].shape[0]
 tril_perms = np.array([Desc.perm(p) for p in task['perms']])
-# Array of size N(N-1)/2 containing the corresponding descriptor permutation.
+# Array of size N*(N-1)/2 containing the corresponding descriptor permutation.
 # symmetric matrix, lower triangular array
 
 # Convert to flat array
@@ -37,16 +43,20 @@ dim_d = desc.dim
 perm_offsets = np.arange(n_perms)[:, None] * dim_d
 tril_perms_lin = (tril_perms + perm_offsets).flatten('F')
 
-lat_and_inv = None
+#
 # Descriptor is calculated here
+#
+
+from my_desc_from_R import my_desc_from_R
+lat_and_inv = None
 R = task['R_train'].reshape(n_train, -1)
-R_desc, R_d_desc = debug_desc_from_R(
+R_desc, R_d_desc = my_desc_from_R(
     desc, R, lat_and_inv=lat_and_inv
 )
 
 # Generate label vector.
 E_train_mean = None
-y = task['F_train'].ravel().copy()
+y = task['F_train'].ravel().copy() # the original F_train is not modified
 # Need this?
 if task['use_E'] and task['use_E_cstr']:
     print("use_E is True")
@@ -59,9 +69,12 @@ y /= y_std
 
 
 print("Using analytic solver")
-analytic = Analytic(gdml_train, desc, callback=None)
-alphas = analytic.solve(task, R_desc, R_d_desc, tril_perms_lin, y)
+#analytic = Analytic(gdml_train, desc)
+#alphas = analytic.solve(task, R_desc, R_d_desc, tril_perms_lin, y)
+from my_analytic_solve import my_analytic_solve
+alphas = my_analytic_solve(gdml_train, desc, task, R_desc, R_d_desc, tril_perms_lin, y)
 print("End of finding parameters")
+
 print(type(alphas))
 print("alphas.shape = ", alphas.shape)
 

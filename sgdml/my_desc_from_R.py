@@ -4,7 +4,7 @@ from functools import partial
 import numpy as np
 import scipy as sp
 
-def debug_desc_from_R(desc_object, R, lat_and_inv=None):
+def my_desc_from_R(desc_object, R, lat_and_inv=None):
     
     print("*** ENTER debug_desc_from_R ....")
 
