@@ -7,8 +7,8 @@ z, R, E, and F.
 
 For example:
 
-- dataset["E"][1] will return the energy of the first data
+- dataset["E"][0] will return the energy of the first data
 
-- dataset["R"][1] will return the coordinates of the first frame (as Natomsx3) array
+- dataset["R"][0] will return the coordinates of the first frame (as Natomsx3) array
 
 
