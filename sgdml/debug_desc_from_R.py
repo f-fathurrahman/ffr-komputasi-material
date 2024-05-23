@@ -71,6 +71,7 @@ def _pdist(r, lat_and_inv=None):
             r, lambda u, v: np.linalg.norm(_pbc_diff(u - v, lat_and_inv))
         )
 
+    # XXX: Why need this?
     tril_idxs = np.tril_indices(n_atoms, k=-1)
     return sp.spatial.distance.squareform(pdist, checks=False)[tril_idxs]
 
@@ -78,6 +79,7 @@ def _pdist(r, lat_and_inv=None):
 
 def _r_to_desc(r, pdist):
     # Add singleton dimension if input is (,3N).
+    # XXX: Why?
     if r.ndim == 1:
         r = r[None, :]
 
@@ -97,6 +99,7 @@ def _r_to_d_desc(r, pdist, lat_and_inv=None):
     i, j = np.tril_indices(n_atoms, k=-1)
 
     pdiff = pdiff[i, j, :]  # lower triangular
+    # pdiff is an array of vector differences
 
     if lat_and_inv is not None:
         pdiff = _pbc_diff(pdiff, lat_and_inv)

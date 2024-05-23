@@ -25,10 +25,7 @@ print("End create task")
 
 
 n_train, n_atoms = task['R_train'].shape[:2]
-desc = Desc(
-    n_atoms,
-    max_processes=gdml_train._max_processes,
-)
+desc = Desc(n_atoms, max_processes=gdml_train._max_processes)
 
 n_perms = task['perms'].shape[0]
 tril_perms = np.array([Desc.perm(p) for p in task['perms']])
