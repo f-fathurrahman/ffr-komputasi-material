@@ -121,6 +121,8 @@ def _assemble_kernel_mat_wkr(
             (symmetric blocks are always created at together).
     """
 
+    #print("*** ENTER _assemble_kernel_mat_wkr")
+
     global glob
 
     R_desc = np.frombuffer(glob['R_desc']).reshape(glob['R_desc_shape'])
@@ -241,7 +243,11 @@ def _assemble_kernel_mat_wkr(
                 1 + (norm_ab_perms / sig) * (1 + norm_ab_perms / (3 * sig))
             ).dot(np.exp(-norm_ab_perms / sig))
 
+    #print("*** EXIT _assemble_kernel_mat_wkr")
+
     return blk_j.stop - blk_j.start
+
+
 
 
 class GDMLTrain(object):
@@ -828,6 +834,8 @@ class GDMLTrain(object):
                 vectors.
         """
 
+        print(">>>> ENTER GDML.train")
+
         task = dict(task)  # make mutable
 
         n_train, n_atoms = task['R_train'].shape[:2]
@@ -1003,8 +1011,9 @@ class GDMLTrain(object):
             alphas_F = alphas[:-n_train]
 
 
-        print("After finding the parameters, create model")
+        print("After finding the parameters, create model which will be returned")
         print("solver_keys = ", solver_keys)
+
         model = self.create_model(
             task,
             'analytic' if use_analytic_solver else 'cg',
@@ -1034,7 +1043,12 @@ class GDMLTrain(object):
             else:
                 model['c'] = c
 
+        print(">>>> EXIT GDML.train")
+
         return model
+
+
+
 
     def _recov_int_const(
         self, model, task, R_desc=None, R_d_desc=None
