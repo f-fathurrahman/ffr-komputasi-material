@@ -404,6 +404,7 @@ class GDMLTrain(object):
             )
 
         use_E_cstr = use_E and use_E_cstr
+        print("use_E_cstr = ", use_E_cstr)
 
         n_atoms = train_dataset['R'].shape[1]
         print("n_atoms = ", n_atoms)

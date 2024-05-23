@@ -1,0 +1,14 @@
+Datasets are given in npz or extended XYZ format.
+
+In case of npz, it can be loaded using np.load.
+It will return a descriptor object which cannot investigated directly.
+It behaves like a loader or a dict. Some important keys are:
+z, R, E, and F.
+
+For example:
+
+- dataset["E"][1] will return the energy of the first data
+
+- dataset["R"][1] will return the coordinates of the first frame (as Natomsx3) array
+
+
