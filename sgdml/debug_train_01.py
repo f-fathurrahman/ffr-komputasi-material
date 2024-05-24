@@ -1,4 +1,3 @@
-import sys
 import numpy as np
 import scipy
 import os
@@ -8,19 +7,14 @@ numpy.random.seed(1234)
 
 from my_sgdml.train import GDMLTrain
 
+filename = "DATASET/ethanol_dft.npz"
 dataset = np.load("DATASET/ethanol_dft.npz")
 n_train = 200
-
 gdml_train = GDMLTrain()
 
-"""
-task = gdml_train.create_task(
-    dataset, n_train, use_sym=False,
-    valid_dataset=dataset, n_valid=1000,
-    sig=20, lam=1e-10
-)
-"""
-
+#
+# We create task here (manually)
+#
 train_dataset = dataset
 use_sym = False # set to False to use GDML not sGDML
 valid_dataset = dataset
@@ -47,6 +41,9 @@ md5_valid = io.dataset_md5(valid_dataset)
 print("md5_train = ", md5_train)
 print("md5_valid = ", md5_valid)
 
+#
+# Sampling the dataset
+#
 from my_draw_strat_sample import my_draw_strat_sample
 
 # if "E" in train_dataset:
@@ -64,6 +61,7 @@ idxs_valid = my_draw_strat_sample(
 )
 
 R_train = train_dataset["R"][idxs_train, :, :]
+F_train = train_dataset["F"][idxs_train, :, :]
 task = {
     "type": "t",
     "code_version": "0.5.1",
@@ -71,7 +69,7 @@ task = {
     "dataset_theory": train_dataset["theory"].astype(str),
     "z": train_dataset["z"],
     "R_train": R_train,
-    "F_train": train_dataset["F"][idxs_train, :, :],
+    "F_train": F_train,
     "idxs_train": idxs_train,
     "md5_train": md5_train,
     "idxs_valid": idxs_valid,
@@ -87,22 +85,17 @@ if use_E:
     print("Using E_train in task")
     task["E_train"] = train_dataset["E"][idxs_train]
 
-"""
-# Not used
-if "r_unit" in train_dataset and "e_unit" in train_dataset:
-    print("Pass here 85")
-    task["r_unit"] = train_dataset["r_unit"]
-    task["e_unit"] = train_dataset["e_unit"]
-"""
-
 task["perms"] = np.arange(train_dataset["R"].shape[1])[None,:]  # no symmetries
+
+# Now task is ready
+
+
 
 #-----------------
 # TRAIN START HERE
 #-----------------
 
-
-task = dict(task)  # make mutable
+task = dict(task)  # make mutable (need this?)
 
 n_train, n_atoms = task["R_train"].shape[:2]
 
@@ -125,24 +118,13 @@ R = task["R_train"].reshape(n_train, -1)
 R_desc, R_d_desc = desc.from_R(
     R,
     lat_and_inv=lat_and_inv,
-    callback=partial(
-        callback, disp_str="Generating descriptors and their Jacobians"
-    )
-    if callback is not None
-    else None,
+    callback=None,
 )
 
 
 # Generate label vector.
 E_train_mean = None
 y = task["F_train"].ravel().copy()
-#if task["use_E"] and task["use_E_cstr"]:
-#    print("Pass here in 134")
-#    E_train = task["E_train"].ravel().copy()
-#    E_train_mean = np.mean(E_train)
-#    y = np.hstack((y, -E_train + E_train_mean))
-#    # y = np.hstack((n*Ft, (1-n)*Et))
-
 y_std = np.std(y)
 print("y_std = ", y_std)
 y /= y_std
@@ -213,6 +195,9 @@ else:
     alphas = -np.linalg.lstsq(K, y, rcond=-1)[0]
 
 
+
+# The parameters are found, now we need to create a model
+# and find
 
 alphas_E = None
 alphas_F = alphas

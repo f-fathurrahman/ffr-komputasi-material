@@ -2,8 +2,6 @@ import numpy as np
 
 import numpy as np
 from my_sgdml.utils.desc import Desc
-from my_sgdml.solvers.analytic import Analytic
-from my_sgdml.utils import ui
 from my_sgdml.train import GDMLTrain
 
 np.random.seed(1234)
