@@ -8,7 +8,8 @@ numpy.random.seed(1234)
 from my_sgdml.train import GDMLTrain
 
 filename = "DATASET/ethanol_dft.npz"
-dataset = np.load("DATASET/ethanol_dft.npz")
+
+dataset = np.load(filename)
 n_train = 200
 gdml_train = GDMLTrain()
 
@@ -18,7 +19,7 @@ gdml_train = GDMLTrain()
 train_dataset = dataset
 use_sym = False # set to False to use GDML not sGDML
 valid_dataset = dataset
-n_valid = 1000
+n_valid = 1000 # not used
 sig = 20 # integer, kernel length scale
 lam = 1e-10
 
