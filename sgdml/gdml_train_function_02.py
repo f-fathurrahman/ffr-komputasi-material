@@ -40,18 +40,10 @@ def my_assemble_kernel_mat(
 
     # Determine size of kernel matrix.
     K_n_rows = n_train * dim_i
-    if isinstance(col_idxs, slice):  # indexed by slice
-        K_n_cols = len(range(*col_idxs.indices(K_n_rows)))
-    else:  # indexed by list
+    K_n_cols = K_n_rows
 
-        # TODO: throw exeption with description
-        assert len(col_idxs) == len(set(col_idxs))  # assume no dublicate indices
-
-        # TODO: throw exeption with description
-        # Note: This function does not support unsorted (ascending) index arrays.
-        assert np.array_equal(col_idxs, np.sort(col_idxs))
-
-        K_n_cols = len(col_idxs)
+    print("K_n_rows = ", K_n_rows)
+    print("K_n_cols = ", K_n_cols)
 
     # Account for additional rows and columns due to energy constraints in the kernel matrix.
     if use_E_cstr:
@@ -61,59 +53,6 @@ def my_assemble_kernel_mat(
     # Make sure no indices are outside of the valid range.
     if K_n_cols > K_n_rows:
         raise ValueError('Columns indexed beyond range.')
-
-    exploit_sym = False
-    cols_m_limit = None
-
-    # Check if range is a subset of training points (as opposed to a subset of partials of multiple points).
-    is_M_subset = (
-        isinstance(col_idxs, slice)
-        and (col_idxs.start is None or col_idxs.start % dim_i == 0)
-        and (col_idxs.stop is None or col_idxs.stop % dim_i == 0)
-        and col_idxs.step is None
-    )
-    if is_M_subset:
-        M_slice_start = (
-            None if col_idxs.start is None else int(col_idxs.start / dim_i)
-        )
-        M_slice_stop = None if col_idxs.stop is None else int(col_idxs.stop / dim_i)
-        M_slice = slice(M_slice_start, M_slice_stop)
-
-        J = range(*M_slice.indices(n_train))
-
-        if M_slice_start is None:
-            exploit_sym = True
-            cols_m_limit = M_slice_stop
-
-    else:
-
-        if isinstance(col_idxs, slice):
-            random = list(range(*col_idxs.indices(n_train * dim_i)))
-        else:
-            random = col_idxs
-
-        # M - number training
-        # N - number atoms
-
-        n_idxs = np.mod(random, dim_i)
-        m_idxs = (np.array(random) / dim_i).astype(int)
-        m_idxs_uniq = np.unique(m_idxs)  # which points to include?
-
-        m_n_idxs = [
-            list(n_idxs[np.where(m_idxs == m_idx)]) for m_idx in m_idxs_uniq
-        ]
-
-        m_n_idxs_lens = [len(m_n_idx) for m_n_idx in m_n_idxs]
-
-        m_n_idxs_lens.insert(0, 0)
-        blk_start_idxs = list(
-            np.cumsum(m_n_idxs_lens[:-1])
-        )  # index within K at which each block starts
-
-        # tupels: (block index in final K, block index global, indices of partials within block)
-        J = list(zip(blk_start_idxs, m_idxs_uniq, m_n_idxs))
-
-    print("J = ", J) # should be the same as number of training data
 
     print("K_n_rows = ", K_n_rows, " K_n_cols = ", K_n_cols)
     print("alloc_extra_rows = ", alloc_extra_rows)
@@ -130,24 +69,15 @@ def my_assemble_kernel_mat(
 
     start = timeit.default_timer()
 
-    pool = None
-    map_func = map
-    todo, done = K_n_cols, 0
-    for done_wkr in map_func(
-        partial(
-            my_assemble_kernel_mat_wkr,
-            tril_perms_lin=tril_perms_lin,
-            sig=sig,
-            use_E_cstr=use_E_cstr,
-            exploit_sym=exploit_sym,
-            cols_m_limit=cols_m_limit,
-        ),
-        J,
-    ):
-        done += done_wkr
-
+    for j in range(n_train):
+        my_assemble_kernel_mat_wkr(
+            j, tril_perms_lin, sig, use_E_cstr=False,
+            exploit_sym=True, cols_m_limit=None
+        )
 
     stop = timeit.default_timer()
+
+    print(f"Time to assemble: {stop - start}")
 
     # Release some memory.
     glob.pop('K', None)
@@ -164,10 +94,7 @@ def my_assemble_kernel_mat_wkr(
     j, tril_perms_lin, sig, use_E_cstr=False, exploit_sym=False, cols_m_limit=None
 ):
 
-    print("*** ENTER _assemble_kernel_mat_wkr for index j = ", j)
-    print("exploit_sym = ", exploit_sym)
-    print("use_E_cstr = ", use_E_cstr)
-    print("cols_m_limit = ", cols_m_limit)
+    #print("*** ENTER _assemble_kernel_mat_wkr for index j = ", j)
 
     global glob
 
@@ -183,19 +110,10 @@ def my_assemble_kernel_mat_wkr(
     dim_i = 3 * n_atoms
     n_perms = int(len(tril_perms_lin) / dim_d)
 
-    if type(j) is tuple:  # Selective/"fancy" indexing
-        (
-            K_j,
-            j,
-            keep_idxs_3n,
-        ) = j  # (block index in final K, block index global, indices of partials within block)
-        blk_j = slice(K_j, K_j + len(keep_idxs_3n))
+    blk_j = slice(j * dim_i, (j + 1) * dim_i)
+    keep_idxs_3n = slice(None)  # same as [:]
 
-    else:  # Sequential indexing
-        blk_j = slice(j * dim_i, (j + 1) * dim_i)
-        keep_idxs_3n = slice(None)  # same as [:]
-        print("dim_i = ", dim_i)
-        print("Using sequential indexing, blk_j = ", blk_j)
+    #print("blk_j = ", blk_j)
 
     # TODO: document this exception
     if use_E_cstr and not (cols_m_limit is None or cols_m_limit == n_train):
@@ -226,7 +144,10 @@ def my_assemble_kernel_mat_wkr(
     ri_d_desc = np.zeros((1, dim_d, dim_i))  # must be zeros!
     k = np.empty((dim_i, dim_i_keep))
 
-    for i in range(j if exploit_sym else 0, n_train):
+    exploit_sym = True
+    #print("exploit_sym = ", exploit_sym)
+
+    for i in range(j,n_train):
 
         blk_i = slice(i * dim_i, (i + 1) * dim_i)
         #print("blk_i = ", blk_i)

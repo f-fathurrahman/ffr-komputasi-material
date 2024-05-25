@@ -70,12 +70,12 @@ print("Using analytic solver")
 #analytic = Analytic(gdml_train, desc)
 #alphas = analytic.solve(task, R_desc, R_d_desc, tril_perms_lin, y)
 from my_analytic_solve import my_analytic_solve
-alphas = my_analytic_solve(gdml_train, desc, task, R_desc, R_d_desc, tril_perms_lin, y)
+alphas = my_analytic_solve(desc, task, R_desc, R_d_desc, tril_perms_lin, y)
 print("End of finding parameters")
 
 print(type(alphas))
 print("alphas.shape = ", alphas.shape)
-
+print("average alpha = ", np.average(alphas))
 
 alphas_E = None
 alphas_F = alphas

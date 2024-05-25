@@ -1,4 +1,4 @@
-from sgdml.intf.ase_calc import SGDMLCalculator
+from my_sgdml.intf.ase_calc import SGDMLCalculator
 
 from ase.io import read
 from ase.optimize import QuasiNewton

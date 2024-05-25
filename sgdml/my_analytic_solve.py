@@ -4,13 +4,9 @@ import os
 import numpy as np
 import scipy as sp
 import timeit
-
 from gdml_train_function import my_assemble_kernel_mat
 
-
-# from memory_profiler import profile
-# @profile
-def my_analytic_solve(gdml_train, desc, task, R_desc, R_d_desc, tril_perms_lin, y):
+def my_analytic_solve(desc, task, R_desc, R_d_desc, tril_perms_lin, y):
 
     sig = task['sig']
     lam = task['lam']
