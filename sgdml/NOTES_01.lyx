@@ -1,0 +1,195 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{braket}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip smallskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Machine learning of accurate energy-conserving molecular force fields
+\end_layout
+
+\begin_layout Standard
+Chmiela et al., Sci.
+ Adv.
+ 2017;3: e1603015 5 May 2017
+\end_layout
+
+\begin_layout Standard
+Stefan Chmiela, Alexandre Tkatchenko, Huziel E.
+ Sauceda, Igor Poltavsky, Kristof T.
+ Schütt, Klaus-Robert Müller
+\end_layout
+
+\begin_layout Standard
+Pendekatan GDML secara eksplisit membuat medan gaya energy-conserving dengan
+ menghindari operasi derivatif.
+\end_layout
+
+\begin_layout Standard
+Langsung mempelajari hubungan fungsional
+\begin_inset Formula 
+\[
+\hat{f}_{F}:\left(\mathbf{r}_{1},\mathbf{r}_{2},\ldots,\mathbf{r}_{N}\right)_{i}\xrightarrow{ML}\mathbf{F}_{i}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+PES kemudian dapat diperoleh dengan integrasi langsung dari 
+\begin_inset Formula $\hat{f}_{F}$
+\end_inset
+
+ sampai pada suatu konstanta aditif.
+\end_layout
+
+\begin_layout Standard
+Normal equation:
+\begin_inset Formula 
+\[
+\left(\mathbf{K}_{\text{Hess}(\kappa)}+\lambda\mathbb{I}\right)\boldsymbol{\alpha}=\nabla V_{\text{BO}}=-\mathbf{F}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Kernel Matern
+\begin_inset Formula 
+\[
+\kappa:C_{\nu=n+\frac{1}{2}}(d)=\exp\left(-\frac{\sqrt{2\nu}d}{\sigma}\right)P_{n}(d)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+P_{n}(d)=\sum_{k=0}^{n}\frac{(n+k)!}{(2n)!}\binom{n}{k}\left(\frac{2\sqrt{2\nu}d}{\sigma}\right)^{n-k}
+\]
+
+\end_inset
+
+dengan
+\begin_inset Formula 
+\[
+d=\left|\mathbf{x}-\mathbf{x}'\right|
+\]
+
+\end_inset
+
+adalah jarak Euclidean di antara dua deskriptor molekul.
+\end_layout
+
+\begin_layout Standard
+The trained force field estimator collects the contribution of the partial
+ derivatives 
+\begin_inset Formula $3N$
+\end_inset
+
+ of all training points 
+\begin_inset Formula $M$
+\end_inset
+
+ to compile the prediction.
+ It takes the form:
+\begin_inset Formula 
+\[
+\hat{f}_{F}(\mathbf{x})=\sum_{i=1}^{M}\sum_{j=1}^{3N}\left(\boldsymbol{\alpha}_{i}\right)_{j}\frac{\partial}{\partial x_{j}}\nabla\kappa\left(\mathbf{x},\mathbf{x}_{i}\right)
+\]
+
+\end_inset
+
+For energy:
+\begin_inset Formula 
+\[
+\hat{f}_{E}(\mathbf{x})=\sum_{i=1}^{M}\sum_{j=1}^{3N}\left(\boldsymbol{\alpha}_{i}\right)_{j}\frac{\partial}{\partial x_{j}}\kappa\left(\mathbf{x},\mathbf{x}_{i}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
