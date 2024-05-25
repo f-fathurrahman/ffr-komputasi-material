@@ -3,9 +3,9 @@ import numpy as np
 import numpy.random
 numpy.random.seed(1234)
 
-from prepare_data import prepare_data
+from prepare_data import import_from_pickle
 
-R_desc, R_d_desc, tril_perms_lin, desc, task, y = prepare_data()
+R_desc, R_d_desc, tril_perms_lin, desc, task, y = import_from_pickle()
 
 sig = 20
 lam = 1e-10

@@ -20,10 +20,11 @@ def debug_assemble_kernel_mat_wkr(
     rj_desc_perms = np.reshape(
         np.tile(R_desc[j, :], n_perms)[tril_perms_lin], (n_perms, -1), order='F'
     )
+    # R_desc[j,:] -> rj_desc_perms  (36,) -> (1,36)
+    # simply reshaping if n_perms == 1 ?
 
-    rj_d_desc = desc_func.d_desc_from_comp(R_d_desc[j, :, :])[0][
-        :, keep_idxs_3n
-    ]  # convert descriptor back to full representation
+    rj_d_desc = desc_func.d_desc_from_comp(R_d_desc[j, :, :])[0][:, keep_idxs_3n]
+    # convert descriptor back to full representation
 
     rj_d_desc_perms = np.reshape(
         np.tile(rj_d_desc.T, n_perms)[:, tril_perms_lin], (-1, dim_d, n_perms)

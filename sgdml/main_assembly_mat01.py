@@ -5,9 +5,9 @@ import os
 import numpy.random
 numpy.random.seed(1234)
 
-from prepare_data import prepare_data
+from prepare_data import import_from_pickle
 
-R_desc, R_d_desc, tril_perms_lin, desc, task, y = prepare_data()
+R_desc, R_d_desc, tril_perms_lin, desc, task, y = import_from_pickle()
 
 sig = 20
 lam = 1e-10
@@ -38,12 +38,17 @@ for j in range(n_train):
         K, R_desc, R_d_desc, desc, j, tril_perms_lin, sig )
 K *= -1 # flip sign
 
+print(f"sum abs K = {np.sum(np.abs(K))}")
+print(f"sum abs y = {np.sum(np.abs(y))}")
+
 #
 # This is the analytic.solve step
 #
 if K.shape[0] == K.shape[1]:
     K[np.diag_indices_from(K)] += lam  # Regularize
     try:
+        # To force using LU decomposition
+        #raise np.linalg.LinAlgError
         print("Trying Cholesky decomposition")
         # Cholesky (do not overwrite K in case we need to retry)
         L, lower = scipy.linalg.cho_factor(
@@ -73,5 +78,7 @@ else:
     # Least squares for non-square K
     alphas = -np.linalg.lstsq(K, y, rcond=-1)[0]
 
-print("average alpha = ", np.average(alphas))
+print("average alphas = ", np.average(alphas))
 # 12315.115002408249
+
+print(f"sum abs alphas = {np.sum(np.abs(alphas))}")

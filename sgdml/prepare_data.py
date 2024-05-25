@@ -109,9 +109,14 @@ def prepare_data(filename="DATASET/ethanol_dft.npz", n_train=200):
 import pickle
 def export_to_pickle(filename="PREPARE_DATA.pkl"):
     ret_vals = prepare_data()
-    with open(filename) as outfile:
+    with open(filename, "wb") as outfile:
         pickle.dump(ret_vals, outfile)
     print(f"Files are saved to {filename}")
+
+def import_from_pickle(filename="PREPARE_DATA.pkl"):
+    with open(filename, "rb") as infile:
+        in_data = pickle.load(infile)
+    return in_data
 
 if __name__ == "__main__":
     export_to_pickle()
