@@ -25,9 +25,7 @@ def my_desc_from_R(desc_object, R, lat_and_inv=None):
     # Generate descriptor and their Jacobians
     start = timeit.default_timer()
 
-    pool = None
     map_func = map
-    max_processes = 1
 
     for i, r_desc_r_d_desc in enumerate(
         map_func(partial(_from_r, lat_and_inv=lat_and_inv), R)
