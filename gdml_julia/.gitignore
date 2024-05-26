@@ -1,0 +1,5 @@
+PRETRAINED
+DATASET
+*.xyz
+*.npz
+*.pkl
