@@ -3,7 +3,7 @@ import scipy as sp
 from functools import partial
 
 
-def _pbc_diff(diffs, lat_and_inv, use_torch=False):
+def _pbc_diff(diffs, lat_and_inv):
     lat, lat_inv = lat_and_inv
     c = lat_inv.dot(diffs.T)
     diffs -= lat.dot(np.around(c)).T
