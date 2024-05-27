@@ -6,12 +6,6 @@ from my_sgdml.train import GDMLTrain
 
 np.random.seed(1234)
 
-#if 'glob' not in globals():  # Don't allow more than one instance of this class.
-#    glob = {}
-#else:
-#    global glob
-#    print(glob)
-
 dataset = np.load("DATASET/ethanol_dft.npz")
 #dataset = np.load("DATASET/benzene2017_dft.npz")
 for k in dataset.keys():
@@ -29,7 +23,7 @@ print("End create task")
 
 
 n_train, n_atoms = task['R_train'].shape[:2]
-desc = Desc(n_atoms, max_processes=gdml_train._max_processes)
+desc = Desc(n_atoms, max_processes=1)
 
 n_perms = task['perms'].shape[0]
 tril_perms = np.array([Desc.perm(p) for p in task['perms']])
@@ -48,8 +42,9 @@ tril_perms_lin = (tril_perms + perm_offsets).flatten('F')
 from my_desc_from_R import my_desc_from_R
 lat_and_inv = None
 R = task['R_train'].reshape(n_train, -1)
+desc_dim = (n_atoms * (n_atoms - 1)) // 2
 R_desc, R_d_desc = my_desc_from_R(
-    desc, R, lat_and_inv=lat_and_inv
+    desc_dim, R, lat_and_inv=lat_and_inv
 )
 
 # Generate label vector.

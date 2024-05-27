@@ -4,26 +4,27 @@ from functools import partial
 import numpy as np
 import scipy as sp
 
-def my_desc_from_R(desc_object, R, lat_and_inv=None):
-    
-    print("*** ENTER debug_desc_from_R ....")
+# removed references to Desc object
+
+
+def my_desc_from_R(desc_dim, R, lat_and_inv=None):
+
+    # desc_dim is Natoms*(Natoms-1) // 2
 
     # Add singleton dimension if input is (,3N).
     if R.ndim == 1:
         R = R[None, :]
 
     M = R.shape[0]
+    # only one example data
     if M == 1:
-        return _from_r(R, lat_and_inv)
+        R_desc, R_d_desc = _from_r(R, lat_and_inv)
+        print("R_desc.shape = ", R_desc.shape)
+        print("R_d_desc.shape = ", R_d_desc.shape)
+        return R_desc, R_d_desc
 
-    R_desc = np.empty([M, desc_object.dim])
-    R_d_desc = np.empty([M, desc_object.dim, 3])
-
-    print("R_desc.shape = ", R_desc.shape)
-    print("R_d_desc.shape = ", R_d_desc.shape)
-
-    # Generate descriptor and their Jacobians
-    start = timeit.default_timer()
+    R_desc = np.empty([M, desc_dim])
+    R_d_desc = np.empty([M, desc_dim, 3])
 
     map_func = map
 
@@ -32,11 +33,8 @@ def my_desc_from_R(desc_object, R, lat_and_inv=None):
     ):
         R_desc[i, :], R_d_desc[i, :, :] = r_desc_r_d_desc
 
-    stop = timeit.default_timer()
-    print("Elapsed time = ", stop - start)
-
-    print("*** EXIT debug_desc_from_R ....")
-
+    print("R_desc.shape = ", R_desc.shape)
+    print("R_d_desc.shape = ", R_d_desc.shape)
     return R_desc, R_d_desc
 
 
@@ -116,3 +114,29 @@ def _pbc_diff(diffs, lat_and_inv):
     diffs -= lat.dot(np.around(c)).T
 
     return diffs
+
+
+
+def d_desc_from_comp(n_atoms, R_d_desc, out=None):
+
+    desc_dim = (n_atoms * (n_atoms - 1)) // 2
+    tril_indices = np.tril_indices(n_atoms, k=-1)
+    dim_i = 3 * n_atoms
+
+    if R_d_desc.ndim == 2:
+        R_d_desc = R_d_desc[None, ...]
+
+    n = R_d_desc.shape[0]
+    i, j = tril_indices
+
+    if out is None:
+        out = np.zeros((n, desc_dim, n_atoms, 3))
+    else:
+        out = out.reshape(n, desc_dim, n_atoms, 3)
+
+    dim_range = np.arange(desc_dim)  # [0, 1, ..., dim-1]
+    out[:, dim_range, j, :] = R_d_desc
+    out[:, dim_range, i, :] = -R_d_desc
+
+    return out.reshape(-1, desc_dim, dim_i)
+
