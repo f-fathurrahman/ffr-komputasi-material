@@ -7,13 +7,14 @@ numpy.random.seed(1234)
 
 import matplotlib.pyplot as plt
 
-from prepare_data import import_from_pickle
-R_desc, R_d_desc, tril_perms_lin, desc, task, y = import_from_pickle()
+from prepare_data import prepare_data
 
-R_desc.shape
-R_d_desc.shape
-tril_perms_lin.shape
-task["E_train"].shape
+R_desc, R_d_desc, tril_perms_lin, desc, task, y = prepare_data(n_train=2)
+
+print("R_desc.shape = ", R_desc.shape)
+print("R_d_desc.shape = ", R_d_desc.shape)
+print("tril_perms_lin.shape = ", tril_perms_lin.shape)
+print("task[\"E_train\"].shape = ", task["E_train"].shape)
 
 
 sig = 20  # kernel parameter, should the the same as task["sig"] ???
@@ -36,19 +37,16 @@ K_n_rows = n_train * dim_i
 K_n_cols = K_n_rows
 K = np.zeros((K_n_rows,K_n_cols))
 
-
-K.shape
-
-
 # in setting K matrix, j is actually used as column index
 # Set column index j here
-j = 2 # n_train - 1
+j = 1 # n_train - 1
 exploit_sym = True
 blk_j = slice(j * dim_i, (j + 1) * dim_i)
 print("j = ", j)
 print("blk_j  = ", blk_j)
 
-i = 2 # choose one i value for row?
+i = 1 # choose one i value for row?
+assert i < n_train
 blk_i = slice(i * dim_i, (i + 1) * dim_i)
 
 print("i = ", i)
@@ -129,13 +127,15 @@ K[blk_i, blk_j] = k
 # print(k - k2)
 
 plt.clf()
-plt.matshow(K[blk_i,blk_i])
+plt.matshow(K)
+plt.colorbar()
 plt.savefig("IMG_K_v1.png", dpi=150)
 
 # For last block this is not really used
 if exploit_sym:
     K[blk_j, blk_i] = K[blk_i, blk_j].T
 plt.clf()
-plt.matshow(K[blk_i,blk_i])
+plt.matshow(K)
+plt.colorbar()
 plt.savefig("IMG_K_v2.png", dpi=150)
 
