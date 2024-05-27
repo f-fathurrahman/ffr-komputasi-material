@@ -79,6 +79,7 @@ else:
     alphas = -np.linalg.lstsq(K, y, rcond=-1)[0]
 
 print("average alphas = ", np.average(alphas))
-# 12315.115002408249
+# 12315.115002408249 WSL2 AMD Ryzen
+# 12315.002994660537 Ubuntu 20.04 native intel i7
 
 print(f"sum abs alphas = {np.sum(np.abs(alphas))}")
