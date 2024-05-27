@@ -1,4 +1,6 @@
 import numpy as np
+np.random.seed(1234)
+
 from my_draw_strat_sample import my_draw_strat_sample
 from my_desc_from_R import my_desc_from_R
 from my_desc import Desc
@@ -87,7 +89,7 @@ def prepare_data(filename="DATASET/ethanol_dft.npz", n_train=200):
     lat_and_inv = None
     R = task['R_train'].reshape(n_train, -1)
     R_desc, R_d_desc = my_desc_from_R(
-        desc, R, lat_and_inv=lat_and_inv
+        desc.dim, R, lat_and_inv=lat_and_inv
     )
 
     # Generate label vector.
