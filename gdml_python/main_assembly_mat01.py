@@ -40,6 +40,9 @@ K *= -1 # flip sign
 
 print(f"sum abs K = {np.sum(np.abs(K))}")
 print(f"sum abs y = {np.sum(np.abs(y))}")
+# sum abs K = 7919.284079790718
+# sum abs y = 4001.788905789174
+
 
 #
 # This is the analytic.solve step
@@ -81,5 +84,6 @@ else:
 print("average alphas = ", np.average(alphas))
 # 12315.115002408249 WSL2 AMD Ryzen
 # 12315.002994660537 Ubuntu 20.04 native intel i7
+# 12315.274852764584 Windows 11
 
 print(f"sum abs alphas = {np.sum(np.abs(alphas))}")
