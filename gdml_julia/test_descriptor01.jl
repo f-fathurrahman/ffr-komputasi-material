@@ -1,21 +1,42 @@
+using LinearAlgebra: norm
 using Serialization: deserialize
 
-R = deserialize("R.dat")
-E = deserialize("E.dat")
-F = deserialize("F.dat")
+include("tril_indices.jl")
+
+
+R_all = deserialize("R.dat")
+E_all = deserialize("E.dat")
+F_all = deserialize("F.dat")
 Zatoms = deserialize("Zatoms.dat")
 
-Ndata = length(E)
-@assert Ndata == length(R)
-@assert Ndata == length(F)
+Ndata = length(E_all)
+@assert Ndata == length(R_all)
+@assert Ndata == length(F_all)
 
 Natoms = length(Zatoms)
-@assert Natoms == size(R[1],2)
-@assert Natoms == size(F[1],2)
+@assert Natoms == size(R_all[1],2)
+@assert Natoms == size(F_all[1],2)
 
+idata = 1
+R = R_all[1]
 
 dim_i = 3*Natoms
 desc_dim = (Natoms * (Natoms - 1)) / 2 |> Int64
 
+ip = 1
+dR = zeros(Float64, desc_dim)
+for icol in 1:Natoms, irow in (icol+1):Natoms
+    dR[ip] = norm(R[:,irow] - R[:,icol])
+    ip += 1 
+end
+R_desc = 1 ./ dR
 
-#tril_indices = np.tril_indices(n_atoms, k=-1)
+R_d_desc = zeros(Float64, 3, desc_dim)
+ip = 1
+dR_vec = zeros(Float64, 3)
+for icol in 1:Natoms, irow in (icol+1):Natoms
+    @views dR_vec[:] .= R[:,irow] - R[:,icol]
+    @views R_d_desc[:,ip] .= dR_vec[:] / dR[ip]^3
+    ip += 1 
+end
+# original Python code have opposite sign
