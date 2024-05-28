@@ -116,7 +116,7 @@ mat52_base_perms = np.exp(-norm_ab_perms / sig) / mat52_base_div * 5
 # a scalar, in case of n_perms == 1 ?
 
 
-# Below involves rj_d_desc_perms
+# Below involves rj_d_desc_perms (derivative of Coulomb matrix)
 
 res1 = diff_ab_perms * mat52_base_perms[:, None] * 5
 res2 = np.einsum('ki,jik -> kj', diff_ab_perms, rj_d_desc_perms)
@@ -133,12 +133,18 @@ diff_ab_outer_perms -= np.einsum(
     rj_d_desc_perms,
     (sig_pow2 + sig * norm_ab_perms) * mat52_base_perms,
 )
+print("rj_d_desc_perms.shape = ", rj_d_desc_perms.shape)
+res4 = (sig_pow2 + sig * norm_ab_perms) * mat52_base_perms
+print("res4.shape = ",res4.shape)
 
 # ri_d_desc = desc_func.d_desc_from_comp(R_d_desc[i, :, :])[0]
 desc.d_desc_from_comp(R_d_desc[i, :, :], out=ri_d_desc)
 
 # K[blk_i, blk_j] = ri_d_desc[0].T.dot(diff_ab_outer_perms)
 np.dot(ri_d_desc[0].T, diff_ab_outer_perms, out=k)
+print("ri_d_desc[0].shape = ", ri_d_desc[0].shape)
+print("diff_ab_outer_perms.shape = ", diff_ab_outer_perms.shape)
+print("k.shape = ", k.shape)
 K[blk_i, blk_j] = k
 # print(k - k2)
 
