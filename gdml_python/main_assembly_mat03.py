@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 from prepare_data import prepare_data
 
-R_desc, R_d_desc, tril_perms_lin, desc, task, y = prepare_data(n_train=2)
+R_desc, R_d_desc, tril_perms_lin, desc, task, y = prepare_data(idxs_train=[0,1])
 
 print("R_desc.shape = ", R_desc.shape)
 print("R_d_desc.shape = ", R_d_desc.shape)

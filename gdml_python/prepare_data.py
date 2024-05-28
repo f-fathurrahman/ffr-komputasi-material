@@ -6,9 +6,15 @@ from my_desc_from_R import my_desc_from_R
 from my_desc import Desc
 
 # Prepare input for assembly_kernel_mat
-def prepare_data(filename="DATASET/ethanol_dft.npz", n_train=200):
+def prepare_data(
+        filename="DATASET/ethanol_dft.npz",
+        n_train=200,
+        idxs_train=None):
 
     dataset = np.load(filename)
+    if not (idxs_train == None):
+        n_train = 2
+        print(f"INFO: n_train is set to {n_train}")
 
     #
     # We create task here (manually)
@@ -31,9 +37,10 @@ def prepare_data(filename="DATASET/ethanol_dft.npz", n_train=200):
     n_atoms = train_dataset["R"].shape[1]
     print("n_atoms = ", n_atoms)
 
-    # if "E" in train_dataset:
-    print("Will call draw_strat_sample")
-    idxs_train = my_draw_strat_sample(train_dataset["E"], n_train)
+    if idxs_train == None:
+        # if "E" in train_dataset:
+        print("Will call draw_strat_sample")
+        idxs_train = my_draw_strat_sample(train_dataset["E"], n_train)
 
     # Assuming same md5_train and md5_valid
     excl_idxs = idxs_train
@@ -41,7 +48,7 @@ def prepare_data(filename="DATASET/ethanol_dft.npz", n_train=200):
     idxs_valid = my_draw_strat_sample(
         valid_dataset["E"],
         n_valid,
-        excl_idxs=excl_idxs,
+        excl_idxs=np.array(excl_idxs),
     )
 
     R_train = train_dataset["R"][idxs_train, :, :]
