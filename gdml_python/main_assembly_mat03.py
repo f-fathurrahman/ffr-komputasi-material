@@ -39,13 +39,14 @@ K = np.zeros((K_n_rows,K_n_cols))
 
 # in setting K matrix, j is actually used as column index
 # Set column index j here
-j = 1 # n_train - 1
+j = 0
+assert j < n_train
 exploit_sym = True
 blk_j = slice(j * dim_i, (j + 1) * dim_i)
 print("j = ", j)
 print("blk_j  = ", blk_j)
 
-i = 1 # choose one i value for row?
+i = 1
 assert i < n_train
 blk_i = slice(i * dim_i, (i + 1) * dim_i)
 
@@ -98,20 +99,35 @@ k = np.empty((dim_i, dim_i_keep))
 # diff_ab_perms = R_desc[i, :] - rj_desc_perms
 np.subtract(R_desc[i, :], rj_desc_perms, out=diff_ab_perms)
 # zeros??
+print("\nnp.subtract:")
+print("R_desc[i,:].shape = ", R_desc[i,:].shape)
+print("rj_desc_perms.shape = ", rj_desc_perms.shape)
+print("diff_ab_perms.shape = ", diff_ab_perms.shape)
+# Example output
+# np.subtract:
+# R_desc[i,:].shape =  (36,)
+# rj_desc_perms.shape =  (1, 36)
+# diff_ab_perms.shape =  (1, 36)
+# norm_ab_perms =  [0.0427072]
 
 norm_ab_perms = sqrt5 * np.linalg.norm(diff_ab_perms, axis=1)
 print("norm_ab_perms = ", norm_ab_perms)
 mat52_base_perms = np.exp(-norm_ab_perms / sig) / mat52_base_div * 5
+# a scalar, in case of n_perms == 1 ?
 
+
+# Below involves rj_d_desc_perms
+
+res1 = diff_ab_perms * mat52_base_perms[:, None] * 5
+res2 = np.einsum('ki,jik -> kj', diff_ab_perms, rj_d_desc_perms)
 np.einsum(
-    'ki,kj->ij',
-    diff_ab_perms * mat52_base_perms[:, None] * 5,
-    np.einsum('ki,jik -> kj', diff_ab_perms, rj_d_desc_perms),
+    'ki,kj->ij', res1, res2,
     out=diff_ab_outer_perms,
 )
+print("res1.shape = ", res1.shape)
+print("res2.shape = ", res2.shape)
+print("diff_ab_outer_perms.shape = ", diff_ab_outer_perms.shape)
 
-
-# Below involves rj_d_desc
 diff_ab_outer_perms -= np.einsum(
     'ikj,j->ki',
     rj_d_desc_perms,

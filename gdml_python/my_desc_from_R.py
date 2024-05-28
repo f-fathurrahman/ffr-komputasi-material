@@ -126,7 +126,7 @@ def d_desc_from_comp(n_atoms, R_d_desc, out=None):
     if R_d_desc.ndim == 2:
         R_d_desc = R_d_desc[None, ...]
 
-    n = R_d_desc.shape[0]
+    n = R_d_desc.shape[0] # number of data
     i, j = tril_indices
 
     if out is None:

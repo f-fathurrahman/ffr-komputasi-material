@@ -19,3 +19,23 @@ R_lin = R.reshape(n_train, -1) # it is linear?
 R_desc, R_d_desc = my_desc_from_R(
     desc_dim, R_lin, lat_and_inv=lat_and_inv
 )
+
+# This is special case (?) for n_perms = 1
+n_perms = 1
+tril_perms_lin = np.arange(0, 36, dtype=np.int32)
+
+keep_idxs_3n = slice(None)  # same as [:]
+# convert descriptor back to full representation
+rj_d_desc = d_desc_from_comp(n_atoms, R_d_desc[:, :])[0][:, keep_idxs_3n]
+# here R_d_desc is given only for one data, current row/column index j
+rj_d_desc_perms = np.reshape(
+    np.tile(rj_d_desc.T, n_perms)[:, tril_perms_lin], (-1, desc_dim, n_perms)
+)
+
+print("Compressed R_d_desc.shape = ", R_d_desc.shape)
+print("Uncompressed rj_d_desc.shape = ", rj_d_desc.shape)
+print("Uncompressed rj_d_desc_perms.shape = ", rj_d_desc_perms.shape)
+# Example output:
+# Compressed R_d_desc.shape =  (36, 3)
+# Uncompressed rj_d_desc.shape =  (36, 27)
+# Uncompressed rj_d_desc_perms.shape =  (27, 36, 1)
