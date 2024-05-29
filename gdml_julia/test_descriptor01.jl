@@ -3,19 +3,43 @@ using Serialization: deserialize
 
 include("tril_indices.jl")
 
+function load_data()
+    Zatoms = deserialize("Zatoms.dat")
+    R_all = deserialize("R.dat")
+    E_all = deserialize("E.dat")
+    F_all = deserialize("F.dat")
+    #
+    Ndata = length(E_all)
+    @assert Ndata == length(R_all)
+    @assert Ndata == length(F_all)
+    #
+    Natoms = length(Zatoms)
+    @assert Natoms == size(R_all[1],2)
+    @assert Natoms == size(F_all[1],2)
+    #
+    return Zatoms, R_all, E_all, F_all
+end
 
-R_all = deserialize("R.dat")
-E_all = deserialize("E.dat")
-F_all = deserialize("F.dat")
-Zatoms = deserialize("Zatoms.dat")
 
-Ndata = length(E_all)
-@assert Ndata == length(R_all)
-@assert Ndata == length(F_all)
+# Uncompressed R_d
+function uncompress_R_d(Natoms, desc_dim, R_d_desc)
+    tmp_R_d = zeros(Float64, 3, Natoms, desc_dim)
+    idx_rows, idx_cols, idx_lin = tril_indices(Natoms)
+    for ip in 1:desc_dim
+        i = idx_rows[ip]
+        j = idx_cols[ip]
+        @views tmp_R_d[:,i,ip] .=  R_d_desc[:,ip]
+        @views tmp_R_d[:,j,ip] .= -R_d_desc[:,ip]
+    end
+    R_d_full = reshape(tmp_R_d, 3*Natoms, desc_dim)
+    # Use SparseArray ???
+    return R_d_full
+end
 
+
+
+Zatoms, R_all, E_all, F_all = load_data()
 Natoms = length(Zatoms)
-@assert Natoms == size(R_all[1],2)
-@assert Natoms == size(F_all[1],2)
 
 idata = 1
 R = R_all[1]
@@ -41,19 +65,7 @@ for icol in 1:Natoms, irow in (icol+1):Natoms
 end
 # original Python code have opposite sign
 
-# Uncompressed R_d
-function uncompress_R_d(R_d_desc)
-    tmp_R_d = zeros(Float64, 3, Natoms, desc_dim)
-    idx_rows, idx_cols, idx_lin = tril_indices(Natoms)
-    for ip in 1:desc_dim
-        i = idx_rows[ip]
-        j = idx_cols[ip]
-        @views tmp_R_d[:,i,ip] .=  R_d_desc[:,ip]
-        @views tmp_R_d[:,j,ip] .= -R_d_desc[:,ip]
-    end
-    R_d_full = reshape(tmp_R_d, 3*Natoms, desc_dim)
-    # Use SparseArray ???
-    return R_d_full
-end
+
+R_d_full = uncompress_R_d(Natoms, desc_dim, R_d_desc)
 
 
