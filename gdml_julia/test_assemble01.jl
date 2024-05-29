@@ -81,7 +81,7 @@ end
 using LinearAlgebra: norm
 
 i = 2
-j = 1
+j = 2
 
 sqrt5 = sqrt(5)
 mat52_base_div = 3*σ^4
@@ -100,6 +100,6 @@ res4 = (sig_pow2 + σ * norm_ab) * mat52_base  # scalar
 diff_ab_outer .-= res4 * Rj_d_desc_full'   # matmul
 
 Ri_desc_full = uncompress_R_d(Natoms, R_d_desc_v[i])
-K = Ri_desc_full * diff_ab_outer   # matmul
-
+Kij = Ri_desc_full * diff_ab_outer   # matmul
+println("sum abs K = ", sum(abs.(Kij)))
 

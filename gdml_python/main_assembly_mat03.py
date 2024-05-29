@@ -39,7 +39,7 @@ K = np.zeros((K_n_rows,K_n_cols))
 
 # in setting K matrix, j is actually used as column index
 # Set column index j here
-j = 0
+j = 1
 assert j < n_train
 exploit_sym = True
 blk_j = slice(j * dim_i, (j + 1) * dim_i)
@@ -146,6 +146,7 @@ print("ri_d_desc[0].shape = ", ri_d_desc[0].shape)
 print("diff_ab_outer_perms.shape = ", diff_ab_outer_perms.shape)
 print("k.shape = ", k.shape)
 K[blk_i, blk_j] = k
+print("sum abs k = ", np.sum(np.abs(k)))
 # print(k - k2)
 
 plt.clf()
