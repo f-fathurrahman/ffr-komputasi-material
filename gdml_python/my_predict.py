@@ -4,15 +4,14 @@ import os
 import psutil
 
 import timeit
-from functools import partial
 
 import numpy as np
 
-from my_desc import Desc
+from my_desc import Desc, _from_r
 
 
 def _predict_wkr(
-    r, r_desc_d_desc, lat_and_inv, glob_id, wkr_start_stop=None, chunk_size=None
+    train_obj, r, r_desc_d_desc, lat_and_inv, wkr_start_stop=None, chunk_size=None
 ):
     """
     Compute (part) of a prediction.
@@ -63,23 +62,15 @@ def _predict_wkr(
                     energy (appended to array as last element).
     """
 
-    global globs
-    glob = globs[glob_id]
-    sig, n_perms = glob['sig'], glob['n_perms']
+    sig, n_perms = train_obj.sig, train_obj.n_perms
 
-    desc_func = glob['desc_func']
+    desc_func = train_obj.desc_func
 
-    R_desc_perms = np.frombuffer(glob['R_desc_perms']).reshape(
-        glob['R_desc_perms_shape']
-    )
-    R_d_desc_alpha_perms = np.frombuffer(glob['R_d_desc_alpha_perms']).reshape(
-        glob['R_d_desc_alpha_perms_shape']
-    )
+    R_desc_perms = train_obj.R_desc_perms
+    R_d_desc_alpha_perms = train_obj.R_d_desc_alpha_perms
 
-    if 'alphas_E_lin' in glob:
-        alphas_E_lin = np.frombuffer(glob['alphas_E_lin']).reshape(
-            glob['alphas_E_lin_shape']
-        )
+    if train_obj.alphas_E_lin is not None:
+        alphas_E_lin = train_obj.alphas_E_lin
 
     r_desc, r_d_desc = r_desc_d_desc or desc_func.from_R(
         r, lat_and_inv, max_processes=1
@@ -126,11 +117,16 @@ def _predict_wkr(
             a_x2 = a_x2[:c_size]
             mat52_base = mat52_base[:c_size]
 
+        print(r_desc.shape)
+        print("r_desc = ", r_desc)
+        print(rj_desc_perms.shape)
+        print(diff_ab_perms.shape)
         np.subtract(
             np.broadcast_to(r_desc, rj_desc_perms.shape),
             rj_desc_perms,
             out=diff_ab_perms,
         )
+        print("Pass here 126")
         norm_ab_perms = sqrt5 * np.linalg.norm(diff_ab_perms, axis=1)
 
         np.exp(-norm_ab_perms * sig_inv, out=mat52_base)
@@ -147,7 +143,7 @@ def _predict_wkr(
         E_F[0] += a_x2.dot(mat52_base)
 
         # Note: Energies are automatically predicted with a flipped sign here (because -E are trained, instead of E)
-        if 'alphas_E_lin' in glob:
+        if train_obj.alphas_E_lin is not None:
 
             K_fe = diff_ab_perms * mat52_base[:, None]
             F += alphas_E_lin[b_start:b_stop].dot(K_fe)
@@ -166,19 +162,6 @@ def _predict_wkr(
         out = np.empty((dim_i + 1,))
         out[0] = E_F[0]
 
-    # NEW
-    # print(r_d_desc.shape)
-
-    # r_d_desc = desc_func.d_desc_from_comp(r_d_desc)[0]
-
-    # u, s, vh = np.linalg.svd(r_d_desc[0], full_matrices=False)
-    # s[s < 1e-15] = 1
-    # r_d_desc = np.dot(u * s, vh)
-    # out[1:] = r_d_desc.T.dot(F)
-    # return out
-
-    # NEW
-
     out[1:] = desc_func.vec_dot_d_desc(
         r_d_desc,
         F,
@@ -187,12 +170,13 @@ def _predict_wkr(
     return out
 
 
+
+
 class GDMLPredict(object):
     def __init__(
         self,
         model,
         batch_size=None,
-        num_workers=None,
         max_memory=None,
         max_processes=None,
         log_level=None,
@@ -218,8 +202,7 @@ class GDMLPredict(object):
 
         self.n_atoms = model['z'].shape[0]
 
-        self.desc = Desc(self.n_atoms, max_processes=max_processes)
-        #glob['desc_func'] = self.desc
+        self.desc_func = Desc(self.n_atoms, max_processes=max_processes)
 
         # Cache for iterative training mode.
         self.R_desc = None
@@ -232,50 +215,38 @@ class GDMLPredict(object):
         )
 
         self.n_train = model['R_desc'].shape[1]
-        #glob['sig'] = model['sig']
+        self.sig = model["sig"]
 
         self.std = model['std'] if 'std' in model else 1.0
         self.c = model['c']
 
-        n_perms = model['perms'].shape[0]
-        #glob['n_perms'] = n_perms
+        self.n_perms = model['perms'].shape[0]
 
         self.tril_perms_lin = model['tril_perms_lin']
 
         # Precompute permuted training descriptors and its first derivatives multiplied with the coefficients.
 
-        R_desc_perms = (
-            np.tile(model['R_desc'].T, n_perms)[:, self.tril_perms_lin]
-            .reshape(self.n_train, n_perms, -1, order='F')
-            .reshape(self.n_train * n_perms, -1)
+        # ffr: make R_desc_perms and R_d_desc_alpha_perms properties 
+        self.R_desc_perms = (
+            np.tile(model['R_desc'].T, self.n_perms)[:, self.tril_perms_lin]
+            .reshape(self.n_train, self.n_perms, -1, order='F')
+            .reshape(self.n_train * self.n_perms, -1)
         )
-        #glob['R_desc_perms'], glob['R_desc_perms_shape'] = share_array(R_desc_perms)
 
-        R_d_desc_alpha_perms = (
-            np.tile(model['R_d_desc_alpha'], n_perms)[:, self.tril_perms_lin]
-            .reshape(self.n_train, n_perms, -1, order='F')
-            .reshape(self.n_train * n_perms, -1)
+        self.R_d_desc_alpha_perms = (
+            np.tile(model['R_d_desc_alpha'], self.n_perms)[:, self.tril_perms_lin]
+            .reshape(self.n_train, self.n_perms, -1, order='F')
+            .reshape(self.n_train * self.n_perms, -1)
         )
-        #(
-        #    glob['R_d_desc_alpha_perms'],
-        #    glob['R_d_desc_alpha_perms_shape'],
-        #) = share_array(R_d_desc_alpha_perms)
 
         if 'alphas_E' in model:
-            alphas_E_lin = np.tile(model['alphas_E'][:, None], (1, n_perms)).ravel()
-            #glob['alphas_E_lin'], glob['alphas_E_lin_shape'] = share_array(
-            #    alphas_E_lin
-            #)
+            self.alphas_E_lin = np.tile(model['alphas_E'][:, None], (1, self.n_perms)).ravel()
+        else:
+            self.alphas_E_lin = None
 
-        # How many workers in addition to main process?
-        #num_workers = num_workers or (
-        #    self.max_processes - 1
-        #)  # exclude main process
-        #self._set_num_workers(num_workers, force_reset=True)
-
-        # Size of chunks in which each parallel task will be processed (unit: number of training samples)
-        # This parameter should be as large as possible, but it depends on the size of available memory.
         self._set_chunk_size(batch_size)
+
+
 
     def __del__(self):
         pass
@@ -292,20 +263,17 @@ class GDMLPredict(object):
 
         assert self.R_d_desc is not None
 
-        #global globs
-        #glob = globs[self.glob_id]
-
         dim_i = self.desc.dim_i
         R_d_desc_alpha = self.desc.d_desc_dot_vec(
             self.R_d_desc, alphas_F.reshape(-1, dim_i)
         )
 
-        R_d_desc_alpha_perms_new = np.tile(R_d_desc_alpha, n_perms)[
+        R_d_desc_alpha_perms_new = np.tile(R_d_desc_alpha, self.n_perms)[
             :, self.tril_perms_lin
         ].reshape(self.n_train, self.n_perms, -1, order='F')
 
         #R_d_desc_alpha_perms = R_d_desc_alpha_perms
-        np.copyto(R_d_desc_alpha_perms, R_d_desc_alpha_perms_new.ravel())
+        np.copyto(self.R_d_desc_alpha_perms, R_d_desc_alpha_perms_new.ravel())
 
         if alphas_E is not None:
 
@@ -566,7 +534,7 @@ class GDMLPredict(object):
                 bmark['gps'] = np.append(bmark['gps'], gps)
         else:
             bmark = {
-                'code_version': __version__,
+                'code_version': '0.0.1.ffr',
                 'runs': [bkey],
                 'gps': [gps],
                 'num_workers': [num_workers],
@@ -630,21 +598,7 @@ class GDMLPredict(object):
         return None
 
     def get_GPU_batch(self):
-        """
-        Get batch size used by the GPU implementation to process bulk
-        predictions (predictions for multiple input geometries at once).
-
-        This value is determined on-the-fly depending on the available GPU
-        memory.
-        """
-
-        if self.use_torch:
-
-            model = self.torch_predict
-            if isinstance(self.torch_predict, torch.nn.DataParallel):
-                model = model.module
-
-            return model._batch_size()
+        pass
 
     def predict(self, R=None, return_E=True):
         # Add singleton dimension if input is (,3N).
@@ -668,54 +622,21 @@ class GDMLPredict(object):
 
         E_F = np.empty((n_pred, dim_i + 1))
 
-        if (
-            self.bulk_mp and self.num_workers > 0
-        ):  # One whole prediction per worker (and multiple workers).
+        print("n_pred = ", n_pred)
+        for i in range(n_pred):
 
-            _predict_wo_r_or_desc = partial(
-                _predict_wkr,
-                lat_and_inv=self.lat_and_inv,
-                glob_id=self.glob_id,
-                wkr_start_stop=None,
-                chunk_size=self.chunk_size,
-            )
+            print("R[i] = ", R[i])
 
-            for i, e_f in enumerate(
-                self.pool.imap(
-                    partial(_predict_wo_r_or_desc, None)
-                    if is_desc_in_cache
-                    else partial(_predict_wo_r_or_desc, r_desc_d_desc=None),
-                    zip(self.R_desc, self.R_d_desc) if is_desc_in_cache else R,
-                )
-            ):
-                E_F[i, :] = e_f
+            if is_desc_in_cache:
+                r_desc, r_d_desc = self.R_desc[i], self.R_d_desc[i]
+            else:
+                #r_desc, r_d_desc = self.desc_func.from_R(R[i], self.lat_and_inv)
+                r_desc, r_d_desc = _from_r(R[i])
 
-        else:  # Multiple workers per prediction (or just one worker).
-
-            for i in range(n_pred):
-
-                if is_desc_in_cache:
-                    r_desc, r_d_desc = self.R_desc[i], self.R_d_desc[i]
-                else:
-                    r_desc, r_d_desc = self.desc.from_R(R[i], self.lat_and_inv)
-
-                _predict_wo_wkr_starts_stops = partial(
-                    _predict_wkr,
-                    None,
-                    (r_desc, r_d_desc),
-                    self.lat_and_inv,
-                    self.glob_id,
-                    chunk_size=self.chunk_size,
-                )
-
-                if self.num_workers == 0:
-                    E_F[i, :] = _predict_wo_wkr_starts_stops()
-                else:
-                    E_F[i, :] = sum(
-                        self.pool.imap_unordered(
-                            _predict_wo_wkr_starts_stops, self.wkr_starts_stops
-                        )
-                    )
+            E_F[i, :] = _predict_wkr(
+                self, None, (r_desc, r_d_desc),
+                self.lat_and_inv,
+                chunk_size=self.chunk_size)
 
         E_F *= self.std
         F = E_F[:, 1:]

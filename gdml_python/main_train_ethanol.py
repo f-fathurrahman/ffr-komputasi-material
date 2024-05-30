@@ -4,7 +4,6 @@ import numpy.random
 numpy.random.seed(1234)
 
 from my_sgdml.train import GDMLTrain
-from debug_gdml_train import debug_gdml_train
 
 dataset = np.load("DATASET/ethanol_dft.npz")
 n_train = 200
@@ -14,12 +13,7 @@ task = gdml_train.create_task(dataset, n_train,\
         valid_dataset=dataset, n_valid=1000,\
         sig=20, lam=1e-10, use_sym=False)
 
-#model = gdml_train.train(task)
-#model = debug_gdml_train(gdml_train, task)
-
-#try:
-#except Exception, err:
-#    sys.exit(err)
-#else:
-#    np.savez_compressed('m_ethanol.npz', **model)
+model = gdml_train.train(task)
+# Recover integration constant: c =  -37146.84576066038
+np.savez_compressed('m_ethanol.npz', **model)
 
