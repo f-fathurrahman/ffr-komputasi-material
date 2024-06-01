@@ -3,8 +3,6 @@ import logging
 import os
 import psutil
 
-import timeit
-
 import numpy as np
 
 from my_desc import Desc, _from_r
@@ -13,55 +11,6 @@ from my_desc import Desc, _from_r
 def _predict_wkr(
     train_obj, r, r_desc_d_desc, lat_and_inv, wkr_start_stop=None, chunk_size=None
 ):
-    """
-    Compute (part) of a prediction.
-
-    Every prediction is a linear combination involving the training points used for
-    this model. This function evalutates that combination for the range specified by
-    `wkr_start_stop`. This workload can optionally be processed in chunks,
-    which can be faster as it requires less memory to be allocated.
-
-    Note
-    ----
-        It is sufficient to provide either the parameter `r` or `r_desc_d_desc`.
-        The other one can be set to `None`.
-
-    Parameters
-    ----------
-            r : :obj:`numpy.ndarray`
-                    An array of size 3N containing the Cartesian
-                    coordinates of each atom in the molecule.
-            r_desc_d_desc : tuple of :obj:`numpy.ndarray`
-                    A tuple made up of:
-                        (1) An array of size D containing the descriptors
-                        of dimension D for the molecule.
-                        (2) An array of size D x 3N containing the
-                        descriptor Jacobian for the molecules. It has dimension
-                        D with 3N partial derivatives with respect to the 3N
-                        Cartesian coordinates of each atom.
-            lat_and_inv : tuple of :obj:`numpy.ndarray`
-                    Tuple of 3 x 3 matrix containing lattice vectors as columns and
-                    its inverse.
-            glob_id : int
-                    Identifier of the global namespace that this
-                    function is supposed to be using (zero if only one
-                    instance of this class exists at the same time).
-            wkr_start_stop : tuple of int, optional
-                    Range defined by the indices of first and last (exclusive)
-                    sum element. The full prediction is generated if this parameter
-                    is not specified.
-            chunk_size : int, optional
-                    Chunk size. The whole linear combination is evaluated in a large
-                    vector operation instead of looping over smaller chunks if this
-                    parameter is left unspecified.
-
-    Returns
-    -------
-            :obj:`numpy.ndarray`
-                    Partial prediction of all force components and
-                    energy (appended to array as last element).
-    """
-
     sig, n_perms = train_obj.sig, train_obj.n_perms
 
     desc_func = train_obj.desc_func
@@ -69,14 +18,20 @@ def _predict_wkr(
     R_desc_perms = train_obj.R_desc_perms
     R_d_desc_alpha_perms = train_obj.R_d_desc_alpha_perms
 
+    print("R_desc_perms.shape = ", R_desc_perms.shape)
+    print("R_d_desc_alpha_perms.shape = ", R_d_desc_alpha_perms.shape)
+
     if train_obj.alphas_E_lin is not None:
         alphas_E_lin = train_obj.alphas_E_lin
 
     r_desc, r_d_desc = r_desc_d_desc or desc_func.from_R(
         r, lat_and_inv, max_processes=1
     )  # no additional forking during parallelization
+    print("r_desc.shape = ", r_desc.shape)
+    print("r_d_desc.shape = ", r_d_desc.shape)
 
     n_train = int(R_desc_perms.shape[0] / n_perms)
+    print("n_train = ", n_train)
 
     wkr_start, wkr_stop = (0, n_train) if wkr_start_stop is None else wkr_start_stop
     if chunk_size is None:
@@ -104,11 +59,15 @@ def _predict_wkr(
     wkr_stop *= n_perms
 
     b_start = wkr_start
+    print("wkr_start = ", wkr_start)
+    print("wkr_stop = ", wkr_stop)
     for b_stop in list(range(wkr_start + dim_c, wkr_stop, dim_c)) + [wkr_stop]:
-
+        #
+        print("b_start = ", b_start, " b_stop = ", b_stop)
+        #
         rj_desc_perms = R_desc_perms[b_start:b_stop, :]
         rj_d_desc_alpha_perms = R_d_desc_alpha_perms[b_start:b_stop, :]
-
+        #
         # Resize pre-allocated memory for last iteration, if chunk_size is not a divisor of the training set size.
         # Note: It's faster to process equally sized chunks.
         c_size = b_stop - b_start
@@ -117,20 +76,21 @@ def _predict_wkr(
             a_x2 = a_x2[:c_size]
             mat52_base = mat52_base[:c_size]
 
-        print(r_desc.shape)
-        print("r_desc = ", r_desc)
-        print(rj_desc_perms.shape)
-        print(diff_ab_perms.shape)
+        print("r_desc.shape = ", r_desc.shape)
+        print("rj_desc_perms.shape = ", rj_desc_perms.shape)
+        print("diff_ab_perms.shape = ", diff_ab_perms.shape)
+        #
         np.subtract(
             np.broadcast_to(r_desc, rj_desc_perms.shape),
             rj_desc_perms,
             out=diff_ab_perms,
         )
-        print("Pass here 126")
         norm_ab_perms = sqrt5 * np.linalg.norm(diff_ab_perms, axis=1)
 
         np.exp(-norm_ab_perms * sig_inv, out=mat52_base)
         mat52_base *= mat52_base_fact
+        print("rj_d_desc_alpha_perms.shape = ", rj_d_desc_alpha_perms.shape)
+        print("a_x2.shape = ", a_x2.shape)
         np.einsum(
             'ji,ji->j', diff_ab_perms, rj_d_desc_alpha_perms, out=a_x2
         )  # colum wise dot product
@@ -166,6 +126,9 @@ def _predict_wkr(
         r_d_desc,
         F,
     )  # 'r_d_desc.T.dot(F)' for our special representation of 'r_d_desc'
+
+    print("Pass here 121")
+    print("out = ", out)
 
     return out
 
@@ -328,275 +291,6 @@ class GDMLPredict(object):
             # Reset data ranges for processes stored in 'wkr_starts_stops'
             self._set_num_workers(self.num_workers)
 
-
-    def set_opt_num_workers_and_batch_size_fast(self, n_bulk=1, n_reps=1):  # deprecated
-        self.prepare_parallel(n_bulk, n_reps)
-
-
-
-    def prepare_parallel(
-        self, n_bulk=1, n_reps=1, return_is_from_cache=False
-    ):
-
-        # Retrieve cached benchmark results, if available.
-        bmark_result = self._load_cached_bmark_result(n_bulk)
-        if bmark_result is not None:
-
-            num_workers, chunk_size, bulk_mp, gps = bmark_result
-
-            self._set_chunk_size(chunk_size)
-            self._set_num_workers(num_workers)
-            self._set_bulk_mp(bulk_mp)
-
-            if return_is_from_cache:
-                is_from_cache = True
-                return gps, is_from_cache
-            else:
-                return gps
-
-        warm_up_done = False
-
-        best_results = []
-        last_i = None
-
-        best_gps = 0
-        gps_min = 0.0
-
-        best_params = None
-
-        r_dummy = np.random.rand(n_bulk, self.n_atoms * 3)
-
-        def _dummy_predict():
-            self.predict(r_dummy)
-
-        bulk_mp_rng = [True, False] if n_bulk > 1 else [False]
-        for bulk_mp in bulk_mp_rng:
-            self._set_bulk_mp(bulk_mp)
-
-            if bulk_mp is False:
-                last_i = 0
-
-            num_workers_rng = list(range(0, self.max_processes))
-            if bulk_mp:
-                num_workers_rng.reverse()  # benchmark converges faster this way
-
-            # num_workers_rng_sizes = [batch_size for batch_size in batch_size_rng if min_batch_size % batch_size == 0]
-
-            # for num_workers in range(min_num_workers,self.max_processes+1):
-            for num_workers in num_workers_rng:
-                if not bulk_mp and num_workers != 0 and self.n_train % num_workers != 0:
-                    continue
-
-                self._set_num_workers(num_workers)
-
-                best_gps = 0
-                gps_rng = (np.inf, 0.0)  # min and max per num_workers
-
-                min_chunk_size = (
-                    min(self.n_train, n_bulk)
-                    if bulk_mp or num_workers < 2
-                    else int(np.ceil(self.n_train / num_workers))
-                )
-                chunk_size_rng = list(range(min_chunk_size, 0, -1))
-
-                chunk_size_rng_sizes = [
-                    chunk_size
-                    for chunk_size in chunk_size_rng
-                    if min_chunk_size % chunk_size == 0
-                ]
-
-                # print('batch_size_rng_sizes ' + str(bulk_mp))
-                # print(batch_size_rng_sizes)
-
-                i_done = 0
-                i_dir = 1
-                i = 0 if last_i is None else last_i
-                # i = 0
-
-                # print(batch_size_rng_sizes)
-                while i >= 0 and i < len(chunk_size_rng_sizes):
-
-                    chunk_size = chunk_size_rng_sizes[i]
-                    self._set_chunk_size(chunk_size)
-
-                    i_done += 1
-
-                    if warm_up_done == False:
-                        timeit.timeit(_dummy_predict, number=10)
-                        warm_up_done = True
-
-                    gps = n_bulk * n_reps / timeit.timeit(_dummy_predict, number=n_reps)
-
-                    # print(
-                    #  '{:2d}@{:d} {:d} | {:7.2f} gps'.format(
-                    #      num_workers, chunk_size, bulk_mp, gps
-                    #  )
-                    # )
-
-                    gps_rng = (
-                        min(gps_rng[0], gps),
-                        max(gps_rng[1], gps),
-                    )  # min and max per num_workers
-
-                    # gps still going up?
-                    # AND: gps not lower than the lowest overall?
-                    # if gps < best_gps and gps >= gps_min:
-                    if gps < best_gps:
-                        if (
-                            i_dir > 0
-                            and i_done == 2
-                            and chunk_size
-                            != chunk_size_rng_sizes[
-                                1
-                            ]  # there is no point in turning if this is the second batch size in the range
-                        ):  # do we turn?
-                            i -= 2 * i_dir
-                            i_dir = -1
-                            # print('><')
-                            continue
-                        else:
-                            if chunk_size == chunk_size_rng_sizes[1]:
-                                i -= 1 * i_dir
-                            # print('>>break ' + str(i_done))
-                            break
-                    else:
-                        best_gps = gps
-                        best_params = num_workers, chunk_size, bulk_mp
-
-                    if (
-                        not bulk_mp and n_bulk > 1
-                    ):  # stop search early when multiple cpus are available and the 1 cpu case is tested
-                        if (
-                            gps < gps_min
-                        ):  # if the batch size run is lower than the lowest overall, stop right here
-                            # print('breaking here')
-                            break
-
-                    i += 1 * i_dir
-
-                last_i = i - 1 * i_dir
-                i_dir = 1
-
-                if len(best_results) > 0:
-                    overall_best_gps = max(best_results, key=lambda x: x[1])[1]
-                    if best_gps < overall_best_gps:
-                        # print('breaking, because best of last test was worse than overall best so far')
-                        break
-
-                    # if best_gps < gps_min:
-                    #    print('breaking here3')
-                    #    break
-
-                gps_min = gps_rng[0]  # FIX me: is this the overall min?
-                # print ('gps_min ' + str(gps_min))
-
-                # print ('best_gps')
-                # print (best_gps)
-
-                best_results.append(
-                    (best_params, best_gps)
-                )  # best results per num_workers
-
-        (num_workers, chunk_size, bulk_mp), gps = max(best_results, key=lambda x: x[1])
-
-        # Cache benchmark results.
-        self._save_cached_bmark_result(n_bulk, num_workers, chunk_size, bulk_mp, gps)
-
-        self._set_chunk_size(chunk_size)
-        self._set_num_workers(num_workers)
-        self._set_bulk_mp(bulk_mp)
-
-        if return_is_from_cache:
-            is_from_cache = False
-            return gps, is_from_cache
-        else:
-            return gps
-
-    def _save_cached_bmark_result(self, n_bulk, num_workers, chunk_size, bulk_mp, gps):
-
-        pkg_dir = os.path.dirname(os.path.abspath(__file__))
-        bmark_file = '_bmark_cache.npz'
-        bmark_path = os.path.join(pkg_dir, bmark_file)
-
-        bkey = '{}-{}-{}-{}'.format(
-            self.n_atoms, self.n_train, n_bulk, self.max_processes
-        )
-
-        if os.path.exists(bmark_path):
-
-            with np.load(bmark_path, allow_pickle=True) as bmark:
-                bmark = dict(bmark)
-
-                bmark['runs'] = np.append(bmark['runs'], bkey)
-                bmark['num_workers'] = np.append(bmark['num_workers'], num_workers)
-                bmark['batch_size'] = np.append(bmark['batch_size'], chunk_size)
-                bmark['bulk_mp'] = np.append(bmark['bulk_mp'], bulk_mp)
-                bmark['gps'] = np.append(bmark['gps'], gps)
-        else:
-            bmark = {
-                'code_version': '0.0.1.ffr',
-                'runs': [bkey],
-                'gps': [gps],
-                'num_workers': [num_workers],
-                'batch_size': [chunk_size],
-                'bulk_mp': [bulk_mp],
-            }
-
-        np.savez_compressed(bmark_path, **bmark)
-
-    def _load_cached_bmark_result(self, n_bulk):
-
-        pkg_dir = os.path.dirname(os.path.abspath(__file__))
-        bmark_file = '_bmark_cache.npz'
-        bmark_path = os.path.join(pkg_dir, bmark_file)
-
-        bkey = '{}-{}-{}-{}'.format(
-            self.n_atoms, self.n_train, n_bulk, self.max_processes
-        )
-
-        if not os.path.exists(bmark_path):
-            return None
-
-        with np.load(bmark_path, allow_pickle=True) as bmark:
-
-            # Keep collecting benchmark runs, until we have at least three.
-            run_idxs = np.where(bmark['runs'] == bkey)[0]
-            if len(run_idxs) >= 3:
-
-                config_keys = []
-                for run_idx in run_idxs:
-                    config_keys.append(
-                        '{}-{}-{}'.format(
-                            bmark['num_workers'][run_idx],
-                            bmark['batch_size'][run_idx],
-                            bmark['bulk_mp'][run_idx],
-                        )
-                    )
-
-                values, uinverse = np.unique(config_keys, return_index=True)
-
-                best_mean = -1
-                best_gps = 0
-                for i, config_key in enumerate(zip(values, uinverse)):
-                    mean_gps = np.mean(
-                        bmark['gps'][
-                            np.where(np.array(config_keys) == config_key[0])[0]
-                        ]
-                    )
-
-                    if best_gps == 0 or best_gps < mean_gps:
-                        best_mean = i
-                        best_gps = mean_gps
-
-                best_idx = run_idxs[uinverse[best_mean]]
-                num_workers = bmark['num_workers'][best_idx]
-                chunk_size = bmark['batch_size'][best_idx]
-                bulk_mp = bmark['bulk_mp'][best_idx]
-
-                return num_workers, chunk_size, bulk_mp, best_gps
-
-        return None
-
     def get_GPU_batch(self):
         pass
 
@@ -607,6 +301,7 @@ class GDMLPredict(object):
 
         # Use precomputed descriptors in training mode.
         is_desc_in_cache = self.R_desc is not None and self.R_d_desc is not None
+        print("is_desc_in_cache = ", is_desc_in_cache)
 
         if R is None and not is_desc_in_cache:
             self.log.critical(
@@ -625,9 +320,11 @@ class GDMLPredict(object):
         print("n_pred = ", n_pred)
         for i in range(n_pred):
 
-            print("R[i] = ", R[i])
+            if R is not None:
+                print("R[i] = ", R[i])
 
             if is_desc_in_cache:
+                print("desc is in cache")
                 r_desc, r_d_desc = self.R_desc[i], self.R_d_desc[i]
             else:
                 #r_desc, r_d_desc = self.desc_func.from_R(R[i], self.lat_and_inv)
@@ -637,6 +334,9 @@ class GDMLPredict(object):
                 self, None, (r_desc, r_d_desc),
                 self.lat_and_inv,
                 chunk_size=self.chunk_size)
+
+        print("self.std = ", self.std)
+        print("self.c = ", self.c)
 
         E_F *= self.std
         F = E_F[:, 1:]

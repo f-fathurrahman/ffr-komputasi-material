@@ -8,7 +8,6 @@ def my_recov_int_const(
     gdml_predict = GDMLPredict(
         model,
         max_processes=1,
-        use_torch=False,
         log_level=0,
     )
 

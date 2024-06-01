@@ -87,3 +87,61 @@ print("average alphas = ", np.average(alphas))
 # 12315.274852764584 Windows 11
 
 print(f"sum abs alphas = {np.sum(np.abs(alphas))}")
+
+
+
+y = task["F_train"].ravel().copy()
+y_std = np.std(y)
+
+dim_i = desc.dim_i
+R_d_desc_alpha = desc.d_desc_dot_vec(R_d_desc, alphas.reshape(-1, dim_i))
+model = {
+    'type': 'm',
+    'code_version': '0.0.1ffr',
+    'dataset_name': task['dataset_name'],
+    'dataset_theory': task['dataset_theory'],
+    'solver_name': 'analytic',
+    'z': task['z'],
+    'idxs_train': task['idxs_train'],
+    'idxs_valid': task['idxs_valid'],
+    'n_test': 0,
+    'md5_test': None,
+    'f_err': {'mae': np.nan, 'rmse': np.nan},
+    'c': 0.0, # not yet calculated
+    'std': y_std,
+    'sig': task['sig'],
+    'lam': task['lam'],
+    'alphas_F': alphas,
+    'R_desc': R_desc.T,   # need transpose!!!!
+    'R_d_desc_alpha': R_d_desc_alpha,
+    'perms': task['perms'],
+    'tril_perms_lin': tril_perms_lin,
+    'use_E': task['use_E'],
+}
+
+
+from my_predict import GDMLPredict
+gdml_predict = GDMLPredict(
+    model,
+    max_processes=1,
+    log_level=0,
+)
+
+gdml_predict.set_R_desc(R_desc)
+gdml_predict.set_R_d_desc(R_d_desc)
+
+R_train = task["R_train"]
+E_pred, _ = gdml_predict.predict()
+#for r in R_train:
+#    print("r = ", r.shape)
+#    E_pred, _ = gdml_predict.predict(r[None,:])
+E_ref = np.squeeze(task['E_train'])
+
+e_fact = np.linalg.lstsq(
+    np.column_stack((E_pred, np.ones(E_ref.shape))), E_ref, rcond=-1
+)[0][0]
+corrcoef = np.corrcoef(E_ref, E_pred)[0, 1]
+
+# Least squares estimate for integration constant.
+c = np.sum(E_ref - E_pred) / E_ref.shape[0]
+print("Recover integration constant: c = ", c)
