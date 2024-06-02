@@ -13,75 +13,33 @@ from my_predict import GDMLPredict
 from my_desc import Desc
 
 
-def _share_array(arr_np, typecode_or_type):
-    """
-    Return a ctypes array allocated from shared memory with data from a
-    NumPy array.
+import hashlib
 
-    Parameters
-    ----------
-        arr_np : :obj:`numpy.ndarray`
-            NumPy array.
-        typecode_or_type : char or :obj:`ctype`
-            Either a ctypes type or a one character typecode of the
-            kind used by the Python array module.
+def io_dataset_md5(dataset):
 
-    Returns
-    -------
-        array of :obj:`ctype`
-    """
+    md5_hash = hashlib.md5()
 
-    arr = mp.RawArray(typecode_or_type, arr_np.ravel())
-    return arr, arr_np.shape
+    keys = ['z', 'R']
+    if 'E' in dataset:
+        keys.append('E')
+    keys.append('F')
+
+    for k in keys:
+        d = dataset[k]
+        if type(d) is np.ndarray:
+            d = d.ravel()
+        md5_hash.update(hashlib.md5(d).digest())
+
+    return md5_hash.hexdigest().encode('utf-8')
+
+
+
 
 
 def _assemble_kernel_mat_wkr(
+    K, desc_func, R_desc, R_d_desc,
     j, tril_perms_lin, sig, use_E_cstr=False, exploit_sym=False, cols_m_limit=None
 ):
-    r"""
-    Compute one row and column of the force field kernel matrix.
-
-    The Hessian of the Matern kernel is used with n = 2 (twice
-    differentiable). Each row and column consists of matrix-valued
-    blocks, which encode the interaction of one training point with all
-    others. The result is stored in shared memory (a global variable).
-
-    Parameters
-    ----------
-        j : int
-            Index of training point.
-        tril_perms_lin : :obj:`numpy.ndarray`
-            1D array (int) containing all recovered permutations
-            expanded as one large permutation to be applied to a tiled
-            copy of the object to be permuted.
-        sig : int
-            Hyper-parameter :math:`\sigma`.
-        use_E_cstr : bool, optional
-            True: include energy constraints in the kernel,
-            False: default (s)GDML kernel.
-        exploit_sym : boolean, optional
-            Do not create symmetric entries of the kernel matrix twice
-            (this only works for spectific inputs for `cols_m_limit`)
-        cols_m_limit : int, optional
-            Limit the number of columns (include training points 1-`M`).
-            Note that each training points consists of multiple columns.
-
-    Returns
-    -------
-        int
-            Number of kernel matrix blocks created, divided by 2
-            (symmetric blocks are always created at together).
-    """
-
-    #print("*** ENTER _assemble_kernel_mat_wkr")
-
-    global glob
-
-    R_desc = np.frombuffer(glob['R_desc']).reshape(glob['R_desc_shape'])
-    R_d_desc = np.frombuffer(glob['R_d_desc']).reshape(glob['R_d_desc_shape'])
-    K = np.frombuffer(glob['K']).reshape(glob['K_shape'])
-
-    desc_func = glob['desc_func']
 
     n_train, dim_d = R_d_desc.shape[:2]
     n_atoms = int((1 + np.sqrt(8 * dim_d + 1)) / 2)
@@ -195,8 +153,6 @@ def _assemble_kernel_mat_wkr(
                 1 + (norm_ab_perms / sig) * (1 + norm_ab_perms / (3 * sig))
             ).dot(np.exp(-norm_ab_perms / sig))
 
-    #print("*** EXIT _assemble_kernel_mat_wkr")
-
     return blk_j.stop - blk_j.start
 
 
@@ -204,68 +160,18 @@ def _assemble_kernel_mat_wkr(
 
 class GDMLTrain(object):
     def __init__(self, max_memory=None, max_processes=None, use_torch=False):
-        """
-        Train sGDML force fields.
-
-        This class is used to train models using different closed-form
-        and numerical solvers. GPU support is provided
-        through PyTorch (requires optional `torch` dependency to be
-        installed) for some solvers.
-
-        Parameters
-        ----------
-                max_memory : int, optional
-                        Limit the max. memory usage [GB]. This is only a
-                        soft limit that can not always be enforced.
-                max_processes : int, optional
-                        Limit the max. number of processes. Otherwise
-                        all CPU cores are used. This parameters has no
-                        effect if `use_torch=True`
-                use_torch : boolean, optional
-                        Use PyTorch to calculate predictions (if
-                        supported by solver)
-
-        Raises
-        ------
-            Exception
-                If multiple instsances of this class are created.
-            ImportError
-                If the optional PyTorch dependency is missing, but PyTorch features are used.
-        """
-
-        global glob
-        if 'glob' not in globals():  # Don't allow more than one instance of this class.
-            glob = {}
-        else:
-            raise Exception(
-                'You can not create multiple instances of this class. Please reuse your first one.'
-            )
-
         self.log = logging.getLogger(__name__)
-
         total_memory = psutil.virtual_memory().total // 2 ** 30  # bytes to GB)
         self._max_memory = (
             min(max_memory, total_memory) if max_memory is not None else total_memory
         )
+        self._max_processes = 1
 
-        total_cpus = mp.cpu_count()
-        self._max_processes = (
-            min(max_processes, total_cpus) if max_processes is not None else total_cpus
-        )
-
-        self._use_torch = use_torch
-
-        if use_torch and not _has_torch:
-            raise ImportError(
-                'Optional PyTorch dependency not found! Please run \'pip install sgdml[torch]\' to install it or disable the PyTorch option.'
-            )
 
     def __del__(self):
+        pass
 
-        global glob
 
-        if 'glob' in globals():
-            del glob
 
     def create_task(
         self,
@@ -281,71 +187,6 @@ class GDMLTrain(object):
         use_E_cstr=False,
         callback=None,  # TODO: document me
     ):
-        """
-        Create a data structure of custom type `task`.
-
-        These data structures serve as recipes for model creation,
-        summarizing the configuration of one particular training run.
-        Training and test points are sampled from the provided dataset,
-        without replacement. If the same dataset if given for training
-        and testing, the subsets are drawn without overlap.
-
-        Each task also contains a choice for the hyper-parameters of the
-        training process and the MD5 fingerprints of the used datasets.
-
-        Parameters
-        ----------
-            train_dataset : :obj:`dict`
-                Data structure of custom type :obj:`dataset` containing
-                train dataset.
-            n_train : int
-                Number of training points to sample.
-            valid_dataset : :obj:`dict`
-                Data structure of custom type :obj:`dataset` containing
-                validation dataset.
-            n_valid : int
-                Number of validation points to sample.
-            sig : int
-                Hyper-parameter (kernel length scale).
-            lam : float, optional
-                Hyper-parameter lambda (regularization strength).
-            perms : :obj:`numpy.ndarray`, optional
-                An 2D array of size P x N containing P possible permutations
-                of the N atoms in the system. This argument takes priority over the ones
-                provided in the trainig dataset. No automatic discovery is run when this
-                argument is provided.
-            use_sym : bool, optional
-                True: include symmetries (sGDML), False: GDML.
-            use_E : bool, optional
-                True: reconstruct force field with corresponding potential energy surface,
-                False: ignore energy during training, even if energy labels are available
-                       in the dataset. The trained model will still be able to predict
-                       energies up to an unknown integration constant. Note, that the
-                       energy predictions accuracy will be untested.
-            use_E_cstr : bool, optional
-                True: include energy constraints in the kernel,
-                False: default (s)GDML.
-            callback : callable, optional
-                Progress callback function that takes three
-                arguments:
-                    current : int
-                        Current progress.
-                    total : int
-                        Task size.
-                    done_str : :obj:`str`, optional
-                        Once complete, this string is shown.
-
-        Returns
-        -------
-            dict
-                Data structure of custom type :obj:`task`.
-
-        Raises
-        ------
-            ValueError
-                If a reconstruction of the potential energy surface is requested,
-                but the energy labels are missing in the dataset.
-        """
 
         if use_E and 'E' not in train_dataset:
             raise ValueError(
@@ -365,8 +206,8 @@ class GDMLTrain(object):
             callback = partial(callback, disp_str='Hashing dataset(s)')
             callback(NOT_DONE)
 
-        md5_train = io.dataset_md5(train_dataset)
-        md5_valid = io.dataset_md5(valid_dataset)
+        md5_train = io_dataset_md5(train_dataset)
+        md5_valid = io_dataset_md5(valid_dataset)
 
         if callback is not None:
             callback(DONE)
@@ -444,102 +285,7 @@ class GDMLTrain(object):
             task['e_unit'] = train_dataset['e_unit']
 
         if use_sym:
-
-            # No permuations provided externally.
-            if perms is None:
-
-                if (
-                    'perms' in train_dataset
-                ):  # take perms from training dataset, if available
-
-                    n_perms = train_dataset['perms'].shape[0]
-                    self.log.info(
-                        'Using {:d} permutations included in dataset.'.format(n_perms)
-                    )
-
-                    task['perms'] = train_dataset['perms']
-
-                else:  # find perms from scratch
-
-                    n_train = R_train.shape[0]
-                    R_train_sync_mat = R_train
-                    if n_train > 1000:
-                        R_train_sync_mat = R_train[
-                            np.random.choice(n_train, 1000, replace=False), :, :
-                        ]
-                        self.log.info(
-                            'Symmetry search has been restricted to a random subset of 1000/{:d} training points for faster convergence.'.format(
-                                n_train
-                            )
-                        )
-
-                    # TOOD: PBCs disabled when matching (for now).
-                    # task['perms'] = perm.find_perms(
-                    #    R_train_sync_mat, train_dataset['z'], lat_and_inv=lat_and_inv, max_processes=self._max_processes,
-                    # )
-                    task['perms'] = perm.find_perms(
-                        R_train_sync_mat,
-                        train_dataset['z'],
-                        # lat_and_inv=None,
-                        lat_and_inv=lat_and_inv,
-                        callback=callback,
-                        max_processes=self._max_processes,
-                    )
-
-                    # NEW
-
-                    USE_EXTRA_PERMS = False
-
-                    if USE_EXTRA_PERMS:
-                        task['perms'] = perm.find_extra_perms(
-                            R_train_sync_mat,
-                            train_dataset['z'],
-                            # lat_and_inv=None,
-                            lat_and_inv=lat_and_inv,
-                            callback=callback,
-                            max_processes=self._max_processes,
-                        )
-
-                    # NEW
-
-                    # NEW
-
-                    USE_FRAG_PERMS = False
-
-                    if USE_FRAG_PERMS:
-                        frag_perms = perm.find_frag_perms(
-                            R_train_sync_mat,
-                            train_dataset['z'],
-                            lat_and_inv=lat_and_inv,
-                            max_processes=self._max_processes,
-                        )
-                        task['perms'] = np.vstack((task['perms'], frag_perms))
-                        task['perms'] = np.unique(task['perms'], axis=0)
-
-                        print(
-                            '| Keeping '
-                            + str(task['perms'].shape[0])
-                            + ' unique permutations.'
-                        )
-
-                    # NEW
-
-            else:  # use provided perms
-
-                n_atoms = len(task['z'])
-                n_perms, perms_len = perms.shape
-
-                if perms_len != n_atoms:
-                    raise ValueError(  # TODO: Document me
-                        'Provided permutations do not match the number of atoms in dataset.'
-                    )
-                else:
-
-                    self.log.info(
-                        'Using {:d} externally provided permutations.'.format(n_perms)
-                    )
-
-                    task['perms'] = perms
+            print("use_symm is disabled")
 
         else:
             task['perms'] = np.arange(train_dataset['R'].shape[1])[
@@ -548,31 +294,10 @@ class GDMLTrain(object):
 
         return task
 
+
+
+
     def create_task_from_model(self, model, dataset):
-        """
-        Create a data structure of custom type `task` from existing
-        an structure of custom type `model`. This method is used to
-        resume training of unconverged models.
-
-        Any hyperparameter (including all symmetry permutations) in the
-        provided model file is reused without further optimization. The
-        current linear coeffiecient are used as starting point for the
-        iterative training procedure.
-
-        Parameters
-        ----------
-            model : :obj:`dict`
-                Data structure of custom type :obj:`model` based on which
-                to create the training task.
-            dataset : :obj:`dict`
-                Data structure of custom type :obj:`dataset` containing
-                the original dataset from which the provided model emerged.
-
-        Returns
-        -------
-            dict
-                Data structure of custom type :obj:`task`.
-        """
 
         idxs_train = model['idxs_train']
         R_train = dataset['R'][idxs_train, :, :]
@@ -637,50 +362,7 @@ class GDMLTrain(object):
         alphas_F,
         alphas_E=None,
     ):
-        """
-        Create a data structure of custom type `model`.
-
-        These data structures contain the trained model are everything
-        that is needed to generate predictions for new inputs.
-
-        Each task also contains the MD5 fingerprints of the used datasets.
-
-        Parameters
-        ----------
-            task : :obj:`dict`
-                Data structure of custom type :obj:`task` from which
-                the model emerged.
-            solver : :obj:`str`
-                Identifier string for the solver that has been used to
-                train this model.
-            R_desc : :obj:`numpy.ndarray`, optional
-                    An 2D array of size M x D containing the
-                    descriptors of dimension D for M
-                    molecules.
-            R_d_desc : :obj:`numpy.ndarray`, optional
-                    A 2D array of size M x D x 3N containing of the
-                    descriptor Jacobians for M molecules. The descriptor
-                    has dimension D with 3N partial derivatives with
-                    respect to the 3N Cartesian coordinates of each atom.
-            tril_perms_lin : :obj:`numpy.ndarray`
-                1D array containing all recovered permutations
-                expanded as one large permutation to be applied to a
-                tiled copy of the object to be permuted.
-            std : float
-                Standard deviation of the training labels.
-            alphas_F : :obj:`numpy.ndarray`
-                    A 1D array of size 3NM containing of the linear
-                    coefficients that correspond to the force constraints.
-            alphas_E : :obj:`numpy.ndarray`, optional
-                    A 1D array of size N containing of the linear
-                    coefficients that correspond to the energy constraints.
-
-        Returns
-        -------
-            dict
-                Data structure of custom type :obj:`model`.
-        """
-
+        
         n_train, dim_d = R_d_desc.shape[:2]
         n_atoms = int((1 + np.sqrt(8 * dim_d + 1)) / 2)
 
@@ -733,61 +415,13 @@ class GDMLTrain(object):
 
         return model
 
-    # from memory_profiler import profile
-    # @profile
-    def train(  # noqa: C901
+
+    def train(
         self,
         task,
         save_progr_callback=None,  # TODO: document me
         callback=None,
     ):
-        """
-        Train a model based on a training task.
-
-        Parameters
-        ----------
-            task : :obj:`dict`
-                Data structure of custom type :obj:`task`.
-            desc_callback : callable, optional
-                Descriptor and descriptor Jacobian generation status.
-                    current : int
-                        Current progress (number of completed descriptors).
-                    total : int
-                        Task size (total number of descriptors to create).
-                    done_str : :obj:`str`, optional
-                        Once complete, this string contains the
-                        time it took complete this task (seconds).
-            ker_progr_callback : callable, optional
-                Kernel assembly progress function that takes three
-                arguments:
-                    current : int
-                        Current progress (number of completed entries).
-                    total : int
-                        Task size (total number of entries to create).
-                    done_str : :obj:`str`, optional
-                        Once complete, this string contains the
-                        time it took to assemble the kernel (seconds).
-            solve_callback : callable, optional
-                Linear system solver status.
-                    done : bool
-                        False when solver starts, True when it finishes.
-                    done_str : :obj:`str`, optional
-                        Once done, this string contains the runtime
-                        of the solver (seconds).
-
-        Returns
-        -------
-            :obj:`dict`
-                Data structure of custom type :obj:`model`.
-
-        Raises
-        ------
-            ValueError
-                If the provided dataset contains invalid lattice
-                vectors.
-        """
-
-        print(">>>> ENTER GDML.train")
 
         task = dict(task)  # make mutable
 
@@ -940,22 +574,7 @@ class GDMLTrain(object):
             solver_keys['norm_y_train'] = np.linalg.norm(y)
 
             if not is_conv:
-                self.log.warning(
-                    'Iterative solver did not converge!\n'
-                    + 'The optimization problem underlying this force field reconstruction task seems to be highly ill-conditioned.\n\n'
-                    + ui.color_str('Troubleshooting tips:\n', bold=True)
-                    + ui.wrap_indent_str(
-                        '(1) ',
-                        'Are the provided geometries highly correlated (i.e. very similar to each other)?',
-                    )
-                    + '\n'
-                    + ui.wrap_indent_str(
-                        '(2) ', 'Try a larger length scale (sigma) parameter.'
-                    )
-                    + '\n\n'
-                    + ui.color_str('Note:', bold=True)
-                    + ' We will continue with this unconverged model, but its accuracy will likely be very bad.'
-                )
+                print('Iterative solver did not converge!')
 
         alphas_E = None
         alphas_F = alphas
@@ -1006,48 +625,6 @@ class GDMLTrain(object):
     def _recov_int_const(
         self, model, task, R_desc=None, R_d_desc=None
     ):  # TODO: document e_err_inconsist return
-        """
-        Estimate the integration constant for a force field model.
-
-        The offset between the energies predicted for the original training
-        data and the true energy labels is computed in the least square sense.
-        Furthermore, common issues with the user-provided datasets are self
-        diagnosed here.
-
-        Parameters
-        ----------
-            model : :obj:`dict`
-                Data structure of custom type :obj:`model`.
-            task : :obj:`dict`
-                Data structure of custom type :obj:`task`.
-            R_desc : :obj:`numpy.ndarray`, optional
-                    An 2D array of size M x D containing the
-                    descriptors of dimension D for M
-                    molecules.
-            R_d_desc : :obj:`numpy.ndarray`, optional
-                    A 2D array of size M x D x 3N containing of the
-                    descriptor Jacobians for M molecules. The descriptor
-                    has dimension D with 3N partial derivatives with
-                    respect to the 3N Cartesian coordinates of each atom.
-
-        Returns
-        -------
-            float
-                Estimate for the integration constant.
-
-        Raises
-        ------
-            ValueError
-                If the sign of the force labels in the dataset from
-                which the model emerged is switched (e.g. gradients
-                instead of forces).
-            ValueError
-                If inconsistent/corrupted energy labels are detected
-                in the provided dataset.
-            ValueError
-                If different scales in energy vs. force labels are
-                detected in the provided dataset.
-        """
 
         gdml_predict = GDMLPredict(
             model,
