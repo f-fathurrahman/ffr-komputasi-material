@@ -145,3 +145,10 @@ corrcoef = np.corrcoef(E_ref, E_pred)[0, 1]
 # Least squares estimate for integration constant.
 c = np.sum(E_ref - E_pred) / E_ref.shape[0]
 print("Recover integration constant: c = ", c)
+
+import matplotlib.pyplot as plt
+sidx = np.argsort(E_ref)
+plt.plot(E_ref[sidx], label="E_ref")
+plt.plot(E_pred[sidx]+c, label="E_pred+c")
+plt.legend()
+plt.show()
