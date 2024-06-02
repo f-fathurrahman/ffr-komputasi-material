@@ -196,6 +196,10 @@ else:
     alphas = -np.linalg.lstsq(K, y, rcond=-1)[0]
 
 
+print("average alphas = ", np.average(alphas))
+print(f"sum abs alphas = {np.sum(np.abs(alphas))}")
+
+
 
 # The parameters are found, now we need to create a model
 # and find
