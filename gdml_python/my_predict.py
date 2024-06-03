@@ -12,17 +12,14 @@ def _predict_wkr(
     train_obj, r, r_desc_d_desc, lat_and_inv, wkr_start_stop=None, chunk_size=None
 ):
     sig, n_perms = train_obj.sig, train_obj.n_perms
-
     desc_func = train_obj.desc_func
-
     R_desc_perms = train_obj.R_desc_perms
     R_d_desc_alpha_perms = train_obj.R_d_desc_alpha_perms
+    if train_obj.alphas_E_lin is not None:
+        alphas_E_lin = train_obj.alphas_E_lin
 
     print("R_desc_perms.shape = ", R_desc_perms.shape)
     print("R_d_desc_alpha_perms.shape = ", R_d_desc_alpha_perms.shape)
-
-    if train_obj.alphas_E_lin is not None:
-        alphas_E_lin = train_obj.alphas_E_lin
 
     r_desc, r_d_desc = r_desc_d_desc or desc_func.from_R(
         r, lat_and_inv, max_processes=1
@@ -126,9 +123,6 @@ def _predict_wkr(
         r_d_desc,
         F,
     )  # 'r_d_desc.T.dot(F)' for our special representation of 'r_d_desc'
-
-    print("Pass here 121")
-    print("out = ", out)
 
     return out
 
