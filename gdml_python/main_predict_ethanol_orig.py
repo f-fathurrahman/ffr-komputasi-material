@@ -16,7 +16,7 @@ gdml = GDMLPredict(model)
 R, E_true, F_true = load_dataset(idx_data=1)
 Natoms = R.shape[0]
 print("Natoms = ", Natoms)
-r = R.reshape(1,Natoms*3)
+r = R.reshape(1,Natoms*3) # we need to reshape it
 E_pred, F_pred = gdml.predict(r)
 
 print("E_pred = ", E_pred)

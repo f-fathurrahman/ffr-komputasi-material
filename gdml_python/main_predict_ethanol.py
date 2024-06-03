@@ -9,13 +9,17 @@ def load_dataset(idx_data=0):
     F = dataset["F"][idx_data]
     return R, E, F
 
-model = np.load("m_ethanol.npz")
-#model = np.load("ethanol-aims.PBE.TS.light.tier.1-train200-sym6.npz")
+#model = np.load("m_ethanol.npz")
+model = np.load("ethanol-aims.PBE.TS.light.tier.1-train200-sym6.npz")
 gdml = GDMLPredict(model)
 
 #idxs_train = model["idxs_train"]
 R, E_true, F_true = load_dataset(idx_data=1)
-E_pred, F_pred = gdml.predict(R[None,:])
+#E_pred, F_pred = gdml.predict(R[None,:])
+Natoms = R.shape[0]
+print("Natoms = ", Natoms)
+r = R.reshape(1,Natoms*3) # we need to reshape it
+E_pred, F_pred = gdml.predict(r)
 
 print("E_pred = ", E_pred)
 print("E_true = ", E_true)
