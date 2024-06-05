@@ -143,9 +143,11 @@ y_std = Statistics.std(y, corrected=false) # ddof=0 in np.std
 y *= (1/y_std)
 
 K .*= -1
-λ = 1e-10  # regularization strength, should be the same as task["lam"] ???
+λ = 1e-10  # regularization strength
 K[:,:] .= K[:,:] + I*λ
 
-chol_res = cholesky(Symmetric(K))
+K_chol_fact = cholesky(Symmetric(K))
+α_F = K_chol_fact\y
+α_F .*= -1
 
 
