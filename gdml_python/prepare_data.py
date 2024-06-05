@@ -41,6 +41,7 @@ def prepare_data(
         # if "E" in train_dataset:
         print("Will call draw_strat_sample")
         idxs_train = my_draw_strat_sample(train_dataset["E"], n_train)
+        np.savez("idxs_train_strat_sample.npz", idxs_train)
 
     # Assuming same md5_train and md5_valid
     excl_idxs = idxs_train
