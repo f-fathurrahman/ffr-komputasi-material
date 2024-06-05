@@ -38,7 +38,7 @@ function uncompress_R_d(Natoms, R_d_desc)
 end
 
 
-function gen_descriptor(Natoms, R)
+function calc_descriptor(Natoms, R)
     dim_i = 3*Natoms
     desc_dim = (Natoms * (Natoms - 1)) / 2 |> Int64
     #
@@ -71,7 +71,7 @@ R_desc_v = Vector{Vector{Float64}}(undef,Ntrain)
 R_d_desc_v = Vector{Matrix{Float64}}(undef,Ntrain)
 
 for i in 1:2
-    R_desc_v[i], R_d_desc_v[i] = gen_descriptor(Natoms, R_all[i])
+    R_desc_v[i], R_d_desc_v[i] = calc_descriptor(Natoms, R_all[i])
 end
 
 
