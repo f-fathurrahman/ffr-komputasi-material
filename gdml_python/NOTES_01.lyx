@@ -81,6 +81,185 @@
 \begin_body
 
 \begin_layout Standard
+Viktor Martvaal's Master Thesis
+\end_layout
+
+\begin_layout Standard
+Force field as gradient of energy
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\hat{f}_{F}(\mathbf{x})=-\nabla\hat{f}_{E}(\mathbf{x})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+dengan 
+\begin_inset Formula $\mathbf{x}\in\mathbb{R}^{3N}$
+\end_inset
+
+ adalah posisi atom.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\hat{f}_{E}$
+\end_inset
+
+ adalah estimator energi: 
+\begin_inset Formula $\mathbb{R}^{3N}\rightarrow\mathbb{R}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\hat{f}_{F}$
+\end_inset
+
+ adalah estimator gaya: 
+\begin_inset Formula $\mathbb{R}^{3N}\rightarrow\mathbb{R}^{3N}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Pada GDML estimator untuk energi dimodelkan sebagai Gaussian Process (GP)
+ dengan vektor rerata nol.
+\begin_inset Formula 
+\[
+\hat{f}_{E}(\mathbf{x})\sim\mathcal{GP}\left[\mathbf{0},k(\mathbf{x},\mathbf{x}')\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Karena 
+\begin_inset Formula $\hat{f}_{F}(\mathbf{x})=-\nabla\hat{f}_{E}(\mathbf{x})$
+\end_inset
+
+ maka estimator gaya dapat dihitung dari
+\begin_inset Formula 
+\[
+\hat{f}_{F}(\mathbf{x})\sim\mathcal{GP}\left[\mathbf{0},\nabla_{\mathbf{x}}k(\mathbf{x},\mathbf{x}')\nabla_{\mathbf{x}'}^{T}\right]
+\]
+
+\end_inset
+
+Di sini 
+\begin_inset Formula $k(\mathbf{x},\mathbf{x}')$
+\end_inset
+
+ adalah fungsi kovariansi atau sering juga disebut sebagai fungsi kernel.
+\end_layout
+
+\begin_layout Standard
+Estimator untuk gaya memiliki fungsi kovariansi:
+\begin_inset Formula 
+\[
+\nabla_{\mathbf{x}}k(\mathbf{x},\mathbf{x}')\nabla_{\mathbf{x}'}^{T}=\mathrm{Hess}_{\mathbf{x}}(k)=k_{H}(\mathbf{x},\mathbf{x}')\in\mathbb{R}^{3N\times3N}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dengan input himpunan geometri atom, estimator untuk gaya
+\begin_inset Formula 
+\[
+\hat{f}_{F}(\mathbf{X}')=\boldsymbol{\alpha}K_{H}(\mathbf{X},\mathbf{X}')^{T}=\sum_{i}^{M}\sum_{j}^{3N}\left(\alpha_{i}\right)_{j}\frac{\partial}{\partial x_{j}}\nabla k(\mathbf{X}',\mathbf{X}_{i})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+dengan
+\begin_inset Formula 
+\[
+\boldsymbol{\alpha}=\left(K_{H}(\mathbf{X},\mathbf{X})+\lambda\mathbf{I}\right)^{-1}\mathbf{y}_{F}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathbf{X}\in\mathbb{R}^{M\times3N}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathbf{y}_{F}\in\mathbb{R}^{3NM}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathbf{X}'\in\mathbb{R}^{L\times3N}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $M$
+\end_inset
+
+ adalah jumlah data latih
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $L$
+\end_inset
+
+ adalah jumlah data uji atau data yang ingin diprediksi
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $k(\mathbf{X}',\mathbf{X}_{i})\in\mathbb{R}^{L}$
+\end_inset
+
+ adalah vektor kovariansi antara 
+\begin_inset Formula $\mathbf{X}'$
+\end_inset
+
+ dan 
+\begin_inset Formula $\mathbf{X}_{i}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\lambda$
+\end_inset
+
+ adalah parameter regularisasi
+\end_layout
+
+\begin_layout Standard
+—————
+\end_layout
+
+\begin_layout Standard
 Machine learning of accurate energy-conserving molecular force fields
 \end_layout
 
