@@ -9,8 +9,8 @@ def load_dataset(idx_data=0):
     F = dataset["F"][idx_data]
     return R, E, F
 
-#model = np.load("m_ethanol.npz")
-model = np.load("ethanol-aims.PBE.TS.light.tier.1-train200-sym6.npz")
+model = np.load("m_ethanol.npz")
+#model = np.load("ethanol-aims.PBE.TS.light.tier.1-train200-sym6.npz")
 gdml = GDMLPredict(model)
 
 #idxs_train = model["idxs_train"]

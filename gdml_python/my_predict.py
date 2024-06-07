@@ -51,6 +51,7 @@ def _predict_wkr(
 
     E_F = np.zeros((dim_d + 1,))
     F = E_F[1:]
+    # First data is energy (?) the rest are forces (using linear index)
 
     wkr_start *= n_perms
     wkr_stop *= n_perms
@@ -58,6 +59,7 @@ def _predict_wkr(
     b_start = wkr_start
     print("wkr_start = ", wkr_start)
     print("wkr_stop = ", wkr_stop)
+    # This is loop over all training data
     for b_stop in list(range(wkr_start + dim_c, wkr_stop, dim_c)) + [wkr_stop]:
         #
         print("b_start = ", b_start, " b_stop = ", b_stop)
