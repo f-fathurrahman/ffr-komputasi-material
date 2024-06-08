@@ -256,6 +256,108 @@ dengan
 \end_layout
 
 \begin_layout Standard
+Prediktor untuk energu dapat diperoleh dengan integrasi:
+\begin_inset Formula 
+\[
+\hat{f}_{E}(\mathbf{X}')=\boldsymbol{\alpha}K_{G}(\mathbf{X}',\mathbf{X})^{T}=\sum_{i}^{M}\sum_{j}^{3N}\left(\alpha_{i}\right)_{j}\frac{\partial}{\partial x_{j}}k(\mathbf{X}',\mathbf{X}_{i})+c
+\]
+
+\end_inset
+
+dengan 
+\begin_inset Formula $c$
+\end_inset
+
+ adalah konstanta integrasi:
+\begin_inset Formula 
+\[
+c=\frac{1}{M}\sum_{i}^{M}\left[E_{i}+\hat{f}_{E}(\mathbf{X}_{i})\right]
+\]
+
+\end_inset
+
+dan 
+\begin_inset Formula $E_{i}$
+\end_inset
+
+ adalah energi ke-
+\begin_inset Formula $i$
+\end_inset
+
+ dari data latih.
+\end_layout
+
+\begin_layout Standard
+Deskriptor:
+\begin_inset Formula 
+\[
+\mathbf{x}\rightarrow D(\mathbf{x})
+\]
+
+\end_inset
+
+dengan 
+\begin_inset Formula $D(\mathbf{x})$
+\end_inset
+
+ adalah fungsi deskriptor.
+ Dengan menggunakan deskriptor pada GDML, fungsi kernel menjadi
+\begin_inset Formula 
+\[
+k(\mathbf{x},\mathbf{x}')\rightarrow J_{D}\nabla_{D}k_{D}
+\]
+
+\end_inset
+
+dan
+\begin_inset Formula 
+\[
+k_{H}(\mathbf{x},\mathbf{x}')=J_{D}\left(\nabla_{D}k_{D}\,\nabla_{D'}^{T}\right)J_{D'}^{T}
+\]
+
+\end_inset
+
+dengan 
+\begin_inset Formula $k_{D}=k(D(\mathbf{x}),D(\mathbf{x}'))$
+\end_inset
+
+ adalah kovariansi pada ruang deskriptor
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $J_{D}$
+\end_inset
+
+ adalah Jacobian dari fungsi deskriptor.
+\end_layout
+
+\begin_layout Standard
+Deskriptor yang sudah 
+\begin_inset Quotes eld
+\end_inset
+
+diratakan
+\begin_inset Quotes erd
+\end_inset
+
+ (flattened)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+D(\mathbf{x}_{i},\mathbf{x}_{j})=\begin{cases}
+\left|\mathbf{x}_{i}-\mathbf{x}_{j}\right|^{-1} & i>j\\
+0 & i\leq j
+\end{cases}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 —————
 \end_layout
 
