@@ -150,4 +150,19 @@ K_chol_fact = cholesky(Symmetric(K))
 α_F = K_chol_fact\y
 α_F .*= -1
 
+α_F_res = reshape(α_F, (3, Natoms, Ntrain))
+
+desc_dim = (Natoms * (Natoms - 1)) / 2 |> Int64
+idx_rows, idx_cols, idx_lin = tril_indices(Natoms)
+
+R_d_desc_α = zeros(Float64, desc_dim, Ntrain)
+dvji = zeros(Float64, 3)
+for itrain in 1:Ntrain
+    ip = 1
+    for (i, j) in zip(idx_rows, idx_cols)
+        @views dvji[:] = α_F_res[:,j,itrain] - α_F_res[:,i,itrain]
+        R_d_desc_α[ip,itrain] = dot(R_d_desc_v[itrain][:,ip], dvji)
+        ip += 1
+    end
+end
 

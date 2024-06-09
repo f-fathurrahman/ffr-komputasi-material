@@ -96,9 +96,55 @@ y_std = np.std(y)
 dim_i = desc.dim_i
 
 #
-R_d_desc_alpha = desc.d_desc_dot_vec(R_d_desc, alphas.reshape(-1, dim_i))
-print("sum abs R_d_desc_alpha = ", np.sum(np.abs(R_d_desc_alpha)))
+#R_d_desc_alpha = desc.d_desc_dot_vec(R_d_desc, alphas.reshape(-1, dim_i))
+#print("sum abs R_d_desc_alpha = ", np.sum(np.abs(R_d_desc_alpha)))
+vecs = alphas.reshape(-1, dim_i)
+print("vecs.shape now 1 = ", vecs.shape)
+i, j = desc.tril_indices # these are atom indices
+vecs = vecs.reshape(vecs.shape[0], -1, 3)
+print("vecs.shape now 2 = ", vecs.shape)
 
+print("R_d_desc.shape = ", R_d_desc.shape)
+dvij = vecs[:,j,:] - vecs[:,i,:] # just to know the shape
+print("dvij.shape = ", dvij.shape)
+
+R_d_desc_alpha = np.einsum('...ij,...ij->...i', R_d_desc, vecs[:, j, :] - vecs[:, i, :])
+print("R_d_desc_alpha.shape = ", R_d_desc_alpha.shape)
+print("sum abs R_d_desc_alpha v2 = ", np.sum(np.abs(R_d_desc_alpha)))
+
+"""
+sum abs alphas = 227310078627.19122
+sum abs R_d_desc_alpha =  70018251794.06943
+
+vecs.shape now 1 =  (200, 27)
+vecs.shape now 2 =  (200, 9, 3)
+R_d_desc.shape =  (200, 36, 3)
+dvij.shape =  (200, 36, 3)
+R_d_desc_alpha.shape =  (200, 36)
+sum abs R_d_desc_alpha v2 =  70018251794.06943
+
+Console output
+
+In [10]: np.dot(R_d_desc[0,0,:], dvij[0,0,:])
+Out[10]: 2285994.9196487283
+
+In [11]: R_d_desc_alpha[0,0]
+Out[11]: 2285994.9196487283
+
+In [12]: np.dot(R_d_desc[0,1,:], dvij[0,1,:])
+Out[12]: -20410071.571386464
+
+In [13]: R_d_desc_alpha[0,1]
+Out[13]: -20410071.571386464
+
+"""
+
+
+
+#exit()
+
+
+"""
 # Prepare model dict
 model = {
     'type': 'm',
@@ -151,12 +197,14 @@ corrcoef = np.corrcoef(E_ref, E_pred)[0, 1]
 c = np.sum(E_ref - E_pred) / E_ref.shape[0]
 print("Recover integration constant: c = ", c)
 
-import matplotlib.pyplot as plt
-import matplotlib.style
-matplotlib.style.use("dark_background")
+#import matplotlib.pyplot as plt
+#import matplotlib.style
+#matplotlib.style.use("dark_background")
+#
+#sidx = np.argsort(E_ref)
+#plt.plot(E_ref[sidx], label="E_ref")
+#plt.plot(E_pred[sidx]+c, label="E_pred+c")
+#plt.legend()
+#plt.show()
+"""
 
-sidx = np.argsort(E_ref)
-plt.plot(E_ref[sidx], label="E_ref")
-plt.plot(E_pred[sidx]+c, label="E_pred+c")
-plt.legend()
-plt.show()
