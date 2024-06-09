@@ -94,7 +94,12 @@ y = task["F_train"].ravel().copy()
 y_std = np.std(y)
 
 dim_i = desc.dim_i
+
+#
 R_d_desc_alpha = desc.d_desc_dot_vec(R_d_desc, alphas.reshape(-1, dim_i))
+print("sum abs R_d_desc_alpha = ", np.sum(np.abs(R_d_desc_alpha)))
+
+# Prepare model dict
 model = {
     'type': 'm',
     'code_version': '0.0.1ffr',
@@ -147,6 +152,9 @@ c = np.sum(E_ref - E_pred) / E_ref.shape[0]
 print("Recover integration constant: c = ", c)
 
 import matplotlib.pyplot as plt
+import matplotlib.style
+matplotlib.style.use("dark_background")
+
 sidx = np.argsort(E_ref)
 plt.plot(E_ref[sidx], label="E_ref")
 plt.plot(E_pred[sidx]+c, label="E_pred+c")
