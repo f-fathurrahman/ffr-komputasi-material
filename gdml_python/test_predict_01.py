@@ -175,7 +175,44 @@ F -= mat52_base.dot(R_d_desc_alpha)
 E_pred0 = a_x2.dot(mat52_base)*y_std
 print("E_pred0 = ", E_pred0)
 
-F_pred = desc.vec_dot_d_desc(r_d_desc, F)*y_std
-F_pred = F_pred.reshape(Natoms,3)
+# Multiply with r_d_desc with F
+#r_d_F = desc.vec_dot_d_desc(r_d_desc, F)*y_std
+
+r_jac = np.copy(r_d_desc)
+vecs = np.copy(F)
+
+if r_jac.ndim == 2:
+    r_jac = r_jac[None, ...]
+
+if vecs.ndim == 1:
+    vecs = vecs[None, ...]
+
+assert (
+    r_jac.shape[0] == 1
+    or vecs.shape[0] == 1
+    or R_d_desc.shape[0] == vecs.shape[0]
+)
+# either multiple descriptors or multiple vectors at once, not both
+# (or the same number of both, than it will must be a multidot) (???)
+
+n = np.max((r_jac.shape[0], vecs.shape[0]))
+# In the present case: n = 1
+i, j = desc.tril_indices
+
+
+"""
+In [13]: vecs[...,None].shape
+Out[13]: (1, 36, 1)
+
+In [14]: vecs.shape
+Out[14]: (1, 36)
+"""
+
+out = np.zeros((n, Natoms, Natoms, 3))
+out[:, i, j, :] = r_jac * vecs[..., None]
+out[:, j, i, :] = -out[:, i, j, :]
+r_d_F = out.sum(axis=1).reshape(n, -1) * y_std
+
+F_pred = r_d_F.reshape(Natoms,3)
 print(F_pred)
 

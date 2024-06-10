@@ -179,7 +179,9 @@ class Desc(object):
             R_d_desc.shape[0] == 1
             or vecs.shape[0] == 1
             or R_d_desc.shape[0] == vecs.shape[0]
-        )  # either multiple descriptors or multiple vectors at once, not both (or the same number of both, than it will must be a multidot)
+        )
+        # either multiple descriptors or multiple vectors at once, not both
+        # (or the same number of both, than it will must be a multidot)
 
         n = np.max((R_d_desc.shape[0], vecs.shape[0]))
         i, j = self.tril_indices
