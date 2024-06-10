@@ -358,6 +358,18 @@ D(\mathbf{x}_{i},\mathbf{x}_{j})=\begin{cases}
 \end_layout
 
 \begin_layout Standard
+Fungsi kernel:
+\begin_inset Formula 
+\[
+k(\mathbf{x},\mathbf{x}')=\left[1+\frac{\sqrt{5}\left|\mathbf{x}_{i}-\mathbf{x}_{j}\right|}{\sigma}+\frac{5\left|\mathbf{x}_{i}-\mathbf{x}_{j}\right|^{2}}{3\sigma^{2}}\right]\exp\left[-\frac{\sqrt{5}\left|\mathbf{x}_{i}-\mathbf{x}_{j}\right|}{\sigma}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 —————
 \end_layout
 
