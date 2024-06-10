@@ -1,4 +1,4 @@
-using LinearAlgebra: norm, I, cholesky, Symmetric
+using LinearAlgebra: norm, I, cholesky, Symmetric, dot
 using Serialization: deserialize
 import Statistics
 
@@ -164,5 +164,18 @@ for itrain in 1:Ntrain
         R_d_desc_α[ip,itrain] = dot(R_d_desc_v[itrain][:,ip], dvji)
         ip += 1
     end
+end
+
+
+# Predict for one data point
+r = R_all[idxs_train[2]] # 2nd data point from training set
+r_desc, r_d_desc = calc_descriptor(Natoms, r)
+println("sum abs r_desc = ", sum(abs.(r_desc)))
+
+diff_ab = zeros(Float64, desc_dim, Ntrain)
+norm_ab = zeros(Float64, Ntrain)
+for itrain in 1:Ntrain
+    @views diff_ab[:,itrain] .= r_desc .- R_desc_v[itrain]
+    norm_ab[itrain] = sqrt(5) * norm(diff_ab[:,itrain])
 end
 
