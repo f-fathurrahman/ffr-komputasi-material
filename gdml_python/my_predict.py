@@ -15,6 +15,9 @@ def _predict_wkr(
     print("\n ***** ENTER _predict_wkr\n")
 
     sig, n_perms = train_obj.sig, train_obj.n_perms
+    print("sig = ", sig)
+    print("n_perms = ", n_perms)
+
     desc_func = train_obj.desc_func
     # These are from training data
     R_desc_perms = train_obj.R_desc_perms
@@ -32,6 +35,7 @@ def _predict_wkr(
     )  # no additional forking during parallelization
     print("Input: r_desc.shape = ", r_desc.shape)
     print("Input: r_d_desc.shape = ", r_d_desc.shape)
+    print("sum abs r_desc = ", np.sum(np.abs(r_desc)))
 
     n_train = int(R_desc_perms.shape[0] / n_perms)
     print("n_train = ", n_train)
@@ -67,7 +71,7 @@ def _predict_wkr(
     print("wkr_start = ", wkr_start)
     print("wkr_stop = ", wkr_stop)
     #
-    # This is loop over all training data block
+    # This is loop over all training data block/chunk
     #
     for b_stop in list(range(wkr_start + dim_c, wkr_stop, dim_c)) + [wkr_stop]:
         #
@@ -98,10 +102,15 @@ def _predict_wkr(
             rj_desc_perms,
             out=diff_ab_perms,
         )
+        print("sum abs diff_ab = ", np.sum(np.abs(diff_ab_perms)))
+        #
         norm_ab_perms = sqrt5 * np.linalg.norm(diff_ab_perms, axis=1)
-
+        print("sum abs norm ab = ", np.sum(np.abs(norm_ab_perms)))
+        #
         np.exp(-norm_ab_perms * sig_inv, out=mat52_base)
         mat52_base *= mat52_base_fact
+        print("sum abs mat52_base = ", np.sum(np.abs(mat52_base)))
+
         print("rj_d_desc_alpha_perms.shape = ", rj_d_desc_alpha_perms.shape)
         print("a_x2.shape = ", a_x2.shape)
         np.einsum(
@@ -114,6 +123,7 @@ def _predict_wkr(
 
         # Note: Energies are automatically predicted with a flipped sign here (because -E are trained, instead of E)
         E_F[0] += a_x2.dot(mat52_base)
+        print("E_F[0] = ", E_F[0])
 
         # Note: Energies are automatically predicted with a flipped sign here (because -E are trained, instead of E)
         if train_obj.alphas_E_lin is not None:
@@ -314,7 +324,9 @@ class GDMLPredict(object):
 
         # Add singleton dimension if input is (,3N).
         if R is not None and R.ndim == 1:
+            print("Adding singleton dimension to R")
             R = R[None, :]
+            print("R.shape = ", R.shape)
 
         # Use precomputed descriptors in training mode.
         is_desc_in_cache = self.R_desc is not None and self.R_d_desc is not None
@@ -331,16 +343,17 @@ class GDMLPredict(object):
 
         dim_i = 3 * self.n_atoms
         n_pred = self.R_desc.shape[0] if R is None else R.shape[0]
+        print("n_pred = ", n_pred)
 
+        # Output array (energies and forces)
         E_F = np.empty((n_pred, dim_i + 1))
 
-        print("n_pred = ", n_pred)
         for i in range(n_pred):
 
             if R is not None:
                 print("R[i] = ", R[i])
 
-            if is_desc_in_cache:
+            if is_desc_in_cache and R is None:
                 # In case of using training data this will always be the true
                 print("desc is in cache")
                 r_desc, r_d_desc = self.R_desc[i], self.R_d_desc[i]
@@ -353,6 +366,8 @@ class GDMLPredict(object):
                 self, None, (r_desc, r_d_desc),
                 self.lat_and_inv,
                 chunk_size=self.chunk_size)
+
+        print("E after _predict_wkr (before multiplied by self.std) = ", E_F[:,0])
 
         print("self.std = ", self.std)
         print("self.c = ", self.c)

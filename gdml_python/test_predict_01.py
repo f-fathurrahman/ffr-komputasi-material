@@ -129,8 +129,53 @@ print("r original shape = ", r.shape)
 Natoms = r.shape[0]
 print("Natoms = ", Natoms)
 r = r.reshape(1,Natoms*3) # we need to reshape it
-E_pred, F_pred = gdml_predict.predict(r)
 
-print("E_pred = ", E_pred)
-print("F_pred = ")
+if False:
+    E_pred, F_pred = gdml_predict.predict(r)
+    F_pred = F_pred.reshape(Natoms,3)
+    print("E_pred = ", E_pred)
+    print("F_pred = ")
+    print(F_pred)
+    exit()
+
+# Compute descriptor and its Jacobian
+lat_and_inv = None
+r_desc, r_d_desc = desc.from_R(r, lat_and_inv)
+
+print("sum abs r_desc = ", np.sum(np.abs(r_desc)))
+
+
+# These are only for the case of n_perms == 1
+
+
+diff_ab = np.subtract(
+    np.broadcast_to(r_desc, R_desc.shape),
+    R_desc
+)
+print("sum abs diff_ab = ", np.sum(np.abs(diff_ab)))
+
+diag_scale_fact = 5.0 / sig
+
+norm_ab = np.sqrt(5) * np.linalg.norm(diff_ab, axis=1)
+print("sum abs norm_ab = ", np.sum(np.abs(norm_ab)))
+
+mat52_base_fact = 5.0 / (3 * sig ** 3)
+mat52_base = np.exp(-norm_ab/sig)
+mat52_base *= mat52_base_fact
+print("sum abs mat52_base = ", np.sum(np.abs(mat52_base)))
+
+# column wise dot product
+a_x2 = np.einsum("ji,ji->j", diff_ab, R_d_desc_alpha)
+
+
+F = (a_x2 * mat52_base).dot(diff_ab) * diag_scale_fact
+mat52_base *= norm_ab + sig
+F -= mat52_base.dot(R_d_desc_alpha)
+
+E_pred0 = a_x2.dot(mat52_base)*y_std
+print("E_pred0 = ", E_pred0)
+
+F_pred = desc.vec_dot_d_desc(r_d_desc, F)*y_std
+F_pred = F_pred.reshape(Natoms,3)
 print(F_pred)
+

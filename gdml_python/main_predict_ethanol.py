@@ -11,6 +11,10 @@ def load_dataset(idx_data=0):
 
 model = np.load("m_ethanol.npz")
 #model = np.load("ethanol-aims.PBE.TS.light.tier.1-train200-sym6.npz")
+for k in model.keys():
+    print("key = ", k)
+
+# This will simply copy or cache some variables from model dict ?
 gdml = GDMLPredict(model)
 
 #idxs_train = model["idxs_train"]
@@ -19,7 +23,11 @@ R, E_true, F_true = load_dataset(idx_data=1)
 Natoms = R.shape[0]
 print("Natoms = ", Natoms)
 r = R.reshape(1,Natoms*3) # we need to reshape it
+
+print("\n------ Calling gdml.predict()\n")
 E_pred, F_pred = gdml.predict(r)
+print("\n------ After calling gdml_predict\n")
+
 
 print("E_pred = ", E_pred)
 print("E_true = ", E_true)
