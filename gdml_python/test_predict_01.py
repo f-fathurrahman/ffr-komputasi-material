@@ -12,19 +12,6 @@ R_desc, R_d_desc, tril_perms_lin, desc, task, y = import_from_pickle()
 sig = 20
 lam = 1e-10
 
-# Run this to compare with the original version which uses multiprocessing
-#from gdml_train_function_02 import my_assemble_kernel_mat
-#K = -my_assemble_kernel_mat(
-#    R_desc,
-#    R_d_desc,
-#    tril_perms_lin,
-#    sig,
-#    desc,
-#    use_E_cstr=False
-#)  # Flip sign to make convex
-#print("shape of kernel matrix K = ", K.shape)
-#np.savez("ORIG_K_ethanol.npz", K)
-
 n_train, dim_d = R_d_desc.shape[:2]
 dim_i = 3 * int((1 + np.sqrt(8 * dim_d + 1)) / 2)
 
@@ -95,58 +82,8 @@ y_std = np.std(y)
 
 dim_i = desc.dim_i
 
-#
 R_d_desc_alpha = desc.d_desc_dot_vec(R_d_desc, alphas.reshape(-1, dim_i))
 print("sum abs R_d_desc_alpha = ", np.sum(np.abs(R_d_desc_alpha)))
-
-
-"""
-# Debugging d_desc_dot_vec
-vecs = alphas.reshape(-1, dim_i)
-print("vecs.shape now 1 = ", vecs.shape)
-i, j = desc.tril_indices # these are atom indices
-vecs = vecs.reshape(vecs.shape[0], -1, 3)
-print("vecs.shape now 2 = ", vecs.shape)
-
-print("R_d_desc.shape = ", R_d_desc.shape)
-dvij = vecs[:,j,:] - vecs[:,i,:] # just to know the shape
-print("dvij.shape = ", dvij.shape)
-
-R_d_desc_alpha = np.einsum('...ij,...ij->...i', R_d_desc, vecs[:, j, :] - vecs[:, i, :])
-print("R_d_desc_alpha.shape = ", R_d_desc_alpha.shape)
-print("sum abs R_d_desc_alpha v2 = ", np.sum(np.abs(R_d_desc_alpha)))
-"""
-
-
-"""
-sum abs alphas = 227310078627.19122
-sum abs R_d_desc_alpha =  70018251794.06943
-
-vecs.shape now 1 =  (200, 27)
-vecs.shape now 2 =  (200, 9, 3)
-R_d_desc.shape =  (200, 36, 3)
-dvij.shape =  (200, 36, 3)
-R_d_desc_alpha.shape =  (200, 36)
-sum abs R_d_desc_alpha v2 =  70018251794.06943
-
-Console output
-
-In [10]: np.dot(R_d_desc[0,0,:], dvij[0,0,:])
-Out[10]: 2285994.9196487283
-
-In [11]: R_d_desc_alpha[0,0]
-Out[11]: 2285994.9196487283
-
-In [12]: np.dot(R_d_desc[0,1,:], dvij[0,1,:])
-Out[12]: -20410071.571386464
-
-In [13]: R_d_desc_alpha[0,1]
-Out[13]: -20410071.571386464
-
-"""
-
-#exit()
-
 
 # Prepare model dict
 model = {
@@ -184,27 +121,16 @@ gdml_predict = GDMLPredict(
 gdml_predict.set_R_desc(R_desc)
 gdml_predict.set_R_d_desc(R_d_desc)
 
-# Get uncorrected predicted energy (without integration constant)
-E_pred, _ = gdml_predict.predict()
-E_ref = np.squeeze(task['E_train'])
+# Predict, one data point
 
-e_fact = np.linalg.lstsq(
-    np.column_stack((E_pred, np.ones(E_ref.shape))), E_ref, rcond=-1
-)[0][0]
-corrcoef = np.corrcoef(E_ref, E_pred)[0, 1]
+R_train = task["R_train"]
+r = R_train[1]
+print("r original shape = ", r.shape)
+Natoms = r.shape[0]
+print("Natoms = ", Natoms)
+r = r.reshape(1,Natoms*3) # we need to reshape it
+E_pred, F_pred = gdml_predict.predict(r)
 
-# Least squares estimate for integration constant.
-c = np.sum(E_ref - E_pred) / E_ref.shape[0]
-print("Recover integration constant: c = ", c)
-
-
-#import matplotlib.pyplot as plt
-#import matplotlib.style
-#matplotlib.style.use("dark_background")
-#
-#sidx = np.argsort(E_ref)
-#plt.plot(E_ref[sidx], label="E_ref")
-#plt.plot(E_pred[sidx]+c, label="E_pred+c")
-#plt.legend()
-#plt.show()
-
+print("E_pred = ", E_pred)
+print("F_pred = ")
+print(F_pred)

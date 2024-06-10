@@ -11,21 +11,27 @@ from my_desc import Desc, _from_r
 def _predict_wkr(
     train_obj, r, r_desc_d_desc, lat_and_inv, wkr_start_stop=None, chunk_size=None
 ):
+
+    print("\n ***** ENTER _predict_wkr\n")
+
     sig, n_perms = train_obj.sig, train_obj.n_perms
     desc_func = train_obj.desc_func
+    # These are from training data
     R_desc_perms = train_obj.R_desc_perms
     R_d_desc_alpha_perms = train_obj.R_d_desc_alpha_perms
     if train_obj.alphas_E_lin is not None:
         alphas_E_lin = train_obj.alphas_E_lin
 
-    print("R_desc_perms.shape = ", R_desc_perms.shape)
-    print("R_d_desc_alpha_perms.shape = ", R_d_desc_alpha_perms.shape)
+    print("r is None: ", (r is None))
+
+    print("Training: R_desc_perms.shape = ", R_desc_perms.shape)
+    print("Training: R_d_desc_alpha_perms.shape = ", R_d_desc_alpha_perms.shape)
 
     r_desc, r_d_desc = r_desc_d_desc or desc_func.from_R(
         r, lat_and_inv, max_processes=1
     )  # no additional forking during parallelization
-    print("r_desc.shape = ", r_desc.shape)
-    print("r_d_desc.shape = ", r_d_desc.shape)
+    print("Input: r_desc.shape = ", r_desc.shape)
+    print("Input: r_d_desc.shape = ", r_d_desc.shape)
 
     n_train = int(R_desc_perms.shape[0] / n_perms)
     print("n_train = ", n_train)
@@ -57,19 +63,27 @@ def _predict_wkr(
     wkr_stop *= n_perms
 
     b_start = wkr_start
+    print("b_start = ", b_start) 
     print("wkr_start = ", wkr_start)
     print("wkr_stop = ", wkr_stop)
-    # This is loop over all training data
+    #
+    # This is loop over all training data block
+    #
     for b_stop in list(range(wkr_start + dim_c, wkr_stop, dim_c)) + [wkr_stop]:
         #
-        print("b_start = ", b_start, " b_stop = ", b_stop)
+        print("Loop over b_stop = ", b_stop)
         #
         rj_desc_perms = R_desc_perms[b_start:b_stop, :]
+        print("rj_desc_perms.shape = ", rj_desc_perms.shape)
+        #
         rj_d_desc_alpha_perms = R_d_desc_alpha_perms[b_start:b_stop, :]
+        print("rj_d_desc_alpha_perms.shape = ", rj_d_desc_alpha_perms.shape)
         #
         # Resize pre-allocated memory for last iteration, if chunk_size is not a divisor of the training set size.
         # Note: It's faster to process equally sized chunks.
         c_size = b_stop - b_start
+        print("c_size = ", c_size)
+        print("dim_c = ", dim_c)
         if c_size < dim_c:
             diff_ab_perms = diff_ab_perms[:c_size, :]
             a_x2 = a_x2[:c_size]
@@ -125,6 +139,9 @@ def _predict_wkr(
         r_d_desc,
         F,
     )  # 'r_d_desc.T.dot(F)' for our special representation of 'r_d_desc'
+
+
+    print("\n ***** EXIT _predict_wkr\n")
 
     return out
 
@@ -275,10 +292,6 @@ class GDMLPredict(object):
         self.chunk_size = chunk_size
 
 
-    def _set_batch_size(self, batch_size=None):  # deprecated
-        self._set_chunk_size(batch_size)
-
-
 
     def _set_bulk_mp(self, bulk_mp=False):
         bulk_mp = bool(bulk_mp)
@@ -290,7 +303,15 @@ class GDMLPredict(object):
     def get_GPU_batch(self):
         pass
 
+    
+
+
     def predict(self, R=None, return_E=True):
+
+        print("---------------------------")
+        print("ENTER GDMLPredict.predict()")
+        print("---------------------------")
+
         # Add singleton dimension if input is (,3N).
         if R is not None and R.ndim == 1:
             R = R[None, :]
@@ -320,9 +341,11 @@ class GDMLPredict(object):
                 print("R[i] = ", R[i])
 
             if is_desc_in_cache:
+                # In case of using training data this will always be the true
                 print("desc is in cache")
                 r_desc, r_d_desc = self.R_desc[i], self.R_d_desc[i]
             else:
+                print("desc is not is cache, calculate descriptor and its Jacobian")
                 #r_desc, r_d_desc = self.desc_func.from_R(R[i], self.lat_and_inv)
                 r_desc, r_d_desc = _from_r(R[i])
 
@@ -341,5 +364,9 @@ class GDMLPredict(object):
         ret = (F,)
         if return_E:
             ret = (E,) + ret
+
+        print("---------------------------")
+        print("EXIT GDMLPredict.predict()")
+        print("---------------------------")
 
         return ret

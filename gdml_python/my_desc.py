@@ -151,9 +151,11 @@ class Desc(object):
     def d_desc_dot_vec(self, R_d_desc, vecs, overwrite_vecs=False):
 
         if R_d_desc.ndim == 2:
+            print("Pass here 154 in my_desc")
             R_d_desc = R_d_desc[None, ...]
 
         if vecs.ndim == 1:
+            print("Pass here 156 in my_desc")
             vecs = vecs[None, ...]
 
         i, j = self.tril_indices
