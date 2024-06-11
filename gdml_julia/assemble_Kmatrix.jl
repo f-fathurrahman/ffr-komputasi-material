@@ -1,13 +1,18 @@
-function assemble_Kmatrix!(K, jrow::Int64, Natoms, R_desc_v, R_d_desc_v)
+function assemble_Kmatrix!(K, jrow::Int64, model::GDMLModel)
 
-    σ = 20     # kernel parameter, should the the same as task["sig"] ???
+    R_desc_v = model.R_desc_v
+    R_d_desc_v = model.R_d_desc_v
+    indices = model.indices
+    Natoms = model.Natoms
+    σ = model.σ
+
     sqrt5 = sqrt(5)
     mat52_base_div = 3*σ^4
     sig_pow2 = σ^2
 
     Ntrain = length(R_desc_v)
 
-    Rj_d_desc_full = uncompress_R_d(Natoms, R_d_desc_v[jrow])
+    Rj_d_desc_full = uncompress_R_d(Natoms, indices, R_d_desc_v[jrow])
     
     dim_i = 3*Natoms
     Kij = zeros(Float64, dim_i, dim_i)
@@ -32,7 +37,8 @@ function assemble_Kmatrix!(K, jrow::Int64, Natoms, R_desc_v, R_d_desc_v)
     
         res4 = (sig_pow2 + σ * norm_ab) * mat52_base  # scalar
         diff_ab_outer .-= res4 * Rj_d_desc_full'   # matmul
-        Ri_desc_full = uncompress_R_d(Natoms, R_d_desc_v[irow])
+
+        Ri_desc_full = uncompress_R_d(Natoms, indices, R_d_desc_v[irow])
 
         @views Kij[:,:] .= Ri_desc_full * diff_ab_outer
         @views K[idx_rows,idx_cols] .= Kij[:,:]
@@ -42,3 +48,4 @@ function assemble_Kmatrix!(K, jrow::Int64, Natoms, R_desc_v, R_d_desc_v)
     return
 
 end
+

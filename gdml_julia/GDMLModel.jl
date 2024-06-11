@@ -9,5 +9,6 @@ mutable struct GDMLModel
     R_d_desc_α::Matrix{Float64}
     indices::TrilIndices
     c::Float64
+    y::Vector{Float64}
     y_std::Float64
 end
