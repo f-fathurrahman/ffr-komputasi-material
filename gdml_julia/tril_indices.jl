@@ -1,3 +1,16 @@
+struct TrilIndices
+    idx_rows::Vector{Int64}
+    idx_cols::Vector{Int64}
+    idx_lin::Vector{Int64}
+end
+
+
+function TrilIndices(N)
+    idx_rows, idx_cols, idx_lin = tril_indices(N)
+    return TrilIndices(idx_rows, idx_cols, idx_lin)
+end
+
+
 # using column major
 function idx_rowcol_to_linear(i,j,N)
     return i + (j-1)*N
