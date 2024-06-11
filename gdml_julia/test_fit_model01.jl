@@ -144,6 +144,7 @@ y *= (1/y_std)
 
 K .*= -1
 λ = 1e-10  # regularization strength
+σ = 20.0   # kernel parameter
 K[:,:] .= K[:,:] + I*λ
 
 K_chol_fact = cholesky(Symmetric(K))
@@ -159,8 +160,8 @@ R_d_desc_α = zeros(Float64, desc_dim, Ntrain)
 dvji = zeros(Float64, 3)
 for itrain in 1:Ntrain
     ip = 1
-    for (i, j) in zip(idx_rows, idx_cols)
-        @views dvji[:] = α_F_res[:,j,itrain] - α_F_res[:,i,itrain]
+    for (ia, ja) in zip(idx_rows, idx_cols)
+        @views dvji[:] = α_F_res[:,ja,itrain] - α_F_res[:,ia,itrain]
         R_d_desc_α[ip,itrain] = dot(R_d_desc_v[itrain][:,ip], dvji)
         ip += 1
     end
@@ -169,6 +170,7 @@ end
 
 # Predict for one data point
 r = R_all[idxs_train[2]] # 2nd data point from training set
+#
 r_desc, r_d_desc = calc_descriptor(Natoms, r)
 println("sum abs r_desc = ", sum(abs.(r_desc)))
 
@@ -179,3 +181,37 @@ for itrain in 1:Ntrain
     norm_ab[itrain] = sqrt(5) * norm(diff_ab[:,itrain])
 end
 
+println("sum abs diff_ab = ", sum(abs.(diff_ab)))
+println("sum abs norm_ab = ", sum(abs.(norm_ab)))
+
+mat52_base = 5.0/(3*σ^3) * exp.(-norm_ab/σ)
+println("sum abs mat52_base = ", sum(abs.(mat52_base)))
+
+a_x2 = zeros(Float64, Ntrain)
+for itrain in 1:Ntrain
+    @views a_x2[itrain] = dot(diff_ab[:,itrain], R_d_desc_α[:,itrain])
+end
+println("sum abs a_x2 = ", sum(abs.(a_x2)))
+
+ff = diff_ab * (a_x2 .* mat52_base) * 5 / σ
+mat52_base .*= norm_ab .+ σ
+println("sum abs mat52_base after scaling ", sum(abs.(mat52_base)))
+
+ff .-= R_d_desc_α * mat52_base
+println("sum abs ff after update with R_d_desc_α = ", sum(abs.(ff)))
+
+E_pred0 = dot(a_x2, mat52_base)*y_std
+println("E_pred0 = ", E_pred0)
+
+# Here r_d_desc is used
+out_F = zeros(Float64, 3, Natoms, Natoms)
+ip = 1
+for (ia, ja) in zip(idx_rows, idx_cols)
+    for i in 1:3
+        out_F[i,ia,ja] = r_d_desc[i,ip] * ff[ip]
+        out_F[i,ja,ia] = -out_F[i,ia,ja]
+    end
+    ip += 1
+end
+F_pred = dropdims(sum(out_F, dims=2), dims=2) * y_std
+# We sum over 2nd dimension here (to get the same sign for forces)

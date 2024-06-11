@@ -124,7 +124,7 @@ gdml_predict.set_R_d_desc(R_d_desc)
 # Predict, one data point
 
 R_train = task["R_train"]
-r = R_train[1]
+r = R_train[9]
 print("r original shape = ", r.shape)
 Natoms = r.shape[0]
 print("Natoms = ", Natoms)
@@ -166,11 +166,16 @@ print("sum abs mat52_base = ", np.sum(np.abs(mat52_base)))
 
 # column wise dot product
 a_x2 = np.einsum("ji,ji->j", diff_ab, R_d_desc_alpha)
-
+print("sum abs a_x2 = ", np.sum(np.abs(a_x2)))
 
 F = (a_x2 * mat52_base).dot(diff_ab) * diag_scale_fact
+print("sum abs F before after dot = ", np.sum(np.abs(F)))
+
 mat52_base *= norm_ab + sig
+print("sum abs mat52_base after scaling ", np.sum(np.abs(mat52_base)))
+
 F -= mat52_base.dot(R_d_desc_alpha)
+print("sum abs F before after dot with R_d_desc_alpha = ", np.sum(np.abs(F)))
 
 E_pred0 = a_x2.dot(mat52_base)*y_std
 print("E_pred0 = ", E_pred0)
