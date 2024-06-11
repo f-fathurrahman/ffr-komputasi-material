@@ -1,3 +1,5 @@
+# Read npz files, rearrange the data and serialize them
+
 using NPZ
 
 filepath = "../gdml_python/DATASET/ethanol_dft.npz"
@@ -12,6 +14,11 @@ Ndata = size(E_read, 1)
 Natoms = size(R_read, 2)
 @assert Natoms == size(F_read, 2)
 
+#
+# Rearrange the data.
+# Need to benchmark or evaluate the convenience with this new arrangement.
+# Convert to Vector of length Ndata
+#
 E = dropdims(E_read, dims=2) # remove 2nd dimension (it is a singleton dimension)
 R = Vector{Matrix{Float64}}(undef,Ndata)
 F = Vector{Matrix{Float64}}(undef,Ndata)
