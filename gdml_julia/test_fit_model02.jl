@@ -203,7 +203,8 @@ end
 #function main()
     # Load data
     Zatoms, R_all, E_all, F_all = load_data()
-    idxs_train = load_idxs_train()
+    #idxs_train = load_idxs_train()
+    idxs_train = 1:500
     # Create model
     model = init_GDML_model(Zatoms, R_all, E_all, F_all, idxs_train)
     # Kernel matrix
