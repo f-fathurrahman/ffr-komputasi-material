@@ -1,21 +1,40 @@
-# Example arrays
-x = [0.2, 6.4, 3.0, 1.6]
-bins = [0.0, 1.0, 2.5, 4.0, 10.0]
+using Serialization: deserialize
+using Statistics: quantile
 
-# Using searchsortedlast with broadcasting to digitize
-indices = searchsortedlast.(Ref(bins), x)
+E_all = deserialize("E.dat")
 
+Nsamples = 200
 
-# Unique return counts
+p25 = quantile(E_all, 0.25)
+p75 = quantile(E_all, 0.75)
 
-# Example array
-idxs = [1, 2, 2, 3, 4, 4, 4, 5]
+h = 2 * (p75 - p25) / cbrt(Nsamples)
+print("h = ", h)
+
+Emax = maximum(E_all)
+Emin = minimum(E_all)
+
+if h > 0.0
+    Nbins = Int64( ceil( (Emax - Emin)/h ) )
+else
+    Nbins = 1    
+end
+
+# Limit number of bins to half of requested subset size.
+Nbins = min(Nbins, round(Int64, Nsamples/2))
+
+bins = collect( range(Emin, Emax, Nbins+1)[1:Nbins] )
+idxs = searchsortedlast.(Ref(bins), E_all)
 
 # Get unique values
-unique_vals = unique(idxs)
+uniq_all = unique(idxs)
 
 # Count occurrences of each unique value
-counts = [count(==(u), idxs) for u in unique_vals]
+cnts_all = [count(==(u), idxs) for u in uniq_all]
 
-# Combine unique values and their counts into a dictionary
-unique_counts = Dict(unique_vals .=> counts)
+# limit reduced_cnts to what is available in cnts_all
+reduced_cnts = Int64.( ceil.( cnts_all/sum(cnts_all) * Nsamples ) )
+
+reduced_cnts = min.(reduced_cnts, cnts_all)
+
+reduced_cnts_delta = Nsamples - sum(reduced_cnts)
