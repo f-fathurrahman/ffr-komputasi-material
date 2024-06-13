@@ -26,6 +26,8 @@ idxs = np.digitize(T, bins)
 # .... SKIPPED ....
 
 uniq_all, cnts_all = np.unique(idxs, return_counts=True)
+print(uniq_all)
+print(cnts_all)
 
 # Remove restricted bin.
 # .... SKIPPED ....
