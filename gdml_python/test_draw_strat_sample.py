@@ -12,7 +12,9 @@ n = n_train
 excl_idxs = None
 
 # Freedman-Diaconis rule
-h = 2 * np.subtract(*np.percentile(T, [75, 25])) / np.cbrt(n)
+p75 = np.percentile(T, 75)
+p25 = np.percentile(T, 25)
+h = 2 * (p75 - p25) / np.cbrt(n)
 print("h = ", h)
 n_bins = int(np.ceil((np.max(T) - np.min(T)) / h)) if h > 0 else 1
 n_bins = min(
@@ -45,18 +47,30 @@ print("reduced_cnts_delta = ", reduced_cnts_delta)
 
 while np.abs(reduced_cnts_delta) > 0:
 
+    print()
+    print("Current reduced_cnts_delta = ", reduced_cnts_delta)
+    print("reduced_cnts = ", reduced_cnts)
+    print("sum reduced_cnts = ", np.sum(reduced_cnts))
+
     # How many members can we remove from an arbitrary bucket
     # without any bucket with more than one member going to zero?
     max_bin_reduction = np.min(reduced_cnts[np.where(reduced_cnts > 1)]) - 1
 
+    probs = (reduced_cnts - 1) / np.sum(reduced_cnts - 1, dtype=float)
+    print("probs = ", probs)
+    print("sum probs = ", np.sum(probs))
+
     # Generate additional bin members to fill up/drain bucket counts
     # of subset. This array contains (repeated) bucket IDs.
+    NbinsAdditional = min(max_bin_reduction, np.abs(reduced_cnts_delta))
+    print("NbinsAdditional = ", NbinsAdditional)
     outstanding = np.random.choice(
         uniq_all,
-        min(max_bin_reduction, np.abs(reduced_cnts_delta)),
-        p=(reduced_cnts - 1) / np.sum(reduced_cnts - 1, dtype=float),
+        NbinsAdditional,
+        p=probs,
         replace=True,
     )
+    print("outstanding = ", outstanding)
     uniq_outstanding, cnts_outstanding = np.unique(
         outstanding, return_counts=True
     )  # Aggregate bucket IDs.
@@ -66,16 +80,29 @@ while np.abs(reduced_cnts_delta) > 0:
     )[
         0
     ]  # Bucket IDs to Idxs.
+    print("outstanding_bucket_idx = ", outstanding_bucket_idx)
+
     reduced_cnts[outstanding_bucket_idx] += (
         np.sign(reduced_cnts_delta) * cnts_outstanding
     )
+    print("Updated reduced_cnts")
+
     reduced_cnts_delta = n - np.sum(reduced_cnts)
+
+
+
+print()
+print("Final reduced_cnts")
+print(reduced_cnts)
+print("sum reduced_cnts = ", np.sum(reduced_cnts))
 
 # Draw examples for each bin.
 idxs_train = np.empty((0,), dtype=int)
 for uniq_idx, bin_cnt in zip(uniq_all, reduced_cnts):
+    print()
+    print("uniq_idx = ", uniq_idx, " bin_cnt = ", bin_cnt)
     idx_in_bin_all = np.where(idxs.ravel() == uniq_idx)[0]
+    print("idx_in_bin_all = ", idx_in_bin_all)
     idxs_train = np.append(
         idxs_train, np.random.choice(idx_in_bin_all, bin_cnt, replace=False)
     )
-

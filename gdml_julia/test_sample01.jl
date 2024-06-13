@@ -1,5 +1,6 @@
 using Serialization: deserialize
 using Statistics: quantile
+using StatsBase: sample
 
 E_all = deserialize("E.dat")
 
@@ -38,3 +39,11 @@ reduced_cnts = Int64.( ceil.( cnts_all/sum(cnts_all) * Nsamples ) )
 reduced_cnts = min.(reduced_cnts, cnts_all)
 
 reduced_cnts_delta = Nsamples - sum(reduced_cnts)
+
+# ??? only satisfied for reduced_cnts_delta == 0
+#while abs(reduced_cnts_delta) > 0
+
+    idxsg1 = reduced_cnts .> 1
+    max_bin_reduction = min(reduced_cnts[idxsg1]) - 1
+
+#end
