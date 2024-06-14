@@ -1,3 +1,26 @@
+In Julia, the equivalent of NumPy's `np.in1d` with `assume_unique=True` can be achieved using the `in` function combined with broadcasting. The `assume_unique=True` parameter in NumPy's `np.in1d` indicates that both input arrays are unique and sorted, optimizing the operation.
+
+Here's how you can do it in Julia:
+
+1. Use the `in` function to check for membership.
+2. Use broadcasting (with the dot `.` operator) to apply this check element-wise.
+
+Assuming you have two arrays `a` and `b`, and you want to check if elements of `a` are in `b`:
+
+```julia
+a = [1, 2, 3, 4]
+b = [3, 4, 5, 6]
+
+result = in.(a, Ref(b))
+```
+
+In this example, `Ref(b)` ensures that `b` is treated as a single argument rather than broadcasting it element-wise. This is similar to the `assume_unique=True` optimization in NumPy, but Julia doesn't have an explicit parameter for assuming uniqueness since the approach inherently handles it efficiently with `Ref`.
+
+If you know the arrays are unique and sorted, the performance should be optimal with this method. If the arrays are not guaranteed to be unique and sorted, you might need additional steps to handle those conditions, but `in.(a, Ref(b))` will work correctly regardless.
+
+
+------------------------
+
 In **Julia**, the equivalent function to **NumPy's** `np.where` is the `ifelse` function. Both serve the purpose of choosing elements in an array based on a given condition.
 
 Here's how you can use it in Julia:

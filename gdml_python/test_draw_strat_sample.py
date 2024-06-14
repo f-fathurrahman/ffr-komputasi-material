@@ -101,8 +101,8 @@ idxs_train = np.empty((0,), dtype=int)
 for uniq_idx, bin_cnt in zip(uniq_all, reduced_cnts):
     print()
     print("uniq_idx = ", uniq_idx, " bin_cnt = ", bin_cnt)
-    idx_in_bin_all = np.where(idxs.ravel() == uniq_idx)[0]
-    print("idx_in_bin_all = ", idx_in_bin_all)
-    idxs_train = np.append(
-        idxs_train, np.random.choice(idx_in_bin_all, bin_cnt, replace=False)
-    )
+    #idx_in_bin_all = np.where(idxs.ravel() == uniq_idx)[0]
+    #print("idx_in_bin_all = ", idx_in_bin_all)
+    #idxs_train = np.append(
+    #    idxs_train, np.random.choice(idx_in_bin_all, bin_cnt, replace=False)
+    #)
