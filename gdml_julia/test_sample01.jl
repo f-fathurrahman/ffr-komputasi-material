@@ -44,6 +44,15 @@ reduced_cnts_delta = Nsamples - sum(reduced_cnts)
 #while abs(reduced_cnts_delta) > 0
 
     idxsg1 = reduced_cnts .> 1
-    max_bin_reduction = min(reduced_cnts[idxsg1]) - 1
+    max_bin_reduction = minimum(reduced_cnts[idxsg1]) - 1
+
+    probs = (reduced_cnts .- 1) / sum(reduced_cnts .- 1)
+    NbinsAdditional = min(max_bin_reduction, abs.(reduced_cnts_delta))
+
+    outstanding = sample(uniq_all, ProbabilityWeights(probs),
+        NbinsAdditional, replace=true)
+
+    uniq_outstanding = unique(outstanding)
+    cnts_outstanding = [count(==(u), outstanding) for u in uniq_outstanding]
 
 #end
