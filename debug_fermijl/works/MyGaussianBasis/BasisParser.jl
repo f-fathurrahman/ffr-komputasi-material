@@ -1,4 +1,4 @@
-const LIBPATH = joinpath(@__DIR__, "../lib")
+const LIBPATH = joinpath(@__DIR__, "../lib_gaussian_basis/")
 const AM_pat = r"([SPDFGHI]{1,2})\s+?(\d++)"
 const prim_pat = r"([+-]?\d*?\.\d+[D+-]{0,2}\d\d)\s+?([+-]?\d*?\.\d+[D+-]{0,2}+\d\d)"
 const prim_pat3 = r"([+-]?\d*?\.\d+[D+-]{0,2}\d\d)\s+?([+-]?\d*?\.\d+[D+-]{0,2}+\d\d)\s+?([+-]?\d*?\.\d+[D+-]{0,2}+\d\d)"
@@ -21,7 +21,7 @@ function read_basisset(bname::String, AtomSymbol::String)
 
     clean_bname = replace(bname, "*"=>"_st_")
     file_path = joinpath(LIBPATH, clean_bname*".gbs")
-
+    println("file_path = $file_path")
     if !(isfile(file_path))
         throw(ArgumentError("Basis set file for $bname was not found."))
     end
