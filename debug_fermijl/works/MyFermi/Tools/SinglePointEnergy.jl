@@ -1,20 +1,20 @@
 export @energy
 
 energy_dict = Dict{String, String}(
-    "rhf" => "Fermi.HartreeFock.RHF()",
-    "uhf" => "Fermi.HartreeFock.UHF()",
-    "mp2" => "Fermi.MollerPlesset.RMP2()",
-    "rmp2" => "Fermi.MollerPlesset.RMP2()",
-    "ccsd" => "Fermi.CoupledCluster.RCCSD()",
-    "rccsd" => "Fermi.CoupledCluster.RCCSD()",
-    "ccsd(t)"=> "Fermi.CoupledCluster.RCCSDpT()",
-    "rccsd(t)"=> "Fermi.CoupledCluster.RCCSDpT()",
-    "fci"=>"Fermi.ConfigurationInteraction.RFCI()",
-    "rfci"=>"Fermi.ConfigurationInteraction.RFCI()"
+    "rhf" => "MyFermi.HartreeFock.RHF()",
+    "uhf" => "MyFermi.HartreeFock.UHF()",
+    "mp2" => "MyFermi.MollerPlesset.RMP2()",
+    "rmp2" => "MyFermi.MollerPlesset.RMP2()",
+    "ccsd" => "MyFermi.CoupledCluster.RCCSD()",
+    "rccsd" => "MyFermi.CoupledCluster.RCCSD()",
+    "ccsd(t)"=> "MyFermi.CoupledCluster.RCCSDpT()",
+    "rccsd(t)"=> "MyFermi.CoupledCluster.RCCSDpT()",
+    "fci"=>"MyFermi.ConfigurationInteraction.RFCI()",
+    "rfci"=>"MyFermi.ConfigurationInteraction.RFCI()"
 )
 
 """
-    Fermi.@energy
+    MyFermi.@energy
 
 Macro to call functions to compute energy given current options. Arguments may be passed
 using "=>" or "<="
@@ -71,7 +71,7 @@ macro energy(comm)
     try
          out = replace(energy_dict[method], "()" => "("*arg*")")
     catch KeyError
-        throw(FermiException("Invalid method for energy computation: \"$A\""))
+        throw(MyFermiException("Invalid method for energy computation: \"$A\""))
     end
 
     expr_out = Meta.parse(out)

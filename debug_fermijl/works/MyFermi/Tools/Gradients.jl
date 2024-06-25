@@ -1,18 +1,18 @@
 export @gradient
 
 g_dict = Dict{String, String}(
-    "rhf" => "Fermi.HartreeFock.RHFgrad()",
-    "uhf" => "Fermi.HartreeFock.UHFgrad()",
-    "mp2" => "Fermi.MollerPlesset.RMP2grad()",
-    "rmp2" => "Fermi.MollerPlesset.RMP2grad()",
-    "ccsd" => "Fermi.CoupledCluster.RCCSDgrad()",
-    "rccsd" => "Fermi.CoupledCluster.RCCSDgrad()",
-    "ccsd(t)"=> "Fermi.CoupledCluster.RCCSDpTgrad()",
-    "rccsd(t)"=> "Fermi.CoupledCluster.RCCSDpTgrad()"
+    "rhf" => "MyFermi.HartreeFock.RHFgrad()",
+    "uhf" => "MyFermi.HartreeFock.UHFgrad()",
+    "mp2" => "MyFermi.MollerPlesset.RMP2grad()",
+    "rmp2" => "MyFermi.MollerPlesset.RMP2grad()",
+    "ccsd" => "MyFermi.CoupledCluster.RCCSDgrad()",
+    "rccsd" => "MyFermi.CoupledCluster.RCCSDgrad()",
+    "ccsd(t)"=> "MyFermi.CoupledCluster.RCCSDpTgrad()",
+    "rccsd(t)"=> "MyFermi.CoupledCluster.RCCSDpTgrad()"
 )
 
 """
-    Fermi.@gradient
+    MyFermi.@gradient
 
 Macro to call functions to compute gradients given current options. Arguments may be passed
 using "=>" or "<=" for analytic gradients. The derivative type (analytic, findif, autodif) 
@@ -74,7 +74,7 @@ macro gradient(comm)
     try
         out = replace(g_dict[method], "()" => "("*arg*")")
     catch KeyError
-        throw(FermiException("Invalid or unsupported method for gradient computation: \"$A\""))
+        throw(MyFermiException("Invalid or unsupported method for gradient computation: \"$A\""))
     end
 
     expr_out = Meta.parse(out)

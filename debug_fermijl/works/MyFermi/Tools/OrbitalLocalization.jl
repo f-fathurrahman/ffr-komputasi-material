@@ -1,4 +1,4 @@
-using Fermi.Orbitals
+using MyFermi.Orbitals
 using TensorOperations
 
 function boys_localize(orbs::AbstractRestrictedOrbitals)
@@ -139,7 +139,7 @@ function ER_localize(orbs::AbstractRestrictedOrbitals, ints, mix_range)
     end
 
     energy = sd_energy(orbs, orbs.molecule.Nα, ints)
-    neworbs = Fermi.Orbitals.GeneralRestrictedOrbitals(orbs.molecule, orbs.basis, energy, newC)
+    neworbs = MyFermi.Orbitals.GeneralRestrictedOrbitals(orbs.molecule, orbs.basis, energy, newC)
     return neworbs
 end
 
@@ -218,9 +218,9 @@ function sd_energy(orbs, ndocc, ints)
     H = ints["T"] + ints["V"]
     F = similar(H)
 
-    Fermi.HartreeFock.build_fock!(F, H, D, ints)
+    MyFermi.HartreeFock.build_fock!(F, H, D, ints)
 
-    E = Fermi.HartreeFock.RHFEnergy(D, H, F)
+    E = MyFermi.HartreeFock.RHFEnergy(D, H, F)
 
     return E + orbs.molecule.Vnuc
 end

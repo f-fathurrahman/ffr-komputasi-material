@@ -13,16 +13,16 @@ function apply_gradient(mol, g, d = 0.001)
     Zvals = [A.Z for A = mol.atoms]
     Svals = [A.AtomicSymbol for A = mol.atoms]
 
-    new_atoms = Fermi.Atom[]
+    new_atoms = MyFermi.Atom[]
 
     for i = eachindex(Zvals)
         x = mol.atoms[i].xyz[1] - d*g[i, 1]
         y = mol.atoms[i].xyz[2] - d*g[i, 2]
         z = mol.atoms[i].xyz[3] - d*g[i, 3]
-        push!(new_atoms, Fermi.Atom(Svals[i], Zvals[i], (x,y,z)))
+        push!(new_atoms, MyFermi.Atom(Svals[i], Zvals[i], (x,y,z)))
     end
 
-    return Fermi.Molecule(new_atoms, mol.charge, mol.multiplicity)
+    return MyFermi.Molecule(new_atoms, mol.charge, mol.multiplicity)
 end
 
 function geom_rms(mol1, mol2)
@@ -36,10 +36,10 @@ end
 
 function findif_intgrad(X::String, mol, A, i, h=0.005)
     mol_disp = create_displacement(mol, A, i, h)
-    I = Fermi.Integrals.IntegralHelper(molecule=mol_disp)
+    I = MyFermi.Integrals.IntegralHelper(molecule=mol_disp)
     Xplus = I[X]
     mol_disp = create_displacement(mol, A, i, -h)
-    I = Fermi.Integrals.IntegralHelper(molecule=mol_disp)
+    I = MyFermi.Integrals.IntegralHelper(molecule=mol_disp)
     Xminus = I[X]
     g = (Xplus - Xminus) ./ (2*h)
     return g * PhysicalConstants.bohr_to_angstrom
@@ -78,7 +78,7 @@ function opt_test(energy_function; h=0.005, d=0.01)
 
     scf_Etol  = Options.get("scf_e_conv")
     scf_Dtol  = Options.get("scf_max_rms")
-    old_mol = Fermi.Molecule()
+    old_mol = MyFermi.Molecule()
 
     # Central
     wfn = eval(Expr(:call, energy_function, old_mol))
