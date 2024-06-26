@@ -77,6 +77,7 @@ struct RHF <: AbstractHFWavefunction
 end
 
 function RHF(x...)
+    println("Argument to RHF: x = $(x)")
     if !any(i-> i isa RHFAlgorithm, x)
         RHF(x..., get_rhf_alg())
     else

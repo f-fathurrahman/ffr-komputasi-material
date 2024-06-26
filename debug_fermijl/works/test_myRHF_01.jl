@@ -16,6 +16,8 @@ using LinearAlgebra
     multiplicity 1 # Note that multiplicity must be one for RHF
 }
 
+#ffr: The global dict is MyFermi.Options.Current
+
 # It is important to specify `eri_type`. The default will return a Sparse Array.
 # The RHF algorithm is faster using this sparse array, but it also gets more complicated
 # Here, we are looking for the simplest implementation
