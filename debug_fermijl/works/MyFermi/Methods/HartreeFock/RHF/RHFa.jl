@@ -1,11 +1,11 @@
-using GaussianBasis
+using MyGaussianBasis
 
 function RHF(Alg::A) where A <: RHFAlgorithm
     ints = IntegralHelper{Float64}()
     RHF(ints, Alg)
 end
 
-function RHF(mol::Molecule, Alg::A) where A <: RHFAlgorithm
+function RHF(mol::MyMolecule, Alg::A) where A <: RHFAlgorithm
     RHF(IntegralHelper{Float64}(molecule=mol), Alg)
 end
 
@@ -53,9 +53,9 @@ function RHF(wfn::RHF, Alg::A) where A <: RHFAlgorithm
     Λ = Array(Sbb^(-1/2))
 
     Ca = wfn.orbitals.C
-    bsA = GaussianBasis.BasisSet(wfn.orbitals.basis, wfn.molecule.atoms)
-    bsB = GaussianBasis.BasisSet(intsB.basis, intsB.molecule.atoms)
-    Sab = GaussianBasis.overlap(bsA, bsB)
+    bsA = MyGaussianBasis.BasisSet(wfn.orbitals.basis, wfn.molecule.atoms)
+    bsB = MyGaussianBasis.BasisSet(intsB.basis, intsB.molecule.atoms)
+    Sab = MyGaussianBasis.overlap(bsA, bsB)
 
     T = transpose(Ca)*Sab*(Sbb^-1.0)*transpose(Sab)*Ca
     Cb = (Sbb^-1.0)*transpose(Sab)*Ca*T^(-1/2)
@@ -101,7 +101,7 @@ function RHF(ints::IntegralHelper{Float64, <:AbstractERI, AtomicOrbitals}, C::Ab
     end
     nvir = size(C,2) - ndocc
     nao = size(C,1)
-    Vnuc = Molecules.nuclear_repulsion(molecule.atoms)
+    Vnuc = MyMolecules.nuclear_repulsion(molecule.atoms)
 
     output("Nuclear repulsion: {:15.10f}", Vnuc)
     output(" Number of AOs:                        {:5.0d}", nao)

@@ -3,7 +3,7 @@ function UHF(Alg::UHFa)
     UHF(ints, Alg)
 end
 
-function UHF(mol::Molecule, Alg::UHFa)
+function UHF(mol::MyMolecule, Alg::UHFa)
     UHF(IntegralHelper{Float64}(molecule=mol), Alg)
 end
 
@@ -54,7 +54,7 @@ function UHF(ints::IntegralHelper{Float64, <:AbstractERI, AtomicOrbitals}, Cα::
     
     Nα = molecule.Nα
     Nβ = molecule.Nβ
-    Vnuc = Molecules.nuclear_repulsion(molecule.atoms)
+    Vnuc = MyMolecules.nuclear_repulsion(molecule.atoms)
     S = ints["S"]
     T = ints["T"]
     V = ints["V"]

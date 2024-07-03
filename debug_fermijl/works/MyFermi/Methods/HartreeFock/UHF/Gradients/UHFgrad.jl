@@ -1,12 +1,12 @@
-using GaussianBasis
-using Molecules
+using MyGaussianBasis
+using MyMolecules
 using TensorOperations
 
 function UHFgrad(x...)
-    UHFgrad(Molecule(), x...)
+    UHFgrad(MyMolecule(), x...)
 end
 
-function UHFgrad(mol::Molecule, x...)
+function UHFgrad(mol::MyMolecule, x...)
     dtype = Options.get("deriv_type")
     if dtype == "analytic"
         throw(MyFermiException("Invalid or unsupported derivative type for UHF: \"$dtype\""))

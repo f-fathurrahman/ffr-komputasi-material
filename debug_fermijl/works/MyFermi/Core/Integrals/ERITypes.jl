@@ -45,7 +45,7 @@ struct JKFIT <: AbstractDFERI
     basisset::BasisSet
 end
 
-function JKFIT(mol::Molecule = Molecule())
+function JKFIT(mol::MyMolecule = MyMolecule())
 
     auxjk = Options.get("jkfit")
     # If aux is auto, determine the aux basis from the basis
@@ -58,7 +58,7 @@ function JKFIT(mol::Molecule = Molecule())
     return JKFIT(mol, auxjk)
 end
 
-function JKFIT(mol::Molecule, basis::String)
+function JKFIT(mol::MyMolecule, basis::String)
     return JKFIT(BasisSet(basis, mol.atoms))
 end
 
@@ -81,7 +81,7 @@ struct RIFIT <: AbstractDFERI
     basisset::BasisSet
 end
 
-function RIFIT(mol::Molecule = Molecule())
+function RIFIT(mol::MyMolecule = MyMolecule())
 
     auxri = Options.get("rifit")
     # If aux is auto, determine the aux basis from the basis
@@ -94,7 +94,7 @@ function RIFIT(mol::Molecule = Molecule())
     return RIFIT(mol, auxri)
 end
 
-function RIFIT(mol::Molecule, basis::String)
+function RIFIT(mol::MyMolecule, basis::String)
     return RIFIT(BasisSet(basis, mol.atoms))
 end
 

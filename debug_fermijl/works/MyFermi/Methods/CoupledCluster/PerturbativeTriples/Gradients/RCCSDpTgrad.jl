@@ -1,12 +1,12 @@
-using GaussianBasis
-using Molecules
+using MyGaussianBasis
+using MyMolecules
 using TensorOperations
 
 function RCCSDpTgrad(x...)
-    RCCSDpTgrad(Molecule(), x...)
+    RCCSDpTgrad(MyMolecule(), x...)
 end
 
-function RCCSDpTgrad(mol::Molecule, x...)
+function RCCSDpTgrad(mol::MyMolecule, x...)
     dtype = Options.get("deriv_type")
     if dtype == "analytic"
         throw(MyFermiException("Invalid or unsupported derivative type for RCCSDpT: \"$dtype\""))

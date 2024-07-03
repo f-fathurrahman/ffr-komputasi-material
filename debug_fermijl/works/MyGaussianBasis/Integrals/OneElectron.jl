@@ -119,7 +119,7 @@ function ao1e(BS1::BasisSet, BS2::BasisSet, compute::String, T::DataType = Float
         lc_atm[1 + ATM_SLOTS*(i-1)] = Cint(A.Z)
         # The second one is the env index address for xyz
         lc_atm[2 + ATM_SLOTS*(i-1)] = off
-        env[off+1:off+3] .= A.xyz ./ MyMolecules.bohr_to_angstrom
+        env[off+1:off+3] .= A.xyz ./ MyMyMolecules.bohr_to_angstrom
         off += 4 # Skip an extra slot reserved for nuclear model
         # The remaining 4 slots are zero.
     end

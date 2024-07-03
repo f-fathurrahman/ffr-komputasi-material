@@ -10,7 +10,7 @@ function RCCSDpT(Alg::ijk2)
     return RCCSDpT(ccsd, moints, Alg)
 end
 
-function RCCSDpT(mol::Molecule, Alg::ijk2)
+function RCCSDpT(mol::MyMolecule, Alg::ijk2)
     val = Options.get("return_ints")
     Options.set("return_ints", true)
     ccsd, moints = RCCSD(mol)

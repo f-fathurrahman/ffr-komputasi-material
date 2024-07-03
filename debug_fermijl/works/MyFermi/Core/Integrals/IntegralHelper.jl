@@ -9,18 +9,18 @@ using MyFermi
 using MyFermi.Options
 using MyFermi.Orbitals
 using LinearAlgebra
-using GaussianBasis
+using MyGaussianBasis
 using TensorOperations
 
-import MyFermi: string_repr
+import Fermi: string_repr
 import Base: getindex, setindex!, delete!, show
-import GaussianBasis: BasisSet
+import MyGaussianBasis: BasisSet
 
 export IntegralHelper, delete!, mo_from_ao!
 export BasisSet, BasisFunction
 
 # Expand BasisSet methods to handle molecules.
-BasisSet(name::String, mol::Molecule) = BasisSet(name, mol.atoms)
+BasisSet(name::String, mol::MyMolecule) = BasisSet(name, mol.atoms)
 
 include("ERITypes.jl")
 
@@ -41,14 +41,14 @@ A key is associated with each type of integral
     "ERI"         -> Electron repulsion integral
 
 # Fields
-    molecule                    Molecule object
+    molecule                    MyMolecule object
     orbitals                    Orbitals used in the integral computation
     basis                       Basis set name
     cache                       Holds computed integrals 
     eri_type                    Defines how electron repulsion integrals are handled 
 """
 struct IntegralHelper{T<:AbstractFloat,E<:AbstractERI,O<:AbstractOrbitals}
-    molecule::Molecule
+    molecule::MyMolecule
     orbitals::O
     basis::String
     cache::Dict{String,AbstractArray{T}} 
@@ -67,7 +67,7 @@ function IntegralHelper(x...;k...)
     end
 end
 
-function IntegralHelper{T}(;molecule = Molecule(), orbitals = nothing, 
+function IntegralHelper{T}(;molecule = MyMolecule(), orbitals = nothing, 
                            basis = Options.get("basis"), eri_type=nothing) where T<:AbstractFloat
 
     if orbitals === nothing
@@ -95,7 +95,7 @@ end
 
 function IntegralHelper{T}(bset::BasisSet, eri_type=nothing) where T<:AbstractFloat
     IntegralHelper{T}(
-        molecule = Molecule(bset.atoms, Options.get("charge"), Options.get("multiplicity")),
+        molecule = MyMolecule(bset.atoms, Options.get("charge"), Options.get("multiplicity")),
         orbitals = AtomicOrbitals(bset),
         basis = bset.name,
         eri_type=eri_type

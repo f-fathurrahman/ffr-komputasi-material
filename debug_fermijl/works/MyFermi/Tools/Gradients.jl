@@ -25,10 +25,10 @@ Generating a RHF gradient
 @gradient rhf
 ```
 
-By default, gradients are calculated using the current `molstring`, but `Molecule` objects 
+By default, gradients are calculated using the current `molstring`, but `MyMolecule` objects 
 can also be passed to the gradients
 ```
-mol = Molecule(molstring=mymol)
+mol = MyMolecule(molstring=mymol)
 @gradient mol => rhf
 ```
 or

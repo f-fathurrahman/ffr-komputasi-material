@@ -13,7 +13,7 @@ function RCCSDpT(rhf::RHF, Alg::abc)
     return RCCSDpT(ccsd, moints, Alg)
 end
 
-function RCCSDpT(mol::Molecule, Alg::abc)
+function RCCSDpT(mol::MyMolecule, Alg::abc)
     aoints = IntegralHelper{Float64}(molecule=mol)
     return RCCSDpT(aoints, Alg)
 end

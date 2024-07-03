@@ -35,7 +35,7 @@ Computes RHF using information from `MyFermi.Options.Current`
 
 | Name   |   Description     |
 |--------|---------------------|
-| `molecule` |   Molecule object |
+| `molecule` |   MyMolecule object |
 | `energy`   |   RHF Energy      |
 | `ndocc`    | Number of doubly occupied spatial orbitals |
 | `nvir`  | Number of virtual spatial orbitals |
@@ -67,7 +67,7 @@ These options can be set with `@set <option> <value>`
 **RHF** <: AbstractHFWavefunction <: AbstractWavefunction
 """
 struct RHF <: AbstractHFWavefunction
-    molecule::Molecule
+    molecule::MyMolecule
     energy::Float64
     ndocc::Int
     nvir::Int

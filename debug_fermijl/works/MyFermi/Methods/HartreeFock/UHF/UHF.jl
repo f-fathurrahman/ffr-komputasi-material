@@ -10,7 +10,7 @@ export UHF
 abstract type UHFAlgorithm end
 
 struct UHF <: AbstractHFWavefunction
-    molecule::Molecule
+    molecule::MyMolecule
     energy::Float64
     nocc::Int
     nvir::Int

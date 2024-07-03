@@ -1,4 +1,4 @@
-function create_displacement(mol::Molecule, A::Int, i::Int, h::Real)
+function create_displacement(mol::MyMolecule, A::Int, i::Int, h::Real)
 
     disp = zeros(3)
     disp[i] += h
@@ -22,7 +22,7 @@ function apply_gradient(mol, g, d = 0.001)
         push!(new_atoms, MyFermi.Atom(Svals[i], Zvals[i], (x,y,z)))
     end
 
-    return MyFermi.Molecule(new_atoms, mol.charge, mol.multiplicity)
+    return MyFermi.MyMolecule(new_atoms, mol.charge, mol.multiplicity)
 end
 
 function geom_rms(mol1, mol2)
@@ -47,10 +47,10 @@ end
 
 function gradient_findif(energy_function)
     h = Options.get("findif_disp_size")
-    gradient_findif(energy_function, Molecule(), h)
+    gradient_findif(energy_function, MyMolecule(), h)
 end
 
-function gradient_findif(energy_function, mol::Molecule, h=0.005)
+function gradient_findif(energy_function, mol::MyMolecule, h=0.005)
     N = length(mol.atoms)
     Eplus = zeros(N,3)
     Eminus = zeros(N,3)
@@ -78,7 +78,7 @@ function opt_test(energy_function; h=0.005, d=0.01)
 
     scf_Etol  = Options.get("scf_e_conv")
     scf_Dtol  = Options.get("scf_max_rms")
-    old_mol = MyFermi.Molecule()
+    old_mol = MyFermi.MyMolecule()
 
     # Central
     wfn = eval(Expr(:call, energy_function, old_mol))

@@ -13,23 +13,38 @@ function compute!(I::IntegralHelper{<:AbstractFloat,<:AbstractERI,AtomicOrbitals
     end
 end
 
+# overlap
 function compute_S!(I::IntegralHelper{T, E, AtomicOrbitals}) where {T<:AbstractFloat, E<:AbstractERI}
+    #
+    @info "compute_S! is called"
+    #
     bs = I.orbitals.basisset
     I.cache["S"] = T.(overlap(bs))
 end
 
+# Kinetic
 function compute_T!(I::IntegralHelper{T, E, AtomicOrbitals}) where {T<:AbstractFloat, E<:AbstractERI}
+    #
+    @info "compute_T! is called"
+    #
     bs = I.orbitals.basisset
     I.cache["T"] = T.(kinetic(bs))
 end
 
+# nuclear
 function compute_V!(I::IntegralHelper{T, E, AtomicOrbitals}) where {T<:AbstractFloat, E<:AbstractERI}
+    #
+    @info "compute_V! is called"
+    #
     bs = I.orbitals.basisset
     I.cache["V"] = T.(nuclear(bs))
 end
 
+# electron repulsion
 function compute_ERI!(I::IntegralHelper{T, E, AtomicOrbitals}) where {T<:AbstractFloat, E<:AbstractDFERI}
-
+    #
+    @info "compute_ERI! for density fit is called"
+    #
     bs = I.orbitals.basisset
     auxbs = I.eri_type.basisset
     J = T.(ERI_2e2c(auxbs))
@@ -41,6 +56,9 @@ function compute_ERI!(I::IntegralHelper{T, E, AtomicOrbitals}) where {T<:Abstrac
 end
 
 function compute_ERI!(I::IntegralHelper{T, Chonky, AtomicOrbitals}) where T<:AbstractFloat
+    #
+    @info "compute_ERI! for Chonky type is called"
+    #
     bs = I.orbitals.basisset
     I.cache["ERI"] = T.(ERI_2e4c(bs))
 end

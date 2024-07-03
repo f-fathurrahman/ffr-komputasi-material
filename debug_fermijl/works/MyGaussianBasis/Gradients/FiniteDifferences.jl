@@ -32,7 +32,7 @@ function ∇FD_1e(BS::BasisSet, compute::String, A, i, h)
     Xplus = ao1e(bs_plus, compute)
     Xminus = ao1e(bs_minus, compute)
 
-    return (Xplus - Xminus) ./ (2*h/MyMolecules.bohr_to_angstrom)
+    return (Xplus - Xminus) ./ (2*h/MyMyMolecules.bohr_to_angstrom)
 end
 
 function ∇FD_ERI_2e4c(BS::BasisSet, A, i, h=1e-5)
@@ -42,7 +42,7 @@ function ∇FD_ERI_2e4c(BS::BasisSet, A, i, h=1e-5)
     Xplus = ERI_2e4c(bs_plus)
     Xminus = ERI_2e4c(bs_minus)
 
-    return (Xplus - Xminus) ./ (2*h/MyMolecules.bohr_to_angstrom)
+    return (Xplus - Xminus) ./ (2*h/MyMyMolecules.bohr_to_angstrom)
 
 end
 
@@ -55,7 +55,7 @@ function ∇FD_sparseERI_2e4c(BS::BasisSet, A, i, h=1e-5)
 
     @assert Iplus == Iminus
 
-    Xout = (Xplus - Xminus) ./ (2*h/MyMolecules.bohr_to_angstrom)
+    Xout = (Xplus - Xminus) ./ (2*h/MyMyMolecules.bohr_to_angstrom)
 
     return Iplus, Xout
 end
@@ -68,7 +68,7 @@ function ∇FD_ERI_2e3c(BS::BasisSet, auxBS::BasisSet, A, i, h=1e-5)
     Xplus  = ERI_2e3c(bs_plus, Abs_plus)
     Xminus = ERI_2e3c(bs_minus, Abs_minus)
 
-    return (Xplus - Xminus) ./ (2*h/MyMolecules.bohr_to_angstrom)
+    return (Xplus - Xminus) ./ (2*h/MyMyMolecules.bohr_to_angstrom)
 
 end
 
@@ -79,6 +79,6 @@ function ∇FD_ERI_2e2c(BS::BasisSet, A, i, h=1e-5)
     Xplus = ERI_2e2c(bs_plus)
     Xminus = ERI_2e2c(bs_minus)
 
-    return (Xplus - Xminus) ./ (2*h/MyMolecules.bohr_to_angstrom)
+    return (Xplus - Xminus) ./ (2*h/MyMyMolecules.bohr_to_angstrom)
 
 end

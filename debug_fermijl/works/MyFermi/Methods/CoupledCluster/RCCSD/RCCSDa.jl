@@ -7,7 +7,7 @@ function RCCSD(alg::RCCSDa)
     RCCSD(aoints, alg)
 end
 
-function RCCSD(mol::Molecule, alg::RCCSDa)
+function RCCSD(mol::MyMolecule, alg::RCCSDa)
     aoints = IntegralHelper{Float64}(molecule=mol)
     RCCSD(aoints, alg)
 end

@@ -8,7 +8,7 @@ function RHF(ints::IntegralHelper{Float64}, Alg::Direct)
         ints["T"]
         ints["V"]
         if !haskey(ints.cache, "Jinv")
-            ints["Jinv"] = inv(GaussianBasis.ERI_2e2c(ints.eri_type.basisset))
+            ints["Jinv"] = inv(MyGaussianBasis.ERI_2e2c(ints.eri_type.basisset))
         end
     end
     output("Done in {:10.5f} s", t)
@@ -62,7 +62,7 @@ function RHF(ints::IntegralHelper{Float64, <:AbstractERI, AtomicOrbitals}, C::Ar
     end
     nvir = size(C,2) - ndocc
     nao = size(C,1)
-    Vnuc = Molecules.nuclear_repulsion(molecule.atoms)
+    Vnuc = MyMolecules.nuclear_repulsion(molecule.atoms)
 
     output("Nuclear repulsion: {:15.10f}", Vnuc)
     output(" Number of AOs:                        {:5.0d}", nao)
@@ -74,7 +74,7 @@ function RHF(ints::IntegralHelper{Float64, <:AbstractERI, AtomicOrbitals}, C::Ar
     T = ints["T"]
     V = ints["V"]
     if !haskey(ints.cache, "Jinv")
-        ints["Jinv"] = inv(GaussianBasis.ERI_2e2c(ints.eri_type.basisset))
+        ints["Jinv"] = inv(MyGaussianBasis.ERI_2e2c(ints.eri_type.basisset))
     end
     Jinv = ints["Jinv"]
 

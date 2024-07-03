@@ -1,12 +1,12 @@
-using GaussianBasis
-using Molecules
+using MyGaussianBasis
+using MyMolecules
 using TensorOperations
 
 function RHFgrad(x...)
-    RHFgrad(Molecule(), x...)
+    RHFgrad(MyMolecule(), x...)
 end
 
-function RHFgrad(mol::Molecule, x...)
+function RHFgrad(mol::MyMolecule, x...)
     dtype = Options.get("deriv_type")
     if dtype == "analytic"
         RHFgrad(RHF(mol), x...)
@@ -48,19 +48,19 @@ function RHFgrad(wfn::RHF, eri_type::MyFermi.Integrals.Chonky)
         ∂ERI .= 0
 
         # Nuclear repulsion
-        ∂E[a, :] .= Molecules.∇nuclear_repulsion(atoms, a)
+        ∂E[a, :] .= MyMolecules.∇nuclear_repulsion(atoms, a)
 
         # Store kinetic into H and nuclear into S
-        GaussianBasis.∇kinetic!(∂H, bset, a)
-        GaussianBasis.∇nuclear!(∂S, bset, a)
+        MyGaussianBasis.∇kinetic!(∂H, bset, a)
+        MyGaussianBasis.∇nuclear!(∂S, bset, a)
 
         ∂H .+= ∂S
         ∂S .= 0
 
         # Now use S for overlap
-        GaussianBasis.∇overlap!(∂S, bset, a)
+        MyGaussianBasis.∇overlap!(∂S, bset, a)
 
-        GaussianBasis.∇ERI_2e4c!(∂ERI, bset, a)
+        MyGaussianBasis.∇ERI_2e4c!(∂ERI, bset, a)
 
         for q in 1:3
             @views vH = ∂H[:,:,q]
@@ -112,19 +112,19 @@ function RHFgrad(wfn::RHF)
         ∂S .= 0
 
         # Nuclear repulsion
-        ∂E[a, :] .= Molecules.∇nuclear_repulsion(atoms, a)
+        ∂E[a, :] .= MyMolecules.∇nuclear_repulsion(atoms, a)
 
         # Store kinetic into H and nuclear into S
-        GaussianBasis.∇kinetic!(∂H, bset, a)
-        GaussianBasis.∇nuclear!(∂S, bset, a)
+        MyGaussianBasis.∇kinetic!(∂H, bset, a)
+        MyGaussianBasis.∇nuclear!(∂S, bset, a)
 
         ∂H .+= ∂S
         ∂S .= 0
 
         # Now use S for overlap
-        GaussianBasis.∇overlap!(∂S, bset, a)
+        MyGaussianBasis.∇overlap!(∂S, bset, a)
 
-        idx, xyz... = GaussianBasis.∇sparseERI_2e4c(bset, a)
+        idx, xyz... = MyGaussianBasis.∇sparseERI_2e4c(bset, a)
 
         for q in 1:3
             @views vH = ∂H[:,:,q]

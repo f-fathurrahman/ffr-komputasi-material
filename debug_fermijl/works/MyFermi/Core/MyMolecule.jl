@@ -1,7 +1,7 @@
-using Molecules
-import Molecules: Atom
+using MyMolecules
+import MyMolecules: Atom
 
-export Molecule, Atom
+export MyMolecule, Atom
 
 using MyFermi.Options
 using MyFermi.PhysicalConstants: atomic_number, bohr_to_angstrom
@@ -12,7 +12,7 @@ using Formatting
 import Base: show
 
 """
-    MyFermi.Molecule
+    MyFermi.MyMolecule
 
 Object storing information about a molecule (group of atoms).
 
@@ -26,7 +26,7 @@ Object storing information about a molecule (group of atoms).
 
 # Examples:
 
-A Molecule object can be created by providing the desired keyworded arguments: 
+A MyMolecule object can be created by providing the desired keyworded arguments: 
 
     molstring:      A string representing the XYZ of the molecule
     unit:           Unit used for the distance between atoms (Bohr or Angstrom)
@@ -35,8 +35,8 @@ A Molecule object can be created by providing the desired keyworded arguments:
 
 Any argument not given explicitly will be read from the Options.
 ```
-julia> Molecule()
-Molecule:
+julia> MyMolecule()
+MyMolecule:
 
 O    1.209153654800    1.766411818900   -0.017161397200
 H    2.198480007500    1.797710062700    0.012116171900
@@ -45,8 +45,8 @@ H    0.919788188200    2.458018557000    0.629793883200
 
 Charge: 0   Multiplicity: 1   
 
-julia> Molecule(charge=2, multiplicity=3)
-Molecule:
+julia> MyMolecule(charge=2, multiplicity=3)
+MyMolecule:
 
 O    1.209153654800    1.766411818900   -0.017161397200
 H    2.198480007500    1.797710062700    0.012116171900
@@ -56,7 +56,7 @@ H    0.919788188200    2.458018557000    0.629793883200
 Charge: 2   Multiplicity: 3   
 ```
 """
-struct Molecule
+struct MyMolecule
     atoms::Vector{Atom}
     charge::Int
     multiplicity::Int
@@ -64,18 +64,18 @@ struct Molecule
     Nβ::Int
 end
 
-function Molecule(;
+function MyMolecule(;
     molstring = Options.get("molstring"),
     unit = Symbol(Options.get("unit")),
     charge = Options.get("charge"),
     multiplicity = Options.get("multiplicity")
     )
 
-    atoms = Molecules.parse_string(molstring, unit=unit)
-    Molecule(atoms, charge, multiplicity)
+    atoms = MyMolecules.parse_string(molstring, unit=unit)
+    MyMolecule(atoms, charge, multiplicity)
 end
 
-function Molecule(atoms::Vector{T}, charge::Int, multiplicity::Int) where T <: Atom
+function MyMolecule(atoms::Vector{T}, charge::Int, multiplicity::Int) where T <: Atom
 
     # Compute number of electrons
     nelec = -charge
@@ -99,19 +99,19 @@ function Molecule(atoms::Vector{T}, charge::Int, multiplicity::Int) where T <: A
 
     Nβ = (nelec - αexcess)/2
     Nα = nelec - Nβ
-    out =  Molecule(atoms, charge, multiplicity, Nα, Nβ)
+    out =  MyMolecule(atoms, charge, multiplicity, Nα, Nβ)
     return out
 end
 
 """
-    MyFermi.string_repr(M::Molecule)
+    MyFermi.string_repr(M::MyMolecule)
 
 Returns a nicely formatted string with all the molecule's information
 """
-function string_repr(M::Molecule)
+function string_repr(M::MyMolecule)
     out = ""
-    out = out*format("Molecule:\n\n")
-    out = out*format(Molecules.get_xyz(M.atoms))
+    out = out*format("MyMolecule:\n\n")
+    out = out*format(MyMolecules.get_xyz(M.atoms))
     out = out*format("\n")
     out = out*format("\nCharge: {}   ", M.charge)
     out = out*format("Multiplicity: {}   \n", M.multiplicity)
@@ -119,6 +119,6 @@ function string_repr(M::Molecule)
 end
 
 # Pretty printing
-function show(io::IO, ::MIME"text/plain", X::Molecule)
+function show(io::IO, ::MIME"text/plain", X::MyMolecule)
     print(io, string_repr(X))
 end
