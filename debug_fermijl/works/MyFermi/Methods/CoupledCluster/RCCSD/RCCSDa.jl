@@ -12,18 +12,31 @@ function RCCSD(mol::MyMolecule, alg::RCCSDa)
     RCCSD(aoints, alg)
 end
 
-function RCCSD(aoints::IntegralHelper, alg::RCCSDa)
-    rhf = RHF(aoints)
 
+
+function RCCSD(aoints::IntegralHelper, alg::RCCSDa)
+    #
+    @info "Enter RCCSD here 19"
+    #
+    # Do RHF calculation first (?)
+    rhf = RHF(aoints)
     if typeof(aoints.eri_type) === JKFIT || Options.get("precision") == "single"
         aoints = IntegralHelper(eri_type=RIFIT())
     end
+    # ffr: Initialize molecular integrals between RHF orbitals (?)
     moints = IntegralHelper(orbitals=rhf.orbitals)
+    # ffr: both moints and aoints are passed to RCCSD
     RCCSD(moints, aoints, alg)
 end
 
-function RCCSD(moints::IntegralHelper{T,<:AbstractERI,<:AbstractRestrictedOrbitals}, aoints::IntegralHelper{T,<:AbstractERI,AtomicOrbitals}, alg::RCCSDa) where T<:AbstractFloat
-
+function RCCSD(
+    moints::IntegralHelper{T,<:AbstractERI,<:AbstractRestrictedOrbitals},
+    aoints::IntegralHelper{T,<:AbstractERI,AtomicOrbitals},
+    alg::RCCSDa
+) where T<:AbstractFloat
+    @info "\nEnter RCCSD here 37\n"
+    # ffr: compute moints from aoints
+    @info "Computing moints ..."
     MyFermi.Integrals.compute!(moints, aoints, "F")
     MyFermi.Integrals.compute!(moints, aoints, "OOOO")
     MyFermi.Integrals.compute!(moints, aoints, "OOOV")
@@ -31,11 +44,20 @@ function RCCSD(moints::IntegralHelper{T,<:AbstractERI,<:AbstractRestrictedOrbita
     MyFermi.Integrals.compute!(moints, aoints, "OVOV")
     MyFermi.Integrals.compute!(moints, aoints, "OVVV")
     MyFermi.Integrals.compute!(moints, aoints, "VVVV")
+    @info "... Done computing moints"
     RCCSD(moints, alg)
 end
 
-function RCCSD(moints::IntegralHelper{T,E1,<:AbstractRestrictedOrbitals}, aoints::IntegralHelper{T,E2,AtomicOrbitals}, alg::RCCSDa) where {T<:AbstractFloat,T2<:AbstractFloat,
-                                                                                E1<:AbstractDFERI,E2<:AbstractDFERI}
+# This is for density fitting
+function RCCSD(
+    moints::IntegralHelper{T,E1,<:AbstractRestrictedOrbitals},
+    aoints::IntegralHelper{T,E2,AtomicOrbitals},
+    alg::RCCSDa
+) where {T<:AbstractFloat,T2<:AbstractFloat, E1<:AbstractDFERI,E2<:AbstractDFERI}
+    #
+    @info "\nEnter RCCSD here 55 (with density fitting)\n"
+    # ffr: XXX: type T2 is not used?
+    #
     MyFermi.Integrals.compute!(moints, aoints, "F")
     MyFermi.Integrals.compute!(moints, aoints, "BOO")
     MyFermi.Integrals.compute!(moints, aoints, "BOV")
@@ -43,7 +65,13 @@ function RCCSD(moints::IntegralHelper{T,E1,<:AbstractRestrictedOrbitals}, aoints
     RCCSD(moints, alg)
 end
 
-function RCCSD(moints::IntegralHelper{T,E,O}, alg::RCCSDa) where {T<:AbstractFloat,E<:AbstractERI,O<:AbstractRestrictedOrbitals}
+# The actual RCCSD is here. This only handles initial guess
+function RCCSD(
+    moints::IntegralHelper{T,E,O},
+    alg::RCCSDa
+) where {T<:AbstractFloat,E<:AbstractERI,O<:AbstractRestrictedOrbitals}
+
+    @info "\nEnter RCCSD line 70 (initial guess)\n"
 
     # Create zeroed guesses for amplitudes
 
@@ -89,9 +117,15 @@ function RCCSD(moints::IntegralHelper{T,E,O}, alg::RCCSDa) where {T<:AbstractFlo
     RCCSD(moints, T1guess, T2guess, alg)
 end
 
-function RCCSD(moints::IntegralHelper{T,E,O}, newT1::AbstractArray{T,2}, newT2::AbstractArray{T,4}, 
-                    alg::RCCSDa) where {T<:AbstractFloat, E<:AbstractERI, O<:AbstractRestrictedOrbitals}
+function RCCSD(
+    moints::IntegralHelper{T,E,O},
+    newT1::AbstractArray{T,2},
+    newT2::AbstractArray{T,4}, 
+    alg::RCCSDa
+) where {T<:AbstractFloat, E<:AbstractERI, O<:AbstractRestrictedOrbitals}
  
+    @info "\nEnter RCCSD line 127\n"
+
     # Print intro
     cc_header()
     Eref = moints.orbitals.sd_energy
