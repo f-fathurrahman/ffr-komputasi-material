@@ -58,7 +58,7 @@ function fock_matrix(system::System)
     (; n, l, h, u) = system
 
 
-    P = Float64.(la.diagm( vcat( repeat([1], n) , repeat([0], l-n) ) ))
+    P = Float64.(LinearAlgebra.diagm( vcat( repeat([1], n) , repeat([0], l-n) ) ))
     
     F = zeros(l, l)
     F += h
