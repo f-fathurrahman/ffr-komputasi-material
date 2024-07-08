@@ -1,5 +1,10 @@
 function S = my_calculate_rb(S)
 % Starting and ending indices of b-region
+% Actual inputs:
+% S.cell_typ, S.dx, S.dy, S.dz
+% S.xvac
+% S.Fdn: finite difference order
+% S.Atm
 if (S.cell_typ == 1 || S.cell_typ == 2)
     pos_atm_x = 0; % atom location in x-direction
     pos_atm_y = 0; % atom location in y-direction
@@ -8,8 +13,9 @@ if (S.cell_typ == 1 || S.cell_typ == 2)
     rb_up_y = (S.dy < 1.5) * (10+10*S.dy) + (S.dy >=1.5) * (20*S.dy-9.5);
     rb_up_z = (S.dz < 1.5) * (10+10*S.dz) + (S.dz >=1.5) * (20*S.dz-9.5);
     f_rby = @(y) y;
-    
+    %
 elseif (S.cell_typ == 3 || S.cell_typ == 4 || S.cell_typ == 5)
+    %
     pos_atm_x = S.xmax_at; % maximum R coordinate of any atom
     pos_atm_y = 0; % atom location in theta-direction
     pos_atm_z = 0; % atom location in z-direction
@@ -17,7 +23,7 @@ elseif (S.cell_typ == 3 || S.cell_typ == 4 || S.cell_typ == 5)
     f_rby = @(y) acos(1 - y^2/(2*pos_atm_x^2));
     rb_up_y = f_rby(12); % Theta direction
     rb_up_z = 12; % z-direction
-    
+    %
 end
 ii_s_temp = -ceil(rb_up_x/S.dx);
 ii_e_temp = ceil(rb_up_x/S.dx);
@@ -48,7 +54,7 @@ for ityp = 1:S.n_typ
         S.Atm(ityp).r_grid_vloc.*S.Atm(ityp).Vloc, dd_temp(~IsLargeThanRmax), 'spline');
     
     V_PS_temp = V_PS_temp./dd_temp;
-    V_PS_temp(dd_temp<S.Atm(ityp).r_grid_vloc(2)) = S.Atm(ityp).Vloc(1);
+    V_PS_temp(dd_temp < S.Atm(ityp).r_grid_vloc(2)) = S.Atm(ityp).Vloc(1);
     II_temp = 1+S.FDn : size(V_PS_temp,1)-S.FDn;
     JJ_temp = 1+S.FDn : size(V_PS_temp,2)-S.FDn;
     KK_temp = 1+S.FDn : size(V_PS_temp,3)-S.FDn;
@@ -75,15 +81,15 @@ for ityp = 1:S.n_typ
         fprintf(' rb = {%.3f %.3f %.3f}, int_b = %.15f, err_rb = %.3e\n',rb_x,rb_y,rb_z,2*sum(sum(sum(W_temp(ii_rb-S.FDn,jj_rb-S.FDn,kk_rb-S.FDn).*b_temp(ii_rb,jj_rb,kk_rb)))),err_rb);
         count = count + 1;
     end
-    
-    assert(rb_x<=rb_up_x && rb_y<=rb_up_y && rb_z<=rb_up_z,'Need to increase upper bound for rb!');
+    %
+    assert(rb_x<=rb_up_x && rb_y<=rb_up_y && rb_z<=rb_up_z, 'Need to increase upper bound for rb!');
     S.Atm(ityp).rb_x = rb_x;
     S.Atm(ityp).rb_y = rb_y;
     S.Atm(ityp).rb_z = rb_z;
     % S.Atm(ityp).rb_x = ceil(rb_x/S.dx-1e-12)*S.dx; % + S.dx;
     % S.Atm(ityp).rb_y = ceil(rb_y/S.dy-1e-12)*S.dy; % + S.dy;
     % S.Atm(ityp).rb_z = ceil(rb_z/S.dz-1e-12)*S.dz; % + S.dz;
-    fprintf(' rb = {%.3f %.3f %.3f}\n',S.Atm(ityp).rb_x,S.Atm(ityp).rb_y,S.Atm(ityp).rb_z);
+    fprintf(' rb = {%.3f %.3f %.3f}\n', S.Atm(ityp).rb_x, S.Atm(ityp).rb_y, S.Atm(ityp).rb_z);
 end
 
 end

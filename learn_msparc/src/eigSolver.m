@@ -11,7 +11,7 @@ function [upper_bound_guess_vecs,psi,EigVal,a0,bup,lambda_cutoff] = eigSolver(S,
 % @param bup                    : upper bound for Chebyshev filtering (1st SCF).
 % @param lambda_cutoff          : cut-off for chebyshev filtering (1st SCF).
 %
-% @authors	Qimen Xu <qimenxu@gatech.edu>
+% @authors    Qimen Xu <qimenxu@gatech.edu>
 %           Abhiraj Sharma <asharma424@gatech.edu>
 %           Phanish Suryanarayana <phanish.suryanarayana@ce.gatech.edu>
 %
@@ -43,11 +43,11 @@ if S.parallel ~= 1
         end
 
         rng('default'); % Initialize random number generator
-		rng(ks+1);
-		opts = struct('maxit', 100, 'tol', S.TOL_LANCZOS, 'v0', rand(N,1));
-		kpt_vec = S.kptgrid(kpt,:);
-		[DL11,DL22,DL33,DG1,DG2,DG3] = blochLaplacian_1d(S,kpt_vec);
-		Hfun = @(x) h_nonlocal_vector_mult(DL11,DL22,DL33,DG1,DG2,DG3,Veff,x,S,kpt_vec,spin);
+        rng(ks+1);
+        opts = struct('maxit', 100, 'tol', S.TOL_LANCZOS, 'v0', rand(N,1));
+        kpt_vec = S.kptgrid(kpt,:);
+        [DL11,DL22,DL33,DG1,DG2,DG3] = blochLaplacian_1d(S,kpt_vec);
+        Hfun = @(x) h_nonlocal_vector_mult(DL11,DL22,DL33,DG1,DG2,DG3,Veff,x,S,kpt_vec,spin);
         
         if ~(isreal(DL11) && isreal(DL22) && isreal(DL33)) || S.SOC_flag
             opts.isreal = false;
@@ -147,8 +147,8 @@ if S.parallel ~= 1
         psi(:,:,ks) = bsxfun(@times, psi(:,:,ks), scfac);
     end
 else 
-	% Before getting into parfor, set to use only one thread
-	LASTN = maxNumCompThreads(1);
+    % Before getting into parfor, set to use only one thread
+    LASTN = maxNumCompThreads(1);
     parfor (ks = 1:S.tnkpt*S.nspin, S.num_worker_heuristic)
         if ks <= S.tnkpt
             kpt = ks;
@@ -165,11 +165,11 @@ else
         end
 
         rng('default'); % Initialize random number generator
-		rng(ks+1);
-		opts = struct('maxit', 100, 'tol', S.TOL_LANCZOS, 'v0', rand(N,1));
-		kpt_vec = S.kptgrid(kpt,:);
-		[DL11,DL22,DL33,DG1,DG2,DG3] = blochLaplacian_1d(S,kpt_vec);
-		Hfun = @(x) h_nonlocal_vector_mult(DL11,DL22,DL33,DG1,DG2,DG3,Veff,x,S,kpt_vec,spin);
+        rng(ks+1);
+        opts = struct('maxit', 100, 'tol', S.TOL_LANCZOS, 'v0', rand(N,1));
+        kpt_vec = S.kptgrid(kpt,:);
+        [DL11,DL22,DL33,DG1,DG2,DG3] = blochLaplacian_1d(S,kpt_vec);
+        Hfun = @(x) h_nonlocal_vector_mult(DL11,DL22,DL33,DG1,DG2,DG3,Veff,x,S,kpt_vec,spin);
         
         if ~(isreal(DL11) && isreal(DL22) && isreal(DL33)) || S.SOC_flag
             opts.isreal = false;
@@ -268,8 +268,8 @@ else
         % psi(:,:,ks) = psi(:,:,ks) * diag(scfac);
         psi(:,:,ks) = bsxfun(@times, psi(:,:,ks), scfac);
     end
-	% After parfor, reset the number of threads as before
-	maxNumCompThreads(LASTN);
+    % After parfor, reset the number of threads as before
+    maxNumCompThreads(LASTN);
 end
 
 % restore the storage of psi, EigVal

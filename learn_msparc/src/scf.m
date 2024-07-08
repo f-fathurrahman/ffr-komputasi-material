@@ -14,23 +14,23 @@ fprintf(' Starting SCF iteration...\n');
 outfname = S.outfname;
 fileID = fopen(outfname,'a');
 if (fileID == -1) 
-	error('\n Cannot open file "%s"\n',outfname);
+    error('\n Cannot open file "%s"\n',outfname);
 end
 if S.spin_typ == 0
-	fprintf(fileID,'=====================================================================\n');
-	fprintf(fileID,'                    Self Consistent Field (SCF#%d)                     \n',S.Relax_iter);
-	fprintf(fileID,'=====================================================================\n');
-	fprintf(fileID,'Iteration     Free Energy (Ha/atom)   SCF Error        Timing (sec)\n');
+    fprintf(fileID,'=====================================================================\n');
+    fprintf(fileID,'                    Self Consistent Field (SCF#%d)                     \n',S.Relax_iter);
+    fprintf(fileID,'=====================================================================\n');
+    fprintf(fileID,'Iteration     Free Energy (Ha/atom)   SCF Error        Timing (sec)\n');
 elseif S.spin_typ == 1
-	fprintf(fileID,'========================================================================================\n');
-	fprintf(fileID,'                            Self Consistent Field (SCF#%d)                     \n',S.Relax_iter);
-	fprintf(fileID,'========================================================================================\n');
-	fprintf(fileID,'Iteration     Free Energy (Ha/atom)    Magnetization     SCF Error        Timing (sec)\n');
+    fprintf(fileID,'========================================================================================\n');
+    fprintf(fileID,'                            Self Consistent Field (SCF#%d)                     \n',S.Relax_iter);
+    fprintf(fileID,'========================================================================================\n');
+    fprintf(fileID,'Iteration     Free Energy (Ha/atom)    Magnetization     SCF Error        Timing (sec)\n');
 elseif S.spin_typ == 2
     fprintf(fileID,'======================================================================================================================\n');
-	fprintf(fileID,'                                              Self Consistent Field (SCF#%d)                                          \n',S.Relax_iter);
-	fprintf(fileID,'======================================================================================================================\n');
-	fprintf(fileID,'Iteration     Free Energy (Ha/atom)            Magnetization (tot,x,y,z)                 SCF Error        Timing (sec)\n');
+    fprintf(fileID,'                                              Self Consistent Field (SCF#%d)                                          \n',S.Relax_iter);
+    fprintf(fileID,'======================================================================================================================\n');
+    fprintf(fileID,'Iteration     Free Energy (Ha/atom)            Magnetization (tot,x,y,z)                 SCF Error        Timing (sec)\n');
 end
 fclose(fileID);
 
@@ -69,11 +69,11 @@ end
 
 % Generate guess psi WARNING: psi is an internal matlab function
 if S.ForceCount == 1
-	rng('default'); % Initialize random number generator
-	rng(1); % Specify the seed to be 1
-	S.psi = rand(S.N*S.nspinor,S.Nev,S.tnkpt)-0.5;
-	S.upper_bound_guess_vecs = zeros(S.N*S.nspinor_eig,S.tnkpt*S.nspin);
-	S.EigVal = zeros(S.Nev,S.tnkpt*S.nspin);
+    rng('default'); % Initialize random number generator
+    rng(1); % Specify the seed to be 1
+    S.psi = rand(S.N*S.nspinor,S.Nev,S.tnkpt)-0.5;
+    S.upper_bound_guess_vecs = zeros(S.N*S.nspinor_eig,S.tnkpt*S.nspin);
+    S.EigVal = zeros(S.Nev,S.tnkpt*S.nspin);
 end
 
 if S.usefock == 1
@@ -174,9 +174,9 @@ scf_tol = varargin{2};
 count_Exx = -1;
 
 if nargin == 3
-	count_Exx = varargin{3};
+    count_Exx = varargin{3};
 elseif nargin > 3 || nargin < 2
-	error('Too many input arguments.');
+    error('Too many input arguments.');
 end
 
 % SCF LOOP 
@@ -198,7 +198,7 @@ lambda_cutoff = zeros(S.tnkpt*S.nspin,1);
 t_SCF = 0; 
 % start scf loop
 while count_SCF <= S.MAXIT_SCF
-	tic_cheb = tic;
+    tic_cheb = tic;
     if count_SCF == 1 && S.ForceCount == 1 && S.usefock <= 1
         Nchefsi = S.rhoTrigger;
     else
@@ -370,9 +370,9 @@ while count_SCF <= S.MAXIT_SCF
     end
     
     scf_runtime = toc(tic_cheb);
-	t_SCF = t_SCF + scf_runtime; % add chebyshev filtering time to SCF time
-	S_Debug.relax(S.Relax_iter).scf_runtime(count_SCF,1) = scf_runtime;
-	fprintf(' This SCF iteration took %.3f s.\n\n', scf_runtime);	
+    t_SCF = t_SCF + scf_runtime; % add chebyshev filtering time to SCF time
+    S_Debug.relax(S.Relax_iter).scf_runtime(count_SCF,1) = scf_runtime;
+    fprintf(' This SCF iteration took %.3f s.\n\n', scf_runtime);    
 
     if S.spin_typ == 0
         fprintf(fileID,'%-6d      %18.10E        %.3E        %.3f\n', ...
@@ -394,8 +394,8 @@ end
 
 S_Debug.relax(S.Relax_iter).scf_flag = 0; % scf_flag being 0 means it's converged
 if (count_SCF == S.MAXIT_SCF + 1)
-	disp(' SCF did not converge. Maximum iterations reached!')
-	S_Debug.relax(S.Relax_iter).scf_flag = 1; % scf_flag being 1 means it's not converged
+    disp(' SCF did not converge. Maximum iterations reached!')
+    S_Debug.relax(S.Relax_iter).scf_flag = 1; % scf_flag being 1 means it's not converged
 end
 
 S_Debug.relax(S.Relax_iter).count_SCF = count_SCF - 1;
@@ -405,7 +405,7 @@ fprintf(' ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \n');
 % write to output file
 fileID = fopen(S.outfname,'a');
 if (fileID == -1) 
-	error('\n Cannot open file "%s"\n',S.outfname);
+    error('\n Cannot open file "%s"\n',S.outfname);
 end
 fprintf(fileID,'Total number of SCF: %-6d\n',count_SCF-1);
 fclose(fileID);

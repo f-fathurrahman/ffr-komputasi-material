@@ -149,7 +149,7 @@ else
         rho(:,3) = rho(:,3)+S.rho_Tilde_at * 0.5;
     end
     rho(rho < S.xc_rhotol) = S.xc_rhotol;
-	rho(:,1) = rho(:,2) + rho(:,3);
+    rho(:,1) = rho(:,2) + rho(:,3);
     
     if S.isgradient
         if S.spin_typ == 1
@@ -290,14 +290,14 @@ else
     if S.isgradient
         v2xc(lestol) = 0;
         if S.cell_typ ~= 2
-		    Vxc_temp = S.grad_1 * (v2xc.*drho_1) + S.grad_2 * (v2xc.*drho_2) + S.grad_3 * (v2xc.*drho_3);
-	    else
-		    Vxc_temp = S.lapc_T(1,1)*S.grad_1*(v2xc.*drho_1) + S.lapc_T(2,2)*S.grad_2*(v2xc.*drho_2) + S.lapc_T(3,3)*S.grad_3*(v2xc.*drho_3) +...
-				       S.lapc_T(2,1)*S.grad_1*(v2xc.*drho_2) + S.lapc_T(2,1)*S.grad_2*(v2xc.*drho_1) + S.lapc_T(3,2)*S.grad_2*(v2xc.*drho_3) +...
-				       S.lapc_T(3,2)*S.grad_3*(v2xc.*drho_2) + S.lapc_T(3,1)*S.grad_1*(v2xc.*drho_3) + S.lapc_T(3,1)*S.grad_3*(v2xc.*drho_1) ;
+            Vxc_temp = S.grad_1 * (v2xc.*drho_1) + S.grad_2 * (v2xc.*drho_2) + S.grad_3 * (v2xc.*drho_3);
+        else
+            Vxc_temp = S.lapc_T(1,1)*S.grad_1*(v2xc.*drho_1) + S.lapc_T(2,2)*S.grad_2*(v2xc.*drho_2) + S.lapc_T(3,3)*S.grad_3*(v2xc.*drho_3) +...
+                       S.lapc_T(2,1)*S.grad_1*(v2xc.*drho_2) + S.lapc_T(2,1)*S.grad_2*(v2xc.*drho_1) + S.lapc_T(3,2)*S.grad_2*(v2xc.*drho_3) +...
+                       S.lapc_T(3,2)*S.grad_3*(v2xc.*drho_2) + S.lapc_T(3,1)*S.grad_1*(v2xc.*drho_3) + S.lapc_T(3,1)*S.grad_3*(v2xc.*drho_1) ;
         end
         vxc(:,1) = vxc(:,1) - Vxc_temp(:,2) - Vxc_temp(:,1);
-	    vxc(:,2) = vxc(:,2) - Vxc_temp(:,3) - Vxc_temp(:,1); 
+        vxc(:,2) = vxc(:,2) - Vxc_temp(:,3) - Vxc_temp(:,1); 
     end
 
     S.e_xc = exc;

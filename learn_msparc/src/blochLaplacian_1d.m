@@ -15,27 +15,27 @@ Nx = S.Nx; Ny = S.Ny; Nz = S.Nz;
 
 % Phase factors
 if kptvec(1) == 0
-	x_phasefac_l = 1.0;
-	x_phasefac_r = 1.0;
+    x_phasefac_l = 1.0;
+    x_phasefac_r = 1.0;
 else
-	x_phasefac_l = exp(-1i*kptvec(1)*S.L1);
-	x_phasefac_r = exp(1i*kptvec(1)*S.L1);
+    x_phasefac_l = exp(-1i*kptvec(1)*S.L1);
+    x_phasefac_r = exp(1i*kptvec(1)*S.L1);
 end
 
 if kptvec(2) == 0
-	y_phasefac_l = 1.0;
-	y_phasefac_r = 1.0;
+    y_phasefac_l = 1.0;
+    y_phasefac_r = 1.0;
 else
-	y_phasefac_l = exp(-1i*kptvec(2)*S.L2);
-	y_phasefac_r = exp(1i*kptvec(2)*S.L2);
+    y_phasefac_l = exp(-1i*kptvec(2)*S.L2);
+    y_phasefac_r = exp(1i*kptvec(2)*S.L2);
 end
 
 if kptvec(3) == 0
-	z_phasefac_l = 1.0;
-	z_phasefac_r = 1.0;
+    z_phasefac_l = 1.0;
+    z_phasefac_r = 1.0;
 else
-	z_phasefac_l = exp(-1i*kptvec(3)*S.L3);
-	z_phasefac_r = exp(1i*kptvec(3)*S.L3);
+    z_phasefac_l = exp(-1i*kptvec(3)*S.L3);
+    z_phasefac_r = exp(1i*kptvec(3)*S.L3);
 end
 
 
@@ -44,8 +44,8 @@ end
 V = S.V_11;
 
 if S.BCx == 0
-	V(S.isOutl_11) = V(S.isOutl_11) * x_phasefac_l;
-	V(S.isOutr_11) = V(S.isOutr_11) * x_phasefac_r;
+    V(S.isOutl_11) = V(S.isOutl_11) * x_phasefac_l;
+    V(S.isOutr_11) = V(S.isOutr_11) * x_phasefac_r;
 end
 
 % Create discretized Laplacian
@@ -56,8 +56,8 @@ DL11 = sparse(S.I_11,S.II_11,V,Nx,Nx);
 V = S.V_22;
 
 if S.BCy == 0
-	V(S.isOutl_22) = V(S.isOutl_22) * y_phasefac_l;
-	V(S.isOutr_22) = V(S.isOutr_22) * y_phasefac_r;  
+    V(S.isOutl_22) = V(S.isOutl_22) * y_phasefac_l;
+    V(S.isOutr_22) = V(S.isOutr_22) * y_phasefac_r;  
 end
 
 % Create discretized Laplacian
@@ -69,8 +69,8 @@ DL22 = sparse(S.I_22,S.II_22,V,Ny,Ny);
 V = S.V_33;
 
 if S.BCz == 0
-	V(S.isOutl_33) = V(S.isOutl_33) * z_phasefac_l;
-	V(S.isOutr_33) = V(S.isOutr_33) * z_phasefac_r;  
+    V(S.isOutl_33) = V(S.isOutl_33) * z_phasefac_l;
+    V(S.isOutr_33) = V(S.isOutr_33) * z_phasefac_r;  
 end
 
 % Create discretized Laplacian
@@ -82,43 +82,43 @@ DG2 = zeros(Ny,Ny);
 DG3 = zeros(Nz,Nz);
 
 if S.cell_typ > 1
-	% x-direction
-	%-------------
+    % x-direction
+    %-------------
 
-	V = S.V_1;
+    V = S.V_1;
 
-	if S.BCx == 0
-		V(S.isOutl_1) = V(S.isOutl_1) * x_phasefac_l;
-		V(S.isOutr_1) = V(S.isOutr_1) * x_phasefac_r;  
-	end
+    if S.BCx == 0
+        V(S.isOutl_1) = V(S.isOutl_1) * x_phasefac_l;
+        V(S.isOutr_1) = V(S.isOutr_1) * x_phasefac_r;  
+    end
 
-	% Create discretized Laplacian
-	DG1 = sparse(S.I_1,S.II_1,V,Nx,Nx);
+    % Create discretized Laplacian
+    DG1 = sparse(S.I_1,S.II_1,V,Nx,Nx);
 
-	% y-direction
-	%-------------
+    % y-direction
+    %-------------
 
-	V = S.V_2;
+    V = S.V_2;
 
-	if S.BCy == 0
-		V(S.isOutl_2) = V(S.isOutl_2) * y_phasefac_l;
-		V(S.isOutr_2) = V(S.isOutr_2) * y_phasefac_r;  
-	end
+    if S.BCy == 0
+        V(S.isOutl_2) = V(S.isOutl_2) * y_phasefac_l;
+        V(S.isOutr_2) = V(S.isOutr_2) * y_phasefac_r;  
+    end
 
-	% Create discretized Laplacian
-	DG2 = sparse(S.I_2,S.II_2,V,Ny,Ny);
+    % Create discretized Laplacian
+    DG2 = sparse(S.I_2,S.II_2,V,Ny,Ny);
 
-	% z-direction
-	%-------------
+    % z-direction
+    %-------------
 
-	V = S.V_3;
+    V = S.V_3;
 
-	if S.BCz == 0
-		V(S.isOutl_3) = V(S.isOutl_3) * z_phasefac_l;
-		V(S.isOutr_3) = V(S.isOutr_3) * z_phasefac_r;  
-	end
+    if S.BCz == 0
+        V(S.isOutl_3) = V(S.isOutl_3) * z_phasefac_l;
+        V(S.isOutr_3) = V(S.isOutr_3) * z_phasefac_r;  
+    end
 
-	% Create discretized Laplacian
-	DG3 = sparse(S.I_3,S.II_3,V,Nz,Nz);
-	
+    % Create discretized Laplacian
+    DG3 = sparse(S.I_3,S.II_3,V,Nz,Nz);
+    
 end

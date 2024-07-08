@@ -73,8 +73,8 @@ function [ec, vc, v2c, v3c] = correlationr2SCAN(rho, s, p, alpha, DsDn, DsDDn, D
     beta = betaConst* (1 + 0.1*rs) ./ (1 + 0.1778*rs);
     % epsilon_c LSDA1
     % correlation parameters
-    % 	p = 1 ;
-    % 	AA = 0.031091 ;
+    %     p = 1 ;
+    %     AA = 0.031091 ;
     AAec0 = 0.0310907 ;
     alpha1ec0 = 0.21370 ;
     beta1ec0 = 7.5957 ;
@@ -161,8 +161,8 @@ function [ec, vc, v2c, v3c] = correlationr2SCAN(rho, s, p, alpha, DsDn, DsDDn, D
     % new variable, derives from decrs0_drs, dmacrs_drs, decrs1_drs formula above
     
     Dec_lsda1Dn = (- rs * 1/3 .* dec_lsda1_drs) ./ rho;
-    % 	Dec_lsda1Dnup = (- rs * 1/3 .* dec_lsda1_drs - zeta .* dec_lsda1_dzeta + dec_lsda1_dzeta) ./ rho(:, 1);
-    % 	Dec_lsda1Dndn = (- rs * 1/3 .* dec_lsda1_drs - zeta .* dec_lsda1_dzeta - dec_lsda1_dzeta) ./ rho(:, 1); % from LDA_PW(S)
+    %     Dec_lsda1Dnup = (- rs * 1/3 .* dec_lsda1_drs - zeta .* dec_lsda1_dzeta + dec_lsda1_dzeta) ./ rho(:, 1);
+    %     Dec_lsda1Dndn = (- rs * 1/3 .* dec_lsda1_drs - zeta .* dec_lsda1_dzeta - dec_lsda1_dzeta) ./ rho(:, 1); % from LDA_PW(S)
     %     fprintf("ecLSDA %10.8f, Vc1LSDA %10.8f %10.8f\n", ec_lsda1, Dec_lsda1Dnup, Dec_lsda1Dndn);
     DbetaDn = 0.066725*(0.1*(1+0.1778*rs) - 0.1778*(1+0.1*rs)) ./ ((1+0.1778*rs).^2) .* DrsDn;
     %     DphiDn = 0.5*(2/3*(1+zeta).^(-1/3) - 2/3*(1-zeta).^(-1/3)).*DzetaDn; % no spin, should be 0

@@ -15,26 +15,26 @@ fprintf(' Reading .ion file ...\n');
 % open .ion file
 fid1=fopen(strcat(filename,'.ion'),'r');
 if (fid1 == -1) 
-	error('\n Cannot open file "%s.ion"\n',filename);
+    error('\n Cannot open file "%s.ion"\n',filename);
 end 
 
 % first identify total number of atom types
 typcnt = 0;
 while (~feof(fid1)) 
-	%fscanf(fid1,"%s",str);
-	C_inpt = textscan(fid1,'%s',1,'delimiter',' ','MultipleDelimsAsOne',1);
-	str = char(C_inpt{:});
-	if (strcmp(str, 'ATOM_TYPE:')) 
-		typcnt = typcnt + 1;
-	end
-	% skip current line
-	textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  
+    %fscanf(fid1,"%s",str);
+    C_inpt = textscan(fid1,'%s',1,'delimiter',' ','MultipleDelimsAsOne',1);
+    str = char(C_inpt{:});
+    if (strcmp(str, 'ATOM_TYPE:')) 
+        typcnt = typcnt + 1;
+    end
+    % skip current line
+    textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  
 end
 
 fprintf(' Number of atom types : %d\n',typcnt);    
 
 if (typcnt < 1) 
-	error('\n Please provide at least one type of atoms!\n');
+    error('\n Please provide at least one type of atoms!\n');
 end
 
 S.n_typ = typcnt;
@@ -49,34 +49,34 @@ atmcnt_cum = zeros(S.n_typ+1,1);
 
 S.Atm = repmat(struct([]), S.n_typ, 1);
 while (~feof(fid1)) 
-	C_inpt = textscan(fid1,'%s',1,'delimiter',' ','MultipleDelimsAsOne',1);
-	str = char(C_inpt{:}); % for R2016b and later, can use string()
-	if (strcmp(str, 'ATOM_TYPE:')) 
-		typcnt = typcnt + 1;
-		C_param = textscan(fid1,'%s',1,'delimiter',' ','MultipleDelimsAsOne',1);
-		S.Atm(typcnt).typ = char(C_param{:});
-	elseif (strcmp(str, 'N_TYPE_ATOM:')) 
-		C_inpt = textscan(fid1,'%f',1,'delimiter',' ','MultipleDelimsAsOne',1);
-		S.Atm(typcnt).n_atm_typ = C_inpt{1};
-		S.Atm(typcnt).coords = zeros(S.Atm(typcnt).n_atm_typ, 3);
-		S.Atm(typcnt).psdfname = 'undefined';
-		S.Atm(typcnt).Mass   = 1e9; % set the default later
-		S.Atm(typcnt).lloc   = 4; % default is 4 for oncv
-		S.Atm(typcnt).psptyp = 1; % default is psp8 format
-		S.Atm(typcnt).mag    = zeros(S.Atm(typcnt).n_atm_typ,3);
-		textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  
-		n_atom = n_atom + S.Atm(typcnt).n_atm_typ ;
-		atmcnt_cum(typcnt+1) = n_atom;
-	else 
-		% skip current line
-		textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  
-	end
+    C_inpt = textscan(fid1,'%s',1,'delimiter',' ','MultipleDelimsAsOne',1);
+    str = char(C_inpt{:}); % for R2016b and later, can use string()
+    if (strcmp(str, 'ATOM_TYPE:')) 
+        typcnt = typcnt + 1;
+        C_param = textscan(fid1,'%s',1,'delimiter',' ','MultipleDelimsAsOne',1);
+        S.Atm(typcnt).typ = char(C_param{:});
+    elseif (strcmp(str, 'N_TYPE_ATOM:')) 
+        C_inpt = textscan(fid1,'%f',1,'delimiter',' ','MultipleDelimsAsOne',1);
+        S.Atm(typcnt).n_atm_typ = C_inpt{1};
+        S.Atm(typcnt).coords = zeros(S.Atm(typcnt).n_atm_typ, 3);
+        S.Atm(typcnt).psdfname = 'undefined';
+        S.Atm(typcnt).Mass   = 1e9; % set the default later
+        S.Atm(typcnt).lloc   = 4; % default is 4 for oncv
+        S.Atm(typcnt).psptyp = 1; % default is psp8 format
+        S.Atm(typcnt).mag    = zeros(S.Atm(typcnt).n_atm_typ,3);
+        textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  
+        n_atom = n_atom + S.Atm(typcnt).n_atm_typ ;
+        atmcnt_cum(typcnt+1) = n_atom;
+    else 
+        % skip current line
+        textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  
+    end
 end
 
 fprintf(' Total number of atoms: %d\n',n_atom);
 
 if (n_atom < 1) 
-	error('\n Please provide at least one atom!\n');
+    error('\n Please provide at least one atom!\n');
 end    
 
 S.n_atm = n_atom;
@@ -88,16 +88,16 @@ S.mvAtmConstraint = ones(n_atom,3);
 
 % set default atomic masses based on atom types (for MD)
 if (1)  % atomic mass is only needed for MD
-	for ityp = 1:S.n_typ
-		% first identify element type
-		elemType = S.Atm(ityp).typ;
-		% remove the number appending the element type name if any
-		elemType = elemType(isstrprop(elemType, 'alpha')); % e.g., Si2 -> Si
-		% S.Atm(ityp).element = elemType;
-		% find default atomic mass
-		S.Atm(ityp).Mass = atomdata_mass(elemType);
-		fprintf(' Default atomic mass for %s is %f\n',elemType,S.Atm(ityp).Mass);
-	end
+    for ityp = 1:S.n_typ
+        % first identify element type
+        elemType = S.Atm(ityp).typ;
+        % remove the number appending the element type name if any
+        elemType = elemType(isstrprop(elemType, 'alpha')); % e.g., Si2 -> Si
+        % S.Atm(ityp).element = elemType;
+        % find default atomic mass
+        S.Atm(ityp).Mass = atomdata_mass(elemType);
+        fprintf(' Default atomic mass for %s is %f\n',elemType,S.Atm(ityp).Mass);
+    end
 end
 
 % reset temp var
@@ -112,56 +112,56 @@ S.IsSpin = zeros(S.n_typ,1);
 fseek(fid1, 0, 'bof'); % equivalent ot frewind(fid1)
 
 while (~feof(fid1)) 
-	C_inpt = textscan(fid1,'%s',1,'delimiter',' ','MultipleDelimsAsOne',1);
-	str = char(C_inpt{:}); % for R2016b and later, can use string()
-	
-	% enable commenting with '#'
-	if (isempty(str) || str(1) == '#')
-		textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
-		continue;
-	end
+    C_inpt = textscan(fid1,'%s',1,'delimiter',' ','MultipleDelimsAsOne',1);
+    str = char(C_inpt{:}); % for R2016b and later, can use string()
+    
+    % enable commenting with '#'
+    if (isempty(str) || str(1) == '#')
+        textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
+        continue;
+    end
 
-	if (strcmp(str, 'ATOM_TYPE:')) 
-		typcnt = typcnt + 1;
-		textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
-	elseif (strcmp(str, 'N_TYPE_ATOM:')) 
-		textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
-	elseif (strcmp(str, 'COORD:')) 
-		textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
-		%fprintf(' typcnt = %d, \n',typcnt);
-		typ_atm_count = 0; % atom count for this type
-		S.Atm(typcnt).coords = zeros(S.Atm(typcnt).n_atm_typ,3);
-		for i = 1:S.Atm(typcnt).n_atm_typ
-			typ_atm_count = typ_atm_count + 1;
-			atmcnt_coord = atmcnt_coord + 1;
-			C_param = textscan(fid1,'%f %f %f',1,'delimiter',' ','MultipleDelimsAsOne',1);
-			S.Atm(typcnt).coords(typ_atm_count,1) = C_param{1};
-			S.Atm(typcnt).coords(typ_atm_count,2) = C_param{2};
-			S.Atm(typcnt).coords(typ_atm_count,3) = C_param{3};
-			S.Atoms(atmcnt_coord,:) = S.Atm(typcnt).coords(typ_atm_count,:);
-			textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
-		end
-	elseif (strcmp(str, 'COORD_FRAC:')) 
-		textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
-		%fprintf(' typcnt = %d, \n',typcnt);
-		typ_atm_count = 0; % atom count for this type
-		for i = 1:S.Atm(typcnt).n_atm_typ
-			typ_atm_count = typ_atm_count + 1;
-			atmcnt_coord = atmcnt_coord + 1;  
-			C_param = textscan(fid1,'%f %f %f',1,'delimiter',' ','MultipleDelimsAsOne',1);
-			S.Atm(typcnt).coords(typ_atm_count,1) = C_param{1} * S.L1;
-			S.Atm(typcnt).coords(typ_atm_count,2) = C_param{2} * S.L2;
-			S.Atm(typcnt).coords(typ_atm_count,3) = C_param{3} * S.L3;
-			S.Atoms(atmcnt_coord,:) = S.Atm(typcnt).coords(typ_atm_count,:);
-			textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
-		end
-		S.IsFrac(typcnt) = 1;
-	elseif (strcmp(str, 'SPIN:')) 
-		textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
-		%fprintf(' typcnt = %d, \n',typcnt);
-		typ_atm_count = 0; % atom count for this type
-		for i = 1:S.Atm(typcnt).n_atm_typ
-			typ_atm_count = typ_atm_count + 1; 
+    if (strcmp(str, 'ATOM_TYPE:')) 
+        typcnt = typcnt + 1;
+        textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
+    elseif (strcmp(str, 'N_TYPE_ATOM:')) 
+        textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
+    elseif (strcmp(str, 'COORD:')) 
+        textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
+        %fprintf(' typcnt = %d, \n',typcnt);
+        typ_atm_count = 0; % atom count for this type
+        S.Atm(typcnt).coords = zeros(S.Atm(typcnt).n_atm_typ,3);
+        for i = 1:S.Atm(typcnt).n_atm_typ
+            typ_atm_count = typ_atm_count + 1;
+            atmcnt_coord = atmcnt_coord + 1;
+            C_param = textscan(fid1,'%f %f %f',1,'delimiter',' ','MultipleDelimsAsOne',1);
+            S.Atm(typcnt).coords(typ_atm_count,1) = C_param{1};
+            S.Atm(typcnt).coords(typ_atm_count,2) = C_param{2};
+            S.Atm(typcnt).coords(typ_atm_count,3) = C_param{3};
+            S.Atoms(atmcnt_coord,:) = S.Atm(typcnt).coords(typ_atm_count,:);
+            textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
+        end
+    elseif (strcmp(str, 'COORD_FRAC:')) 
+        textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
+        %fprintf(' typcnt = %d, \n',typcnt);
+        typ_atm_count = 0; % atom count for this type
+        for i = 1:S.Atm(typcnt).n_atm_typ
+            typ_atm_count = typ_atm_count + 1;
+            atmcnt_coord = atmcnt_coord + 1;  
+            C_param = textscan(fid1,'%f %f %f',1,'delimiter',' ','MultipleDelimsAsOne',1);
+            S.Atm(typcnt).coords(typ_atm_count,1) = C_param{1} * S.L1;
+            S.Atm(typcnt).coords(typ_atm_count,2) = C_param{2} * S.L2;
+            S.Atm(typcnt).coords(typ_atm_count,3) = C_param{3} * S.L3;
+            S.Atoms(atmcnt_coord,:) = S.Atm(typcnt).coords(typ_atm_count,:);
+            textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
+        end
+        S.IsFrac(typcnt) = 1;
+    elseif (strcmp(str, 'SPIN:')) 
+        textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
+        %fprintf(' typcnt = %d, \n',typcnt);
+        typ_atm_count = 0; % atom count for this type
+        for i = 1:S.Atm(typcnt).n_atm_typ
+            typ_atm_count = typ_atm_count + 1; 
             C_param = textscan(fid1,'%f %f %f',1,'delimiter',' ','MultipleDelimsAsOne',1);
             num_non_nan = sum(cellfun(@(x) sum(~isnan(x)), C_param));
             if num_non_nan == 1
@@ -175,45 +175,45 @@ while (~feof(fid1))
             else
                 error("Please specify either spin in Z direction or spin in x, y, z directions.");
             end
-			textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
-		end
-		S.IsSpin(typcnt) = 1;
-	elseif (strcmp(str, 'RELAX:')) 
-		textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
-		atmcnt_relax = atmcnt_cum(typcnt);
-		%typ_atm_count = 0; % atom count for this type
-		for i = 1:S.Atm(typcnt).n_atm_typ
-			% typ_atm_count = typ_atm_count + 1;
-			atmcnt_relax  = atmcnt_relax + 1;  
-			C_param = textscan(fid1,'%d %d %d',1,'delimiter',' ','MultipleDelimsAsOne',1);
-			S.mvAtmConstraint(atmcnt_relax,1) = C_param{1,1};
-			S.mvAtmConstraint(atmcnt_relax,2) = C_param{1,2};
-			S.mvAtmConstraint(atmcnt_relax,3) = C_param{1,3};
-			textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
-		end
-		fprintf('WARNING: All atoms will be forced to relax\n');
-	elseif (strcmp(str, 'PSEUDO_POT:')) 
-		C_param = textscan(fid1,'%s',1,'delimiter',' ','MultipleDelimsAsOne',1);
-		S.Atm(typcnt).psdfname = char(C_param{:});
-		textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
-		S.is_default_psd = 0; % switch off default psedopots
-		fprintf(' pseudo_dir # %d = %s\n',typcnt,S.Atm(typcnt).psdfname);
-	elseif (strcmp(str, 'ATOMIC_MASS:')) 
-		C_param = textscan(fid1,'%f',1,'delimiter',' ','MultipleDelimsAsOne',1);
-		S.Atm(typcnt).Mass = C_param{1};
-		textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
-	elseif ( isnumeric(str(1)) ) 
-		error(['\nPlease specify the identifier before numbers!\n', ...
-			   'Reminder: check if the number of atoms specified is inconsistent\n' ...
-			   '          with the number of coordinates provided\n']); 
-	else 
-		fprintf('\nCannot recognize input flag: "%s"',str);
-	end
+            textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
+        end
+        S.IsSpin(typcnt) = 1;
+    elseif (strcmp(str, 'RELAX:')) 
+        textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
+        atmcnt_relax = atmcnt_cum(typcnt);
+        %typ_atm_count = 0; % atom count for this type
+        for i = 1:S.Atm(typcnt).n_atm_typ
+            % typ_atm_count = typ_atm_count + 1;
+            atmcnt_relax  = atmcnt_relax + 1;  
+            C_param = textscan(fid1,'%d %d %d',1,'delimiter',' ','MultipleDelimsAsOne',1);
+            S.mvAtmConstraint(atmcnt_relax,1) = C_param{1,1};
+            S.mvAtmConstraint(atmcnt_relax,2) = C_param{1,2};
+            S.mvAtmConstraint(atmcnt_relax,3) = C_param{1,3};
+            textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
+        end
+        fprintf('WARNING: All atoms will be forced to relax\n');
+    elseif (strcmp(str, 'PSEUDO_POT:')) 
+        C_param = textscan(fid1,'%s',1,'delimiter',' ','MultipleDelimsAsOne',1);
+        S.Atm(typcnt).psdfname = char(C_param{:});
+        textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
+        S.is_default_psd = 0; % switch off default psedopots
+        fprintf(' pseudo_dir # %d = %s\n',typcnt,S.Atm(typcnt).psdfname);
+    elseif (strcmp(str, 'ATOMIC_MASS:')) 
+        C_param = textscan(fid1,'%f',1,'delimiter',' ','MultipleDelimsAsOne',1);
+        S.Atm(typcnt).Mass = C_param{1};
+        textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0);  % skip current line
+    elseif ( isnumeric(str(1)) ) 
+        error(['\nPlease specify the identifier before numbers!\n', ...
+               'Reminder: check if the number of atoms specified is inconsistent\n' ...
+               '          with the number of coordinates provided\n']); 
+    else 
+        fprintf('\nCannot recognize input flag: "%s"',str);
+    end
 end
 
 if (atmcnt_coord ~= n_atom) 
-	error(['The number of coordinates provided is inconsistent '...
-			 'with the given number of atoms!']);
+    error(['The number of coordinates provided is inconsistent '...
+             'with the given number of atoms!']);
 end
 
 fprintf('\n COORD:\n');
@@ -227,7 +227,7 @@ fclose(fid1);
 % find total mass
 S.TotalMass = 0;
 for ityp = 1:S.n_typ
-	S.TotalMass = S.TotalMass + S.Atm(ityp).Mass * S.Atm(ityp).n_atm_typ;
+    S.TotalMass = S.TotalMass + S.Atm(ityp).Mass * S.Atm(ityp).n_atm_typ;
 end
 end
 

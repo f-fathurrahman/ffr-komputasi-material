@@ -46,26 +46,26 @@ function [ec, v1c, v2c, v3c] = scanc(rho, sigma, tau)
     beta = betaConst* (1 + 0.1*rs) ./ (1 + 0.1778*rs);
     % epsilon_c LSDA1
     % correlation parameters
-	p = 1 ;
-% 	AA = 0.031091 ;
-	AA = 0.0310907 ;
-	alpha1 = 0.21370 ;
-	beta1 = 7.5957 ;
-	beta2 = 3.5876 ;
-	beta3 = 1.6382 ;
-	beta4 = 0.49294 ;
+    p = 1 ;
+%     AA = 0.031091 ;
+    AA = 0.0310907 ;
+    alpha1 = 0.21370 ;
+    beta1 = 7.5957 ;
+    beta2 = 3.5876 ;
+    beta3 = 1.6382 ;
+    beta4 = 0.49294 ;
     % conpute
     ec0_q0 = -2.0 * AA * (1.0 + alpha1*rs);
-	ec0_q1 = 2.0 * AA *(beta1*sqr_rs + beta2*rs + beta3*rs.*sqr_rs + beta4*rs.*rs);
-	ec0_q1p = AA * (beta1*rsm1_2 + 2.0*beta2 + 3.0*beta3*sqr_rs + 4.0*beta4*rs);
-	ec0_den = 1.0 ./ (ec0_q1.*ec0_q1 + ec0_q1);
-	ec0_log = -log(ec0_q1.*ec0_q1 .* ec0_den);
-	ecrs0 = ec0_q0 .* ec0_log;
+    ec0_q1 = 2.0 * AA *(beta1*sqr_rs + beta2*rs + beta3*rs.*sqr_rs + beta4*rs.*rs);
+    ec0_q1p = AA * (beta1*rsm1_2 + 2.0*beta2 + 3.0*beta3*sqr_rs + 4.0*beta4*rs);
+    ec0_den = 1.0 ./ (ec0_q1.*ec0_q1 + ec0_q1);
+    ec0_log = -log(ec0_q1.*ec0_q1 .* ec0_den);
+    ecrs0 = ec0_q0 .* ec0_log;
     ec_lsda1 = ecrs0;
-	Dec_lsda1Drs = -2.0 * AA * alpha1 * ec0_log - ec0_q0 .* ec0_q1p .* ec0_den;
+    Dec_lsda1Drs = -2.0 * AA * alpha1 * ec0_log - ec0_q0 .* ec0_q1p .* ec0_den;
     
     r = 0.031091;
-	w1 = exp(-ec_lsda1 ./ (r*phi.^3)) - 1;
+    w1 = exp(-ec_lsda1 ./ (r*phi.^3)) - 1;
     A = beta ./ (r*w1);
     t = (3*pi^2/16)^(1/3) * s./(phi*sqr_rs);
     g = (1 + 4*A.*t.*t).^(-0.25);
@@ -99,9 +99,9 @@ function [ec, v1c, v2c, v3c] = scanc(rho, sigma, tau)
     Dec0DDn = DH0DDn.*Gc;
     %% compute variation of epsilon_c^1
     Dec_lsda1Dn = - (rs./rho/3).*(-2*AA*alpha1*log(1+1./(2*AA*( beta1*sqr_rs + beta2*rs + beta3*(rs.^1.5) + beta4*(rs.^(p+1))))) ...
-		- ((-2*AA*(1+alpha1*rs)).*(AA*( beta1*(rs.^-0.5)+ 2*beta2 + 3*beta3*(rs.^0.5) + 2*(p+1)*beta4*(rs.^p) ))) ...
-		./((2*AA*( beta1*sqr_rs + beta2*rs + beta3*(rs.^1.5) + beta4*(rs.^(p+1)) ) ) ...
-		.*(2*AA*( beta1*sqr_rs + beta2*rs + beta3*(rs.^1.5) + beta4*(rs.^(p+1)) ) )+(2*AA*( beta1*(rs.^0.5) + beta2*rs + beta3*(rs.^1.5) + beta4*(rs.^(p+1)) ) )) ) ;% from LDA_PW(S)
+        - ((-2*AA*(1+alpha1*rs)).*(AA*( beta1*(rs.^-0.5)+ 2*beta2 + 3*beta3*(rs.^0.5) + 2*(p+1)*beta4*(rs.^p) ))) ...
+        ./((2*AA*( beta1*sqr_rs + beta2*rs + beta3*(rs.^1.5) + beta4*(rs.^(p+1)) ) ) ...
+        .*(2*AA*( beta1*sqr_rs + beta2*rs + beta3*(rs.^1.5) + beta4*(rs.^(p+1)) ) )+(2*AA*( beta1*(rs.^0.5) + beta2*rs + beta3*(rs.^1.5) + beta4*(rs.^(p+1)) ) )) ) ;% from LDA_PW(S)
     DbetaDn = 0.066725*(0.1*(1+0.1778*rs) - 0.1778*(1+0.1*rs)) ./ ((1+0.1778*rs).^2) .* DrsDn;
     DphiDn = 0.5*(2/3*(1+zeta).^(-1/3) - 2/3*(1-zeta).^(-1/3)).*DzetaDn; % no spin, should be 0
     DtDn = (3*pi^2/16)^(1/3)*(phi.*sqr_rs.*DsDn - s.*(DphiDn.*sqr_rs + phi.*DrsDn./(2*sqr_rs))) ./ (phi.^2.*rs);

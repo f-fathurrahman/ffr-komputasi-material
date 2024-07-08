@@ -83,8 +83,8 @@ function [ec, Vc1, Vc2, Vc3] = correlationSr2SCAN(rho, s, p, alpha, zeta, DsDn, 
     beta = betaConst* (1 + 0.1*rs) ./ (1 + 0.1778*rs);
     % epsilon_c LSDA1
     % correlation parameters
-% 	p = 1 ;
-% 	AA = 0.031091 ;
+%     p = 1 ;
+%     AA = 0.031091 ;
     AAec0 = 0.0310907 ;
     alpha1ec0 = 0.21370 ;
     beta1ec0 = 7.5957 ;

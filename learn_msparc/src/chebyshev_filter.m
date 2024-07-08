@@ -31,14 +31,14 @@ Y = (sigma1/e)*(Y-c*X);
 
 ii = 2;
 while(ii <= m)
-	sigma2 = 1/(gamma - sigma);
-	% HX = H * Y;
-	Ynew = h_nonlocal_vector_mult(DL11,DL22,DL33,DG1,DG2,DG3,Veff,Y,S,kpt_vec,spin);
-	Ynew = (2*sigma2/e)*(Ynew - c*Y) - ((sigma*sigma2)*X);
-	X = Y;
-	Y = Ynew;
-	sigma = sigma2;
-	ii = ii + 1;
+    sigma2 = 1/(gamma - sigma);
+    % HX = H * Y;
+    Ynew = h_nonlocal_vector_mult(DL11,DL22,DL33,DG1,DG2,DG3,Veff,Y,S,kpt_vec,spin);
+    Ynew = (2*sigma2/e)*(Ynew - c*Y) - ((sigma*sigma2)*X);
+    X = Y;
+    Y = Ynew;
+    sigma = sigma2;
+    ii = ii + 1;
 end
 
 end

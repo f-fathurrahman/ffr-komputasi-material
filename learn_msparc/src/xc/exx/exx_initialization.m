@@ -552,7 +552,7 @@ for ind = 1:S.num_shift
         for k2 = [1:floor(N2/2)+1, floor(-N2/2)+2:0]
             for k1 = [1:floor(N1/2)+1, floor(-N1/2)+2:0]
                 % finite difference G2
-		        Gpkmq2(count) = -w2_diag;
+                Gpkmq2(count) = -w2_diag;
                 for p = 1:FDn
                     Gpkmq2(count) = Gpkmq2(count) - 2 * ...
                         (  cos(2*pi*(k1-1)*p/N1+kpt1*dx*p)*w2_x(p+1) ...

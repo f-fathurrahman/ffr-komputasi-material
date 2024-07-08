@@ -38,30 +38,30 @@ end
 
 f_k = g_k - x_k;
 if iter > 1
-	f_km1 = S.mixing_hist_fkm1;
-	x_km1 = S.mixing_hist_xkm1;
+    f_km1 = S.mixing_hist_fkm1;
+    x_km1 = S.mixing_hist_xkm1;
 end
 
 % store residual & iteration history
 if iter > 1
-	i_hist = mod(iter-2,m)+1;
-	if (S.PulayRestartFlag ~= 0 && i_hist == 1)
-		S.X = zeros(size(S.X)); S.F = zeros(size(S.F));
-		S.X(:,1) = x_k - x_km1;
-		S.F(:,1) = f_k - f_km1;
-	else
-		S.X(:,i_hist) = x_k - x_km1;
-		S.F(:,i_hist) = f_k - f_km1;
-	end
+    i_hist = mod(iter-2,m)+1;
+    if (S.PulayRestartFlag ~= 0 && i_hist == 1)
+        S.X = zeros(size(S.X)); S.F = zeros(size(S.F));
+        S.X(:,1) = x_k - x_km1;
+        S.F(:,1) = f_k - f_km1;
+    else
+        S.X(:,i_hist) = x_k - x_km1;
+        S.F(:,i_hist) = f_k - f_km1;
+    end
 end
 
 % apply Anderson extrapolation every p iters
 if Pulay_mixing_flag
-	% find weighted averages x_wavg, f_wavg
-	[x_wavg, f_wavg] = andersonWtdAvg(x_k, f_k, S.X, S.F,S.nspden,S.MixingVariable);
+    % find weighted averages x_wavg, f_wavg
+    [x_wavg, f_wavg] = andersonWtdAvg(x_k, f_k, S.X, S.F,S.nspden,S.MixingVariable);
 else 
-	% simple mixing
-	x_wavg = x_k; f_wavg = f_k;
+    % simple mixing
+    x_wavg = x_k; f_wavg = f_k;
 end
 
 % calculate sum of all columns
@@ -111,8 +111,8 @@ end
 x_kp1 = x_wavg + reshape(Pf,[],1);
 
 if S.MixingVariable == 0
-	% due to inaccurate kerker solver, the density might have
-	% slightly inaccuate integral, scale the density
+    % due to inaccurate kerker solver, the density might have
+    % slightly inaccuate integral, scale the density
     negrho_count = sum(x_kp1(1:S.N) < 0);
     if (negrho_count > 0)
         fprintf('\nDensity got negative\n\n');                
@@ -147,7 +147,7 @@ function Pf = Kerker_Precond(S, f, a, lambda_TF, idiemac, tol, maxit, Pf_guess)
 % Pf = aar(B,Df,Pf_guess,tol,maxit,[],[],[],[],[]);
 
 % Pf = RSfit_Precond(S,f,S.precondcoeff_a,S.precondcoeff_lambda_TF,...
-% 				   S.precondcoeff_k,tol,maxit,Pf_guess);
+%                    S.precondcoeff_k,tol,maxit,Pf_guess);
 
 Lf = S.Lap_std * f - (lambda_TF*lambda_TF*idiemac)*f;
 B = S.Lap_std - spdiags(lambda_TF*lambda_TF * ones(S.N,1),0,S.N,S.N);
@@ -164,7 +164,7 @@ function Pf = Resta_Precond(S, f, tol, maxit, Pf_guess)
 % RESTA_PRECOND applies real-space resta preconditioner.
 
 Pf = RSfit_Precond(S,f,S.precondcoeff_a,S.precondcoeff_lambda_TF,...
-				   S.precondcoeff_k,tol,maxit,Pf_guess);
+                   S.precondcoeff_k,tol,maxit,Pf_guess);
 
 end
 
@@ -173,7 +173,7 @@ function Pf = TruncatedKerker_Precond(S, f, tol, maxit, Pf_guess)
 % TRUNCATEDKERKER_PRECOND applies real-space truncated-Kerker preconditioner.
 
 Pf = RSfit_Precond(S,f,S.precondcoeff_a,S.precondcoeff_lambda_TF,...
-				   S.precondcoeff_k,tol,maxit,Pf_guess);
+                   S.precondcoeff_k,tol,maxit,Pf_guess);
 
 end
 
@@ -195,11 +195,11 @@ Pf = k * f;
 
 isguess = size(Pf_guess,2) >= m; 
 for i = 1:m
-	B = S.Lap_std - spdiags(lambda_sqr(i) * ones(S.N,1),0,S.N,S.N);
-	guess = []; if isguess, guess = Pf_guess(:,i); end
-	Pf = Pf + a(i) * aar(B,Df,guess,tol,maxit,0.6,0.6,7,6,S.LapPreconL,S.LapPreconU);
-	%[f1,~,~,~] = gmres(B,Df,50,tol,maxit,S.LapPreconL,S.LapPreconU,guess);
-	%Pf = Pf + a(i) * f1;
+    B = S.Lap_std - spdiags(lambda_sqr(i) * ones(S.N,1),0,S.N,S.N);
+    guess = []; if isguess, guess = Pf_guess(:,i); end
+    Pf = Pf + a(i) * aar(B,Df,guess,tol,maxit,0.6,0.6,7,6,S.LapPreconL,S.LapPreconU);
+    %[f1,~,~,~] = gmres(B,Df,50,tol,maxit,S.LapPreconL,S.LapPreconU,guess);
+    %Pf = Pf + a(i) * f1;
 end
 
 Pf = real(Pf);

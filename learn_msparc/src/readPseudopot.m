@@ -38,7 +38,7 @@ fchrg = Ax{2};
 A = textscan(fid,'%f %f %f %f %f');
 nproj = ones(lmax+1,1);
 for i = 0:lmax
-	nproj(i+1) = A{1,i+1};
+    nproj(i+1) = A{1,i+1};
 end
 textscan(fid,'%s',1,'delimiter','\n') ;
 
@@ -62,31 +62,31 @@ Potso = repmat(struct([]), lmax, 1);
 
 l_read = fscanf(fid,'%f',1);
 for l = 0:lmax
-	if l ~= lloc
-		A = fscanf(fid,'%f',nproj(l+1)) ;
-		Pot(l+1).gamma_Jl = A(:); 
-		sz = [2+nproj(l+1),mmax];
-		A = fscanf(fid,'%g',sz) ;
-		r = A(2,:)' ;
-		Pot(l+1).proj = A(3:end,:)';
-		Pot(l+1).proj(2:end,:) = Pot(l+1).proj(2:end,:)./repmat(r(2:end),1,nproj(l+1));
-		Pot(l+1).proj(1,:) = Pot(l+1).proj(2,:);
-	else
-		textscan(fid,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0); % skip current line  
-		A = fscanf(fid,'%g',[3,mmax]);
-		r = A(2,:)' ;
-		Vloc = A(3,:)';
-	end
-	l_read = fscanf(fid,'%f',1);
+    if l ~= lloc
+        A = fscanf(fid,'%f',nproj(l+1)) ;
+        Pot(l+1).gamma_Jl = A(:); 
+        sz = [2+nproj(l+1),mmax];
+        A = fscanf(fid,'%g',sz) ;
+        r = A(2,:)' ;
+        Pot(l+1).proj = A(3:end,:)';
+        Pot(l+1).proj(2:end,:) = Pot(l+1).proj(2:end,:)./repmat(r(2:end),1,nproj(l+1));
+        Pot(l+1).proj(1,:) = Pot(l+1).proj(2,:);
+    else
+        textscan(fid,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0); % skip current line  
+        A = fscanf(fid,'%g',[3,mmax]);
+        r = A(2,:)' ;
+        Vloc = A(3,:)';
+    end
+    l_read = fscanf(fid,'%f',1);
 end
 
 if lloc > lmax || l_read == 4
-	A = fscanf(fid,'%g',[3,mmax]) ;
-	r = A(2,:)';
-	Vloc = A(3,:)';
+    A = fscanf(fid,'%g',[3,mmax]) ;
+    r = A(2,:)';
+    Vloc = A(3,:)';
 else
-	% move back file pointer 4 columns
-	fseek(fid, -4, 'cof');
+    % move back file pointer 4 columns
+    fseek(fid, -4, 'cof');
 end
 
 % read spin-orbit projectors
@@ -106,15 +106,15 @@ end
 
 % read core density
 if fchrg > 0
-	uu = zeros(mmax,1);
-	Atilde = fscanf(fid,'%d %g %g %g %g %g %g',[7,mmax]) ;
-	uu(1:end,1) = Atilde(3,:)/(4*pi);
-	rho_Tilde = uu;
-	rTilde = Atilde(2,:)';
+    uu = zeros(mmax,1);
+    Atilde = fscanf(fid,'%d %g %g %g %g %g %g',[7,mmax]) ;
+    uu(1:end,1) = Atilde(3,:)/(4*pi);
+    rho_Tilde = uu;
+    rTilde = Atilde(2,:)';
     S.NLCC_flag = 1;
 else
-	rTilde = r;
-	rho_Tilde = zeros(length(r),1);
+    rTilde = r;
+    rho_Tilde = zeros(length(r),1);
 end
 
 uu = zeros(mmax,1);
@@ -127,7 +127,7 @@ frewind(fid);
 fscanf(fid,'%s',3);
 rc = 0 ;
 for l = 0:lmax
-	r_core_read = fscanf(fid,'%g',1);
+    r_core_read = fscanf(fid,'%g',1);
     rc_max = r_core_read;
     if l ~= lloc
         % check if r_core is large enough s.t. |proj| < 1E-8
@@ -145,7 +145,7 @@ for l = 0:lmax
         fprintf("atom type %d, l = %d, r_core read %.5f, change to rmax where |UdV| < 1E-8, %.5f.\n", ityp, l, r_core_read, rc_max);
     end
     if rc_max > rc 
-		rc = rc_max;
+        rc = rc_max;
     end
 end
 
