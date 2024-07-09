@@ -43,3 +43,5 @@ S = my_write_output_init(S, filename);
 
 % This is needed
 S.parallel = 0;  % no parallelization
+
+% [~,~,S] = electronicGroundStateAtomicForce(S.Atoms,S);

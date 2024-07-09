@@ -745,7 +745,7 @@ fprintf(' Done. (%.3f sec)\n', toc(t1));
 S.memory_usage = my_estimate_memory(S);
 
 if S.usefock == 1
-    S = exx_initialization(S);
+    S = my_exx_initialization(S);
 end
 
 end
