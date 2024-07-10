@@ -2,6 +2,8 @@ Where are basic data structures defined?
 
 Struct `S`: some fields are added and modified.
 
+S.xc == 41 --> using hydbrid DFT (PBE0)
+
 Some important fields of `S`:
 
 - S.lat_vec
@@ -17,3 +19,4 @@ Some important fields of `S`:
 - S.Lap_std: Laplacian matrix?
 
 - S.Atm(1), S.Atm(2), ...
+
