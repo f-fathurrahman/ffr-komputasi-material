@@ -633,13 +633,18 @@ while(~feof(fid1))
         C_param = textscan(fid1,'%s',1,'delimiter',' ','MultipleDelimsAsOne',1);
         S.ExxMethod = char(C_param{:});
         textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0); % skip current line
-    elseif (strcmp(str,'ACE_FLAG:'))      
-        C_param = textscan(fid1,'%f',1,'delimiter',' ','MultipleDelimsAsOne',1);
-        %disp(['C_param = ', C_param{:}]);
-        class(C_param)
+    % ffr: this is not properly read (?)
+    elseif (strcmp(str,'ACE_FLAG:'))
+        disp(' ')
+        disp('>>> Begin reading ACE_FLAG')
+        C_param = textscan(fid1, '%f', 1, 'delimiter', ' ', 'MultipleDelimsAsOne', 1);
+        disp(['C_param = ', C_param]);
+        disp(['Class C_param ', class(C_param)])
         %S.ACEFlag = char(C_param{:});
         S.ACEFlag = C_param{:}; % ffr
         disp(['***********  Read S.ACEFlag = ', S.ACEFlag]);
+        disp('>>> End of reading ACE_FLAG')
+        disp(' ')
         textscan(fid1,'%s',1,'delimiter','\n','MultipleDelimsAsOne',0); % skip current line
     elseif (strcmp(str,'EXX_ACE_VALENCE_STATES:'))      
         C_param = textscan(fid1,'%f',1,'delimiter',' ','MultipleDelimsAsOne',1);
