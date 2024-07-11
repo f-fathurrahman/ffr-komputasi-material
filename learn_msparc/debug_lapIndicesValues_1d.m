@@ -4,8 +4,8 @@
 %
 clear all; close all; %#ok<*CLALL>
 
-%filename = 'TEMP_Si2_kpt_PBE0'; % prefix of input files
-filename = 'TEMP_SiH4_quick'; % prefix of input files
+filename = 'TEMP_Si2_kpt_PBE0'; % example for non-orthogonal case
+%filename = 'TEMP_SiH4_quick'; % prefix of input files
 
 % Set up inpt defaults
 S = my_inpt_defaults();
@@ -17,15 +17,75 @@ S = read_inpt(S, filename);
 S = read_ion(S, filename);
 
 
+
+
+S.temp_tol = 1e-12;
+
+% Check the cell typ (orthogonal or non-orthogonal)
+if(abs(dot(S.lat_vec(1,:),S.lat_vec(2,:))) > S.temp_tol ||...
+   abs(dot(S.lat_vec(2,:),S.lat_vec(3,:))) > S.temp_tol ||...
+   abs(dot(S.lat_vec(3,:),S.lat_vec(1,:))) > S.temp_tol)
+    fprintf('Cell type is non-orthogonal')
+    S.cell_typ = 2;
+end
+
+% Lattice vectors are stored by rows
+S.lat_uvec(1,:) = S.lat_vec(1,:)/norm(S.lat_vec(1,:));
+S.lat_uvec(2,:) = S.lat_vec(2,:)/norm(S.lat_vec(2,:));
+S.lat_uvec(3,:) = S.lat_vec(3,:)/norm(S.lat_vec(3,:));
+
+% Set up transformation matrices for non orthogonal cells
+if S.cell_typ == 2
+    % Jacobian
+    S.Jacb = det(S.lat_uvec');
+    assert(S.Jacb > 0.0,'Volume is negative!');
+
+    % metric_T, Gradient and laplacian transformation matrices
+    S.metric_T = S.lat_uvec * S.lat_uvec' ;
+    S.metric_T(1,2) = 2*S.metric_T(1,2); 
+    S.metric_T(2,3) = 2*S.metric_T(2,3); 
+    S.metric_T(1,3) = 2*S.metric_T(1,3);
+    S.grad_T = inv(S.lat_uvec') ;
+    S.lapc_T = S.grad_T * S.grad_T' ;
+    S.lapc_T(1,2) = 2*S.lapc_T(1,2); 
+    S.lapc_T(2,3) = 2*S.lapc_T(2,3);
+    S.lapc_T(1,3) = 2*S.lapc_T(1,3);
+    %
+    % Convert coordinates to Cartesian
+    count_prev = 0;
+    count = 0;
+    for ityp = 1:S.n_typ
+        if(S.IsFrac(ityp) == 0)
+            S.Atm(ityp).coords = transpose(S.grad_T * transpose(S.Atm(ityp).coords));
+            count = count + S.Atm(ityp).n_atm_typ;
+            S.Atoms(count_prev+1:count,:) = S.Atm(ityp).coords;
+            count_prev = count;
+        else
+            count = count + S.Atm(ityp).n_atm_typ;
+            count_prev = count;
+        end
+    end
+end
+
+
+
+
+
+% ffr: ugh this is a bit confusing
+% S.BCx is BC for one direction
+% S.BC is combination of all BCx, BCy, BCz
+% Value of 1 of S.BCx and S.BC means the same things
+% But, for periodic S.BCx is 0.
+%
 % BCx = 0 -> periodic, BCx = 1 -> dirichlet
 if S.BC >= 0    % if user provides BOUNDARY_CONDITION: 1-4
-    if(S.BC == 1)
+    if(S.BC == 1) % all Dirichlet
         S.BCx = 1; S.BCy = 1; S.BCz = 1;
     elseif(S.BC == 2)
         S.BCx = 0; S.BCy = 0; S.BCz = 0;
-    elseif(S.BC == 3)
+    elseif(S.BC == 3) % surface
         S.BCx = 0; S.BCy = 0; S.BCz = 1;
-    elseif(S.BC == 4)
+    elseif(S.BC == 4) % wire
         %S.BCx = 0; S.BCy = 1; S.BCz = 1;
         S.BCx = 1; S.BCy = 1; S.BCz = 0;
     else
@@ -47,6 +107,8 @@ else
     S.BC = 2;
     S.BCx = 0; S.BCy = 0; S.BCz = 0;
 end
+fprintf('Boundary conditions: [%d %d %d]\n', S.BCx, S.BCy, S.BCz)
+fprintf('Boundary conditions kind: %d\n', S.BC)
 
 
 
@@ -58,22 +120,23 @@ if S.Nx > 0 && S.Ny > 0 && S.Nz > 0
 elseif S.ecut > 0
     % XXX ... This is not executed ...
     S.mesh_spacing = my_Ecut2h(S.ecut, S.FDn);
-    S.Nx = max(ceil(S.L1/S.mesh_spacing),S.FDn);
-    S.Ny = max(ceil(S.L2/S.mesh_spacing),S.FDn);
-    S.Nz = max(ceil(S.L3/S.mesh_spacing),S.FDn);
+    S.Nx = max(ceil(S.L1/S.mesh_spacing), S.FDn);
+    S.Ny = max(ceil(S.L2/S.mesh_spacing), S.FDn);
+    S.Nz = max(ceil(S.L3/S.mesh_spacing), S.FDn);
     S.dx = S.L1 / S.Nx;
     S.dy = S.L2 / S.Ny;
     S.dz = S.L3 / S.Nz;
 elseif S.mesh_spacing > 0
-    S.Nx = max(ceil(S.L1/S.mesh_spacing),S.FDn);
-    S.Ny = max(ceil(S.L2/S.mesh_spacing),S.FDn);
-    S.Nz = max(ceil(S.L3/S.mesh_spacing),S.FDn);
+    S.Nx = max(ceil(S.L1/S.mesh_spacing), S.FDn);
+    S.Ny = max(ceil(S.L2/S.mesh_spacing), S.FDn);
+    S.Nz = max(ceil(S.L3/S.mesh_spacing), S.FDn);
     S.dx = S.L1 / S.Nx;
     S.dy = S.L2 / S.Ny;
     S.dz = S.L3 / S.Nz;
 end
-
 S.dV = S.dx * S.dy * S.dz * S.Jacb;
+fprintf('Grid spacing: [%f, %f, %f]\n', S.dx, S.dy, S.dz)
+fprintf('Jacobian: %f\n', S.Jacb)
 
 % Finite-difference discretization
 S.Nx = S.Nx + S.BCx;
@@ -81,7 +144,14 @@ S.Ny = S.Ny + S.BCy;
 S.Nz = S.Nz + S.BCz;
 S.N = S.Nx * S.Ny * S.Nz;
 
+fprintf('Number of grid points: [%d, %d, %d]\n', S.Nx, S.Ny, S.Nz)
 
+% FDn = 1 -> 3 point
+% FDn = 2 -> 5 point
+% FDn = 3 -> 7 point
+% FDn = 4 -> 9 point
+% FDn = 5 -> 11 point
+% FDn = 6 -> 13 point
 
 
 % Finite difference weights of the second derivative
@@ -134,6 +204,7 @@ dz = S.dz;
 
 % Initial number of non-zeros: including ghost nodes
 nnzCount = (2 * n0 + 1) * Nx;
+fprintf('Initial nnzCount = %d\n', nnzCount);
 
 % Row and column indices and the corresponding non-zero values
 % used to generate sparse matrix DL11 s.t. DL11(I(k),II(k)) = V(k)
@@ -143,35 +214,39 @@ II = zeros(nnzCount,1);
 rowCount = 1;
 count = 1;
 coef_dxx = 1/dx^2;
-
 % Find non-zero entries that use forward difference
 for ii = 1:Nx
     % diagonal element
-    I(count) = rowCount; II(count) = ii;
+    I(count) = rowCount;
+    II(count) = ii;
     V(count) = w2(1)*coef_dxx ;
+    % fprintf('%d %d %d\n', count, I(count), II(count))
     count = count + 1;
     % off-diagonal elements
     for q = 1:n0
         % ii + q
-        I(count) = rowCount; II(count) = ii+q;
+        I(count) = rowCount;
+        II(count) = ii + q;
         V(count) = w2(q+1)*coef_dxx;
+        % fprintf('%d %d %d\n', count, I(count), II(count))
         count = count + 1;
         % ii - q
-        I(count) = rowCount; II(count) = ii-q;
+        I(count) = rowCount;
+        II(count) = ii - q;
         V(count) = w2(q+1)*coef_dxx;
+        % fprintf('%d %d %d\n', count, I(count), II(count))
         count = count + 1;
-        
     end
     rowCount = rowCount + 1;
 end
 
-if S.BCx == 1
+if S.BCx == 1 % Dirichlet BC
     % Removing outside domain entries (for periodic code this is unnecessary)
     isIn = (II >= 1) & (II <= Nx);
     S.I_11 = I(isIn);
     S.II_11 = II(isIn);
     S.V_11 = V(isIn);
-elseif S.BCx == 0
+elseif S.BCx == 0 % Periodic BC
     S.isOutl_11 = (II < 1);
     S.isOutr_11 = (II > Nx); % Warning: Assumed influence of only neighboring cells
     S.I_11 = I;
@@ -220,10 +295,15 @@ end
 if S.BCy == 1
     % Removing outside domain entries (for periodic code this is unnecessary)
     isIn = (II >= 1) & (II <= Ny);
-    S.I_22 = I(isIn); S.II_22 = II(isIn); S.V_22 = V(isIn);
+    S.I_22 = I(isIn);
+    S.II_22 = II(isIn);
+    S.V_22 = V(isIn);
 elseif S.BCy == 0
-    S.isOutl_22 = (II<1); S.isOutr_22 = (II>Ny); % Warning: Assumed influence of only neighboring cells
-    S.I_22 = I;  S.II_22 = mod(II+(Ny-1),Ny)+1; S.V_22 = V;
+    S.isOutl_22 = (II < 1);
+    S.isOutr_22 = (II > Ny); % Warning: Assumed influence of only neighboring cells
+    S.I_22 = I;
+    S.II_22 = mod(II + (Ny-1), Ny) + 1;
+    S.V_22 = V;
 end
 
 % D_zz laplacian in 1D
@@ -244,17 +324,20 @@ coef_dzz = 1/dz^2;
 % Find non-zero entries that use forward difference
 for ii = 1:Nz
     % diagonal element
-    I(count) = rowCount; II(count) = ii;
+    I(count) = rowCount;
+    II(count) = ii;
     V(count) = w2(1)*coef_dzz ;
     count = count + 1;
     % off-diagonal elements
     for q = 1:n0
         % ii + q
-        I(count) = rowCount; II(count) = ii+q;
+        I(count) = rowCount;
+        II(count) = ii+q;
         V(count) = w2(q+1)*coef_dzz;
         count = count + 1;
         % ii - q
-        I(count) = rowCount; II(count) = ii-q;
+        I(count) = rowCount;
+        II(count) = ii-q;
         V(count) = w2(q+1)*coef_dzz;
         count = count + 1;
         
@@ -265,10 +348,15 @@ end
 if S.BCz == 1
     % Removing outside domain entries (for periodic code this is unnecessary)
     isIn = (II >= 1) & (II <= Nz);
-    S.I_33 = I(isIn); S.II_33 = II(isIn); S.V_33 = V(isIn);
+    S.I_33 = I(isIn);
+    S.II_33 = II(isIn);
+    S.V_33 = V(isIn);
 elseif S.BCz == 0
-    S.isOutl_33 = (II<1); S.isOutr_33 = (II>Nz); % Warning: Assumed influence of only neighboring cells
-    S.I_33 = I; S.II_33 = mod(II+(Nz-1),Nz)+1; S.V_33 = V;
+    S.isOutl_33 = (II < 1);
+    S.isOutr_33 = (II > Nz); % Warning: Assumed influence of only neighboring cells
+    S.I_33 = I;
+    S.II_33 = mod(II + (Nz-1), Nz) + 1;
+    S.V_33 = V;
 end
 
 
@@ -332,11 +420,13 @@ if S.cell_typ == 2
     for jj = 1:Ny
         for q = 1:n0
             % jj + q
-            G(count) = rowCount; R(count) = jj+q;
+            G(count) = rowCount;
+            R(count) = jj + q;
             A(count) = w1(q+1)*coef_dy;
             count = count + 1;
             % jj - q
-            G(count) = rowCount; R(count) = jj-q;
+            G(count) = rowCount;
+            R(count) = jj - q;
             A(count) = -w1(q+1)*coef_dy;
             count = count + 1;
         end
@@ -402,3 +492,4 @@ end % non-orthogonal
 
 % Create discretized Laplacian
 DL11 = sparse(S.I_11, S.II_11, S.V_11, Nx, Nx);
+DG1 = sparse(S.I_1, S.II_1, S.V_1, Nx, Nx);

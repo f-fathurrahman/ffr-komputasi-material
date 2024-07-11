@@ -1,5 +1,7 @@
 # Case of periodic, non-orthonal cell
 
+using LinearAlgebra: norm, det, dot, inv
+
 include("create_D1_matrix.jl")
 include("create_D2_matrix.jl")
 
@@ -13,46 +15,38 @@ LatVecs[3,:] = [0.667124384994991, 0.074124931666110, 0.741249316661101]*6
 
 
 # Check the cell typ (orthogonal or non-orthogonal)
-if(abs(dot(S.lat_vec(1,:),S.lat_vec(2,:))) > S.temp_tol ||...
-   abs(dot(S.lat_vec(2,:),S.lat_vec(3,:))) > S.temp_tol ||...
-   abs(dot(S.lat_vec(3,:),S.lat_vec(1,:))) > S.temp_tol)
-    S.cell_typ = 2;
+SMALL = 1e-12
+cond12 = abs( dot(LatVecs[1,:], LatVecs[2,:]) ) > SMALL
+cond23 = abs( dot(LatVecs[2,:], LatVecs[3,:]) ) > SMALL
+cond31 = abs( dot(LatVecs[3,:], LatVecs[1,:]) ) > SMALL
+CELL_TYPE = :ORTHOGONAL
+if any([cond12, cond23, cond31]) # or using || operator
+   CELL_TYPE = :NON_ORTHOGONAL
 end
 
-S.lat_uvec(1,:) = S.lat_vec(1,:)/norm(S.lat_vec(1,:));
-S.lat_uvec(2,:) = S.lat_vec(2,:)/norm(S.lat_vec(2,:));
-S.lat_uvec(3,:) = S.lat_vec(3,:)/norm(S.lat_vec(3,:));
+# Normalize
+UnitLatVecs = zeros(Float64, 3, 3)
+UnitLatVecs[1,:] = LatVecs[1,:]/norm(LatVecs[1,:])
+UnitLatVecs[2,:] = LatVecs[2,:]/norm(LatVecs[2,:])
+UnitLatVecs[3,:] = LatVecs[3,:]/norm(LatVecs[3,:])
 
-% Set up transformation matrices for non orthogonal cells
-if S.cell_typ == 2
-    % Jacobian
-    S.Jacb = det(S.lat_uvec');
-    assert(S.Jacb > 0.0,'Volume is negative!');
-
-    % metric_T, Gradient and laplacian transformation matrices
-    S.metric_T = S.lat_uvec * S.lat_uvec' ;
-    S.metric_T(1,2) = 2*S.metric_T(1,2); 
-    S.metric_T(2,3) = 2*S.metric_T(2,3); 
-    S.metric_T(1,3) = 2*S.metric_T(1,3);
-    S.grad_T = inv(S.lat_uvec') ;
-    S.lapc_T = S.grad_T * S.grad_T' ;
-    S.lapc_T(1,2) = 2*S.lapc_T(1,2); 
-    S.lapc_T(2,3) = 2*S.lapc_T(2,3);
-    S.lapc_T(1,3) = 2*S.lapc_T(1,3);
-
-    count_prev = 0;
-    count = 0;
-    for ityp = 1:S.n_typ
-        if(S.IsFrac(ityp) == 0)
-            S.Atm(ityp).coords = transpose(S.grad_T * transpose(S.Atm(ityp).coords));
-            count = count + S.Atm(ityp).n_atm_typ;
-            S.Atoms(count_prev+1:count,:) = S.Atm(ityp).coords;
-            count_prev = count;
-        else
-            count = count + S.Atm(ityp).n_atm_typ;
-            count_prev = count;
-        end
+# Set up transformation matrices for non orthogonal cells
+if CELL_TYPE == :NON_ORTHOGONAL
+    # Jacobian
+    JacobianUnitLatVecs = det(UnitLatVecs')
+    if JacobianUnitLatVecs < 0
+        error("Volume is negative!")
     end
+    # metric_T, Gradient and Laplacian transformation matrices
+    metric_T = UnitLatVecs * UnitLatVecs'
+    metric_T[1,2] = 2*metric_T[1,2] 
+    metric_T[2,3] = 2*metric_T[2,3] 
+    metric_T[1,3] = 2*metric_T[1,3]
+    grad_T = inv(UnitLatVecs')
+    lapc_T = grad_T * grad_T'
+    lapc_T[1,2] = 2*lapc_T[1,2]
+    lapc_T[2,3] = 2*lapc_T[2,3]
+    lapc_T[1,3] = 2*lapc_T[1,3]
 end
 
 
@@ -72,3 +66,13 @@ theme(:dark)
 heatmap(D2mat, yflip=true, aspect_ratio=:equal)
 =#
 
+
+[DL11,DL22,DL33,DG1,DG2,DG3] = blochLaplacian_1d(S,[0 0 0]);
+if S.cell_typ < 3
+    S.Lap_std = S.lapc_T(1,1) * kron(speye(S.Nz),kron(speye(S.Ny),DL11))  +  S.lapc_T(2,2) * kron(speye(S.Nz),kron(DL22,speye(S.Nx))) + ...
+                S.lapc_T(3,3) * kron(DL33,kron(speye(S.Ny),speye(S.Nx))) ;
+    if (S.cell_typ == 2)
+        MDL = S.lapc_T(1,2) * kron(speye(S.Nz),kron(DG2,DG1))  +  S.lapc_T(2,3) * kron(DG3,kron(DG2,speye(S.Nx))) + ...
+              S.lapc_T(1,3) * kron(DG3,kron(speye(S.Ny),DG1)) ;
+        S.Lap_std = S.Lap_std + MDL;
+    end
