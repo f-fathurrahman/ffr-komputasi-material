@@ -1,4 +1,4 @@
-function create_D2_matrix_FD(FDn::Int64, Nx::Int64, BCx::Symbol)
+function create_D2_matrix_FD(FDn::Int64, Lx::Float64, Nx::Int64, BCx::Symbol)
     #
     if BCx == :DIRICHLET_BC
         dx = Lx/(Nx-1)

@@ -1,9 +1,12 @@
 # Case of periodic, non-orthonal cell
 
-using LinearAlgebra: norm, det, dot, inv
+using LinearAlgebra: norm, det, dot, inv, I, kron
+using SparseArrays: sparse
 
 include("create_D1_matrix.jl")
 include("create_D2_matrix.jl")
+
+function main()
 
 BCx = :PERIODIC_BC
 
@@ -51,13 +54,19 @@ end
 
 
 
-Lx = 6.0
-Nx = 15 # Number of discretization points
+Lx, Ly, Lz = 6.0, 6.0, 6.0
+Nx, Ny, Nz = 15, 15, 15
 FDn = 6 # finite difference order
 # using FDn*2 + 1 points
 
-D2mat = create_D2_matrix_FD(FDn, Nx, :PERIODIC_BC)
-D1mat = create_D1_matrix_FD(FDn, Nx, :PERIODIC_BC)
+DL11 = create_D2_matrix_FD(FDn, Lx, Nx, :PERIODIC_BC)
+DG1 = create_D1_matrix_FD(FDn, Lx, Nx, :PERIODIC_BC)
+
+DL22 = create_D2_matrix_FD(FDn, Ly, Ny, :PERIODIC_BC)
+DG2 = create_D1_matrix_FD(FDn, Ly, Ny, :PERIODIC_BC)
+
+DL33 = create_D2_matrix_FD(FDn, Lz, Nz, :PERIODIC_BC)
+DG3 = create_D1_matrix_FD(FDn, Lz, Nz, :PERIODIC_BC)
 
 #=
 using Plots: heatmap, theme
@@ -66,13 +75,21 @@ theme(:dark)
 heatmap(D2mat, yflip=true, aspect_ratio=:equal)
 =#
 
+speye(N::Int64) = sparse(Matrix(1.0I, N, N))
 
-[DL11,DL22,DL33,DG1,DG2,DG3] = blochLaplacian_1d(S,[0 0 0]);
-if S.cell_typ < 3
-    S.Lap_std = S.lapc_T(1,1) * kron(speye(S.Nz),kron(speye(S.Ny),DL11))  +  S.lapc_T(2,2) * kron(speye(S.Nz),kron(DL22,speye(S.Nx))) + ...
-                S.lapc_T(3,3) * kron(DL33,kron(speye(S.Ny),speye(S.Nx))) ;
-    if (S.cell_typ == 2)
-        MDL = S.lapc_T(1,2) * kron(speye(S.Nz),kron(DG2,DG1))  +  S.lapc_T(2,3) * kron(DG3,kron(DG2,speye(S.Nx))) + ...
-              S.lapc_T(1,3) * kron(DG3,kron(speye(S.Ny),DG1)) ;
-        S.Lap_std = S.Lap_std + MDL;
-    end
+Ix = speye(Nx)
+Iy = speye(Ny)
+Iz = speye(Nz)
+
+Lap_std = lapc_T[1,1] * kron( Iz, kron(Iy, DL11) ) + 
+          lapc_T[2,2] * kron( Iz, kron(DL22, Ix) ) +
+          lapc_T[3,3] * kron( DL33, kron(Iy, Ix) )
+if CELL_TYPE == :NON_ORTHOGONAL
+    MDL = lapc_T[1,2] * kron( Iz, kron(DG2, DG1) ) +
+          lapc_T[2,3] * kron( DG3, kron(DG2, Ix) ) +
+          lapc_T[1,3] * kron( DG3, kron(Iy, DG1) )
+    Lap_std += MDL
+end
+
+
+end
