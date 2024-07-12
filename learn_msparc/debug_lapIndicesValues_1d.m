@@ -487,9 +487,24 @@ if S.cell_typ == 2
 end % non-orthogonal
 
 
-
-
-
 % Create discretized Laplacian
 DL11 = sparse(S.I_11, S.II_11, S.V_11, Nx, Nx);
 DG1 = sparse(S.I_1, S.II_1, S.V_1, Nx, Nx);
+
+DL22 = sparse(S.I_22, S.II_22, S.V_22, Ny, Ny);
+DG2 = sparse(S.I_2, S.II_2, S.V_2, Ny, Ny);
+
+DL33 = sparse(S.I_33, S.II_33, S.V_33, Nz, Nz);
+DG3 = sparse(S.I_3, S.II_3, S.V_3, Nz, Nz);
+
+assert(S.cell_typ < 3, "Only cell_typ < 3 is supported in this script")
+S.Lap_std = S.lapc_T(1,1) * kron(speye(S.Nz),kron(speye(S.Ny),DL11)) + ...
+            S.lapc_T(2,2) * kron(speye(S.Nz),kron(DL22,speye(S.Nx))) + ...
+            S.lapc_T(3,3) * kron(DL33, kron(speye(S.Ny),speye(S.Nx)));
+if (S.cell_typ == 2)
+    MDL = S.lapc_T(1,2) * kron(speye(S.Nz),kron(DG2,DG1)) + ...
+          S.lapc_T(2,3) * kron(DG3,kron(DG2,speye(S.Nx))) + ...
+          S.lapc_T(1,3) * kron(DG3,kron(speye(S.Ny),DG1)) ;
+    S.Lap_std = S.Lap_std + MDL;
+end
+
