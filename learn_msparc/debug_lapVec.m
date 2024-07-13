@@ -3,9 +3,13 @@
 % result = lapVec(DL11, DL22, DL33, DG1, DG2, DG3, X, S)
 
 kpt_vec = [0.0, 0.0, 0.0];
-[DL11, DL22, DL33, DG1, DG2, DG3] = blochLaplacian_1d(S,kpt_vec);
+[DL11, DL22, DL33, DG1, DG2, DG3] = blochLaplacian_1d(S, kpt_vec);
 
-X = rand(S.N, 1);
+%X = rand(S.N, 1);
+X = zeros(S.N, 3);
+X(100,1) = 1.0;
+X(100,2) = 2.0;
+X(100,3) = 3.0;
 
 Nx = S.Nx;
 Ny = S.Ny;
