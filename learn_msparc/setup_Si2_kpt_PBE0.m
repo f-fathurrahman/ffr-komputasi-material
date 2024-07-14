@@ -3,7 +3,7 @@
 %
 clear all; close all; %#ok<*CLALL>
 
-filename = 'TEMP_Si2_kpt_PBE0'; % prefix of input files
+%filename = 'TEMP_Si2_kpt_PBE0'; % prefix of input files
 % S = initialization();
 
 % Set up inpt defaults

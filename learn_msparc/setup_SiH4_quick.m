@@ -3,8 +3,9 @@
 %
 clear all; close all; %#ok<*CLALL>
 
-filename = 'TEMP_SiH4_quick'; % prefix of input files
+%filename = 'TEMP_SiH4_quick'; % prefix of input files
 % S = initialization();
+filename = 'TEMP_SiH4_latvecs'; % prefix of input files
 
 % Set up inpt defaults
 S = my_inpt_defaults();

@@ -364,6 +364,7 @@ end
 
 % Additional steps for non-orthogonal cells
 
+% XXX: May be we need this whether or not cell_typ is orthogonal or not
 if S.cell_typ == 2
     % Create 1D gradient in all directions
     %---------------------------------------
@@ -438,10 +439,15 @@ if S.cell_typ == 2
     if S.BCy == 1
         % Removing outside domain entries (for periodic code this is unnecessary)
         isIn = (R >= 1) & (R <= Ny);
-        S.I_2 = G(isIn); S.II_2 = R(isIn); S.V_2 = A(isIn);
+        S.I_2 = G(isIn);
+        S.II_2 = R(isIn);
+        S.V_2 = A(isIn);
     elseif S.BCy == 0
-        S.isOutl_2 = (R<1); S.isOutr_2 = (R>Ny);
-        S.I_2 = G; S.II_2 = mod(R+(Ny-1),Ny)+1; S.V_2 = A;
+        S.isOutl_2 = (R<1);
+        S.isOutr_2 = (R>Ny);
+        S.I_2 = G;
+        S.II_2 = mod(R+(Ny-1),Ny)+1;
+        S.V_2 = A;
     end
 
 
@@ -494,7 +500,8 @@ DL11 = sparse(S.I_11, S.II_11, S.V_11, Nx, Nx);
 DL22 = sparse(S.I_22, S.II_22, S.V_22, Ny, Ny);
 DL33 = sparse(S.I_33, S.II_33, S.V_33, Nz, Nz);
 if S.cell_typ == 1
-    DG1 = zeros(Nx,Nx);
+    % This does not mean that they are actually zeros
+    DG1 = zeros(Nx, Nx);
     DG2 = zeros(Ny, Ny);
     DG3 = zeros(Nz, Nz);
 else

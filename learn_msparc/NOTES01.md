@@ -36,6 +36,16 @@ end
 ```
 
 
+# How to multiply Laplacian matrix?
+
+Function lapVec, using Kronecker product rather than direct sparse-matrix
+dense vector multiplication.
+
+
+# Where are the wavefunctions?
+
+S.psi
+
 
 
 # Struct S
