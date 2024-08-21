@@ -19,7 +19,7 @@ end
 function HF(system, mixer)
     (; l) = system
     
-    C = la.I(l)
+    C = LinearAlgebra.I(l)
     P = zeros((l, l))
     F = zeros((l, l))
     
@@ -34,7 +34,7 @@ function HF_update!(state::HFState; iters = 1)
     for i in 1:iters
         P_update!(state)
         F_update!(state)
-        C .= la.eigvecs(F)
+        C .= LinearAlgebra.eigvecs(F)
     end
     return state
 end
@@ -42,7 +42,7 @@ end
 function update!(state::HFState)
     (; C, F) = state
     
-    C .= la.eigvecs(F)
+    C .= LinearAlgebra.eigvecs(F)
     P_update!(state)
     F_update!(state)
         
