@@ -1,7 +1,8 @@
 struct SpinBasis{T} <: SpatialBasis
     base::T # The basis with no spin
-    l::Int64
+    l::Int64 # number of basis (2 times larger than spatial basis)
     function SpinBasis(base::SpatialBasis)
+        @info "Constructing SpinBasis"
         return new{typeof(base)}(base, 2 * base.l)
     end
 end
@@ -13,7 +14,9 @@ function spatial(basis::SpinBasis, grid)
     
     nospin = zeros(l÷2)
     
-    @inbounds for i in 1:n
+    # loop over spatial points
+    for i in 1:n
+        #
         evaluate!(nospin, grid[i], basis.base) # the basis functions evaluated at x
         for j in 1:l÷2
             

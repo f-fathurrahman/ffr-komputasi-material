@@ -20,6 +20,7 @@ struct SpatialSystem{T} <: System
     V::Interaction
 end
 
+# A constructor for SpatialSystem
 function System(n, basis::SpatialBasis, grid, V::Interaction)
     l = basis.l
     spfs = spatial(basis, grid) # The basis functions evaluated on the grid

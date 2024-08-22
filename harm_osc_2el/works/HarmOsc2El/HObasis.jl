@@ -29,9 +29,8 @@ function evaluate(x, ho::HOBasis)
     ho_fac *= 1 / √2
     hos[2] = ho_fac * hermites[2]
 
-    for n in 3:length(hos)
+    for n in 3:size(hos,1)
         hermites[n] = 2x * hermites[n-1] - 2(n - 2) * hermites[n-2]
-
         ho_fac *= 1 / sqrt( 2(n - 1) )
         hos[n] = ho_fac * hermites[n]
     end
@@ -56,7 +55,7 @@ function evaluate!(hos, x, ho::HOBasis)
 
     hos[2] = ho_fac * hermites[2]
 
-    @inbounds for n in 3:length(hos)
+    for n in 3:size(hos,1)
         hermites[n] = 2x * hermites[n-1] - 2(n - 2) * hermites[n-2]
         ho_fac *= 1 / sqrt( 2(n - 1) )
 

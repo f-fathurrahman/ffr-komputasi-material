@@ -18,10 +18,12 @@ struct RHFState{T}
 end
 
 function RHF(system::SpatialSystem{SpinBasis{T}}) where T <: SpatialBasis
+    @info "Constructing RHF calculation"
     mixer = DIIS( system.basis.base.l^2 )
     return RHF(system, mixer)
 end
 
+# This will return an RHFState instance
 function RHF(system::SpatialSystem{SpinBasis{T}}, mixer) where T <: SpatialBasis
     (; transform, basis, h, grid, V) = system
     

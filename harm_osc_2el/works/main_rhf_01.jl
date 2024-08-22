@@ -5,12 +5,11 @@ l = 20
 
 ω = 0.25
 basis = SpinBasis(HOBasis(l, ω))
-
-# Potetial
+# Potetial (using the same ω as used in constructing the basis)
 V = HOCoulomb(ω, shielding = 0.25)
 
 # Grid points
-grid = [x for x in range(-10, stop = 10, length = 2001)]
+xgrid = range(-10, stop=10, length=2001) |> collect
 
 #=
 Construct system with the following inputs:
@@ -19,7 +18,7 @@ Construct system with the following inputs:
 - grid points: spatial points array
 - potential: V
 =#
-system = System(n, basis, grid, V)
+system = System(n, basis, xgrid, V)
 # system of type SpatialSystem (?)
 
 # Construct various arrays needed in RHF calculations
