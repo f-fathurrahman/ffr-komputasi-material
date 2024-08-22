@@ -28,8 +28,9 @@ function interaction_over_grid!(interaction, x1, grid, V::CalogeroSutherland)
     interaction .= V.ββ_1 ./ ((grid .- x1).^2 .+ 0.1)
 end
 
-abstract type NonInteracting <: Interaction end
 
+# Non interacting potential?
+abstract type NonInteracting <: Interaction end
 struct HarmonicOscillator <: NonInteracting
     ω2::Float64
     HarmonicOscillator(ω) = new(ω^2)

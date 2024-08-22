@@ -11,7 +11,8 @@ export System, Basis, reference_energy, particle_density
 export SpatialSystem, SpatialBasis, HOBasis, SpinBasis
 export PairingSystem, pairing_exact, pairing_MBPT2, Pairing
 export CalogeroSutherland, HOCoulomb, HarmonicOscillator
-export RHF, HF, CCD, energy
+export RHF, HF, CCD, CCSD
+export energy
 export compute_ground_state!
 
 include("mixer.jl")

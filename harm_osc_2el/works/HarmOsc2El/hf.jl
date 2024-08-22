@@ -98,10 +98,10 @@ function energy(state::HFState)
     energy = 0.0
     for a in 1:l
         for b in 1:l
-            @inbounds energy += P[b, a] * h[a, b]
+            energy += P[b, a] * h[a, b]
             for c in 1:l
                 for d in 1:l
-                    @inbounds energy += 0.5 * P[b, a] * P[d, c] * u[a, c, b, d]
+                    energy += 0.5 * P[b, a] * P[d, c] * u[a, c, b, d]
                 end
             end
         end

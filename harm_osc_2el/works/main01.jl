@@ -16,6 +16,7 @@ function setup_rhf_sys(;n, l)
     return rhf_system
 end
 
+# rename?
 function hf_energy(; n, l)
     ω = 0.25
     basis = SpinBasis(HOBasis(l, ω))
