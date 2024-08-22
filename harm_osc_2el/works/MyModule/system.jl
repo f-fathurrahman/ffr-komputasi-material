@@ -19,9 +19,9 @@ end
 # SpatialBasis is an abstract type
 function init_system(n, basis::SpatialBasis, xgrid, V::Interaction)
     Nbasis = basis.l
-    spfs = evaluate_on_grid(basis, xgrid)
+    spfs = evaluate_on_grid(basis, xgrid) # including spin
     h = calc_onebody_integrals(basis, xgrid) # One body integrals
-    u = calc_twobody_integrals(spfs, xgrid, V) # Two body integrals
+    u = calc_twobody_integrals(basis, xgrid, V) # Two body integrals
     u .= u .- permutedims(u, [1, 2, 4, 3]) # Anti-symmetrizing u
     transform = LinearAlgebra.I(Nbasis)
     return SpatialSystem{typeof(basis)}(

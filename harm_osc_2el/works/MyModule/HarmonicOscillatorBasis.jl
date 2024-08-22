@@ -46,6 +46,21 @@ function evaluate_basis!(hos, x::Float64, ho::HarmonicOscillatorBasis)
 end
 
 
+function evaluate_on_grid(ho::HarmonicOscillatorBasis, xgrid::Vector{Float64})
+    Nbasis = ho.l
+    hos = ho.hos
+    Npoints = size(xgrid, 1)
+    spfs = [zeros(Float64, Npoints) for _ in 1:Nbasis]
+    for ip in 1:Npoints
+        evaluate_basis!(hos, xgrid[ip], ho)
+        for j in 1:Nbasis
+            spfs[j][ip] = hos[j]
+        end
+    end
+    return spfs
+end
+
+
 
 # Rename to SpinOrbitalBasis ???
 struct SpinBasis{T} <: SpatialBasis

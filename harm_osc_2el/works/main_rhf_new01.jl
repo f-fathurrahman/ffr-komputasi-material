@@ -13,9 +13,9 @@ function main()
 
     xgrid = range(-10, stop=10, length=2001) |> collect
 
-    @infiltrate
     # Debug SpatialSystem
-    #system = init_system(n, basis, xgrid, V)
+    system = init_system(n, basis, xgrid, V)
+    @infiltrate
 
 end
 

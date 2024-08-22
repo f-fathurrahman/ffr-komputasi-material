@@ -2,7 +2,7 @@ module MyModule
 
 using Infiltrator
 import LinearAlgebra
-using LinearAlgebra: Diagonal, kron
+using LinearAlgebra: Diagonal, kron, kron!
 
 include("HarmonicOscillatorBasis.jl");
 export SpatialBasis

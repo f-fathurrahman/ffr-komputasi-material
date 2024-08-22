@@ -12,14 +12,11 @@ end
 
 function outer_int(spfs, grid, inner_ints)
     l = length(spfs)
-    @info "outer_int: Nbasis = $(l)"
     outer_int = zeros(typeof(spfs[1][1]), l, l, l, l)
     
     fs = [similar(spfs[1]) for i in 1:Threads.nthreads()]
     is = [similar(spfs[1]) for i in 1:Threads.nthreads()]
-    #
-    #@info "nthreads = $(Threads.nthreads())"
-    #
+
     @inbounds Threads.@threads for κ in 1:l
         f_vals = fs[Threads.threadid()]
         inner = is[Threads.threadid()]
@@ -39,13 +36,9 @@ end
 
 function inner_ints(spfs, grid, V::Interaction)
     l = length(spfs)
-    @info "inner_int: Nbasis = $(l)"
     inner_int = zeros(typeof(spfs[1][1]), l, l, length(spfs[1]))
     interactions = [similar(grid) for i in 1:Threads.nthreads()]
     fs = [similar(spfs[1]) for i in 1:Threads.nthreads()]
-    #
-    #@info "nthreads = $(Threads.nthreads())"
-    #
     @inbounds Threads.@threads for xi in eachindex(grid)
         x1 = grid[xi]
         f_vals = fs[Threads.threadid()] # Pre-allocated vector for this thread
@@ -73,6 +66,5 @@ end
 function trapz(f_vals, grid)
     val = sum(f_vals)
     val = val - 0.5 * (f_vals[1] + f_vals[end])
-
     return val * (grid[2] - grid[1])
 end
