@@ -14,16 +14,17 @@ grid = [x for x in range(-10, stop = 10, length = 2001)]
 
 #=
 Construct system with the following inputs:
-- number of points: n (redundant? can be obtained from grid?)
+- number of particles (electrons): n
 - basis: spin basis
 - grid points: spatial points array
 - potential: V
 =#
 system = System(n, basis, grid, V)
+# system of type SpatialSystem (?)
 
 # Construct various arrays needed in RHF calculations
 rhf = RHF(system)
-compute_ground_state!(rhf);
+t = @elapsed compute_ground_state!(rhf);
 
 # XXX Why need this?
 rhf_system = System(rhf)
