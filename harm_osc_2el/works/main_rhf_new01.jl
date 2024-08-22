@@ -11,15 +11,12 @@ function main()
     basis = HarmonicOscillatorBasis(l, ω) |> SpinBasis
     V = HarmonicOscillatorCoulomb(ω, shielding=0.25)
 
-    xgrid = range(-10, stop=10, length=2001)
-    
-    # Debug SpatialSystem
-
-    # The basis functions evaluated on the grid
-    spfs = evaluate_on_grid(basis, xgrid)
-    h = calc_onebody_integrals(basis, xgrid) # One body integrals
+    xgrid = range(-10, stop=10, length=2001) |> collect
 
     @infiltrate
+    # Debug SpatialSystem
+    #system = init_system(n, basis, xgrid, V)
+
 end
 
 main()

@@ -6,7 +6,9 @@ end
 
 function twobody(basis::SpinBasis, grid, V::Interaction)
     u = twobody(basis.base, grid, V)
+    @info "twobody: size(u) = $(size(u))"
     u = add_spin_u(u)
+    @info "At the end: size(u) = $(size(u))"
     return u
 end
 

@@ -55,14 +55,12 @@ function _twobody_outer_ints(spfs, xgrid, inner_ints)
     fs = zeros(Float64, Npoints)
     iis = zeros(Float64, Npoints)
 
-    for κ in 1:Nbasis
-        #f_vals = fs[Threads.threadid()]
-        #inner = is[Threads.threadid()]        
+    @inbounds for κ in 1:Nbasis     
         for λ in 1:Nbasis
             @views iis[:] .= inner_ints[κ, λ, :]
             for μ in 1:Nbasis
                 for ν in 1:Nbasis
-                    fs[:] .= conj.(spfs[μ]) .* iis .* spfs[ν]
+                    fs .= conj.(spfs[μ]) .* iis .* spfs[ν]
                     outer_int[μ, κ, ν, λ] = trapz(fs, xgrid)
                 end
             end

@@ -15,13 +15,17 @@ struct SpatialSystem{T} <: System
 end
 
 # A constructor for SpatialSystem
-function SpatialSystem(n, basis::SpatialBasis, grid, V::Interaction)
-    l = basis.l
-    spfs = spatial(basis, grid) # The basis functions evaluated on the grid
-    h = onebody(basis, grid) # One body integrals
-    u = twobody(basis, grid, V) # Two body integrals
+# XXX Pass SpatialBasis ?
+# SpatialBasis is an abstract type
+function init_system(n, basis::SpatialBasis, xgrid, V::Interaction)
+    Nbasis = basis.l
+    spfs = evaluate_on_grid(basis, xgrid)
+    h = calc_onebody_integrals(basis, xgrid) # One body integrals
+    u = calc_twobody_integrals(spfs, xgrid, V) # Two body integrals
     u .= u .- permutedims(u, [1, 2, 4, 3]) # Anti-symmetrizing u
-    transform = LinearAlgebra.I(l)
-    return SpatialSystem{typeof(basis)}(n, l, h, u, spfs, grid, basis, transform, V)
+    transform = LinearAlgebra.I(Nbasis)
+    return SpatialSystem{typeof(basis)}(
+        n, Nbasis, h, u, spfs, xgrid, basis, transform, V
+    )
 end
 

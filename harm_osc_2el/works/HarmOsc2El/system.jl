@@ -21,6 +21,7 @@ struct SpatialSystem{T} <: System
 end
 
 # A constructor for SpatialSystem
+# SpatialBasis is an abstract type
 function System(n, basis::SpatialBasis, grid, V::Interaction)
     l = basis.l
     spfs = spatial(basis, grid) # The basis functions evaluated on the grid
