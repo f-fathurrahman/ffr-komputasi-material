@@ -14,7 +14,7 @@ export evaluate_on_grid
 include("interactions.jl")
 export HarmonicOscillatorCoulomb
 
-include("functions.jl")
+include("integrals.jl")
 export calc_onebody_integrals
 export calc_twobody_integrals
 
