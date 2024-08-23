@@ -24,5 +24,11 @@ export SpatialSystem, init_system
 include("mixer.jl")
 export LinearMixer, DIISMixer, compute_new_vector
 
+include("rhf.jl")
+export RHFState, RHF
+
+include("calc_ground_state.jl")
+export calc_ground_state!
+
 end # module
 

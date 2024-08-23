@@ -13,7 +13,12 @@ function main()
 
     # Debug SpatialSystem
     system = init_system(n, basis, xgrid, V)
-    @infiltrate
+    
+    # RHF calculation
+    rhf = RHF(system)
+    calc_ground_state!(rhf, verbose=1);
+
+    #@infiltrate
 
 end
 
