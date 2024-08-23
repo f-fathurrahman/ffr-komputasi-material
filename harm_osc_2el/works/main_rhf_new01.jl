@@ -1,6 +1,4 @@
 using Infiltrator
-using LinearAlgebra: Diagonal, kron
-
 using MyModule
 
 function main()

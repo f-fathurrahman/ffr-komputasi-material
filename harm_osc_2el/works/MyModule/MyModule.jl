@@ -2,7 +2,7 @@ module MyModule
 
 using Infiltrator
 import LinearAlgebra
-using LinearAlgebra: Diagonal, kron, kron!
+using LinearAlgebra: Diagonal, kron, kron!, dot, pinv, diag
 
 include("HarmonicOscillatorBasis.jl");
 export SpatialBasis
@@ -21,4 +21,8 @@ export calc_twobody_integrals
 include("system.jl")
 export SpatialSystem, init_system
 
-end
+include("mixer.jl")
+export LinearMixer, DIISMixer, compute_new_vector
+
+end # module
+
