@@ -46,7 +46,7 @@ function evaluate_basis!(hos, x::Float64, ho::HarmonicOscillatorBasis)
 end
 
 
-function evaluate_on_grid(ho::HarmonicOscillatorBasis, xgrid::Vector{Float64})
+function evaluate_on_grid(ho::HarmonicOscillatorBasis, xgrid)
     Nbasis = ho.l
     hos = ho.hos
     Npoints = size(xgrid, 1)

@@ -1,6 +1,7 @@
 module MyModule
 
 using Infiltrator
+using Printf
 import LinearAlgebra
 using LinearAlgebra: Diagonal, kron, kron!, dot, pinv, diag
 
