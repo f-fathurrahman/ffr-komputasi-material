@@ -1,0 +1,8 @@
+10 10   N_x, N_y
+0.4     U
+1.0     mu
+3       N_S
+2       N_spin_flip
+1000    N_steps
+100     N_thermolization
+.true.
