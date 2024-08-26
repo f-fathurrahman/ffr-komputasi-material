@@ -1,93 +1,117 @@
-MODULE HUBBARD_2D
-  IMPLICIT NONE
-  ! Lattice size
-  INTEGER :: N_x,N_y
-  ! Lattice dimension
-  INTEGER :: Ndim
-  ! Boundary condition
-  LOGICAL :: PBC
-  ! Hopping matrix
-  INTEGER, ALLOCATABLE :: Hopping_matrix(:,:)
-!   Hubbard U (must be positive)
-  real(8) :: U
+!------------------
+MODULE m_hubbard_2d
+!------------------
+
+IMPLICIT NONE
+
+! Lattice size
+INTEGER :: N_x,N_y
+
+! Lattice dimension
+INTEGER :: Ndim
+
+! Boundary condition
+LOGICAL :: PBC
+
+! Hopping matrix
+INTEGER, ALLOCATABLE :: hopping_matrix(:,:)
+
+! Hubbard U (must be positive)
+real(8) :: U
+
 ! number of slices
-  integer                 :: N_S
+integer :: N_S
+
 ! chemical potential
-  real(8)                  :: Mu
+real(8) :: Mu
+
 ! delta_t for Suzuki-Trotter
-  real(8) :: delta_t
-!  
-  real(8) :: exp_up(-1:1),exp_down(-1:1)
+real(8) :: delta_t
+
+! Automatic arrays
+real(8) :: exp_up(-1:1), exp_down(-1:1)
+
 ! sigma
-  integer, allocatable :: Sigma(:,:)
+integer, allocatable :: Sigma(:,:)
+
 ! random seed
-  integer  :: idum
-  real(8), allocatable     :: e_up(:,:),e_down(:,:),t_m(:,:)
+integer  :: idum
+
+real(8), allocatable :: e_up(:,:), e_down(:,:), t_m(:,:)
+
 !
-  integer                 :: N_spin_flip,N_steps,N_thermolization
+integer :: N_spin_flip,N_steps,N_thermolization
 
 CONTAINS
 
-subroutine initialize
-implicit none
+!----------------------
+subroutine initialize()
+!----------------------
+  implicit none
   integer                  :: i,j,m,mx
   real(8)                   :: lambda,v_p,v_m,x
   real(8),external          :: ran2
   real(8),allocatable       :: am(:,:),eval(:),evec(:,:)
 
   open(1,file='hub2d.inp')
-    read(1,*) N_x, N_y
-    read(1,*) U
-    read(1,*) mu
-    read(1,*) N_S
-    read(1,*) N_spin_flip
-    read(1,*) N_steps
-    read(1,*) N_thermolization
-    read(1,*) PBC
-    close(1)
-    Ndim = N_x*N_y
-    allocate(Hopping_Matrix(Ndim,Ndim), Sigma(Ndim,N_S))
-    allocate(e_up(Ndim,N_S), e_down(Ndim,N_S), T_m(Ndim,Ndim))
-    idum = 1231
-    ! initialize the Hopping Matrix
-    Hopping_matrix=0
-    do i=1,N_x-1
-      do j=1,N_y
-        m=1+(i-1)+N_x*(j-1)
-        Hopping_matrix(m,m+1)=1
-        Hopping_matrix(m+1,m)=1
-      enddo
+  read(1,*) N_x, N_y
+  read(1,*) U
+  read(1,*) mu
+  read(1,*) N_S
+  read(1,*) N_spin_flip
+  read(1,*) N_steps
+  read(1,*) N_thermolization
+  read(1,*) PBC
+  close(1)
+    
+  Ndim = N_x*N_y
+  allocate(Hopping_Matrix(Ndim,Ndim), Sigma(Ndim,N_S))
+  allocate(e_up(Ndim,N_S), e_down(Ndim,N_S), T_m(Ndim,Ndim))
+
+  idum = 1231
+  ! initialize the Hopping Matrix
+  Hopping_matrix=0
+  do i = 1,N_x-1
+    do j = 1,N_y
+      m = 1 + (i-1) + N_x*(j-1)
+      Hopping_matrix(m,m+1) = 1
+      Hopping_matrix(m+1,m) = 1
     enddo
-    do i=1,N_y-1
-      do j=1,N_x
-        m=j+N_x*(i-1)
-        mx=m+N_x   
-        Hopping_matrix(m,mx)=1
-        Hopping_matrix(mx,m)=1
-      enddo
-    enddo     
-! boundary-condition: periodic hopping or not
+  enddo
+
+  do i=1,N_y-1
+    do j=1,N_x
+      m=j+N_x*(i-1)
+      mx=m+N_x   
+      Hopping_matrix(m,mx)=1
+      Hopping_matrix(mx,m)=1
+    enddo
+  enddo
+
+  ! boundary-condition: periodic hopping or not
   if( PBC ) then
     do i=1,N_y
-      m=N_x+N_x*(i-1)
-      Hopping_matrix(m,m-(N_x-1))=1
-      Hopping_matrix(m-(N_x-1),m)=1
+      m = N_x + N_x*(i-1)
+      Hopping_matrix(m,m-(N_x-1)) = 1
+      Hopping_matrix(m-(N_x-1),m) = 1
     end do
-  end if
+  endif
+  
   do i=2,N_y-1,2
     do j=1,N_x
       m=j+N_x*(i-1)
       Hopping_matrix(m,m+N_x)=1
       Hopping_matrix(m+N_x,m)=1
     end do                  
-  end do
+  enddo
+
   if (PBC .and. (N_y > 1)) then
     do i=1,N_x
-      m=i+N_x*(N_y-1)
-      Hopping_matrix(m,m-(Ndim-N_x))=1
-      Hopping_matrix(m-(Ndim-N_x),m)=1
+      m = i + N_x*(N_y-1)
+      Hopping_matrix(m,m-(Ndim-N_x)) = 1
+      Hopping_matrix(m-(Ndim-N_x),m) = 1
     end do
-  end if                  
+  endif
 
   do j=1,Ndim
     do i=1,Ndim
@@ -104,39 +128,42 @@ implicit none
 
   exp_down(-1)=v_p
   exp_down(1)=v_m
-! initialize the HS fields
+  ! initialize the HS fields
   do i=1,N_S
     do j=1,Ndim
       x=ran2(idum)
-      if(x.lt.0.5d0) then
-        sigma(j,i)=-1
+      if(x < 0.5d0) then
+        sigma(j,i) = -1
       else
-        sigma(j,i)=1
-      end if
-    end do
-  end do
+        sigma(j,i) = 1
+      endif
+    enddo
+  enddo
   call calculate_fields()
   
-  allocate(am(Ndim,Ndim),evec(Ndim,Ndim),eval(Ndim))
+  allocate( am(Ndim,Ndim), evec(Ndim,Ndim), eval(Ndim))
   
   am = Hopping_matrix*delta_t
 
   call diag_real(am,Ndim,eval,evec)
-  T_M=0.d0  
+  
+  T_M(:,:) = 0.d0
   do i=1,Ndim
     do j=1,Ndim
       do m=1,Ndim
         T_m(j,i) = T_m(j,i) + evec(m,i)*exp(eval(m))*evec(m,j)
-      end do
-    end do
-  end do
+      enddo
+    enddo
+  enddo
+
+  write(*,*) 'Finished initialize'
  
 end subroutine
 
 
-!-------------------
-subroutine spin_flip
-!-------------------
+!---------------------
+subroutine spin_flip()
+!---------------------
   implicit none
   integer       :: i,j,k,ii
   real(8)        :: x
@@ -170,14 +197,14 @@ subroutine calculate_fields()
         e_down(j,i)=exp_down(sigma(j,i))
     end do
   end do
-  
+end subroutine
 
-end  subroutine calculate_fields
-
+!------------------------------
 subroutine Greens_function(A,G)
+!------------------------------
   implicit none
-  integer                :: i,j,k
-  real(8)                 :: A(Ndim,N_S),B(Ndim,Ndim),C(Ndim,Ndim),G(Ndim,Ndim)
+  integer :: i,j,k
+  real(8) :: A(Ndim,N_S),B(Ndim,Ndim),C(Ndim,Ndim),G(Ndim,Ndim)
 
   do i=1,N_S
     B=0.d0
@@ -201,15 +228,17 @@ subroutine Greens_function(A,G)
   
   call inv(C,Ndim,G)
 
-end  subroutine Greens_function
+end subroutine
 
 
-subroutine Monte_Carlo
+!-----------------------
+subroutine Monte_Carlo()
+!-----------------------
   implicit none
   integer                :: i,j
-  real(8),allocatable     :: G_up(:,:),G_down(:,:),G_up_new(:,:),G_down_new(:,:),A(:,:),A_new(:,:),B(:,:)
-  real(8)                 :: d,d_new,x,w
-  real(8),external        :: ran2
+  real(8), allocatable :: G_up(:,:),G_down(:,:),G_up_new(:,:),G_down_new(:,:),A(:,:),A_new(:,:),B(:,:)
+  real(8) :: d,d_new,x,w
+  real(8), external :: ran2
 
   allocate(G_down(Ndim,Ndim),G_up(Ndim,Ndim),G_down_new(Ndim,Ndim),G_up_new(Ndim,Ndim), &
 &   A(Ndim,Ndim),A_new(Ndim,Ndim),B(Ndim,N_S))
@@ -220,33 +249,35 @@ subroutine Monte_Carlo
   call Greens_function(A,G_down)
 
   do i=1,N_steps
-    write(6,*)i
+    if( mod(i, 100) == 0 ) THEN
+      write(*,*) 'Step: ', i
+    endif
     do j=1,Ndim
-      call spin_flip      
-      call calculate_fields
-      B=E_up
+      call spin_flip()
+      call calculate_fields()
+      B = E_up
       call Greens_function(A,G_up_new)
-      B=E_down
+      B = E_down
       call Greens_function(A,G_down_new)
-      A=matmul(G_up,G_down)
+      A = matmul(G_up,G_down)
       call det(A,Ndim,d)
-      A_new=matmul(G_up_new,G_down_new)
+      A_new = matmul(G_up_new,G_down_new)
       call det(A,Ndim,d_new)
-      w=d/d_new
-!     heat bath
-      w=w/(1.d0+w)
-      x=ran2(idum)
-      if(abs(w).gt.x) then
+      w = d/d_new
+      ! heat bath
+      w = w/(1.d0+w)
+      x = ran2(idum)
+      if(abs(w) > x) then
         G_up=G_up_new
         G_down=G_down_new
       endif        
-    end do 
-!     measuerement
-    if(i.gt.N_thermolization) then
+    enddo 
+    ! measuerement
+    if(i > N_thermolization) then
+      ! do something?
     endif
-  end do
-
-end subroutine Monte_Carlo
+  enddo
+end subroutine
 
 
 subroutine diag_real(A,n,e,v)
@@ -299,9 +330,7 @@ subroutine diag_real(A,n,e,v)
   deallocate(WORK)
 end subroutine diag_real
 
-
-
-END MODULE HUBBARD_2D
+END MODULE
 
 
        SUBROUTINE lubksb_r(a,n,np,indx,b)
@@ -347,7 +376,7 @@ END MODULE HUBBARD_2D
          do 11 j=1,n
            if (abs(a(i,j)).gt.aamax) aamax=abs(a(i,j))
  11      continue
-         if (aamax.eq.0.d0) pause 'singular matrix in ludcmp'
+         if (aamax.eq.0.d0) stop 'singular matrix in ludcmp'
          vv(i)=1.d0/aamax
  12    continue
        do 19 j=1,n
@@ -443,7 +472,7 @@ end subroutine det
         iy=idum
       endif
       j=1+(97*iy)/m
-      if(j.gt.97.or.j.lt.1)pause
+      if(j.gt.97.or.j.lt.1) stop 'Something wrong'
       iy=ir(j)
       ran2=iy*rm
       idum=mod(ia*idum+ic,m)
@@ -452,8 +481,10 @@ end subroutine det
       end
 
 
+!-----------
 program main
-  USE HUBBARD_2D
+!-----------
+  USE m_hubbard_2d
   call initialize()
   call Monte_Carlo()
 end program

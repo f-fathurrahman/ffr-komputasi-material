@@ -1,4 +1,4 @@
-MODULE MOD_MD
+MODULE m_molecular_dynamics
   implicit none
   integer            :: use_periodic_boundary_conditions,thermostat_type,output_frequency
   integer            :: MD_steps,N_s,N_Particles,g,N_term,N_histogram,potential_type,using_sw_three_body
@@ -27,8 +27,8 @@ SUBROUTINE initialize()
   real(8)  :: lm
 
   ! Silicon
-  lj_epsilon=2.1678d0 ! eV
-  lj_sigma=2.0951d0   ! Angstroms
+  lj_epsilon = 2.1678d0 ! eV
+  lj_sigma = 2.0951d0   ! Angstroms
 
   ! Argon
 !  lj_epsilon=0.010d0 ! eV
@@ -257,32 +257,32 @@ SUBROUTINE sw_potential
        r2ij = dxij*dxij + dyij*dyij + dzij*dzij
        rij = sqrt(r2ij)
        if (r2ij<a2_sw) then
-	 vcuij = 1.0/(rij - a_sw)
-	 evcuij = 0.0
-	 if (vcuij > -30.0) evcuij = exp(vcuij)
-	 res = 1.0
-	 if (NQ_sw.ne.0) res = rij**NQ_sw
+   vcuij = 1.0/(rij - a_sw)
+   evcuij = 0.0
+   if (vcuij > -30.0) evcuij = exp(vcuij)
+   res = 1.0
+   if (NQ_sw.ne.0) res = rij**NQ_sw
          vlj = B_sw * rij**NP_sw - res
          vv2=AA_sw*vlj*evcuij
-	 C2  = BP_sw*rij**NP_1_sw
-	 if (Q_sw.ne.0.d0) C2 = C2-Q_sw*rij**NQ_1_sw
-	 C2 =C2*AA_sw*evcuij
-	 C2 = C2+vv2*vcuij*vcuij
-	 C2 = C2/rij
-	 F(1,i) =F(1,i)+ dxij*C2
-	 F(1,j) =F(1,j)- dxij*C2
-	 F(2,i) =F(2,i)+ dyij*C2
-	 F(2,j) =F(2,j)- dyij*C2
-	 F(3,i) =F(3,i)+ dzij*C2
-	 F(3,j) =F(3,j)- dzij*C2
-	 P_E=P_E+vv2
+   C2  = BP_sw*rij**NP_1_sw
+   if (Q_sw.ne.0.d0) C2 = C2-Q_sw*rij**NQ_1_sw
+   C2 =C2*AA_sw*evcuij
+   C2 = C2+vv2*vcuij*vcuij
+   C2 = C2/rij
+   F(1,i) =F(1,i)+ dxij*C2
+   F(1,j) =F(1,j)- dxij*C2
+   F(2,i) =F(2,i)+ dyij*C2
+   F(2,j) =F(2,j)- dyij*C2
+   F(3,i) =F(3,i)+ dzij*C2
+   F(3,j) =F(3,j)- dzij*C2
+   P_E=P_E+vv2
        endif
 if(using_sw_three_body==1) then
        rij_a=0.d0; rhoij=0.d0; vcuij=0.d0
        if (rij<a_sw) then
-	 rij_a = rij - a_sw;
-	 rhoij = rij*rij_a*rij_a;
-	 vcuij = GAM_sw/rij_a;
+   rij_a = rij - a_sw;
+   rhoij = rij*rij_a*rij_a;
+   vcuij = GAM_sw/rij_a;
          if (vcuij > -30) then
            vcuij = exp(vcuij)
          else
@@ -292,118 +292,118 @@ if(using_sw_three_body==1) then
        do k=j+1,N_particles
          hijk=0.0d0; hjik=0.0d0; hikj=0.d0
          hij=0.0d0; hik=0.0d0; hjk=0.d0
-	 ri = 0.d0;  rj = 0.d0; rk = 0.0d0
-	 ei = 0.d0;  ej = 0.d0; ek = 0.0d0
-	 cosjik = 0.d0; cosijk = 0.d0; cosikj = 0.0d0
-	 cosjik_3 = 0.d0;  cosijk_3 = 0.d0; cosikj_3 = 0.0d0
+   ri = 0.d0;  rj = 0.d0; rk = 0.0d0
+   ei = 0.d0;  ej = 0.d0; ek = 0.0d0
+   cosjik = 0.d0; cosijk = 0.d0; cosikj = 0.0d0
+   cosjik_3 = 0.d0;  cosijk_3 = 0.d0; cosikj_3 = 0.0d0
 
-	 eiNjik_x = 0.0; eiNjik_y = 0.0; eiNjik_z = 0.0
-	 eiNkij_x = 0.0; eiNkij_y = 0.0; eiNkij_z = 0.0
-	 ejNijk_x = 0.0; ejNijk_y = 0.0; ejNijk_z = 0.0
-	 ejNkji_x = 0.0; ejNkji_y = 0.0; ejNkji_z = 0.0
-	 ekNikj_x = 0.0; ekNikj_y = 0.0; ekNikj_z = 0.0
-	 ekNjki_x = 0.0; ekNjki_y = 0.0; ekNjki_z = 0.0
+   eiNjik_x = 0.0; eiNjik_y = 0.0; eiNjik_z = 0.0
+   eiNkij_x = 0.0; eiNkij_y = 0.0; eiNkij_z = 0.0
+   ejNijk_x = 0.0; ejNijk_y = 0.0; ejNijk_z = 0.0
+   ejNkji_x = 0.0; ejNkji_y = 0.0; ejNkji_z = 0.0
+   ekNikj_x = 0.0; ekNikj_y = 0.0; ekNikj_z = 0.0
+   ekNjki_x = 0.0; ekNjki_y = 0.0; ekNjki_z = 0.0
 
-	 rik_a =0.d0;  vcuik = 0.d0; rhoik = 0.d0
-	 rjk_a =0.d0;  vcujk = 0.d0; rhojk = 0.d0
+   rik_a =0.d0;  vcuik = 0.d0; rhoik = 0.d0
+   rjk_a =0.d0;  vcujk = 0.d0; rhojk = 0.d0
 
-	 dxik  = (r(1,i)-r(1,k))
-	 dyik  = (r(2,i)-r(2,k))
-	 dzik  = (r(3,i)-r(3,k))
+   dxik  = (r(1,i)-r(1,k))
+   dyik  = (r(2,i)-r(2,k))
+   dzik  = (r(3,i)-r(3,k))
          if (dxij>hLx)       dxij=dxij-L(1)
          if (dxij<-hLx)      dxij=dxij+L(1)
          if (dyij>hLy)       dyij=dyij-L(2)
          if (dyij<-hLy)      dyij=dyij+L(2)
          if (dzij>hLz)       dzij=dzij-L(3)
          if (dzij<-hLz)      dzij=dzij+L(3)
-	 r2ik = dxik*dxik + dyik*dyik + dzik*dzik
+   r2ik = dxik*dxik + dyik*dyik + dzik*dzik
          rik = sqrt(r2ik)
-	 dxjk  = (r(1,j)-r(1,k))
-	 dyjk  = (r(2,j)-r(2,k))
-	 dzjk  = (r(3,j)-r(3,k))
+   dxjk  = (r(1,j)-r(1,k))
+   dyjk  = (r(2,j)-r(2,k))
+   dzjk  = (r(3,j)-r(3,k))
          if (dxjk>hLx)       dxjk=dxjk-L(1)
          if (dxjk<-hLx)      dxjk=dxjk+L(1)
          if (dyjk>hLy)       dyjk=dyjk-L(2)
          if (dyjk<-hLy)      dyjk=dyjk+L(2)
          if (dzjk>hLz)       dzjk=dzjk-L(3)
          if (dzjk<-hLz)      dzjk=dzjk+L(3)
-	 r2jk = dxjk*dxjk + dyjk*dyjk + dzjk*dzjk;
+   r2jk = dxjk*dxjk + dyjk*dyjk + dzjk*dzjk;
          rjk = sqrt(r2jk)
-	 if (r2ik<a2_sw) then
-	   rik_a = rik - a_sw
-	   rhoik = rik*rik_a*rik_a
-	   vcuik = GAM_sw/rik_a
+   if (r2ik<a2_sw) then
+     rik_a = rik - a_sw
+     rhoik = rik*rik_a*rik_a
+     vcuik = GAM_sw/rik_a
            if (vcuik > -30.0) then
              vcuik = exp(vcuik)
            else
              vcuik = 0.0
            endif
-	 endif
-	 if (r2jk<a2_sw) then
-	   rjk_a = rjk - a_sw
-	   rhojk = rjk*rjk_a*rjk_a
-	   vcujk = GAM_sw/rjk_a
+   endif
+   if (r2jk<a2_sw) then
+     rjk_a = rjk - a_sw
+     rhojk = rjk*rjk_a*rjk_a
+     vcujk = GAM_sw/rjk_a
            if (vcujk > -30.0) then
              vcujk = exp(vcujk)
            else
              vcujk = 0.0
            endif
          end if
-	 vcui = vcuij*vcuik
-	 if (vcui.ne.0.d0) then
-	   ri = rij*rik
-	   cosjik = (dxij*dxik+dyij*dyik+dzij*dzik)/ri
-	   cosjik_3 = cosjik + 1.d0/3.d0
-	   si = LAM_sw*vcui*cosjik_3
-	   ei = 2*si/ri
+   vcui = vcuij*vcuik
+   if (vcui.ne.0.d0) then
+     ri = rij*rik
+     cosjik = (dxij*dxik+dyij*dyik+dzij*dzik)/ri
+     cosjik_3 = cosjik + 1.d0/3.d0
+     si = LAM_sw*vcui*cosjik_3
+     ei = 2*si/ri
            hjik = si*cosjik_3
          endif
-	 vcuj = vcuij*vcujk
-	 if (vcuj.ne.0.d0) then
-	   rj = rij*rjk
-	   cosijk = -(dxij*dxjk+dyij*dyjk+dzij*dzjk)/rj
-	   cosijk_3 = cosijk + 1.d0/3.d0
-	   sj = LAM_sw*vcuj*cosijk_3
-	   ej = 2*sj/rj
-	   hijk = sj*cosijk_3
-	 endif
-	 vcuk = vcuik*vcujk
-	 if (vcuk.ne.0.d0) then
-	   rk = rik*rjk
-	   cosikj = (dxjk*dxik+dyjk*dyik+dzjk*dzik)/rk
-	   cosikj_3 = cosikj + 1.d0/3.d0
-	   sk = LAM_sw*vcuk*cosikj_3
-	   ek = 2*sk/rk
+   vcuj = vcuij*vcujk
+   if (vcuj.ne.0.d0) then
+     rj = rij*rjk
+     cosijk = -(dxij*dxjk+dyij*dyjk+dzij*dzjk)/rj
+     cosijk_3 = cosijk + 1.d0/3.d0
+     sj = LAM_sw*vcuj*cosijk_3
+     ej = 2*sj/rj
+     hijk = sj*cosijk_3
+   endif
+   vcuk = vcuik*vcujk
+   if (vcuk.ne.0.d0) then
+     rk = rik*rjk
+     cosikj = (dxjk*dxik+dyjk*dyik+dzjk*dzik)/rk
+     cosikj_3 = cosikj + 1.d0/3.d0
+     sk = LAM_sw*vcuk*cosikj_3
+     ek = 2*sk/rk
            hikj = sk*cosikj_3
          endif
 
-	 eiNjik_x = ei*(dxik - rik/rij*cosjik*dxij)
-	 eiNjik_y = ei*(dyik - rik/rij*cosjik*dyij)
-	 eiNjik_z = ei*(dzik - rik/rij*cosjik*dzij)
+   eiNjik_x = ei*(dxik - rik/rij*cosjik*dxij)
+   eiNjik_y = ei*(dyik - rik/rij*cosjik*dyij)
+   eiNjik_z = ei*(dzik - rik/rij*cosjik*dzij)
 
-	 eiNkij_x = ei*(dxij - rij/rik*cosjik*dxik)
-	 eiNkij_y = ei*(dyij - rij/rik*cosjik*dyik)
-	 eiNkij_z = ei*(dzij - rij/rik*cosjik*dzik)
+   eiNkij_x = ei*(dxij - rij/rik*cosjik*dxik)
+   eiNkij_y = ei*(dyij - rij/rik*cosjik*dyik)
+   eiNkij_z = ei*(dzij - rij/rik*cosjik*dzik)
 
-	 ejNijk_x = ej*(dxjk + rjk/rij*cosijk*dxij)
-	 ejNijk_y = ej*(dyjk + rjk/rij*cosijk*dyij)
-	 ejNijk_z = ej*(dzjk + rjk/rij*cosijk*dzij)
+   ejNijk_x = ej*(dxjk + rjk/rij*cosijk*dxij)
+   ejNijk_y = ej*(dyjk + rjk/rij*cosijk*dyij)
+   ejNijk_z = ej*(dzjk + rjk/rij*cosijk*dzij)
 
-	 ejNkji_x = ej*(-dxij - rij/rjk*cosijk*dxjk)
-	 ejNkji_y = ej*(-dyij - rij/rjk*cosijk*dyjk)
-	 ejNkji_z = ej*(-dzij - rij/rjk*cosijk*dzjk)
+   ejNkji_x = ej*(-dxij - rij/rjk*cosijk*dxjk)
+   ejNkji_y = ej*(-dyij - rij/rjk*cosijk*dyjk)
+   ejNkji_z = ej*(-dzij - rij/rjk*cosijk*dzjk)
 
-	 ekNikj_x = ek*(-dxjk + rjk/rik*cosikj*dxik)
-	 ekNikj_y = ek*(-dyjk + rjk/rik*cosikj*dyik)
-	 ekNikj_z = ek*(-dzjk + rjk/rik*cosikj*dzik)
+   ekNikj_x = ek*(-dxjk + rjk/rik*cosikj*dxik)
+   ekNikj_y = ek*(-dyjk + rjk/rik*cosikj*dyik)
+   ekNikj_z = ek*(-dzjk + rjk/rik*cosikj*dzik)
 
-	 ekNjki_x = ek*(-dxik + rik/rjk*cosikj*dxjk)
-	 ekNjki_y = ek*(-dyik + rik/rjk*cosikj*dyjk)
-	 ekNjki_z = ek*(-dzik + rik/rjk*cosikj*dzjk)
+   ekNjki_x = ek*(-dxik + rik/rjk*cosikj*dxjk)
+   ekNjki_y = ek*(-dyik + rik/rjk*cosikj*dyjk)
+   ekNjki_z = ek*(-dzik + rik/rjk*cosikj*dzjk)
 
-	 if(rhoij.ne.0.d0) hij = GAM_sw*(hijk+hjik)/rhoij
-	 if(rhoik.ne.0.d0) hik = GAM_sw*(hjik+hikj)/rhoik
-	 if(rhojk.ne.0.d0) hjk = GAM_sw*(hikj+hijk)/rhojk
+   if(rhoij.ne.0.d0) hij = GAM_sw*(hijk+hjik)/rhoij
+   if(rhoik.ne.0.d0) hik = GAM_sw*(hjik+hikj)/rhoik
+   if(rhojk.ne.0.d0) hjk = GAM_sw*(hikj+hijk)/rhojk
 
       hRij_x = hij * dxij
       hRij_y = hij * dyij
@@ -539,9 +539,9 @@ SUBROUTINE stats(k)
 
   total_energy=K_E+P_E
   write(6,'(i10,5E16.8)')k,K_E/dfloat(N_particles),total_energy/dfloat(N_particles), &
-	2.d0*K_E/3.d0/dfloat(N_particles),T_av/dfloat(k),pressure
+  2.d0*K_E/3.d0/dfloat(N_particles),T_av/dfloat(k),pressure
   write(stat_file,'(i10,5E16.8)')k,K_E/dfloat(N_particles),total_energy/dfloat(N_particles), &
-	2.d0*K_E/3.d0/dfloat(N_particles),T_av/dfloat(k),pressure
+  2.d0*K_E/3.d0/dfloat(N_particles),T_av/dfloat(k),pressure
 END SUBROUTINE stats
 
 SUBROUTINE radial_distribution
@@ -573,52 +573,53 @@ SUBROUTINE output_xyz_coordinates
   enddo
 END SUBROUTINE output_xyz_coordinates
 
-END MODULE MOD_MD
+END MODULE m_molecular_dynamics
 
 PROGRAM md
-  USE MOD_MD
+  USE m_molecular_dynamics
   implicit none
   integer          :: i,k,num_args
-  real(8)           :: del(3),dd,shell_volume,np
+  real(8)           :: del(3), dd, shell_volume, np
 
   ! Process command-line arguments
-  num_args=iargc()
+  num_args = iargc()
   if(num_args/=1) then
-    write(6,*); write(6,*)" Usage: md <input_filename>"; write(6,*)
+    write(*,*)
+    write(*,*) "Usage: md <input_filename>"; write(6,*)
     stop
   else
     call getarg(1,input_filename)
   endif
 
-  call initialize
+  call initialize()
 
   ! Perform the simulation
-  T_av=0.d0
-  call force
-  call output_xyz_coordinates
+  T_av = 0.d0
+  call force()
+  call output_xyz_coordinates()
   do i=1,md_steps
     if(thermostat_type==1) then
-      call velocity_scaling
+      call velocity_scaling()
     elseif(thermostat_type==2) then
-      call andersen_simulation
+      call andersen_simulation()
     else
-      call nose_hoover_simulation
+      call nose_hoover_simulation()
     endif
     call stats(i)
-    T_av=T_av+2.d0*K_E/(3.d0*N_particles)
-    if(mod(i,output_frequency)==0) call output_xyz_coordinates
+    T_av = T_av + 2.d0*K_E/(3.d0*N_particles)
+    if(mod(i,output_frequency)==0) call output_xyz_coordinates()
   enddo
 
   ! Calculate the RDF
-  do k=0,N_histogram
-    shell_volume=(4.d0/3.d0)*pi*((k+1)**3-k**3)*delta**3
-    np=shell_volume*rho
-    rdf(k)=rdf(k)/(N_s*N_particles*Np)
-    write(rdf_file,*)(k+0.5d0)*delta,rdf(k)
+  do k = 0,N_histogram
+    shell_volume = (4.d0/3.d0)*pi*((k+1)**3 - k**3)*delta**3
+    np = shell_volume*rho
+    rdf(k) = rdf(k)/(N_s*N_particles*Np)
+    write(rdf_file,*) (k+0.5d0)*delta, rdf(k)
   enddo
 
-  call output  ! Output final positions and velocities to a file
-  call output_xyz_coordinates
-  call cleanup ! Deallocate memory
-END PROGRAM md
+  call output()  ! Output final positions and velocities to a file
+  call output_xyz_coordinates()
+  call cleanup() ! Deallocate memory
+END PROGRAM
 
