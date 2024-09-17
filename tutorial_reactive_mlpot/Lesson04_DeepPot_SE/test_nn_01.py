@@ -10,16 +10,15 @@ import pytorch_lightning as pl
 
 
 def load_data():
-    ds = np.DataSource(None)
-    coord = np.array(np.load(ds.open("../DATASET/DeepPot/input_coord.npy", "rb")), dtype="float32")
-    atom_types = np.loadtxt(ds.open("../DATASET/DeepPot/type.raw", "r"), dtype=int)
+    coord = np.array(np.load("../DATASET/DeepPot/input_coord.npy"), dtype="float32")
+    atom_types = np.loadtxt("../DATASET/DeepPot/type.raw", dtype=int)
     elems = np.unique(atom_types).tolist()
     atom_types = np.array([[elems.index(i) for i in atom_types]])
     atom_types = atom_types.repeat(len(coord), axis=0)
-    grad = np.array(np.load(ds.open("../DATASET/DeepPot/input_grad.npy", "rb")), dtype="float32")
+    grad = np.array(np.load("../DATASET/DeepPot/input_grad.npy"), dtype="float32")
 
     # Now, convert them to Tensor
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device("cpu")
     coord = torch.from_numpy(coord).to(device)
     atom_types = torch.from_numpy(atom_types).to(device)
     grad = torch.from_numpy(grad).to(device)
@@ -190,4 +189,8 @@ model = DeepPot(descriptor, fitting_net, learning_rate=5e-4)
 
 # Data
 coord, atom_types, grad = load_data()
+
+# forward pass
+res = model(coord[0:1,:,:], atom_types[0]) # xxx only need one instance of atom_types?
+
 
