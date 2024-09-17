@@ -9,6 +9,9 @@ from torch.utils.data import TensorDataset, DataLoader
 import pytorch_lightning as pl
 from pytorch_lightning import loggers as pl_loggers
 
+#torch.set_num_interop_threads() # Inter-op parallelism
+torch.set_num_threads(4) # Intra-op parallelism
+
 
 class Sequential(nn.Sequential):
     def forward(self, input: Tuple[Tensor, Tensor]) -> Tuple[Tensor, Tensor]:
@@ -26,7 +29,7 @@ class Dense(nn.Module):
         if bias:
             self.bias = nn.Parameter(torch.Tensor(num_channels, out_features))
         else:
-            self.register_parameter('bias', None)
+            self.register_parameter("bias", None)
         self.activation = activation
         self.residual = residual
         self.reset_parameters()
@@ -63,7 +66,7 @@ class Dense(nn.Module):
         return output, channels
 
     def extra_repr(self) -> str:
-        return 'num_channels={}, in_features={}, out_features={}, bias={}, activation={}, residual={}'.format(
+        return "num_channels={}, in_features={}, out_features={}, bias={}, activation={}, residual={}".format(
             self.num_channels, self.in_features, self.out_features, self.bias is not None, self.activation, self.residual
         )
 
@@ -153,14 +156,14 @@ class DeepPot(pl.LightningModule):
         qm_coord, atom_types, grad = batch
         ene_pred, grad_pred = self(qm_coord, atom_types[0])
         loss = F.mse_loss(grad_pred, grad)
-        self.log('train_loss', loss)
+        self.log("train_loss", loss)
         return loss
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
-        scheduler = {'scheduler': torch.optim.lr_scheduler.ExponentialLR(optimizer, 0.95),
-                     'interval': 'epoch',
-                     'frequency': 1,
+        scheduler = {"scheduler": torch.optim.lr_scheduler.ExponentialLR(optimizer, 0.95),
+                     "interval": "epoch",
+                     "frequency": 1,
                     }
         return [optimizer], [scheduler]
 
@@ -168,17 +171,15 @@ class DeepPot(pl.LightningModule):
 
 import numpy as np
 
-ds = np.DataSource(None)
-coord = np.array(np.load(ds.open("../DATASET/DeepPot/input_coord.npy", "rb")), dtype="float32")
-atom_types = np.loadtxt(ds.open("../DATASET/DeepPot/type.raw", "r"), dtype=int)
+coord = np.array(np.load("../DATASET/DeepPot/input_coord.npy"), dtype="float32")
+atom_types = np.loadtxt("../DATASET/DeepPot/type.raw", dtype=int)
+grad = np.array(np.load("../DATASET/DeepPot/input_grad.npy"), dtype="float32")
 
 elems = np.unique(atom_types).tolist()
 atom_types = np.array([[elems.index(i) for i in atom_types]])
 atom_types = atom_types.repeat(len(coord), axis=0)
 
-grad = np.array(np.load(ds.open("../DATASET/DeepPot/input_grad.npy", "rb")), dtype="float32")
-
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device("cpu")
 
 coord = torch.from_numpy(coord).to(device)
 atom_types = torch.from_numpy(atom_types).to(device)
@@ -190,8 +191,8 @@ train_loader = DataLoader(dataset, batch_size=32)
 descriptor = Feature(4, neuron=[25, 50], axis_neuron=4)
 fitting_net = Fitting(4, descriptor.output_length, neuron=[120, 120])
 model = DeepPot(descriptor, fitting_net, learning_rate=5e-4)
-csv_logger = pl_loggers.CSVLogger('logs_csv/')
-trainer = pl.Trainer(max_epochs=500, logger=csv_logger, accelerator='auto')
+csv_logger = pl_loggers.CSVLogger("logs_csv/")
+trainer = pl.Trainer(max_epochs=100, logger=csv_logger, accelerator="auto")
 trainer.fit(model, train_loader)
 model.to(device)
 
@@ -206,12 +207,12 @@ f1 = -grad.cpu().detach().numpy().reshape(-1)
 f2 = -grad_pred.cpu().detach().numpy().reshape(-1)
 fig, ax = plt.subplots()
 
-ax.plot(f1, f2, linestyle='none', marker='.',color='springgreen')
-ax.set_aspect('equal', adjustable='box')
+ax.plot(f1, f2, linestyle="none", marker=".",color="springgreen")
+ax.set_aspect("equal", adjustable="box")
 ax.plot([np.max(f1), np.min(f1)], [np.max(f2), np.min(f2)] , color="k", linewidth=1.5)
-ax.set_xlabel(r'Reference Force (kcal/mol/$\AA$)',size=14)
-ax.set_ylabel(r'Predicted Force (kcal/mol/$\AA$)',size=14)
-ax.text(-20, 18, 'RMSD: %.3f' % np.sqrt(np.mean((f1 - f2)**2)), size=14)
+ax.set_xlabel(r"Reference Force (kcal/mol/$\AA$)",size=14)
+ax.set_ylabel(r"Predicted Force (kcal/mol/$\AA$)",size=14)
+ax.text(-20, 18, "RMSD: %.3f" % np.sqrt(np.mean((f1 - f2)**2)), size=14)
 plt.show()
 
 
@@ -220,7 +221,7 @@ import pandas as pd
 loss = pd.read_csv("logs_csv/lightning_logs/version_0/metrics.csv")
 
 fig, ax = plt.subplots()
-ax.semilogy(loss["epoch"], loss["train_loss"],color='dodgerblue')
+ax.semilogy(loss["epoch"], loss["train_loss"],color="dodgerblue")
 ax.set_xlabel("Epoch",size=14)
 ax.set_ylabel("Training Errors",size=14)
 plt.show()
