@@ -105,6 +105,7 @@ class Feature(nn.Module):
         num_batches, num_channels, _ = coords.size()
         loc_env_r, loc_env_a = local_environment(coords)
 
+        # Check this for different atom_types (?)
         neighbor_types = atom_types.repeat(num_channels, 1)
         mask = ~torch.eye(num_channels, dtype=torch.bool, device=coords.device)
         neighbor_types = torch.masked_select(neighbor_types, mask).view(num_channels, -1)
@@ -124,7 +125,8 @@ class Feature(nn.Module):
 
 
 """
-Now we define the fitting neural network that maps the encoded feature matrix into the atomic energy values.
+Now we define the fitting neural network that maps the encoded feature matrix into the
+atomic energy values.
 """
 class Fitting(nn.Module):
     def __init__(self, n_types: int, in_features: int, neuron: Sequence[int] = [240, 240, 240]) -> None:

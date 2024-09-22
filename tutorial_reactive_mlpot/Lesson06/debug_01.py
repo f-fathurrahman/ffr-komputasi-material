@@ -25,6 +25,8 @@ coords = qm_coord[0:1,:,:]
 atom_types = atom_types_all[0]
 coords.requires_grad_()
 
+# TODO: test passing different atom_types for descriptor and fitting_net
+
 # Decriptors for these coordinates
 descriptors = descriptor(coords, atom_types)
 
