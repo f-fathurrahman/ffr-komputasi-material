@@ -8,9 +8,9 @@ atomic_label    = 'atomic_dipole' # data file prefix for 'atomic' model; string 
 # Dataset in DeepMD-kit format; nested paths like [[dat1,dat2],[dat3]] allowed
 # Note: Here the atomic type index of dat1,dat2 must be the same, but that of dat3 can be different
 # train_paths     = ['data/chunyi_dplr/data/dipole_data']
-train_paths     = ['train_path']  # paths to training data
+train_paths     = ['DATASET/CH4_data/training_data']  # paths to training data
 use_val_data    = False           # if not, next line is ignored
-val_paths       = ['val_path']    # paths to validation data
+val_paths       = ['DATASET/CH4_data/validata_data']    # paths to validation data
 
 # Model parameters
 rcut            = 6.0             # cutoff radius (Angstrom)
@@ -30,7 +30,7 @@ s_pref_e        = 0.02            # starting prefactor for energy loss
 l_pref_e        = 1               # limit prefactor for energy loss, increase for energy accuracy
 s_pref_f        = 1000            # starting prefactor for force loss
 l_pref_f        = 1               # limit prefactor for force loss, increase for force accuracy
-total_steps     = 300000          # total training steps. Rec: 1e6 for 'energy', 1e5 for 'atomic'
+total_steps     = 30000           # total training steps. Rec: 1e6 for 'energy', 1e5 for 'atomic'
 print_every     = 1000            # for printing loss and validation
 
 # parameters you usually don't need to change
