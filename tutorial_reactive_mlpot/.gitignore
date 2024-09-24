@@ -1,3 +1,4 @@
 logs_*
 *.pt
 DATASET
+test_packmol

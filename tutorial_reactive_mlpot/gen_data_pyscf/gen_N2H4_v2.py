@@ -1,10 +1,8 @@
-from ase import units, Atoms
-from ase.io import read, write
+from ase import units
+from ase.io import read
 from ase.md.langevin import Langevin
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.calculators.calculator import Calculator, all_properties
-from ase.optimize import QuasiNewton
-import numpy as np
 from pyscf import gto, dft, grad
 
 
@@ -35,34 +33,26 @@ class PySCFCalculator(Calculator):
 
 
 
+def save_md_results(atoms=None):
+    atoms.write("TEMP_langevin_7mols.xyz", append=True)
 
 # Load molecule from file
-#atoms = read('N2H4_7mols.xyz')
-atoms = read("N2H4_v1.xyz")
-
-# Menentukan unit cell dengan panjang sisi 20 Å
-unit_cell_size = 20.0
-atoms.set_cell(unit_cell_size * np.identity(3))
-atoms.set_pbc(True)  # Mengatur Periodic Boundary Conditions (PBC)
-
-# Hitung pusat massa (center of mass)
-center_of_mass = atoms.get_center_of_mass()
-
-# Hitung vektor translasi agar pusat massa berada di tengah unit cell
-translation_vector = 0.5 * unit_cell_size - center_of_mass
-
-# Pindahkan semua atom ke posisi baru berdasarkan vektor translasi
-atoms.translate(translation_vector)
-
-# Pastikan semua atom berada di dalam unit cell setelah translasi
-atoms.wrap()
+#atoms = read("N2H4_v1.xyz")
+atoms = read('N2H4_7mols.xyz')
 
 # Attach PySCF calculator
 atoms.calc = PySCFCalculator()
 
 
-
-
-atoms.get_total_energy()
-
-
+# Langevin dynamics
+T_K = 300
+MaxwellBoltzmannDistribution(atoms, temperature_K=T_K)
+dyn = Langevin(
+    atoms,
+    timestep=1.0*units.fs,
+    temperature_K=T_K,
+    friction=0.001/units.fs,
+    logfile="LOG_langevin_7mols"
+)
+dyn.attach(save_md_results, interval=1, atoms=atoms)
+dyn.run(500)
