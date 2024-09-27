@@ -43,7 +43,6 @@ decay_steps     = 5000            # learning rate exponentially decays every dec
 getstat_bs      = 64              # batch size for computing model statistics at initialization
 
 # From here on you don"t need to change anything unless you know what you are doing
-import numpy as np
 import jax
 import datetime
 from time import time

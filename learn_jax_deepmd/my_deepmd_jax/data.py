@@ -8,6 +8,7 @@ from .utils import shift, get_relative_coord, sr
 class DPDataset():
     def __init__(self, paths, labels, params={}):
         if type(paths[0]) == list:
+            # This is nested dataset
             self.is_leaf = False
             self.subsets = [DPDataset(path, labels, params) for path in paths]
             self.nframes = sum([subset.nframes for subset in self.subsets])
@@ -17,6 +18,7 @@ class DPDataset():
             self.type_count = self.count_max()
             self.valid_types = np.arange(self.ntypes)[self.type_count > 0]
         else:
+            # This is the usual case
             self.is_leaf = True
             self.type = np.genfromtxt(paths[0] + '/type.raw').astype(int)
             self.data = {l: np.concatenate(sum([[np.load(set+l+'.npy') for set in glob(path+'/set.*/')]
@@ -126,6 +128,7 @@ class DPDataset():
         else:
             return sum([subset._get_energy_stats() for subset in self.subsets], [])
 
+#XXXs What's this?
 def compute_lattice_candidate(boxes, rcut): # boxes (nframes,3,3)
     N = 2  # This algorithm is heuristic and subject to change. Increase N in case of missing neighbors.
     ortho = not vmap(lambda box: box - jnp.diag(jnp.diag(box)))(boxes).any()
