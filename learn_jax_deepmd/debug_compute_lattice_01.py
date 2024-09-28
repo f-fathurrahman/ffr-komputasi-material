@@ -93,10 +93,31 @@ ortho = not vmap(lambda box: box - jnp.diag(jnp.diag(box)))(boxes).any()
 
 recp_norm = jnp.linalg.norm((jnp.linalg.inv(boxes)), axis=-1)    # (nframes,3)
 n = np.ceil(rcut * recp_norm - 0.5).astype(int).max(0)           # (3,)
-lattice_cand = jnp.stack(np.meshgrid(range(-n[0],n[0]+1),range(-n[1],n[1]+1),range(-n[2],n[2]+1),indexing='ij'),axis=-1).reshape(-1,3)
-trial_points = jnp.stack(np.meshgrid(np.arange(-N,N+1),np.arange(-N,N+1),np.arange(-N,N+1)),axis=-1).reshape(-1,3) / (2*N)
-is_neighbor = jnp.linalg.norm((lattice_cand[:,None]-trial_points)[None] @ boxes[:,None], axis=-1) < rcut  # (nframes,l,t)
+lattice_cand = jnp.stack(
+    np.meshgrid(
+        range(-n[0],n[0]+1),
+        range(-n[1],n[1]+1),
+        range(-n[2],n[2]+1),
+        indexing='ij'
+    ),
+    axis=-1
+).reshape(-1,3)
+
+trial_points = jnp.stack(
+    np.meshgrid(
+        np.arange(-N,N+1),
+        np.arange(-N,N+1),
+        np.arange(-N,N+1)
+    ),
+    axis=-1
+).reshape(-1,3) / (2*N)
+
+is_neighbor = jnp.linalg.norm(
+    (lattice_cand[:,None] - trial_points)[None] @ boxes[:,None],
+axis=-1) < rcut  # (nframes,l,t)
+
 lattice_cand = np.array(lattice_cand[is_neighbor.any((0,2))])
+
 lattice_max = is_neighbor.sum(1).max().item()
 
 
