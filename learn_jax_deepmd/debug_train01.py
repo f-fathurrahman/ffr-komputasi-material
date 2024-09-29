@@ -81,13 +81,16 @@ print("Model params:", model.params)
 # initialize model variables
 batch, type_count, lattice_args = train_data.get_batch(1) # get one data point
 static_args  = nn.FrozenDict({"type_count": type_count, "lattice": lattice_args})
+print("^^^^ Initializing model parameters")
 variables = model.init(
     random.PRNGKey(np.random.randint(42)),
     batch["coord"][0],
     batch["box"][0],
     static_args
 )
-print("# Model initialized. Precision: %s. Parameter count: %d." % 
+print("^^^^ Done initializing model parameters")
+# variables is NN parameters
+print("Model initialized. Precision: %s. Parameter count: %d." % 
             ({"default": "fp32", "low": "fp32-16", "high": "fp64"}[INPUT.precision], 
             sum(i.size for i in tree_util.tree_flatten(variables)[0])))
 

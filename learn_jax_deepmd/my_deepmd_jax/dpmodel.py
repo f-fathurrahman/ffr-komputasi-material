@@ -90,7 +90,9 @@ class DPModel(nn.Module):
         return pred * self.params['out_norm'], debug
 
     def energy_and_force(self, variables, coord_N3, box_33, static_args, nbrs_lists=None):
+        print("\n*** ENTER energy_and_force")
         (pred, _), g = value_and_grad(self.apply, argnums=1, has_aux=True)(variables, coord_N3, box_33, static_args, nbrs_lists)
+        print("*** EXIT energy_and_force")
         return pred, -g
     
     def wc_predict(self, variables, coord_N3, box_33, static_args, nbrs_nm=None):
