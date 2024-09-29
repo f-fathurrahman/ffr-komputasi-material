@@ -25,6 +25,7 @@ class DPModel(nn.Module):
             
     @nn.compact
     def __call__(self, coord_N3, box_33, static_args, nbrs_nm=None):
+        print("*** ENTER dpmodel.__call__")
         # prepare input parameters
         coord_N3, type_count, mask, compress, K, nsel, nbrs_nm = self.get_input(coord_N3, static_args, nbrs_nm)
         A, L = self.params['axis'], static_args['lattice']['lattice_max'] if nbrs_nm is None else None
@@ -83,6 +84,9 @@ class DPModel(nn.Module):
             pred = concat([lax.with_sharding_constraint((f[:,None]*T).sum(-1)[:static_args['type_count'][self.params['nsel'][i]]],
                 jax.sharding.PositionalSharding(jax.devices()).replicate()) for i,(f,T) in enumerate(zip(fit_nselW,T_nsel3W))])
         debug = T_NselXW
+        #
+        print("*** EXIT dpmodel.__call__")
+        #
         return pred * self.params['out_norm'], debug
 
     def energy_and_force(self, variables, coord_N3, box_33, static_args, nbrs_lists=None):
@@ -97,6 +101,7 @@ class DPModel(nn.Module):
     
     def get_loss_fn(self):
         if self.params['atomic'] is False:
+            print("ENTER dpmode.get_loss_fn 104")
             vmap_energy_and_force = vmap(self.energy_and_force, (None, 0, 0, None))
             def loss_ef(variables, batch_data, pref, static_args):
                 e, f = vmap_energy_and_force(variables, batch_data['coord'], batch_data['box'], static_args)
@@ -104,6 +109,7 @@ class DPModel(nn.Module):
                 lf = ((batch_data['force'] - f)**2).mean()
                 return pref['e']*le + pref['f']*lf, (le, lf)
             loss_and_grad = value_and_grad(loss_ef, has_aux=True)
+            print("EXIT dpmode.get_loss_fn 112")
             return loss_ef, loss_and_grad
         else:
             vmap_apply = vmap(self.apply, (None, 0, 0, None))

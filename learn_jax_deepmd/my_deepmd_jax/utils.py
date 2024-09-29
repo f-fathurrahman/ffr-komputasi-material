@@ -91,7 +91,9 @@ class embedding_net(nn.Module):
     dt_layers: tuple = ()
     @nn.compact
     def __call__(self, x, compress=False, reducer=None):
+        print("ENTER embedding net, x.shape = ", x.shape)
         if not compress:
+            print("embedding_net: NOT compressed")
             for i in range(len(self.widths)):
                 if i == 0 and self.in_bias_only:
                     x = nn.tanh(x + self.param('bias',zeros_init,(self.widths[0],)))
@@ -111,6 +113,7 @@ class embedding_net(nn.Module):
                             x += x_prev
             return x if reducer is None else reducer @ x
         else:
+            print("embedding_net: compressed")
             srmin = self.variable('compress_var', 'srmin').value
             srmax = self.variable('compress_var', 'srmax').value
             poly_coeff = self.variable('compress_var', 'poly_coeff').value
