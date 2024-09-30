@@ -28,7 +28,12 @@ class DPModel(nn.Module):
         print("*** ENTER dpmodel.__call__")
         # prepare input parameters
         coord_N3, type_count, mask, compress, K, nsel, nbrs_nm = self.get_input(coord_N3, static_args, nbrs_nm)
+        print("coord_N3 = ")
+        print(coord_N3)
+        #
         A, L = self.params['axis'], static_args['lattice']['lattice_max'] if nbrs_nm is None else None
+        print("A = ", A)
+        print("L = ", L)
         # compute relative coordinates x_3NM, distance r_NM, s(r) and normalized s(r)
         x_n3m, r_nm = get_relative_coord(coord_N3, box_33, type_count, static_args.get('lattice',None), nbrs_nm)
         sr_nm = [[sr(r, self.params['rcut']) for r in R] for R in r_nm]
@@ -72,11 +77,23 @@ class DPModel(nn.Module):
         T_NselW, T_Nsel3W, T_Nsel6W = T_NselXW[:,0]+self.param('Tbias',zeros_init,T_NselXW.shape[-1:]), T_NselXW[:,1:4], T_NselXW[:,4:] 
         G_NselAW = T_NselW[:,None]*T_NselW[:,:A,None] + (T_Nsel3W[:,:,None]*T_Nsel3W[:,:,:A,None]).sum(1)
         if self.params['use_2nd']:
+            print(">>>>>>> Using 2nd order")
             G2_axis_Nsel6A = tensor_3to6(T_Nsel3W[:,:,A:2*A], axis=1) + T_Nsel6W[:,:,A:2*A]
             G_NselAW += (G2_axis_Nsel6A[...,None] * T_Nsel6W[:,:,None]).sum(1)
         if not self.params['atomic']: # Energy prediction
+            #
+            G_split = split(G_NselAW.reshape(G_NselAW.shape[0],-1),type_count,0,K=K)
+            for G in G_split:
+                print("G.shape = ", G.shape)
+            #
             fit_n1 = [fitting_net(self.params['fit_widths'])(G) for G in split(G_NselAW.reshape(G_NselAW.shape[0],-1),type_count,0,K=K)]
-            pred = (mask * concat([f[:,0]+Eb for f,Eb in zip(fit_n1,self.params['Ebias'])], K=K)).sum()
+            print("len of fit_n1 = ", len(fit_n1))
+            print("len of mask = ", len(mask))
+            print("K = ", K)
+            list_E = [ f[:,0] + Eb for f,Eb in zip(fit_n1,self.params['Ebias']) ]
+            print("list_E = ", list_E)
+            #pred = (mask * concat([f[:,0]+Eb for f,Eb in zip(fit_n1,self.params['Ebias'])], K=K)).sum()
+            pred = (mask * concat(list_E, K=K)).sum()
         else: # Atomic tensor prediction
             sel_count = [type_count[i] for i in nsel]
             fit_nselW = [fitting_net(self.params['fit_widths'], use_final=False)(G) for G in split(G_NselAW.reshape(G_NselAW.shape[0],-1),sel_count,0,K=K)]
