@@ -1,6 +1,6 @@
 import INPUT01 as INPUT
 
-#from INPUT01 import *
+INPUT.train_paths = ["DATASET/N2H4_1mol/training_data"]
 
 # override some input parameters
 INPUT.total_steps = 1
@@ -9,15 +9,16 @@ INPUT.print_every = 1
 
 # From here on you don"t need to change anything unless you know what you are doing
 import numpy as np
-from jax import jit, random, tree_util
-import jax, optax, datetime
+np.random.seed(1234)
+
+
+from jax import random
+import jax, datetime
 import flax.linen as nn
 from time import time
-from functools import partial
 
-from my_deepmd_jax import data, utils
+from my_deepmd_jax import data
 from my_deepmd_jax.dpmodel import DPModel
-
 
 # From here on you don"t need to change anything unless you know what you are doing
 import jax
@@ -93,6 +94,6 @@ coord_N3 = batch["coord"][0]
 box_33 = batch["box"][0]
 nbrs_nm = None # not used?
 
-model.apply({"params": variables["params"]}, coord_N3, box_33, static_args)
-
+res = model.apply({"params": variables["params"]}, coord_N3, box_33, static_args)
+print("res[0] = ", res[0])
 

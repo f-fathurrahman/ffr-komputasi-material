@@ -1,6 +1,6 @@
 import INPUT01 as INPUT
 
-#from INPUT01 import *
+INPUT.train_paths = ["DATASET/N2H4_1mol/training_data"]
 
 # override some input parameters
 INPUT.total_steps = 1
@@ -9,11 +9,12 @@ INPUT.print_every = 1
 
 # From here on you don"t need to change anything unless you know what you are doing
 import numpy as np
-from jax import jit, random, tree_util
-import jax, optax, datetime
+np.random.seed(1234)
+
+from jax import random
+import jax, datetime
 import flax.linen as nn
 from time import time
-from functools import partial
 
 from my_deepmd_jax import data, utils
 from my_deepmd_jax.dpmodel import DPModel
@@ -93,8 +94,18 @@ coord_N3 = batch["coord"][0]
 box_33 = batch["box"][0]
 nbrs_nm = None
 
+print("\nENTER manual evaluation ...")
+
 # prepare input parameters
 coord_N3, type_count, mask, compress, K, nsel, nbrs_nm = model.get_input(coord_N3, static_args, nbrs_nm)
+
+print("coord_N3")
+print(coord_N3)
+print("mask = ", mask)
+print("K = ", K)
+print("nsel = ", nsel)
+print("nbrs_nm = ", nbrs_nm)
+
 
 A = model.params["axis"]
 L = static_args["lattice"]["lattice_max"] if nbrs_nm is None else None
@@ -132,68 +143,65 @@ R_nselXm = [
         for i in range(len(nsel))
 ]
 
-
-#Nembed = 0
-#i = 0
-#sri = sr_centernorm_nm[nsel[i]]
-#rxi = R_nselXm[i]
-#sr = sri[0]
-#rx = rxi[0]
-#net_name = "embedding_net_" + str(Nembed)
-#net_vars = variables["params"][net_name]
-#utils.embedding_net(model.params["embed_widths"]).apply({"params": net_vars}, sr[:,:,None], compress, rx)
-
-
 Nembed = 0
-list_embed = []
+list_sum = []
 for i in range(len(nsel)):
+    list_embed = []
     for sr, rx in zip(sr_centernorm_nm[nsel[i]], R_nselXm[i]):
         net_name = "embedding_net_" + str(Nembed)
         net_vars = variables["params"][net_name]
         list_embed.append(
-            utils.embedding_net(model.params['embed_widths']).apply(
+            utils.embedding_net(model.params["embed_widths"]).apply(
                 {"params": net_vars}, sr[:,:,None], compress, rx
             )
         )
         Nembed += 1
-
-T_NselXW = utils.concat(list_embed, K=K) / model.params['Nnbrs']
+    list_sum.append(sum(list_embed))
+T_NselXW = utils.concat(list_sum, K=K) / model.params["Nnbrs"]
 
 
 #T_NselW = T_NselXW[:,0] + model.param("Tbias", utils.zeros_init, T_NselXW.shape[-1:])
 T_NselW = T_NselXW[:,0] + variables["params"]["Tbias"]
+# We can't call .param("Tbias") ?
+
 T_Nsel3W = T_NselXW[:,1:4]
 T_Nsel6W = T_NselXW[:,4:]
 G_NselAW = T_NselW[:,None]*T_NselW[:,:A,None] + (T_Nsel3W[:,:,None]*T_Nsel3W[:,:,:A,None]).sum(1)
 
+print("T_NselXW.shape = ", T_NselXW.shape)
+print("T_NselW.shape = ", T_NselW.shape)
+print("T_Nsel3W.shape = ", T_Nsel3W.shape)
+print("G_NselAW.shape 1st = ", G_NselAW.shape)
+
 # XXX only for use_2nd
 G2_axis_Nsel6A = utils.tensor_3to6(T_Nsel3W[:,:,A:2*A], axis=1) + T_Nsel6W[:,:,A:2*A]
 G_NselAW += (G2_axis_Nsel6A[...,None] * T_Nsel6W[:,:,None]).sum(1)
+print("G_NselAW.shape 2nd = ", G_NselAW.shape)
 
 #fit_n1 = [utils.fitting_net(model.params["fit_widths"])(G) for G in utils.split(G_NselAW.reshape(G_NselAW.shape[0],-1),type_count,0,K=K)]
 G_split = utils.split(G_NselAW.reshape(G_NselAW.shape[0],-1),type_count,0,K=K)
+for G in G_split:
+    print("G.shape = ", G.shape)
+
 fit_n1 = []
 Nfit = 0
 for G in G_split:
     net_name = "fitting_net_" + str(Nfit)
-    print("net_name = ", net_name)
     net_vars = variables["params"][net_name]
-    print(G.shape)
     res = utils.fitting_net(model.params["fit_widths"]).apply({"params": net_vars}, G)
-    print("res = ", res)
-    #fit_n1.append(
-    #    utils.fitting_net(model.params["fit_widths"]).apply({"params": net_vars}, G)
-    #)
+    fit_n1.append(res)
     Nfit += 1
 
-#print("len of fit_n1 = ", len(fit_n1))
-#print("len of mask = ", len(mask))
-#print("K = ", K)
-#
-#list_E = []
-#for f,Eb in zip(fit_n1, model.params["Ebias"]):
-#    list_E.append(f[:,0] + Eb)
-#print("list_E = ", list_E)
+print("len of fit_n1 = ", len(fit_n1))
+print("len of mask = ", len(mask))
+print("K = ", K)
+
+list_E = []
+for f, Eb in zip(fit_n1, model.params["Ebias"]):
+    print("f = ", f)
+    print("Eb = ", Eb)
+    list_E.append(f[:,0] + Eb)
+print("list_E = ", list_E)
 
 #pred = (mask * utils.concat(list_E, K=K)).sum()
 #energy_pred = pred * model.params["out_norm"]

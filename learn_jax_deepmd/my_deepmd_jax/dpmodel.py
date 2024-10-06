@@ -74,12 +74,19 @@ class DPModel(nn.Module):
                         dt_layers=range(2,len(self.params['embedMP_widths'])))(f, reducer=rx)
                         for f,rx in zip(F,RX)]) for F,RX in zip(F_nselmE, R_nselXm)],K=K) / self.params['Nnbrs'] 
         # compute fitting net with input G = T @ T_sub; energy is sum of output; A for any axis dimension
-        T_NselW, T_Nsel3W, T_Nsel6W = T_NselXW[:,0]+self.param('Tbias',zeros_init,T_NselXW.shape[-1:]), T_NselXW[:,1:4], T_NselXW[:,4:] 
+        T_NselW, T_Nsel3W, T_Nsel6W = T_NselXW[:,0] + self.param('Tbias',zeros_init,T_NselXW.shape[-1:]), T_NselXW[:,1:4], T_NselXW[:,4:] 
         G_NselAW = T_NselW[:,None]*T_NselW[:,:A,None] + (T_Nsel3W[:,:,None]*T_Nsel3W[:,:,:A,None]).sum(1)
+        #
+        print("T_NselXW.shape = ", T_NselXW.shape)
+        print("T_NselW.shape = ", T_NselW.shape)
+        print("T_Nsel3W.shape = ", T_Nsel3W.shape)
+        print("G_NselAW.shape 1st = ", G_NselAW.shape)
+        #
         if self.params['use_2nd']:
             print(">>>>>>> Using 2nd order")
             G2_axis_Nsel6A = tensor_3to6(T_Nsel3W[:,:,A:2*A], axis=1) + T_Nsel6W[:,:,A:2*A]
             G_NselAW += (G2_axis_Nsel6A[...,None] * T_Nsel6W[:,:,None]).sum(1)
+            print("G_NselAW.shape 2nd = ", G_NselAW.shape)
         if not self.params['atomic']: # Energy prediction
             #
             G_split = split(G_NselAW.reshape(G_NselAW.shape[0],-1),type_count,0,K=K)
