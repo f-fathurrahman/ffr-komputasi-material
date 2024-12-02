@@ -9,6 +9,7 @@ from copy import deepcopy
 from random import randint
 
 import torch
+import torch.nn as nn
 from torch.utils import data
 import torch.nn.functional as F
 torch.set_default_tensor_type(torch.DoubleTensor)

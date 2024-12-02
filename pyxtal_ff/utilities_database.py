@@ -130,7 +130,7 @@ class Database():
             lists = range(_N)
         else:
             lists = range(N1)
-            
+        
         for i, index in enumerate(lists):
             d = self.compute(function, data[index])
             self.append(d)

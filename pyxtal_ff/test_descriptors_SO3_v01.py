@@ -54,5 +54,5 @@ f = SO3(nmax=nmax, lmax=lmax, rcut=rcut, alpha=alpha, derivative=True, stress=Fa
 x = f.calculate(test)
 start2 = time.time()
 print('x', x['x'])
-#print('dxdr', x['dxdr'])
+print('dxdr', x['dxdr'])
 print('calculation time {}'.format(start2-start1))

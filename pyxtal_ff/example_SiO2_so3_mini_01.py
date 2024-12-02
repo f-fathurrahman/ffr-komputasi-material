@@ -11,27 +11,25 @@ if not os.path.exists(train_data):
     print('downloading the training data')
     os.system('wget https://raw.githubusercontent.com/MDIL-SNU/SIMPLE-NN/master/examples/SiO2/ab_initio_output/OUTCAR_comp')
 
-descriptor = {'Rc': 4.9, 
-              'type': 'SO3',
-              'parameters': {'nmax': 4, 'lmax': 3},
-              'ncpu': 16,
-             }
+descriptor = {
+    'Rc': 3.0, # make Rc smaller to speed up the calculation
+    'type': 'SO3',
+    'parameters': {'nmax': 4, 'lmax': 3},
+    'ncpu': 1,
+}
  
-model = {'system' : ['Si', 'O'],
-         'hiddenlayers': [30, 30],
-         'force_coefficient': 0.1,
-         'epoch': 100,
-         'batch_size': 1000,
-         'path': 'SO3-mini-batch/',
-         'restart': 'SO3-mini-batch/30-30-checkpoint.pth',
-         'memory': 'out',
-         'optimizer': {'method': 'LBFGS'}
-         }
+model = {
+    'system' : ['Si', 'O'],
+    'hiddenlayers': [30, 30],
+    'force_coefficient': 0.1,
+    'epoch': 100,
+    'batch_size': 1000,
+    'path': 'SO3-mini-batch/',
+    #'restart': 'SO3-mini-batch/30-30-checkpoint.pth',
+    'memory': 'out',
+    'optimizer': {'method': 'LBFGS'}
+}
 
 #------------------------- Run NN calculation ------------------------------
 ff = PyXtal_FF(descriptors=descriptor, model=model)
 ff.run(mode='train', TrainData=train_data)
-#ff.run(mode='train', TrainData=train_data)
-#ff.run(mode='train', TrainData=train_data)
-#ff.run(mode='train', TrainData=train_data)
-#ff.run(mode='train', TrainData=train_data)

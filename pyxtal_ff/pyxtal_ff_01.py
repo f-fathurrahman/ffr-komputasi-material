@@ -110,7 +110,9 @@ class PyXtal_FF():
             assert TrainData is not None, "TrainData can't be None for train mode."
 
             # Instantiate model
+            print("Initializing model ...")
             self._MODEL(self._model)
+            print("... Done initializing model")
 
             # Calculate descriptors.
             self._descriptors.update({'N': self._descriptors['N_train']})
