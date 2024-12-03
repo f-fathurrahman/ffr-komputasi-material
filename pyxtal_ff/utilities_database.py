@@ -181,24 +181,22 @@ class Database():
                     stress=function['stress']).calculate(data['structure'])
 
         elif function['type'] in ['EAD', 'ead']:
-            raise NotImplementedError("Not yet implemented")
-            #from pyxtal_ff.descriptors.EAD import EAD
-            #d = EAD(function['parameters'],
-            #         function['Rc'],
-            #         function['force'], function['stress'],
-            #         function['cutoff']).calculate(data['structure'])
+            from descriptors_EAD import EAD
+            d = EAD(function['parameters'],
+                     function['Rc'],
+                     function['force'], function['stress'],
+                     function['cutoff']).calculate(data['structure'])
         
         elif function['type'] in ['SNAP', 'snap']:
-            raise NotImplementedError("Not yet implemented")
-            #from pyxtal_ff.descriptors.SNAP import SO4_Bispectrum
-            #d = SO4_Bispectrum(function['weights'],
-            #                   function['parameters']['lmax'],
-            #                   function['Rc'],
-            #                   derivative=function['force'],
-            #                   stress=function['stress'],
-            #                   normalize_U=function['parameters']['normalize_U'],
-            #                   cutoff_function=function['cutoff'],
-            #                   rfac0=function['parameters']['rfac']).calculate(data['structure'])
+            from descriptors_SNAP import SO4_Bispectrum
+            d = SO4_Bispectrum(function['weights'],
+                               function['parameters']['lmax'],
+                               function['Rc'],
+                               derivative=function['force'],
+                               stress=function['stress'],
+                               normalize_U=function['parameters']['normalize_U'],
+                               cutoff_function=function['cutoff'],
+                               rfac0=function['parameters']['rfac']).calculate(data['structure'])
 
         else:
             msg = f"{function['type']} is not implemented"
@@ -432,74 +430,20 @@ def get_descriptors_parameters(symmetry, system):
     return G
 
 
+import ase.io
+
 def parse_xyz(structure_file, N=1000000):
-    """
-    Extract structures/enegy/force information of xyz file provided by the Cambridge group
-    """
     data = []
-    with open(structure_file, 'r') as f:
-        lines = f.readlines()
-        count = 0
-        while True:
-            line = lines[count]
-            symbols = []
-            number = int(line)
-            coords = np.zeros([number, 3])
-            forces = np.zeros([number, 3])
-            infos = lines[count+1].split('=')
-            for i, info in enumerate(infos):
-                if info.find('dft_energy') >= 0 or info.find('DFT_energy') >= 0:
-                    energy = float(infos[i+1].split()[0])
-                elif info.find('config_type') == 0:
-                    group = infos[i+1].split()[0]
-                elif info.find('Lattice') == 8:
-                    lat = []
-                    tmp = infos[i+1].split()
-                    for num in tmp:
-                        num = num.replace('"','')
-                        if num.replace('.', '', 1).replace('-', '', 1).isdigit():
-                            lat.append(float(num))
-                    lat = np.array(lat).reshape([3,3])
-                elif info.find('virial') > 0:
-                    s = []
-                    tmp = infos[i+1].split()
-                    for num in tmp:
-                        num = num.replace('"','')
-                        if num.replace('.', '', 1).replace('-', '', 1).isdigit():
-                            s.append(float(num))
-                    s = np.array(s).flatten()
-                    stress = np.array([s[0], s[4], s[8], s[1], s[2], s[5]])
-                elif info.find('Properties') >= 0: 
-                    items = infos[i+1].split(':')
-                    counts = 0
-                    for i in range(int(len(items)/3)):
-                        if items[i*3] == 'dft_force' or items[i*3] == 'DFT_force':
-                            count_f = counts
-                        elif items[i*3] == 'pos':
-                            count_p = counts
-                        counts += int(items[i*3+2])
-                    break
-
-            for i in range(number):
-                infos = lines[count+2+i].split()
-                symbols.append(infos[0])
-                coords[i, :] = np.array([float(num) for num in infos[count_p:count_p+3]])
-                forces[i, :] = np.array([float(num) for num in infos[count_f:count_f+3]])
-
-            structure = Atoms(symbols=symbols,
-                              positions=coords,
-                              cell=lat, pbc=True)
-            data.append({'structure': structure,
-                         'energy': energy, 'force': forces,
-                         'stress': stress, 'group': group})
-
-            count = count + number + 2
-            if count >= len(lines) or len(data) == N:
-                break
-
+    for atoms in ase.io.iread(structure_file):
+        data.append({
+            'structure': atoms,
+            'energy': atoms.get_potential_energy(),
+            'force': atoms.get_forces(),
+            'stress': None,
+            'group': 'random'
+        })
     return data
 
-import ase.io
 def parse_OUTCAR_comp(structure_file, N=1000000):
     data = []
     for atoms in ase.io.iread(structure_file):
