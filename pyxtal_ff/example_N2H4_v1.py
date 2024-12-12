@@ -1,7 +1,7 @@
 from pyxtal_ff_01 import PyXtal_FF
 import os
 
-# This is a VASP output file
+# This is extended XYZ file
 train_data = "DATASET_N2H4_v1/TEMP_ATOMS_TRAIN.xyz"
 
 descriptor = {
