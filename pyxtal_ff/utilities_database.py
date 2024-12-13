@@ -144,32 +144,29 @@ class Database():
         """ Compute descriptor for one structure to the database. """
 
         if function['type'] in ['BehlerParrinello', 'ACSF']:
-            raise NotImplementedError("Not yet implemented")
-            #from pyxtal_ff.descriptors.ACSF import ACSF
-            #d = ACSF(function['parameters'],
-            #         function['Rc'], 
-            #         function['force'],
-            #         function['stress'], 
-            #         function['cutoff'], False).calculate(data['structure'])
+            from descriptors_ACSF import ACSF
+            d = ACSF(function['parameters'],
+                     function['Rc'], 
+                     function['force'],
+                     function['stress'], 
+                     function['cutoff'], False).calculate(data['structure'])
 
         elif function['type'] in ['wACSF', 'wacsf']:
-            raise NotImplementedError("Not yet implemented")
-            #from pyxtal_ff.descriptors.ACSF import ACSF
-            #d = ACSF(function['parameters'],
-            #         function['Rc'], 
-            #         function['force'],
-            #         function['stress'], 
-            #         function['cutoff'], True).calculate(data['structure'])
+            from descriptors_ACSF import ACSF
+            d = ACSF(function['parameters'],
+                     function['Rc'], 
+                     function['force'],
+                     function['stress'], 
+                     function['cutoff'], True).calculate(data['structure'])
         
         elif function['type'] in ['SO4', 'Bispectrum', 'bispectrum']:
-            raise NotImplementedError("Not yet implemented")
-            #from pyxtal_ff.descriptors.SO4 import SO4_Bispectrum
-            #d = SO4_Bispectrum(function['parameters']['lmax'],
-            #                   function['Rc'],
-            #                   derivative=function['force'],
-            #                   stress=function['stress'],
-            #                   normalize_U=function['parameters']['normalize_U'],
-            #                   cutoff_function=function['cutoff']).calculate(data['structure'])
+            from descriptors_SO4 import SO4_Bispectrum
+            d = SO4_Bispectrum(function['parameters']['lmax'],
+                               function['Rc'],
+                               derivative=function['force'],
+                               stress=function['stress'],
+                               normalize_U=function['parameters']['normalize_U'],
+                               cutoff_function=function['cutoff']).calculate(data['structure'])
         
         elif function['type'] in ['SO3', 'SOAP', 'soap']:
             from descriptors_SO3 import SO3
@@ -432,6 +429,7 @@ def get_descriptors_parameters(symmetry, system):
 
 import ase.io
 
+# Modified by ffr, using ase.io, stress/virial is not yet read
 def parse_xyz(structure_file, N=1000000):
     data = []
     for atoms in ase.io.iread(structure_file):
@@ -444,6 +442,7 @@ def parse_xyz(structure_file, N=1000000):
         })
     return data
 
+# Modified by ffr, using ase.io, stress/virial is not yet read
 def parse_OUTCAR_comp(structure_file, N=1000000):
     data = []
     for atoms in ase.io.iread(structure_file):
