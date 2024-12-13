@@ -12,7 +12,8 @@ import torch
 import torch.nn as nn
 from torch.utils import data
 import torch.nn.functional as F
-torch.set_default_tensor_type(torch.DoubleTensor)
+#torch.set_default_tensor_type(torch.DoubleTensor)
+torch.set_default_dtype(torch.float64)
 
 import matplotlib as mpl
 mpl.use("Agg")
@@ -962,8 +963,11 @@ class NeuralNetwork():
         db1 = shelve.open(self.path+data)
         self.no_of_structures = len(list(db1.keys()))
         self.no_of_descriptors = db1['0']['x'].shape[1]
-        doit = True if not os.path.exists(self.path+data+'_norm.dat') else False
-        
+
+        #doit = True if not os.path.exists(self.path+data+'_norm.dat') else False
+        doit = True # force
+        print("doit in normalize: ", doit)
+
         if doit:
             db2 = shelve.open(self.path+data+'_norm')
 

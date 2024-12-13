@@ -47,4 +47,7 @@ model = {
 }
 
 ff = PyXtal_FF(descriptors=descriptor, model=model)
-ff.run(mode="train", TrainData=train_data)
+
+#ff.run(mode="train", TrainData=train_data)
+from debug_run_train_01 import debug_run_train
+debug_run_train(ff, TrainData=train_data)

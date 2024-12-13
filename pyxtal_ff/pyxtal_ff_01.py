@@ -90,6 +90,7 @@ class PyXtal_FF():
         nn_keywords = ['NeuralNetwork', 'NN']
         if 'algorithm' not in model:
             model['algorithm'] = 'NN'
+        # default is using NN
 
         if model['algorithm'] in pr_keywords:
             self.algorithm = 'PR'
@@ -120,8 +121,11 @@ class PyXtal_FF():
                 trainDB = Database(name=self.path+'Train_db')
                 trainDB.store(TrainData, self._descriptors, True, self.path+'ase.db')
             else:
+                # The database is already exist, just load it
+                # XXX In several case this will error if the database is not complete
                 trainDB = Database(name=self.path+'Train_db')
                 trainDB.store(TrainData, self._descriptors, False)
+            #
             trainDB.close()
 
             if TestData is not None:
