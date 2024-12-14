@@ -969,15 +969,23 @@ class NeuralNetwork():
         print("doit in normalize: ", doit)
 
         if doit:
-            db2 = shelve.open(self.path+data+'_norm')
+            db2 = shelve.open(self.path+data+'_norm') # open file for writing
+
+            print("no_of_structures = ", self.no_of_structures)
 
             for i in range(self.no_of_structures):
                 d = {'x': {}, 'dxdr': {}, 'seq': {}, 'rdxdr': {}}
                 descriptor = db1[str(i)]
 
                 for element in self.elements:
+
+                    print("element = ", element)
+
                     _drange = drange[element]
                     scale = (norm[1] - norm[0]) / (_drange[:, 1] - _drange[:, 0])
+                    print("scale = ", scale) # this is a matrix?
+                    print("_drange = ", _drange)
+                    
                     e = np.where(np.array(descriptor['elements'])==element)[0]
                     try:
                         ee0 = np.where(descriptor['seq'][:,0]==e[0])[0][0]
