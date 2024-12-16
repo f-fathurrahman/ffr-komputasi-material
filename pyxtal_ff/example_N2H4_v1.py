@@ -2,24 +2,25 @@ from pyxtal_ff_01 import PyXtal_FF
 import os
 
 # This is extended XYZ file
-train_data = "DATASET_N2H4_v1/TEMP_ATOMS_TRAIN.xyz"
+train_data = "DATASET_N2H4_v2/TEMP_ATOMS_TRAIN.xyz"
+path_model = "LOGDIR_N2H4_gabung_v1/" # need trailing /
 
 descriptor = {
-    'Rc': 3.0, # make Rc smaller to speed up the calculation
+    'Rc': 4.0, # make Rc smaller to speed up the calculation
     'type': 'SO3',
     'parameters': {'nmax': 4, 'lmax': 3},
     'ncpu': 1,
 }
  
 model = {
-    'system' : ['N', 'H'],
-    'hiddenlayers': [30, 30],
-    'force_coefficient': 1.0,
-    'epoch': 100,
-    'batch_size': 32,
-    'path': 'TEMP_N2H4_database_v2/',
-    'memory': 'out',
-    'optimizer': {'method': 'LBFGS'}
+    "system" : ["N", "H"],
+    "hiddenlayers": [30, 30],
+    "force_coefficient": 0.001,
+    "epoch": 50,
+    "batch_size": 32,
+    "path": path_model,
+    "memory": "out",
+    "optimizer": {"method": "LBFGS"}
 }
 
 #------------------------- Run NN calculation ------------------------------

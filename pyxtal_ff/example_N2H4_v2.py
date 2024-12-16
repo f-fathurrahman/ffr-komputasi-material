@@ -2,7 +2,7 @@ from pyxtal_ff_01 import PyXtal_FF
 
 # This is extended XYZ file
 train_data = "DATASET_N2H4_v2/TEMP_ATOMS_TRAIN.xyz"
-path_model = "TEMP_N2H4_v2_gabung_v3/" # need trailing /
+path_model = "LOGDIR_N2H4_PR_gabung_v1/" # need trailing /
 
 descriptor = {
     'Rc': 4.0, # make Rc smaller to speed up the calculation
@@ -15,7 +15,7 @@ model = {
     "algorithm": "PR",
     "system" : ["N", "H"],
     "path": path_model,
-    'force_coefficient': 0.5,
+    'force_coefficient': 0.001,
 }
 
 #------------------------- Run NN calculation ------------------------------
