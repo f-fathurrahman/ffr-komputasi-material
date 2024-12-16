@@ -428,22 +428,57 @@ def get_descriptors_parameters(symmetry, system):
 
 
 import ase.io
+from ase import Atoms, Atom
+
+def sort_atoms(atoms):
+    atsymbs = atoms.get_chemical_symbols()
+    positions = atoms.get_positions()
+    cell = atoms.get_cell()
+    pbc = atoms.pbc
+    forces = atoms.get_forces()
+    energy = atoms.get_potential_energy()
+
+    idx_sorted = np.argsort(atsymbs)
+
+    atoms_copy = Atoms()
+    for i in idx_sorted:
+        atoms_copy.append(Atom(atsymbs[i]))
+
+    atoms_copy.set_positions(positions[idx_sorted])
+    atoms_copy.set_cell(cell)
+    atoms_copy.set_pbc(pbc)
+
+    from ase.calculators.singlepoint import SinglePointCalculator
+    stress = None # not yet needed
+    magmoms = None
+    calc = SinglePointCalculator(
+        atoms_copy,
+        energy=energy, forces=forces[idx_sorted]
+    )
+    atoms_copy.calc = calc
+    
+    return atoms_copy
+
+
 
 # Modified by ffr, using ase.io, stress/virial is not yet read
-def parse_xyz(structure_file, N=1000000):
+# XXX For some part of the code it seems that we need to sort the atoms
+def parse_xyz(structure_file):
     data = []
     for atoms in ase.io.iread(structure_file):
+        atoms_p = sort_atoms(atoms)
         data.append({
-            'structure': atoms,
-            'energy': atoms.get_potential_energy(),
-            'force': atoms.get_forces(),
+            'structure': atoms_p,
+            'energy': atoms_p.get_potential_energy(),
+            'force': atoms_p.get_forces(),
             'stress': None,
             'group': 'random'
         })
     return data
 
 # Modified by ffr, using ase.io, stress/virial is not yet read
-def parse_OUTCAR_comp(structure_file, N=1000000):
+# XXX No need to sort the atoms, already sorted by chemical elements
+def parse_OUTCAR_comp(structure_file):
     data = []
     for atoms in ase.io.iread(structure_file):
         data.append({
