@@ -964,14 +964,10 @@ class NeuralNetwork():
         self.no_of_structures = len(list(db1.keys()))
         self.no_of_descriptors = db1['0']['x'].shape[1]
 
-        #doit = True if not os.path.exists(self.path+data+'_norm.dat') else False
-        doit = True # force
-        print("doit in normalize: ", doit)
+        doit = True if not os.path.exists(self.path+data+'_norm.dat') else False
 
         if doit:
             db2 = shelve.open(self.path+data+'_norm') # open file for writing
-
-            print("no_of_structures = ", self.no_of_structures)
 
             for i in range(self.no_of_structures):
                 d = {'x': {}, 'dxdr': {}, 'seq': {}, 'rdxdr': {}}
@@ -979,12 +975,8 @@ class NeuralNetwork():
 
                 for element in self.elements:
 
-                    print("element = ", element)
-
                     _drange = drange[element]
                     scale = (norm[1] - norm[0]) / (_drange[:, 1] - _drange[:, 0])
-                    print("scale = ", scale) # this is a matrix?
-                    print("_drange = ", _drange)
                     
                     e = np.where(np.array(descriptor['elements'])==element)[0]
                     try:
