@@ -1,9 +1,8 @@
 from pyxtal_ff_01 import PyXtal_FF
 import os
 
-#train_data = "DATASET_others/TiAl_2atoms_v01.xyz"
 train_data = "DATASET_others/TiAl_gabung.xyz"
-path_model = "TEMP_TiAl_gabung_v02/" # need trailing /
+path_model = "LOGDIR_TiAl_PR_sorted/" # need trailing /
 
 descriptor = {
     "Rc": 4.0, # make Rc smaller to speed up the calculation
@@ -19,5 +18,4 @@ model = {
 }
 
 ff = PyXtal_FF(descriptors=descriptor, model=model)
-
 ff.run(mode="train", TrainData=train_data)

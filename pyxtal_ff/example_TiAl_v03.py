@@ -1,18 +1,24 @@
 from pyxtal_ff_01 import PyXtal_FF
 
-#train_data = "DATASET_others/TiAl_2atoms_v01.xyz"
-#path_model = "LOGDIR_TiAl_2atoms_v01/" # need trailing /
-
-#train_data = "DATASET_others/TEMP_TiAl_gabung01.xyz"
-#path_model = "LOGDIR_TiAl_gabung_v02/" # need trailing /
-
 train_data = "DATASET_others/TiAl_gabung.xyz"
-path_model = "LOGDIR_TiAl_gabung_v03/" # need trailing /
+path_model = "LOGDIR_TiAl_gabung_acsf/" # need trailing /
+
+symmetry = {
+    "G2": {
+        "eta": [0.035709, 0.071418, 0.178545, 0.35709, 0.71418, 1.78545],
+        "Rs": [0]
+    },
+    "G4": {
+        "lambda": [-1, 1],
+        "zeta": [1],
+        "eta": [0.035709, 0.071418, 0.178545, 0.35709]
+    }
+}
 
 descriptor = {
-    "Rc": 4.0, # make Rc smaller to speed up the calculation
-    "type": "SO3",
-    "parameters": {"nmax": 4, "lmax": 3},
+    "type": "BehlerParrinello",
+    "parameters": symmetry,
+    "Rc": 5.0,
     "ncpu": 1,
 }
 
