@@ -851,6 +851,9 @@ class PrimitiveNeighborList:
     """
     def __init__(self, cutoffs, skin=0.3, sorted=False, self_interaction=True,
                  bothways=False, use_scaled_positions=False):
+        
+        print("\nEnter PrimitiveNeighborList")
+
         self.cutoffs = np.asarray(cutoffs) + skin
         self.skin = skin
         self.sorted = sorted
@@ -864,10 +867,14 @@ class PrimitiveNeighborList:
     def update(self, pbc, cell, coordinates):
         """Make sure the list is up to date."""
 
+        print("\nEnter update of PrimitiveNeighborList")
+
         if self.nupdates == 0:
             self.build(pbc, cell, coordinates)
+            # early return
             return True
 
+        # check?
         if ((self.pbc != pbc).any() or (self.cell != cell).any() or
             ((self.coordinates - coordinates)**2).sum(1).max() > self.skin**2):
             self.build(pbc, cell, coordinates)
@@ -881,6 +888,10 @@ class PrimitiveNeighborList:
         Coordinates are taken to be scaled or not according
         to self.use_scaled_positions.
         """
+        
+        print("\nEnter build of PrimitiveNeighborList")
+        print(f"use_scaled_positions = {self.use_scaled_positions}")
+
         self.pbc = pbc = np.array(pbc, copy=True)
         self.cell = cell = Cell(cell)
         self.coordinates = coordinates = np.array(coordinates, copy=True)
@@ -894,15 +905,24 @@ class PrimitiveNeighborList:
         else:
             rcmax = 0.0
 
+        # convert the coordinates if using scaled positions
+        # default is no
         if self.use_scaled_positions:
             positions0 = cell.cartesian_positions(coordinates)
         else:
             positions0 = coordinates
 
+        # why this?
         rcell, op = minkowski_reduce(cell, pbc)
+        print("rcell = ", rcell)
+
         positions = wrap_positions(positions0, rcell, pbc=pbc, eps=0)
+        print("positions = ", positions)
 
         natoms = len(positions)
+        print("natoms = ", natoms)
+        print("positions.shape = ", positions.shape)
+
         self.nneighbors = 0
         self.npbcneighbors = 0
         self.neighbors = [np.empty(0, int) for a in range(natoms)]
