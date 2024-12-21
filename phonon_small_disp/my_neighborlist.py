@@ -852,7 +852,7 @@ class PrimitiveNeighborList:
     def __init__(self, cutoffs, skin=0.3, sorted=False, self_interaction=True,
                  bothways=False, use_scaled_positions=False):
         
-        print("\nEnter PrimitiveNeighborList")
+        #print("\nEnter PrimitiveNeighborList")
 
         self.cutoffs = np.asarray(cutoffs) + skin
         self.skin = skin
@@ -867,7 +867,7 @@ class PrimitiveNeighborList:
     def update(self, pbc, cell, coordinates):
         """Make sure the list is up to date."""
 
-        print("\nEnter update of PrimitiveNeighborList")
+        #print("\nEnter update of PrimitiveNeighborList")
 
         if self.nupdates == 0:
             self.build(pbc, cell, coordinates)
@@ -889,7 +889,7 @@ class PrimitiveNeighborList:
         to self.use_scaled_positions.
         """
         
-        print("\nEnter build of PrimitiveNeighborList")
+        #print("\nEnter build of PrimitiveNeighborList")
         print(f"use_scaled_positions = {self.use_scaled_positions}")
 
         self.pbc = pbc = np.array(pbc, copy=True)
@@ -914,14 +914,14 @@ class PrimitiveNeighborList:
 
         # why this?
         rcell, op = minkowski_reduce(cell, pbc)
-        print("rcell = ", rcell)
+        #print("rcell = ", rcell)
 
         positions = wrap_positions(positions0, rcell, pbc=pbc, eps=0)
-        print("positions = ", positions)
+        #print("positions = ", positions)
 
         natoms = len(positions)
-        print("natoms = ", natoms)
-        print("positions.shape = ", positions.shape)
+        #print("natoms = ", natoms)
+        #print("positions.shape = ", positions.shape)
 
         self.nneighbors = 0
         self.npbcneighbors = 0

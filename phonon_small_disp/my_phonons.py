@@ -185,11 +185,15 @@ class MyDisplacement:
         offset = natoms * self.offset
         pos = atoms_N.positions[offset: offset + natoms].copy()
 
+        print("self.indices = ", self.indices)
+        print("offset = ", offset)
+
         # Loop over all displacements
         for a in self.indices:
             for i in range(3):
                 for sign in [-1, 1]:
                     disp = self._disp(a, i, sign)
+                    print("disp = ", disp) # this is a Displacement object?
                     # key = '%s.%d%s%s' % (self.name, a, 'xyz'[i], ' +-'[sign])
                     with self.cache.lock(disp.name) as handle:
                         if handle is None:
@@ -314,6 +318,7 @@ class MyPhonons(MyDisplacement):
 
     def __call__(self, atoms_N):
         """Calculate forces on atoms in supercell."""
+        print("Will compute forces")
         return atoms_N.get_forces()
 
     def calculate(self, atoms_N, disp):
