@@ -66,10 +66,11 @@ def debug_phonon_read(phonon, method="Frederiksen", symmetrize=3, acoustic=True,
     if symmetrize:
         for i in range(symmetrize):
             # Symmetrize
-            C_N = phonon.symmetrize(C_N)
+            C_N = ph_symmetrize(phonon, C_N)
             # Restore acoustic sum-rule
             if acoustic:
-                phonon.acoustic(C_N)
+                ph_acoustic(phonon, C_N)
+                #phonon.acoustic(C_N)
             else:
                 break
 
@@ -192,3 +193,50 @@ def compute_dynamical_matrix(phonon, q_scaled: np.ndarray, D_N: np.ndarray):
     phase_N = np.exp(-2.j * pi * np.dot(q_scaled, R_cN))
     D_q = np.sum(phase_N[:, np.newaxis, np.newaxis] * D_N, axis=0)
     return D_q
+
+
+# 
+def ph_symmetrize(phonon, C_N):
+
+    # Number of atoms
+    natoms = len(phonon.indices)
+    # Number of unit cells
+    N = np.prod(phonon.supercell)
+
+    # Reshape force constants to (l, m, n) cell indices
+    C_lmn = C_N.reshape(phonon.supercell + (3 * natoms, 3 * natoms))
+
+    # Shift reference cell to center index
+    if phonon.offset == 0:
+        C_lmn = fft.fftshift(C_lmn, axes=(0, 1, 2)).copy()
+    # Make force constants symmetric in indices -- in case of an even
+    # number of unit cells don't include the first cell
+    i, j, k = 1 - np.asarray(phonon.supercell) % 2
+    C_lmn[i:, j:, k:] *= 0.5
+    C_lmn[i:, j:, k:] += \
+        C_lmn[i:, j:, k:][::-1, ::-1, ::-1].transpose(0, 1, 2, 4, 3).copy()
+    if phonon.offset == 0:
+        C_lmn = fft.ifftshift(C_lmn, axes=(0, 1, 2)).copy()
+
+    # Change to single unit cell index shape
+    C_N = C_lmn.reshape((N, 3 * natoms, 3 * natoms))
+
+    return C_N
+
+
+def ph_acoustic(phonon, C_N):
+    """Restore acoustic sumrule on force constants."""
+
+    # Number of atoms
+    natoms = len(phonon.indices)
+    # Copy force constants
+    C_N_temp = C_N.copy()
+
+    # Correct atomic diagonals of R_m = (0, 0, 0) matrix
+    for C in C_N_temp:
+        for a in range(natoms):
+            for a_ in range(natoms):
+                C_N[phonon.offset,
+                    3 * a: 3 * a + 3,
+                    3 * a: 3 * a + 3] -= C[3 * a: 3 * a + 3,
+                                            3 * a_: 3 * a_ + 3]

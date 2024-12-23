@@ -22,4 +22,4 @@ ph.clean()
 print("ph.D_N.shape = ", ph.D_N.shape)
 
 path = atoms.cell.bandpath("GXULGK", npoints=100)
-bs = get_band_structure(ph, path)
+bs = get_band_structure(ph, path) #XXX cannot compute modes?
