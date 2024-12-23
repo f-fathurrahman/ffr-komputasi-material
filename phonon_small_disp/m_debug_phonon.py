@@ -62,6 +62,7 @@ def debug_phonon_read(phonon, method="Frederiksen", symmetrize=3, acoustic=True,
         phonon.apply_cutoff(C_N, cutoff)
 
     # Symmetrize force constants
+    print("symmetrize = ", symmetrize)
     if symmetrize:
         for i in range(symmetrize):
             # Symmetrize
@@ -98,33 +99,6 @@ def get_band_structure(phonon, path, modes=False, born=False, verbose=True):
 
 
 def band_structure(phonon, path_kc, modes=False, born=False, verbose=True):
-    """Calculate phonon dispersion along a path in the Brillouin zone.
-
-    The dynamical matrix at arbitrary q-vectors is obtained by Fourier
-    transforming the real-space force constants. In case of negative
-    eigenvalues (squared frequency), the corresponding negative frequency
-    is returned.
-
-    Frequencies and modes are in units of eV and Ang/sqrt(amu),
-    respectively.
-
-    Parameters:
-
-    path_kc: ndarray
-        List of k-point coordinates (in units of the reciprocal lattice
-        vectors) specifying the path in the Brillouin zone for which the
-        dynamical matrix will be calculated.
-    modes: bool
-        Returns both frequencies and modes when True.
-    born: bool
-        Include non-analytic part given by the Born effective charges and
-        the static part of the high-frequency dielectric tensor. This
-        contribution to the force constant accounts for the splitting
-        between the LO and TO branches for q -> 0.
-    verbose: bool
-        Print warnings when imaginary frequncies are detected.
-
-    """
 
     assert phonon.D_N is not None
     if born:
@@ -144,6 +118,8 @@ def band_structure(phonon, path_kc, modes=False, born=False, verbose=True):
     vol = abs(la.det(phonon.atoms.cell)) / units.Bohr**3
 
     for q_c in path_kc:
+
+        print("q_c = ", q_c)
 
         # Add non-analytic part
         if born:
@@ -170,6 +146,7 @@ def band_structure(phonon, path_kc, modes=False, born=False, verbose=True):
         D_q = compute_dynamical_matrix(phonon, q_c, D_N)
 
         if modes:
+            # compute both eigenvalues and eigenvectors
             omega2_l, u_xl = la.eigh(D_q, UPLO='U')
             # Sort eigenmodes according to eigenvalues (see below) and
             # multiply with mass prefactor
@@ -177,6 +154,7 @@ def band_structure(phonon, path_kc, modes=False, born=False, verbose=True):
                     u_xl[:, omega2_l.argsort()]).T.copy()
             u_kl.append(u_lx.reshape((-1, len(phonon.indices), 3)))
         else:
+            # only compute eigenvalues
             omega2_l = la.eigvalsh(D_q, UPLO='U')
 
         # Sort eigenvalues in increasing order
@@ -209,21 +187,6 @@ def band_structure(phonon, path_kc, modes=False, born=False, verbose=True):
 
 
 def compute_dynamical_matrix(phonon, q_scaled: np.ndarray, D_N: np.ndarray):
-    """ Computation of the dynamical matrix in momentum space D_ab(q).
-        This is a Fourier transform from real-space dynamical matrix D_N
-        for a given momentum vector q.
-
-    q_scaled: q vector in scaled coordinates.
-
-    D_N: the dynamical matrix in real-space. It is necessary, at least
-            currently, to provide this matrix explicitly (rather than use
-            self.D_N) because this matrix is modified by the Born charges
-            contributions and these modifications are momentum (q) dependent.
-
-    Result:
-        D(q): two-dimensional, complex-valued array of
-                shape=(3 * natoms, 3 * natoms).
-    """
     # Evaluate fourier sum
     R_cN = phonon._lattice_vectors_array
     phase_N = np.exp(-2.j * pi * np.dot(q_scaled, R_cN))
