@@ -21,9 +21,6 @@ function test_noneig
 % alist = [1 10 100 1000];
 nlist = 2000; plist = 10; alist = 100;
 
-% whether to save the output information, default is 0
-dosave = 1;
-
 % set tolerance for ARNT
 gtol = 1e-12;
 
@@ -32,17 +29,6 @@ filesrc = strcat(pwd,filesep,'results');
 if ~exist(filesrc, 'dir');     mkdir(filesrc);   end
 filepath = strcat(filesrc, filesep, 'noneig');
 if ~exist(filepath, 'dir');    mkdir(filepath);  end
-
-if dosave
-    filename = strcat(filepath,filesep,'Date_',...
-        num2str(date),'noneig','.txt');
-    fid = fopen(filename,'w+');
-    fprintf(fid,'\n');
-    fprintf(fid,' & \t \\multicolumn{4}{c|}{ARNT}');
-    fprintf(fid,'\\\\ \\hline \n');
-    fprintf(fid,'Prob \t & fval \t  & \t  its \t & \t nrmG    &\t time');
-    fprintf(fid,'\\\\ \\hline \n');
-end
 
 % loop
 for n = nlist
@@ -81,7 +67,7 @@ for n = nlist
             opts.fun_extra = @fun_extra;
             
             % set default parameters for ARNT
-            opts.record = 1; % 0 for slient, 1 for outer iter. info., 2 or more for all iter. info.
+            opts.record = 2; % 0 for slient, 1 for outer iter. info., 2 or more for all iter. info.
             opts.xtol = 1e-12;
             opts.ftol = 1e-12;
             opts.gtol = gtol;
@@ -99,21 +85,14 @@ for n = nlist
             fprintf('ARNT|  f: %8.6e, nrmG: %2.1e, cpu: %4.2f, OutIter: %3d, InnerIter: %4d, nfe: %4d,\n',...
                 out_ARNT.fval, out_ARNT.nrmG, tsolve_ARNT, out_ARNT.iter, sum(out_ARNT.iter_sub), out_ARNT.nfe);
             
-            % save info.
-            if dosave
-                name = strcat('noneig-','n-',num2str(n),'-p-',num2str(p),'-al-',num2str(alpha));
-                save(strcat(filepath, filesep,'ARNT-',name), 'out_ARNT', 'tsolve_ARNT');
-                fprintf(fid,'ARNT & %14.8e &%4d(%4.0f)    & \t %1.1e &\t %6.1f \\\\ \\hline \n', ...
-                    out_ARNT.fval, out_ARNT.iter, sum(out_ARNT.iter_sub)/out_ARNT.iter, out_ARNT.nrmG, tsolve_ARNT);
-            end
-            
         end
     end
     
 end
 
-if dosave; fclose(fid);  end
-
+%
+% Inner functions
+%
 
     function [f,g] = fun(X,~)
         LX = L*X;
