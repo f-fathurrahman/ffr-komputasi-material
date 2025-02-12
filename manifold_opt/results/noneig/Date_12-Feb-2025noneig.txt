@@ -1,0 +1,4 @@
+
+ & 	 \multicolumn{4}{c|}{ARNT}\\ \hline 
+Prob 	 & fval 	  & 	  its 	 & 	 nrmG    &	 time\\ \hline 
+ARNT & 2.75967660e+03 &   3(  10)    & 	 2.0e-06 &	    0.1 \\ \hline 
