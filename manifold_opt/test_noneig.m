@@ -39,7 +39,10 @@ for n = nlist
             if exist('RandStream','file')
                 RandStream.setGlobalStream(RandStream('mt19937ar','seed',seed));
             else
-                randrot('state',seed); randn('state',seed);
+                disp('WARNING: Not setting random seed')
+                % set seed for what?
+                %randrot('state', seed);
+                %randn('state',seed);
             end
             
             fprintf('\n------- (n,p,alpha) = (%d, %d, %.1f)----\n',n,p, alpha);
