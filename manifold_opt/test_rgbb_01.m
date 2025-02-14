@@ -1,5 +1,5 @@
 %-------------------
-function test_noneig
+function test_rgbb_01
 %-------------------
 
 clear variables; close all;
@@ -58,12 +58,12 @@ opts.usenumstab = 1;
 
 % run ARNT
 t0 = tic;
-[~, ~, out_ARNT] = arnt(X0, @fun, M, opts);
-tsolve_ARNT = toc(t0);
+[~, ~, out_RGBB] = RGBB(X0, @fun, M, opts);
+tsolve_RGBB = toc(t0);
             
 % print info. in command line
-fprintf('ARNT|  f: %8.6e, nrmG: %2.1e, cpu: %4.2f, OutIter: %3d, InnerIter: %4d, nfe: %4d,\n',...
-    out_ARNT.fval, out_ARNT.nrmG, tsolve_ARNT, out_ARNT.iter, sum(out_ARNT.iter_sub), out_ARNT.nfe);
+fprintf('RGBB|  f: %8.6e, nrmG: %2.1e, cpu: %4.2f, OutIter: %3d, nfe: %4d,\n',...
+    out_RGBB.fval, out_RGBB.nrmG, tsolve_RGBB, out_RGBB.iter, out_RGBB.nfe);
 
 
 %
