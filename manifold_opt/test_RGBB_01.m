@@ -1,7 +1,3 @@
-%-------------------
-function test_rgbb_01
-%-------------------
-
 clear variables; close all;
 
 n = 2000;
@@ -43,9 +39,8 @@ X0 = U0;
 M = stiefelfactory(n,p);
 
 % identify Eculidean gradient and Hessian
-opts.hess = @hess;
-opts.grad = @grad;
-opts.fun_extra = @fun_extra;
+opts.grad = @PROB01_grad;
+opts.fun_extra = @PROB01_fun_extra;
 
 % set default parameters for ARNT
 opts.record = 2; % 0 for slient, 1 for outer iter. info., 2 or more for all iter. info.
@@ -58,54 +53,9 @@ opts.usenumstab = 1;
 
 % run ARNT
 t0 = tic;
-[~, ~, out_RGBB] = RGBB(X0, @fun, M, opts);
+[~, ~, out_RGBB] = debug_RGBB(X0, @PROB01_fun, M, opts, L, Lu, Ll, alpha);
 tsolve_RGBB = toc(t0);
             
 % print info. in command line
 fprintf('RGBB|  f: %8.6e, nrmG: %2.1e, cpu: %4.2f, OutIter: %3d, nfe: %4d,\n',...
     out_RGBB.fval, out_RGBB.nrmG, tsolve_RGBB, out_RGBB.iter, out_RGBB.nfe);
-
-
-%
-% Inner functions
-%
-function [f,g] = fun(X,~)
-    LX = L*X;
-    rhoX = sum(X.^2, 2); % diag(X*X');
-    tempa = Lu\(Ll\rhoX); tempa = alpha*tempa;
-    
-    f = 0.5*sum(sum(X.*(LX))) + 1/4*(rhoX'*tempa);
-    g = LX + bsxfun(@times,tempa,X);
-end
-
-function data = fun_extra(data)
-    
-    XP = data.XP;
-    data.rhoX = sum(XP.^2,2);
-    
-end
-
-function g = grad(X)
-    rhoX = sum(X.^2, 2); % diag(X*X');
-    tempa = Lu\(Ll\rhoX); tempa = alpha*tempa;
-    g = L*X + bsxfun(@times,tempa,X);
-end
-
-
-function h = hess(X, U, data)
-    
-    rhoX = data.rhoX;
-    rhoXdot = 2*sum(X.*U, 2);
-    tempa = Lu\(Ll\rhoXdot);
-    tempa = alpha*tempa;
-    tempb = Lu\(Ll\rhoX);
-    tempb = alpha*tempb;
-    if isfield(data,'sigma')
-        h = L*U + bsxfun( @times,tempa,X) + bsxfun(@times, tempb + data.sigma, U);
-    else
-        h = L*U + bsxfun( @times,tempa,X) + bsxfun(@times, tempb, U);
-    end
-end
-
-
-end % function
