@@ -42,7 +42,6 @@ M = stiefelfactory(n,p);
 opts.grad = @PROB01_grad;
 opts.fun_extra = @PROB01_fun_extra;
 
-% set default parameters for ARNT
 opts.record = 2; % 0 for slient, 1 for outer iter. info., 2 or more for all iter. info.
 opts.xtol = 1e-12;
 opts.ftol = 1e-12;
@@ -51,9 +50,8 @@ opts.maxit = 500;
 opts.tau = 1;
 opts.usenumstab = 1;
 
-% run ARNT
 t0 = tic;
-[~, ~, out_RGBB] = debug_RGBB(X0, @PROB01_fun, M, opts, L, Lu, Ll, alpha);
+[~, ~, out_RGBB] = my_RGBB(X0, @PROB01_fun, M, opts, L, Lu, Ll, alpha);
 tsolve_RGBB = toc(t0);
             
 % print info. in command line

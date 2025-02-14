@@ -1,6 +1,6 @@
-function [x, f, out] = debug_RGBB(x, fun, M, opts, varargin)
+function [x, f, out] = my_RGBB(x, fun, M, opts, varargin)
 
-    if nargin < 3
+if nargin < 3
     error('at least three inputs: [x, f, out] = RGBB(x, fun, M, opts)');
 elseif nargin < 4
     opts = [];
