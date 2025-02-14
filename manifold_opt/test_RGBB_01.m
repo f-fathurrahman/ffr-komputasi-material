@@ -46,7 +46,7 @@ opts.record = 2; % 0 for slient, 1 for outer iter. info., 2 or more for all iter
 opts.xtol = 1e-12;
 opts.ftol = 1e-12;
 opts.gtol = gtol;
-opts.maxit = 500;
+opts.maxit = 1; % debug
 opts.tau = 1;
 opts.usenumstab = 1;
 

@@ -1,15 +1,64 @@
-function [x, f, out] = my_RGBB(x, fun, M, opts, varargin)
+clear variables; close all;
 
-if nargin < 3
-    error('at least three inputs: [x, f, out] = RGBB(x, fun, M, opts)');
-elseif nargin < 4
-    opts = [];
+n = 2000;
+p = 10;
+alpha_potential = -10;
+
+% set tolerance for ARNT
+gtol = 1e-12;
+
+% loop      
+seed = 2010;
+if exist('RandStream','file')
+    RandStream.setGlobalStream(RandStream('mt19937ar','seed',seed));
+else
+    disp('WARNING: Not setting random seed')
+    % set seed for what?
+    %randrot('state', seed);
+    %randn('state',seed);
 end
 
+fprintf('\n------- (n, p, alpha_potential) = (%d, %d, %.1f)----\n',n,p, alpha_potential);
+
+% generate L
+L = gallery('tridiag', n, -1, 2, -1);
+[Ll,Lu] = lu(L);
+
+% intial point
+X = randn(n, p);
+[U, ~, V] = svd(X, 0);
+X_init = U*V';
+tempM2 = alpha_potential*(L\(sum(X_init.^2,2)));
+tempM2 = spdiags(tempM2,0,n,n);
+tempM = L + tempM2;
+% XXX why need to call eigs?
+[U0, ~, ~] = eigs(tempM, p, 'sm');
+X0 = U0;
+
+% Stiefel manifold
+M = stiefelfactory(n,p);
+
+% set default parameters for ARNT
+opts.record = 2; % 0 for slient, 1 for outer iter. info., 2 or more for all iter. info.
+opts.xtol = 1e-12;
+opts.ftol = 1e-12;
+opts.gtol = gtol;
+opts.maxit = 500;
+opts.tau = 1;
+opts.usenumstab = 1;
+
+% [~, ~, out_RGBB] = my_RGBB(X0, @PROB01_fun, M, opts, L, Lu, Ll, alpha);
+
+% RGBB starts here
+% function [x, f, out] = my_RGBB(x, fun, M, opts, varargin)
+x = X0;
+clear U0 X0;
+fprintf("sum initial x = %18.10f\n", sum(sum(x)));
+
 % termination rule
-if ~isfield(opts, 'gtol');      opts.gtol = 1e-6;  end % 1e-5
-if ~isfield(opts, 'xtol');      opts.xtol = 1e-6;  end % 1e-6
-if ~isfield(opts, 'ftol');      opts.ftol = 1e-13; end % 1e-13
+if ~isfield(opts, 'gtol'); opts.gtol = 1e-6;  end
+if ~isfield(opts, 'xtol'); opts.xtol = 1e-6;  end
+if ~isfield(opts, 'ftol'); opts.ftol = 1e-13; end
 
 % parameters for control the linear approximation in line search,
 if ~isfield(opts, 'alpha');     opts.alpha  = 1e-3;   end
@@ -24,16 +73,6 @@ if ~isfield(opts, 'record');    opts.record = 0;      end
 if ~isfield(opts, 'radius');    opts.radius = 1;      end
 if isfield(opts,  'nt');         opts.nt = 5;          end
 
-hasRecordFile = 0;
-if isfield(opts, 'recordFile')
-    fid = fopen(opts.recordFile,'w+'); hasRecordFile = 1;
-end
-
-% initial guess
-if ~exist('x', 'var') || isempty(x)
-    x = problem.M.rand();
-end
-
 % copy parameters
 gtol = opts.gtol;
 xtol = opts.xtol;
@@ -47,37 +86,22 @@ record = opts.record;
 nt = opts.nt;
 alpha = opts.alpha;
 
-fprintf("sum initial x = %18.10f\n", sum(sum(x)));
+
 % initial function value and gradient
-[f, ge] = feval(fun, x, varargin{:});
+[f, ge] = PROB01_fun(x, L, Lu, Ll, alpha_potential);
 fprintf('Initial function value = %18.10f\n', f);
 g = M.egrad2rgrad(x, ge);
 
 % norm
-if isstruct(g)
-    matG = M.tangent2ambient(x,g);
-    nrmG = norm(matG,'fro');
-else
-    nrmG = norm(g,'fro');
-end
-
-if isstruct(x)
-    matX = x.U*x.S*x.V';
-end
+nrmG = norm(g, 'fro');
 
 % initial iter. information 
-out.nfe = 1; Q = 1; Cval = f; out.fval0 = f;
+out.nfe = 1;
+Q = 1;
+Cval = f;
+out.fval0 = f;
 
-%% Print iteration header if debug == 1
-
-if hasRecordFile 
-    fprintf(fid,'%4s \t %10s \t %10s \t  %10s \t %10s \t %10s \t %10s \t %10s\n', ...
-        'Iter', 'f(X)', 'Cval', 'nrmG', 'XDiff', 'FDiff', 'nls', 'alpha');
-end
-
-if record == 10; out.fvec = f; end
 out.msg = 'exceed max iteration';
-
 if record
     str1 = '    %6s';
     stra = ['%6s','%12s  ','%12s  ',str1,str1,str1,'   %.5s','  %.6s','\n'];
@@ -90,18 +114,19 @@ end
 % loop
 for iter = 1:maxit
     
-    xp = x; gp = g; fp = f; 
-    if isstruct(x), matXP = matX; end 
-    if isstruct(g), matGP = matG; end
-    nls = 1; deriv = rhols*nrmG^2; 
+    xp = x;
+    gp = g;
+    fp = f; 
+    nls = 1;
+    deriv = rhols*nrmG^2; 
     d = M.lincomb(x, -1, g);
     
     % curvilinear search
     while 1
-        
+        %
         x = M.retr(xp, d, alpha);
-        [f,ge] = feval(fun, x, varargin{:});
-        
+        % Evaluate function and its gradient
+        [f, ge] = PROB01_fun(x, L, Lu, Ll, alpha_potential);
         out.nfe = out.nfe + 1;
         if f <=  Cval - alpha*deriv || nls >= 5
             break
@@ -111,19 +136,12 @@ for iter = 1:maxit
     end
     
     % Riemannian gradient
-    g = M.egrad2rgrad(x,ge); 
+    g = M.egrad2rgrad(x, ge);
     
     % norm
-    if isstruct(g)
-        matG = M.tangent2ambient(x,g);
-        nrmG = norm(matG,'fro');
-    else
-        nrmG = M.norm(x,g);
-    end
+    nrmG = M.norm(x,g);
     
     out.nrmGvec(iter) = nrmG;
-
-    if record == 10; out.fvec = [out.fvec; f]; end
     
     % difference of x
     if isstruct(x)
@@ -144,13 +162,7 @@ for iter = 1:maxit
         fprintf(str_num, iter, f, Cval, nrmG, XDiff, FDiff, nls, alpha);
     end
     
-    if hasRecordFile 
-        fprintf(fid,...
-         '%4d\t %14.13e\t %14.13e\t %3.2e\t %3.2e\t %3.2e\t %2d\t %3.2e\n', ...
-            iter, f, Cval, nrmG, XDiff, FDiff, nls, alpha);
-    end
-    
-    
+    % FIXME: preallocate this?
     % check stopping
     crit(iter) = FDiff;
     mcrit = mean(crit(iter-min(nt,iter)+1:iter));
@@ -175,10 +187,13 @@ for iter = 1:maxit
     end
     
     % BB step size
-    sy = abs(iprod(s,y));
+    sy = abs(euclidian_iprod(s,y));
     if sy > 0
-        if mod(iter,2)==0; alpha = norm(s, 'fro')^2/sy;
-        else alpha = sy/ norm(y, 'fro')^2; end
+        if mod(iter,2)==0
+            alpha = norm(s, 'fro')^2/sy;
+        else
+            alpha = sy/ norm(y, 'fro')^2;
+        end
         % safeguarding on alpha
         alpha = max(min(alpha, 1e20), 1e-20);
     end
@@ -193,8 +208,6 @@ out.fval = f;
 out.iter = iter;
 
 % Euclidean inner product
-function a = iprod(x,y)
+function a = euclidian_iprod(x,y)
   a = real(sum(sum(conj(x).*y)));
-end
-
 end

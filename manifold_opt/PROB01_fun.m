@@ -1,6 +1,3 @@
-%
-% Inner functions
-%
 function [f,g] = PROB01_fun(X, L, Lu, Ll, alpha)
     LX = L*X;
     rhoX = sum(X.^2, 2); % diag(X*X');
