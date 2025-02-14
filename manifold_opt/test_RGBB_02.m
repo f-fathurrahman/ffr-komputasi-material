@@ -2,7 +2,7 @@ clear variables; close all;
 
 n = 2000;
 p = 10;
-alpha_potential = -10;
+alpha_potential = 1000;
 
 % set tolerance for ARNT
 gtol = 1e-12;
@@ -108,7 +108,7 @@ if record
     str_head = sprintf(stra,...
         'iter', 'F','Cval', 'nrmG', 'XDiff', 'FDiff', 'nls', 'alpha');
     str1 = '  %3.2e';
-    str_num = ['%4d','  %14.8e', '  %14.8e', str1,str1,str1, '  %d','  %3.2e','\n'];
+    str_num = ['%4d','  %18.10e', '  %18.10e', str1,str1,str1, '  %d','  %3.2e','\n'];
 end
 
 % loop
@@ -144,12 +144,7 @@ for iter = 1:maxit
     out.nrmGvec(iter) = nrmG;
     
     % difference of x
-    if isstruct(x)
-        matX = x.U*x.S*x.V';
-        s = matX - matXP;
-    else
-        s = x - xp;
-    end
+    s = x - xp;
     
     XDiff = norm(s,'inf')/alpha; % (relative Xdiff) ~ g
     FDiff = abs(f-fp)/(abs(fp)+1);
