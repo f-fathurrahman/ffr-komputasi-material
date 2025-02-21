@@ -1,21 +1,26 @@
 import numpy as np
 from mod_lsqt_01 import *
 
-Nx = 3
-Ny = 3
+Nx = 10
+Ny = 10
 W = 1.0
 
 N = Nx * Ny; # total number of sites
+
 row_H = np.zeros(N * 4 - Nx * 2) # the row indices for H
 col_H = np.zeros(N * 4 - Nx * 2) # the column indices for H
 Hij = -np.ones(N * 4 - Nx * 2, complex) # nonzero Hamiltonian elements
+
 row_V = np.zeros(N * 2) # row indices for V
 col_V = np.zeros(N * 2) # column indices for V
 Vij = np.zeros(N * 2, complex) # nonzero velocity matrix elements
+
 row_U = np.arange(0, N) # row and column indices for U
-Uij = np.random.uniform(-W * 0.5, W * 0.5, N) # on-site potentials
+Uij = 1.234*np.ones(N) # np.random.uniform(-W * 0.5, W * 0.5, N) # on-site potentials
+
 count_H = 0 # number of nonzero H elements
 count_V = 0 # number of nonzero V elements
+
 for nx in range(Nx):
     for ny in range(Ny):
         # (0) # get the index of the center site
