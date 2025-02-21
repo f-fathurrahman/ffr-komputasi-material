@@ -1,13 +1,11 @@
-import numpy as np              # used frequently
-import matplotlib.pyplot as plt # used for plotting
-from scipy import sparse        # crucial for performance
-from scipy import special       # for Bessel function
-
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import sparse
+from scipy import special
 
 def find_index(nx, ny, Ny):
     index = nx * Ny + ny
     return index
-
 
 def find_H(Nx, Ny, W):
     N = Nx * Ny; # total number of sites
@@ -232,100 +230,3 @@ def lsqt(Nx, Ny, W, M, E_max, E, dt):
     print("... end of find MSD")
 
     return DOS, VAC, sigma_from_VAC, MSD, sigma_from_MSD
-
-
-def test_lsqt_v01():
-    # (1) Prepare some parameters
-    Nx = 50000 # 0                       # length
-    Ny = 2                            # width
-    W = 0                             # no disorder in this example
-    E_max = 3.1                       # energy scaling factor
-    M = 1000                          # number of Chebyshev moments
-    E = np.linspace(-3, 3, num = 601) # energy points
-    dt = np.ones(10)                  # time steps
-
-    # (2) Calculate physical quantities
-    DOS, VAC, sigma_from_VAC, MSD, sigma_from_MSD = lsqt(Nx, Ny, W, M, E_max, E, dt)
-    v_F = np.sqrt(VAC[0, :])                        # Fermi velocity
-    g = Ny * DOS * v_F * 0.5                        # conductance
-    g *= 2.0 * np.pi                                # from e^2/hbar to e^2/h
-
-    # (3) Get similar plots as in Figs. 5 and 6 in the review paper
-
-    plt.figure
-    plt.plot(np.arange(10.0), VAC[:, 301], 'bo')
-    plt.xlabel('Time ($\hbar/\gamma$)')
-    plt.ylabel('VAC ($a^2\gamma^2/\hbar^2$)')
-    plt.ylim(0, 4)
-    plt.show()
-
-    plt.figure
-    plt.plot(np.arange(1.0, 11.0, 1.0), MSD[:, 301], 'bo')
-    plt.xlabel('Time ($\hbar/\gamma$)')
-    plt.ylabel('MSD ($a^2$)')
-    plt.show()
-
-    plt.figure
-    plt.plot(E, DOS)
-    plt.xlabel('Energy ($\gamma$)')
-    plt.ylabel('DOS ($1/\gamma/a^2$)')
-    plt.show()
-
-    plt.figure
-    plt.plot(E, v_F)
-    plt.xlabel('Energy ($\gamma$)')
-    plt.ylabel('v ($a\gamma/\hbar$)')
-    plt.show()
-
-    plt.figure
-    plt.plot(E, g)
-    plt.xlabel('Energy ($\gamma$)')
-    plt.ylabel('g ($e^2/h$)')
-    plt.show()
-
-def test_lsqt_v02():
-    # (1) Prepare some parameters
-    Nx = 20000                         # length
-    Ny = 50                            # width
-    W = 1.0                            # disordered
-    E_max = 5.1                        # energy scaling factor
-    M = 1000                           # number of Chebyshev moments
-    E = np.linspace(-5, 5, num = 1001) # energy points
-    dt = np.ones(20) * 2.0             # time steps
-
-    # (2) Calculate physical quantities
-    DOS, VAC, sigma_from_VAC, MSD, sigma_from_MSD = lsqt(Nx, Ny, W, M, E_max, E, dt)
-
-    # (3) Get plots similar to those in Fig. 7 in the review paper
-    plt.figure
-    plt.plot(np.arange(0.0, 40.0, 2.0), VAC[:, 501], 'bo')
-    plt.xlabel('Time ($\hbar/\gamma$)')
-    plt.ylabel('VAC ($a^2\gamma^2/\hbar^2$)')
-    plt.show()
-
-    plt.figure
-    plt.plot(np.arange(2.0, 42.0, 2.0), MSD[:, 501], 'rd')
-    plt.xlabel('Time ($\hbar/\gamma$)')
-    plt.ylabel('MSD ($a^2$)')
-    plt.show()
-
-    plt.figure
-    plt.plot(np.arange(0.0, 40.0, 2.0), sigma_from_VAC[:, 501], 'bo')
-    plt.plot(np.arange(1.0, 41.0, 2.0), sigma_from_MSD[:, 501], 'rd')
-
-
-    plt.xlabel('Time ($\hbar/\gamma$)')
-    plt.ylabel('$\sigma$ ($e^2/h$)')
-    plt.show()
-
-    plt.figure
-    plt.plot(E, np.amax(sigma_from_VAC, axis=0), 'bo')
-    plt.plot(E, np.amax(sigma_from_MSD, axis=0), 'rd')
-    plt.xlabel('Energy ($\gamma$)')
-    plt.ylabel('$\sigma_{sc}$ ($e^2/h$)')
-    plt.show()
-
-
-
-
-test_lsqt_v01()
