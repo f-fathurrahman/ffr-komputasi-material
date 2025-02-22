@@ -1,6 +1,7 @@
 using LinearAlgebra: dot, norm
 using Printf
 using SparseArrays
+using SpecialFunctions: besselj
 using Infiltrator
 
 function gen_idx_xy2ip(Nx, Ny)
@@ -117,7 +118,7 @@ function jackson_damping(M)
     return g
 end
 
-function find_moments(M, H_scaled, ϕ_l, ϕ_r)
+function calc_moments(M, H_scaled, ϕ_l, ϕ_r)
     #
     C = zeros(Float64, M)
     #
@@ -136,7 +137,7 @@ function find_moments(M, H_scaled, ϕ_l, ϕ_r)
     return C
 end
 
-function chebyshev_summation(M, C, E_scaled, E_max)
+function sum_chebyshev(M, C, E_scaled, E_max)
     g = jackson_damping(M) # get the damping factor
     C .*= g                 # apply the damping factor
     Ne = length(E_scaled)     # number of energy points
@@ -163,5 +164,108 @@ function chebyshev_summation(M, C, E_scaled, E_max)
         s[i] *= 2.0 / (pi * sqrt(1.0 - E_scaled[i]^2) * E_max)
     end
     return s
+end
+
+function calc_dos(M, E_max, E_scaled, H_scaled, phi)
+    C = calc_moments(M, H_scaled, phi, phi)
+    DOS = sum_chebyshev(M, C, E_scaled, E_max)
+    return DOS
+end
+
+function evolve(H_scaled, dt_scaled, sign, phi_i)
+    phi_0 = phi_i
+    phi_1 = H_scaled * phi_i
+    j0 = besselj(0, dt_scaled)
+    j1 = besselj(1, dt_scaled)
+    phi_o = j0 * phi_0 + 2.0 * (-1im * sign) * j1 * phi_1
+    m = 2
+    while true
+        jm = besselj(m, dt_scaled)
+        if abs(jm) < 1.0e-15
+            break
+        end
+        phi_2 = 2.0 * H_scaled * phi_1 - phi_0
+        phi_o += 2.0 * (-im*sign)^m * jm * phi_2
+        phi_0 = phi_1
+        phi_1 = phi_2
+        m += 1
+    end
+    return phi_o
+end
+
+function calc_vac(M, E_max, dt_scaled, E_scaled, H_scaled, V, ϕ, DOS)
+    Ne = length(E_scaled)  # number of energy points
+    Nt = length(dt_scaled) # number of time steps
+    dt = dt_scaled / E_max
+    phi_left = ϕ
+    phi_right = V * ϕ
+    DOS_times_VAC_old = zeros(Ne)
+    DOS_times_VAC_new = zeros(Ne)
+    VAC = zeros( Nt, Ne )
+    sigma_from_VAC = zeros((Nt, Ne))
+    for nt in 1:Nt
+        C = calc_moments(M, H_scaled, V * phi_left, phi_right)
+        DOS_times_VAC_new = sum_chebyshev(M, C, E_scaled, E_max)
+        VAC[nt, :] = DOS_times_VAC_new ./ DOS
+        if nt > 1
+            tmp = dt[nt-1] * (DOS_times_VAC_old + DOS_times_VAC_new) * 0.5
+            sigma_from_VAC[nt, :] = sigma_from_VAC[nt - 1, :] + tmp
+        end
+        DOS_times_VAC_old[:] = DOS_times_VAC_new
+        phi_left[:] = evolve(H_scaled, dt_scaled[nt], -1, phi_left)
+        phi_right[:] = evolve(H_scaled, dt_scaled[nt], -1, phi_right)
+    end
+    sigma_from_VAC *= 2.0 * pi # from e^2/hbar to e^2/h
+    return VAC, sigma_from_VAC
+end
+
+
+function evolvex(H_scaled, V_scaled, dt_scaled, phi_i)
+    phi_0 = copy(phi_i)
+    phix_0 = zeros(size(phi_i)) #phi_i * 0.0
+    phi_1 = H_scaled * phi_0
+    phix_1 = im * V_scaled * phi_0
+    phi_o = -2im * besselj(1, dt_scaled) * phix_1
+    m = 2
+    while true
+        jm = besselj(m, dt_scaled)
+        if abs(jm) < 1.0e-15
+            break
+        end
+        phi_2 = 2.0 * H_scaled * phi_1 - phi_0
+        phix_2 = 2im * V_scaled * phi_1
+        phix_2 += 2.0 * H_scaled * phix_1 - phix_0
+        phi_o += 2.0 * (-1im)^m * jm * phix_2
+        phi_0 = phi_1 
+        phi_1 = phi_2
+        phix_0 = phix_1
+        phix_1 = phix_2
+        m += 1
+    end
+    return phi_o
+end
+
+
+function calc_msd(M, E_max, dt_scaled, E_scaled, H_scaled, V_scaled, phi, DOS)
+    Ne = length(E_scaled)  # number of energy points
+    Nt = length(dt_scaled) # number of time steps
+    dt = dt_scaled / E_max
+    MSD = zeros((Nt, Ne))
+    sigma_from_MSD = zeros((Nt, Ne))
+    phix = zeros(size(phi))
+    DOS_times_MSD_old = zeros(Ne)
+    DOS_times_MSD_new = zeros(Ne)
+    for nt in 1:Nt
+        phix = evolve(H_scaled, dt_scaled[nt], 1, phix)
+        phix += evolvex(H_scaled, V_scaled, dt_scaled[nt], phi)
+        phi = evolve(H_scaled, dt_scaled[nt], 1, phi)
+        C = calc_moments(M, H_scaled, phix, phix)
+        DOS_times_MSD_new = sum_chebyshev(M, C, E_scaled, E_max);
+        MSD[nt, :] = DOS_times_MSD_new ./ DOS
+        sigma_from_MSD[nt, :] = (DOS_times_MSD_new - DOS_times_MSD_old) / dt[nt] * 0.5
+        DOS_times_MSD_old = DOS_times_MSD_new
+    end
+    sigma_from_MSD *= 2.0 * pi # from e^2/hbar to e^2/h
+    return MSD, sigma_from_MSD
 end
 

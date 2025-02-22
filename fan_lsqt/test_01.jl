@@ -12,8 +12,18 @@ function test_main()
 
     ϕ = init_state(Nx*Ny);
 
-    C = find_moments(M, H/E_max, ϕ, ϕ);
-    DOS = chebyshev_summation(M, C, E/E_max, E_max);
-    #DOS = find_dos(M, E_max, E/E_max, H/E_max, ϕ);
+    DOS = calc_dos(M, E_max, E/E_max, H/E_max, ϕ);
+
+    VAC, sigma_from_VAC = calc_vac(M, E_max, dt*E_max, E/E_max, H/E_max, V, ϕ, DOS);
+
+    MSD, sigma_from_MSD = calc_msd(M, E_max, dt*E_max, E/E_max, H/E_max, V/E_max, ϕ, DOS);
+
+    #dt_scaled = dt*E_max;
+    #E_scaled = E/E_max;
+    #H_scaled = H/E_max
+
+    v_F = sqrt.(VAC[1,:]) # Fermi velocity
+    g = 0.5*Ny * DOS .* v_F  # conductance
+    g *= 2π # from e^2/hbar to e^2/h
 
 end
