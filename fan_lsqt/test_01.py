@@ -18,6 +18,8 @@ v_F = np.sqrt(VAC[0, :])                        # Fermi velocity
 g = Ny * DOS * v_F * 0.5                        # conductance
 g *= 2.0 * np.pi                                # from e^2/hbar to e^2/h
 
+
+"""
 # (3) Get similar plots as in Figs. 5 and 6 in the review paper
 
 plt.figure
@@ -50,4 +52,4 @@ plt.plot(E, g)
 plt.xlabel('Energy ($\gamma$)')
 plt.ylabel('g ($e^2/h$)')
 plt.show()
-
+"""

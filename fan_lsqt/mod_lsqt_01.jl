@@ -1,4 +1,4 @@
-using LinearAlgebra: dot, norm
+using LinearAlgebra: dot, norm, mul!
 using Printf
 using SparseArrays
 using SpecialFunctions: besselj
@@ -119,9 +119,88 @@ function jackson_damping(M)
 end
 
 function calc_moments(M, H_scaled, ϕ_l, ϕ_r)
-    #
     C = zeros(Float64, M)
+    calc_moments!(M, H_scaled, ϕ_l, ϕ_r, C)
+    return C
+end
+
+
+function calc_moments!(M, H_scaled, ϕ_l, ϕ_r, C)
     #
+    ϕ_0 = copy(ϕ_r)
+    C[1] = real(dot(ϕ_l, ϕ_0))
+    #
+    ϕ_1 = H_scaled * ϕ_0
+    C[2] = real(dot(ϕ_l, ϕ_1))
+    ϕ_2 = similar(ϕ_l)
+    #
+    for m in 3:M
+        #ϕ_2 = 2 * H_scaled * ϕ_1 - ϕ_0
+        mul!(ϕ_2, H_scaled, ϕ_1)
+        ϕ_2 *= 2
+        ϕ_2 -= ϕ_0
+        #        
+        C[m] = real(dot(ϕ_l, ϕ_2))
+        @views ϕ_0[:] = ϕ_1[:]
+        @views ϕ_1[:] = ϕ_2[:]
+    end
+    return
+end
+
+
+function sum_chebyshev(M, C, E_scaled, E_max, g)
+    Ne = length(E_scaled)
+    s = zeros(Float64, Ne)
+    sum_chebyshev!(M, C, E_scaled, E_max, g, s)
+    return s
+end
+
+# g is damping factor
+# C is modified
+# TODO: fuse this with calc_moments ?
+function sum_chebyshev!(M, C, E_scaled, E_max, g, s)
+    # apply the damping factor
+    for i in 1:M
+        C[i] = C[i] * g[i]
+    end
+    Ne = length(E_scaled)     # number of energy points
+    T0 = ones(Float64, Ne)
+    T1 = copy(E_scaled)
+    T2 = zeros(Float64, Ne)
+    for i in 1:Ne
+        s[i] = C[2] * T1[i]
+    end
+    for m in 3:M
+        for i in 1:Ne
+            T2[i] = 2.0 * E_scaled[i] * T1[i] - T0[i]
+            T0[i] = T1[i]
+            T1[i] = T2[i]
+            s[i] += C[m] * T2[i]
+        end
+    end
+    for i in 1:Ne
+        s[i] *= 2.0
+        s[i] += C[1]
+        s[i] *= 2.0 / (pi * sqrt(1.0 - E_scaled[i]^2) * E_max)
+    end
+    return
+end
+
+function calc_dos(M, E_max, E_scaled, H_scaled, phi)
+    damping_factor = jackson_damping(M) # get the damping factor
+    C = calc_moments(M, H_scaled, phi, phi)
+    DOS = sum_chebyshev(M, C, E_scaled, E_max, damping_factor)
+    return DOS
+end
+
+
+
+function calc_dos_fused(M, E_max, E_scaled, H_scaled, phi)
+
+    ϕ_l = phi
+    ϕ_r = phi
+
+    C = zeros(Float64, M)
     ϕ_0 = copy(ϕ_r)
     C[1] = real(dot(ϕ_l, ϕ_0))
     #
@@ -131,63 +210,63 @@ function calc_moments(M, H_scaled, ϕ_l, ϕ_r)
     for m in 3:M
         ϕ_2 = 2 * H_scaled * ϕ_1 - ϕ_0
         C[m] = real(dot(ϕ_l, ϕ_2))
-        ϕ_0[:] .= ϕ_1[:]
-        ϕ_1[:] .= ϕ_2[:]
+        @views ϕ_0[:] = ϕ_1[:]
+        @views ϕ_1[:] = ϕ_2[:]
     end
-    return C
-end
 
-function sum_chebyshev(M, C, E_scaled, E_max)
     g = jackson_damping(M) # get the damping factor
-    C .*= g                 # apply the damping factor
+
+    # apply the damping factor
+    for i in 1:M
+        C[i] = C[i] * g[i]
+    end
     Ne = length(E_scaled)     # number of energy points
-    T0 = ones(Ne)
+    T0 = ones(Float64, Ne)
     T1 = copy(E_scaled)
-    T2 = zeros(Ne)
-    s = zeros(Ne)
+    T2 = zeros(Float64, Ne)
+    s = zeros(Float64, Ne) # output DOS
     for i in 1:Ne
         s[i] = C[2] * T1[i]
     end
-    for m in range(3, M)
+    for m in 3:M
         for i in 1:Ne
             T2[i] = 2.0 * E_scaled[i] * T1[i] - T0[i]
-        end
-        T0[:] .= T1[:]
-        T1[:] .= T2[:]
-        for i in 1:Ne
+            T0[i] = T1[i]
+            T1[i] = T2[i]
             s[i] += C[m] * T2[i]
         end
     end
-    s .*= 2.0
-    s .+= C[1]
     for i in 1:Ne
+        s[i] *= 2.0
+        s[i] += C[1]
         s[i] *= 2.0 / (pi * sqrt(1.0 - E_scaled[i]^2) * E_max)
     end
+
     return s
 end
 
-function calc_dos(M, E_max, E_scaled, H_scaled, phi)
-    C = calc_moments(M, H_scaled, phi, phi)
-    DOS = sum_chebyshev(M, C, E_scaled, E_max)
-    return DOS
-end
 
-function evolve(H_scaled, dt_scaled, sign, phi_i)
-    phi_0 = phi_i
-    phi_1 = H_scaled * phi_i
+function evolve( H_scaled, dt_scaled, sign, phi_i )
     j0 = besselj(0, dt_scaled)
     j1 = besselj(1, dt_scaled)
-    phi_o = j0 * phi_0 + 2.0 * (-1im * sign) * j1 * phi_1
+    N = size(phi_i, 1)
+    #
+    phi_0 = copy(phi_i) # phi_i is not modified
+    phi_1 = H_scaled * phi_i
+    phi_o = j0*phi_0 + 2.0 * (-1im * sign) * j1 * phi_1
+    phi_2 = zeros(ComplexF64, N)
     m = 2
+    Hv = similar(phi_1)
     while true
         jm = besselj(m, dt_scaled)
         if abs(jm) < 1.0e-15
             break
         end
-        phi_2 = 2.0 * H_scaled * phi_1 - phi_0
-        phi_o += 2.0 * (-im*sign)^m * jm * phi_2
-        phi_0 = phi_1
-        phi_1 = phi_2
+        mul!(Hv, H_scaled, phi_1)
+        @views phi_2[:] = 2.0 * Hv - phi_0
+        @views phi_o[:] .+= 2.0 * (-im*sign)^m * jm * phi_2
+        @views phi_0[:] = phi_1[:]
+        @views phi_1[:] = phi_2[:]
         m += 1
     end
     return phi_o
@@ -199,21 +278,33 @@ function calc_vac(M, E_max, dt_scaled, E_scaled, H_scaled, V, ϕ, DOS)
     dt = dt_scaled / E_max
     phi_left = ϕ
     phi_right = V * ϕ
-    DOS_times_VAC_old = zeros(Ne)
-    DOS_times_VAC_new = zeros(Ne)
-    VAC = zeros( Nt, Ne )
-    sigma_from_VAC = zeros((Nt, Ne))
+    DOS_times_VAC_old = zeros(Float64, Ne)
+    DOS_times_VAC_new = zeros(Float64, Ne)
+    VAC = zeros(Float64, Nt, Ne)
+    sigma_from_VAC = zeros(Float64, Nt, Ne)
+    damping_factor = jackson_damping(M)
+    tmp = zeros(Float64, Ne)
+    C = zeros(Float64, M)
+    Vf = similar(phi_left)
+    #
     for nt in 1:Nt
-        C = calc_moments(M, H_scaled, V * phi_left, phi_right)
-        DOS_times_VAC_new = sum_chebyshev(M, C, E_scaled, E_max)
-        VAC[nt, :] = DOS_times_VAC_new ./ DOS
-        if nt > 1
-            tmp = dt[nt-1] * (DOS_times_VAC_old + DOS_times_VAC_new) * 0.5
-            sigma_from_VAC[nt, :] = sigma_from_VAC[nt - 1, :] + tmp
+        mul!(Vf, V, phi_left)
+        calc_moments!(M, H_scaled, Vf, phi_right, C)
+        sum_chebyshev!(M, C, E_scaled, E_max, damping_factor, DOS_times_VAC_new)
+        for i in 1:Ne
+            VAC[nt,i] = DOS_times_VAC_new[i] / DOS[i]
         end
-        DOS_times_VAC_old[:] = DOS_times_VAC_new
-        phi_left[:] = evolve(H_scaled, dt_scaled[nt], -1, phi_left)
-        phi_right[:] = evolve(H_scaled, dt_scaled[nt], -1, phi_right)
+        if nt > 1
+            for i in 1:Ne
+                tmp[i] = dt[nt-1] * (DOS_times_VAC_old[i] + DOS_times_VAC_new[i]) * 0.5
+                sigma_from_VAC[nt,i] = sigma_from_VAC[nt-1,i] + tmp[i]
+            end
+        end
+        for i in 1:Ne
+            DOS_times_VAC_old[i] = DOS_times_VAC_new[i]
+        end
+        @views phi_left[:] = evolve(H_scaled, dt_scaled[nt], -1, phi_left)
+        @views phi_right[:] = evolve(H_scaled, dt_scaled[nt], -1, phi_right)
     end
     sigma_from_VAC *= 2.0 * pi # from e^2/hbar to e^2/h
     return VAC, sigma_from_VAC
@@ -222,24 +313,33 @@ end
 
 function evolvex(H_scaled, V_scaled, dt_scaled, phi_i)
     phi_0 = copy(phi_i)
-    phix_0 = zeros(size(phi_i)) #phi_i * 0.0
+    phix_0 = zeros(ComplexF64, size(phi_i)) #phi_i * 0.0
     phi_1 = H_scaled * phi_0
     phix_1 = im * V_scaled * phi_0
     phi_o = -2im * besselj(1, dt_scaled) * phix_1
     m = 2
+    Hv = similar(phi_1)
+    Vv = similar(phi_1)
     while true
         jm = besselj(m, dt_scaled)
         if abs(jm) < 1.0e-15
             break
         end
-        phi_2 = 2.0 * H_scaled * phi_1 - phi_0
-        phix_2 = 2im * V_scaled * phi_1
-        phix_2 += 2.0 * H_scaled * phix_1 - phix_0
-        phi_o += 2.0 * (-1im)^m * jm * phix_2
-        phi_0 = phi_1 
-        phi_1 = phi_2
-        phix_0 = phix_1
-        phix_1 = phix_2
+        mul!(Hv, H_scaled, phi_1)
+        phi_2 = 2.0 * Hv - phi_0
+        mul!(Vv, V_scaled, phi_1)
+        phix_2 = 2im * Vv
+        #
+        mul!(Hv, H_scaled, phix_1)
+        phix_2 += 2.0 * Hv - phix_0
+        #
+        @views phi_o[:] .+= 2.0 * (-1im)^m * jm * phix_2[:]
+        #
+        @views phi_0[:] = phi_1[:] 
+        @views phi_1[:] = phi_2[:]
+        #
+        @views phix_0[:] = phix_1[:]
+        @views phix_1[:] = phix_2[:]
         m += 1
     end
     return phi_o
@@ -255,17 +355,22 @@ function calc_msd(M, E_max, dt_scaled, E_scaled, H_scaled, V_scaled, phi, DOS)
     phix = zeros(size(phi))
     DOS_times_MSD_old = zeros(Ne)
     DOS_times_MSD_new = zeros(Ne)
+    damping_factor = jackson_damping(M)
+    C = zeros(Float64, M)
     for nt in 1:Nt
+        #
         phix = evolve(H_scaled, dt_scaled[nt], 1, phix)
         phix += evolvex(H_scaled, V_scaled, dt_scaled[nt], phi)
         phi = evolve(H_scaled, dt_scaled[nt], 1, phi)
-        C = calc_moments(M, H_scaled, phix, phix)
-        DOS_times_MSD_new = sum_chebyshev(M, C, E_scaled, E_max);
-        MSD[nt, :] = DOS_times_MSD_new ./ DOS
-        sigma_from_MSD[nt, :] = (DOS_times_MSD_new - DOS_times_MSD_old) / dt[nt] * 0.5
-        DOS_times_MSD_old = DOS_times_MSD_new
+        #
+        calc_moments!(M, H_scaled, phix, phix, C)
+        sum_chebyshev!(M, C, E_scaled, E_max, damping_factor, DOS_times_MSD_new)
+        #
+        @views MSD[nt,:] = DOS_times_MSD_new ./ DOS
+        @views sigma_from_MSD[nt,:] = (DOS_times_MSD_new - DOS_times_MSD_old) / dt[nt] * 0.5
+        @views DOS_times_MSD_old[:] = DOS_times_MSD_new[:]
     end
-    sigma_from_MSD *= 2.0 * pi # from e^2/hbar to e^2/h
+    sigma_from_MSD *= 2π # from e^2/hbar to e^2/h
     return MSD, sigma_from_MSD
 end
 
