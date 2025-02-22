@@ -1,8 +1,8 @@
 import numpy as np
 from mod_lsqt_01 import *
 
-Nx = 10
-Ny = 10
+Nx = 50000
+Ny = 2
 W = 1.0
 
 N = Nx * Ny; # total number of sites
@@ -44,25 +44,25 @@ for nx in range(Nx):
         Vij[count_V] = -1j
         count_V += 1
         # (3) consider the upper neighbor (open boundary)
-        print("\n -- nx=%3d ny=%3d index_center=%d" % (nx, ny, index_center))
-        print("Periodic BC: index_left=%3d index_right=%3d" % (index_left, index_right))
+        #print("\n -- nx=%3d ny=%3d index_center=%d" % (nx, ny, index_center))
+        #print("Periodic BC: index_left=%3d index_right=%3d" % (index_left, index_right))
         if ny < Ny - 1:
             index_up = find_index(nx, (ny + 1), Ny)
             row_H[count_H] = index_center
             col_H[count_H] = index_up
             count_H += 1
-            print("Open BC: index_up=%3d" % (index_up))
-        else:
-            print("No index up")
+            #print("Open BC: index_up=%3d" % (index_up))
+        #else:
+        #    print("No index up")
         # (4) consider the down neighbor (open boundary)
         if ny > 0:
             index_down = find_index(nx, (ny - 1), Ny)
             row_H[count_H] = index_center
             col_H[count_H] = index_down
             count_H += 1
-            print("Open BC: index_down=%3d" % (index_down))
-        else:
-            print("No index down")
+            #print("Open BC: index_down=%3d" % (index_down))
+        #else:
+        #    print("No index down")
 
 
 H = sparse.csr_matrix((Hij, (row_H, col_H)), shape = (N, N))
@@ -70,6 +70,6 @@ U = sparse.csr_matrix((Uij, (row_U, row_U)), shape = (N, N))
 H = H + U
 V = sparse.csr_matrix((Vij, (row_V, col_V)), shape = (N, N))
 
-Udense = U.todense()
-Vdense = V.todense()
-Hdense = H.todense()
+#Udense = U.todense()
+#Vdense = V.todense()
+#Hdense = H.todense()

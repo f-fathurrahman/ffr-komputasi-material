@@ -6,7 +6,7 @@ using Infiltrator
 function gen_idx_xy2ip(Nx, Ny)
     idx_xy2ip = zeros(Int64, Nx, Ny)
     ip = 0
-    for j in 1:Ny, i in 1:Nx
+    for i in 1:Nx, j in 1:Ny # the same ordering as in Python
         ip += 1
         idx_xy2ip[i,j] = ip
     end
@@ -16,10 +16,9 @@ end
 
 function test_main()
 
-    Nx = 10
-    Ny = 10
+    Nx = 50_000
+    Ny = 2
     W = 1.0
-
 
     idx_xy2ip = gen_idx_xy2ip(Nx, Ny)
 
@@ -40,7 +39,7 @@ function test_main()
     count_H = 0
     count_V = 0
 
-    for j in 1:Ny, i in 1:Nx
+    for i in 1:Nx, j in 1:Ny # the same ordering as in Python
         #
         # (0) # get the index of the center site
         idx_center = idx_xy2ip[i,j]
@@ -78,14 +77,14 @@ function test_main()
         Vij[count_V] = -im
         #
         # (3) consider the upper neighbor (open boundary)
-        @printf("\n -- i=%3d j=%3d idx_center=%d\n", i, j, idx_center)
-        @printf("Periodic BC: idx_left=%3d idx_right=%3d\n" , idx_left, idx_right)
+        #@printf("\n -- i=%3d j=%3d idx_center=%d\n", i, j, idx_center)
+        #@printf("Periodic BC: idx_left=%3d idx_right=%3d\n" , idx_left, idx_right)
         if j < Ny
             idx_up = idx_xy2ip[i,j+1]
             count_H += 1
             row_H[count_H] = idx_center
             col_H[count_H] = idx_up
-            @printf("Open BC: idx_up=%3d\n", idx_up)
+            #@printf("Open BC: idx_up=%3d\n", idx_up)
         end
         #
         # (4) consider the down neighbor (open boundary)
@@ -94,7 +93,7 @@ function test_main()
             count_H += 1
             row_H[count_H] = idx_center
             col_H[count_H] = idx_down
-            @printf("Open BC: index_down=%3d\n", idx_down)
+            #@printf("Open BC: index_down=%3d\n", idx_down)
         end
     end
 
