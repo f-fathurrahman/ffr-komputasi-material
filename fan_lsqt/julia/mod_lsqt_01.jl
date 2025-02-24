@@ -133,6 +133,7 @@ function calc_moments!(M, H_scaled, ϕ_l, ϕ_r, C)
     ϕ_1 = H_scaled * ϕ_0
     C[2] = real(dot(ϕ_l, ϕ_1))
     ϕ_2 = similar(ϕ_l)
+    N = size(ϕ_0, 1)
     #
     for m in 3:M
         #ϕ_2 = 2 * H_scaled * ϕ_1 - ϕ_0
@@ -141,8 +142,10 @@ function calc_moments!(M, H_scaled, ϕ_l, ϕ_r, C)
         ϕ_2 -= ϕ_0
         #        
         C[m] = real(dot(ϕ_l, ϕ_2))
-        @views ϕ_0[:] = ϕ_1[:]
-        @views ϕ_1[:] = ϕ_2[:]
+        for i in 1:N
+            ϕ_0[i] = ϕ_1[i]
+            ϕ_1[i] = ϕ_2[i]
+        end
     end
     return
 end
@@ -200,6 +203,8 @@ function calc_dos_fused(M, E_max, E_scaled, H_scaled, phi)
     ϕ_l = phi
     ϕ_r = phi
 
+    Hv = similar(ϕ_l)
+
     C = zeros(Float64, M)
     ϕ_0 = copy(ϕ_r)
     C[1] = real(dot(ϕ_l, ϕ_0))
@@ -208,7 +213,9 @@ function calc_dos_fused(M, E_max, E_scaled, H_scaled, phi)
     C[2] = real(dot(ϕ_l, ϕ_1))
     #
     for m in 3:M
-        ϕ_2 = 2 * H_scaled * ϕ_1 - ϕ_0
+        mul!( Hv, H_scaled, ϕ_1 )
+        ϕ_2 = 2*Hv - ϕ_0
+        #ϕ_2 = 2 * H_scaled * ϕ_1 - ϕ_0
         C[m] = real(dot(ϕ_l, ϕ_2))
         @views ϕ_0[:] = ϕ_1[:]
         @views ϕ_1[:] = ϕ_2[:]

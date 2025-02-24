@@ -2,7 +2,7 @@ import Plots
 
 function test_main()
     # (1) Prepare some parameters
-    Nx = 50000;
+    Nx = 50_000;
     Ny = 2;
     W = 0.0;
     E_max = 3.1; # energy scaling factor
