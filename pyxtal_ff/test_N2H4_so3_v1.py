@@ -1,9 +1,7 @@
 import pickle
 import time
 
-import numpy as np
-
-from descriptors_SO3 import SO3
+from my_pyxtal_ff.descriptors_SO3 import SO3
 
 
 with open("DATASET_N2H4_v1/TEMP_ATOMS_TRAIN.pkl", "rb") as f:

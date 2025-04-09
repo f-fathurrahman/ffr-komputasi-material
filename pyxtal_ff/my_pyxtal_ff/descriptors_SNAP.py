@@ -4,10 +4,11 @@ import numpy as np
 import numba as nb
 
 from ase_neighborlist import NeighborList
-from copy import deepcopy
 
-from descriptors_angular_momentum import Wigner_D, factorial, deltacg, Wigner_D_wDerivative
 from numba import prange
+
+from .descriptors_angular_momentum import Wigner_D, factorial, deltacg, Wigner_D_wDerivative
+
 
 class SO4_Bispectrum:
     '''

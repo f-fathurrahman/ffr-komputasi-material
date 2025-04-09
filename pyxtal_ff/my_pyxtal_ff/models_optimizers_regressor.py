@@ -17,7 +17,7 @@ class Regressor:
         
         kwargs = {'lr': 1,}
         if method in ['lbfgs', 'LBFGS']:
-            from models_optimizers_lbfgs import LBFGS as optimizer
+            from .models_optimizers_lbfgs import LBFGS as optimizer
             _kwargs = {'max_iter': 100,
                        'max_eval': 15000,
                        'tolerance_grad': 1e-7,
@@ -42,7 +42,7 @@ class Regressor:
                        'amsgrad': False}
 
         elif self.method in ['lbfgsb']:
-            from models_optimizers_lbfgsb import LBFGSScipy as optimizer
+            from .models_optimizers_lbfgsb import LBFGSScipy as optimizer
             _kwargs = {'max_iter': 100,
                        'max_eval': 15000,
                        'tolerance_grad': 1e-7,

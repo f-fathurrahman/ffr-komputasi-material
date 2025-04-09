@@ -1,7 +1,7 @@
 from ase.io import read
 import time
 from optparse import OptionParser
-from descriptors_SO3 import SO3
+from my_pyxtal_ff.descriptors_SO3 import SO3
 
 # ---------------------- Options ------------------------
 parser = OptionParser()

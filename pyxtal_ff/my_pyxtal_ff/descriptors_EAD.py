@@ -1,7 +1,8 @@
 import math
 import numpy as np
-from ase_neighborlist import NeighborList
-from descriptors_cutoff import Cutoff
+
+from .ase_neighborlist import NeighborList
+from .descriptors_cutoff import Cutoff
 
 
 class EAD:

@@ -1,7 +1,7 @@
 import time
-from descriptors_SNAP import SO4_Bispectrum
 
-from utilities_database import parse_OUTCAR_comp
+from my_pyxtal_ff.descriptors_SNAP import SO4_Bispectrum
+from my_pyxtal_ff.utilities_database import parse_OUTCAR_comp
 
 data = parse_OUTCAR_comp("OUTCAR_comp")
 

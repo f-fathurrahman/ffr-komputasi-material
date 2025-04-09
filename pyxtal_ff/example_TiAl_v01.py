@@ -1,4 +1,4 @@
-from pyxtal_ff_01 import PyXtal_FF
+from my_pyxtal_ff.pyxtal_ff_01 import PyXtal_FF
 
 #train_data = "DATASET_others/TiAl_2atoms_v01.xyz"
 #path_model = "LOGDIR_TiAl_2atoms_v01/" # need trailing /
@@ -19,8 +19,8 @@ descriptor = {
 model = {
     "system" : ["Ti", "Al"],
     "hiddenlayers": [30, 30],
-    "force_coefficient": 0.0001,
-    "epoch": 50,
+    "force_coefficient": 0.01,
+    "epoch": 100,
     "batch_size": 32,
     "path": path_model,
     "memory": "out",

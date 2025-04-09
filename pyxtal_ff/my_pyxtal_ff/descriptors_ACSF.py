@@ -2,7 +2,7 @@ import numpy as np
 from ase.neighborlist import NeighborList
 from itertools import combinations, combinations_with_replacement
 
-from descriptors_cutoff import Cutoff
+from .descriptors_cutoff import Cutoff
 
 
 class ACSF:

@@ -1,7 +1,6 @@
-from ase.io import read
 import time
 
-from descriptors_SNAP import SO4_Bispectrum
+from my_pyxtal_ff.descriptors_SNAP import SO4_Bispectrum
 
 from ase.build import bulk
 test = bulk('Si', 'diamond', a=5.459)

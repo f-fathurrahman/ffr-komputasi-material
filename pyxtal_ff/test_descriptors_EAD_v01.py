@@ -1,7 +1,6 @@
 import numpy as np
-import time
 from ase.build import bulk
-from descriptors_EAD import EAD
+from my_pyxtal_ff.descriptors_EAD import EAD
 
 np.set_printoptions(formatter={'float': '{: 0.4f}'.format})
 

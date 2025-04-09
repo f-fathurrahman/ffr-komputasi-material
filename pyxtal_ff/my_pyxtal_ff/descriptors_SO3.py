@@ -1,10 +1,9 @@
 from __future__ import division
 import numpy as np
-
-from ase_neighborlist import NeighborList, PrimitiveNeighborList
-
 from scipy.special import sph_harm, spherical_in
-from ase import Atoms
+
+from .ase_neighborlist import NeighborList, PrimitiveNeighborList
+
 
 class SO3:
     '''

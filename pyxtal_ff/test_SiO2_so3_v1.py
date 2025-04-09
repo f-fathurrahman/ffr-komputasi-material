@@ -1,7 +1,7 @@
 import time
-from descriptors_SO3 import SO3
 
-from utilities_database import parse_OUTCAR_comp
+from my_pyxtal_ff.descriptors_SO3 import SO3
+from my_pyxtal_ff.utilities_database import parse_OUTCAR_comp
 
 data = parse_OUTCAR_comp("OUTCAR_comp")
 

@@ -1,5 +1,5 @@
 import numpy as np
-from ase.neighborlist import NeighborList
+from .ase_neighborlist import NeighborList
 
 factor = 14.399645306701126
 

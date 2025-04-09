@@ -1,8 +1,7 @@
 from ase.io import read
-import time
 from optparse import OptionParser
 
-from descriptors_SO4 import SO4_Bispectrum
+from my_pyxtal_ff.descriptors_SO4 import SO4_Bispectrum
 
 # ---------------------- Options ------------------------
 parser = OptionParser()

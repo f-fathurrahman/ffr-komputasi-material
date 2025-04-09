@@ -6,7 +6,6 @@ import time
 import shelve
 import numpy as np
 from copy import deepcopy
-from random import randint
 
 import torch
 import torch.nn as nn
@@ -22,8 +21,8 @@ from matplotlib.gridspec import GridSpec
 import matplotlib.ticker as mticker
 plt.style.use("ggplot")
 
-from models_optimizers_regressor import Regressor
-from utilities_elements import Element
+from .models_optimizers_regressor import Regressor
+from .utilities_elements import Element
 
 eV2GPa = 160.21766
 

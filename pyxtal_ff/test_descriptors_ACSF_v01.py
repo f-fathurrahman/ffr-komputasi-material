@@ -1,7 +1,6 @@
-import time
 from ase.build import bulk
 
-from descriptors_ACSF import ACSF
+from my_pyxtal_ff.descriptors_ACSF import ACSF
 
 import numpy as np
 np.set_printoptions(formatter={'float': '{: 0.4f}'.format})

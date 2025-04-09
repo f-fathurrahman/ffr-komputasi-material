@@ -4,12 +4,9 @@ import shelve
 import numpy as np
 from ase import Atoms, units
 from copy import deepcopy
-from functools import partial
-
 from monty.serialization import loadfn
-from multiprocessing import Pool
 
-from utilities_base_potential import ZBL
+from .utilities_base_potential import ZBL
 
 
 class Database():
@@ -144,7 +141,7 @@ class Database():
         """ Compute descriptor for one structure to the database. """
 
         if function['type'] in ['BehlerParrinello', 'ACSF']:
-            from descriptors_ACSF import ACSF
+            from .descriptors_ACSF import ACSF
             d = ACSF(function['parameters'],
                      function['Rc'], 
                      function['force'],
@@ -152,7 +149,7 @@ class Database():
                      function['cutoff'], False).calculate(data['structure'])
 
         elif function['type'] in ['wACSF', 'wacsf']:
-            from descriptors_ACSF import ACSF
+            from .descriptors_ACSF import ACSF
             d = ACSF(function['parameters'],
                      function['Rc'], 
                      function['force'],
@@ -160,7 +157,7 @@ class Database():
                      function['cutoff'], True).calculate(data['structure'])
         
         elif function['type'] in ['SO4', 'Bispectrum', 'bispectrum']:
-            from descriptors_SO4 import SO4_Bispectrum
+            from .descriptors_SO4 import SO4_Bispectrum
             d = SO4_Bispectrum(function['parameters']['lmax'],
                                function['Rc'],
                                derivative=function['force'],
@@ -169,7 +166,7 @@ class Database():
                                cutoff_function=function['cutoff']).calculate(data['structure'])
         
         elif function['type'] in ['SO3', 'SOAP', 'soap']:
-            from descriptors_SO3 import SO3
+            from .descriptors_SO3 import SO3
             d = SO3(function['parameters']['nmax'],
                     function['parameters']['lmax'],
                     function['Rc'],
@@ -178,14 +175,14 @@ class Database():
                     stress=function['stress']).calculate(data['structure'])
 
         elif function['type'] in ['EAD', 'ead']:
-            from descriptors_EAD import EAD
+            from .descriptors_EAD import EAD
             d = EAD(function['parameters'],
                      function['Rc'],
                      function['force'], function['stress'],
                      function['cutoff']).calculate(data['structure'])
         
         elif function['type'] in ['SNAP', 'snap']:
-            from descriptors_SNAP import SO4_Bispectrum
+            from .descriptors_SNAP import SO4_Bispectrum
             d = SO4_Bispectrum(function['weights'],
                                function['parameters']['lmax'],
                                function['Rc'],
@@ -234,7 +231,7 @@ def compute_descriptor(function, structure):
     """ Compute descriptor for one structure. """
 
     if function['type'] in ['BehlerParrinello', 'ACSF']:
-        from pyxtal_ff.descriptors.ACSF import ACSF
+        from .descriptors_ACSF import ACSF
         d = ACSF(function['parameters'],
                  function['Rc'], 
                  function['force'],
@@ -242,7 +239,7 @@ def compute_descriptor(function, structure):
                  function['cutoff'], False).calculate(structure)
 
     elif function['type'] in ['wACSF', 'wacsf']:
-        from pyxtal_ff.descriptors.ACSF import ACSF
+        from .descriptors_ACSF import ACSF
         d = ACSF(function['parameters'],
                  function['Rc'], 
                  function['force'],
@@ -250,7 +247,7 @@ def compute_descriptor(function, structure):
                  function['cutoff'], True).calculate(structure)
 
     elif function['type'] in ['SO4', 'Bispectrum', 'bispectrum']:
-        from pyxtal_ff.descriptors.SO4 import SO4_Bispectrum
+        from descriptors_SO4 import SO4_Bispectrum
         d = SO4_Bispectrum(function['parameters']['lmax'],
                            function['Rc'],
                            derivative=True,
@@ -259,7 +256,7 @@ def compute_descriptor(function, structure):
                            cutoff_function=function['cutoff']).calculate(structure)
 
     elif function['type'] in ['SO3', 'SOAP', 'soap']:
-        from pyxtal_ff.descriptors.SO3 import SO3
+        from .descriptors_SO3 import SO3
         d = SO3(function['parameters']['nmax'],
                 function['parameters']['lmax'],
                 function['Rc'],
@@ -267,14 +264,14 @@ def compute_descriptor(function, structure):
                 stress=True).calculate(structure)
 
     elif function['type'] in ['EAD', 'ead']:
-            from pyxtal_ff.descriptors.EAD import EAD
+            from .descriptors_EAD import EAD
             d = EAD(function['parameters'],
                      function['Rc'],
                      True, True,
                      function['cutoff']).calculate(structure)
 
     elif function['type'] in ['SNAP', 'snap']:
-        from pyxtal_ff.descriptors.SNAP import SO4_Bispectrum
+        from .descriptors_SNAP import SO4_Bispectrum
         d = SO4_Bispectrum(function['weights'],
                            function['parameters']['lmax'],
                            function['Rc'],

@@ -13,7 +13,7 @@ mpl.use("Agg")
 import matplotlib.pyplot as plt
 plt.style.use("ggplot")
 
-from utilities_elements import Element
+from .utilities_elements import Element
 eV2GPa = 160.21766
 
 class PR():

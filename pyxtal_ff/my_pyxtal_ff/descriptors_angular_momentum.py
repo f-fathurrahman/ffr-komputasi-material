@@ -1,11 +1,9 @@
 import numpy as np
 
-from optparse import OptionParser
 import numba as nb
 import cmath
-import os.path
 
-from descriptors_utils import (_Wigner_coefficient as _coeff,
+from .descriptors_utils import (_Wigner_coefficient as _coeff,
                Wigner_coefficient as coeff)
 
 @nb.njit(nb.f8(nb.i8), cache=True, nogil=True, fastmath=True)

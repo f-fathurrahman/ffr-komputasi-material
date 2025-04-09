@@ -1,9 +1,9 @@
 import os
 import torch
 
-from utilities_database import Database
-from models_polynomialregression import PR
-from models_neuralnetwork import NeuralNetwork
+from .utilities_database import Database
+from .models_polynomialregression import PR
+from .models_neuralnetwork import NeuralNetwork
 
 __version__ = '0.2.3'
 
