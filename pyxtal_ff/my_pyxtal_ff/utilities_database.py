@@ -4,7 +4,7 @@ import shelve
 import numpy as np
 from ase import Atoms, units
 from copy import deepcopy
-from monty.serialization import loadfn
+#from monty.serialization import loadfn
 
 from .utilities_base_potential import ZBL
 
@@ -299,7 +299,8 @@ def compute_descriptor(function, structure):
 def parse_json(path, N=None, Random=False):
     """ Extract structures/energy/forces/stress information from json file. """
     if os.path.isfile(path):
-        structure_dict = loadfn(path)
+        #structure_dict = loadfn(path)
+        raise RuntimeError("monty is needed")
     elif os.path.isdir(path):
         import glob
         cwd = os.getcwd()

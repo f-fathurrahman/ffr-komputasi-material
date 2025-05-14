@@ -1,4 +1,4 @@
-from pyxtal_ff_01 import PyXtal_FF
+from my_pyxtal_ff.pyxtal_ff_01 import PyXtal_FF
 import shelve
 
 def get_desc_list(model_nn):
@@ -49,7 +49,7 @@ print("... Done initializing model")
 TrainData = train_data # set argument
 
 import os
-from utilities_database import Database
+from my_pyxtal_ff.utilities_database import Database
 
 # Calculate descriptors.
 ff._descriptors.update({'N': ff._descriptors['N_train']})
