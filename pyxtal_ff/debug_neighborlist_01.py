@@ -2,9 +2,9 @@ import ase.io
 from ase.neighborlist import NeighborList
 import numpy as np
 
-#atoms_list = ase.io.read("DATASET_OTHERS/TiAl_gabung.xyz@:")
+atoms_list = ase.io.read("DATASET_OTHERS/TiAl_gabung.xyz@:")
 #atoms_list = ase.io.read("DATASET_N2H4_v2/N2H4_2mol_1data.xyz@:")
-atoms_list = ase.io.read("DATASET_N2H4_v1/TEMP_ATOMS_TRAIN.xyz@:")
+#atoms_list = ase.io.read("DATASET_N2H4_v1/TEMP_ATOMS_TRAIN.xyz@:")
 atoms = atoms_list[0]
 for a in atoms:
     print(f"{a.symbol} {a.position[0]} {a.position[1]} {a.position[2]}")
@@ -12,16 +12,7 @@ for a in atoms:
 print("Lattice vectors: ")
 print(atoms.get_cell())
 
-
-# Should be invariant with w.r.t translations
-#pos_shifted = atoms.positions.copy()
-#pos_shifted[:,2] = atoms.positions[:,2] + 3.0
-#atoms.set_positions(pos_shifted)
-
-lmax = 4
-nmax = 3
 rcut = 3.5
-alpha = 2.0
 
 # default
 weight_on = False
