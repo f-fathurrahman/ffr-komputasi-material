@@ -7,7 +7,7 @@ import ase.units as units
 def debug_phonon_read(phonon, method="Frederiksen", symmetrize=3, acoustic=True,
             cutoff=None, born=False, **kwargs):
 
-    print("Enter debug_phonon_read")
+    print("\n<div> ENTER debug_phonon_read\n")
 
     method = method.lower()
     assert method in ["standard", "frederiksen"]
@@ -26,18 +26,25 @@ def debug_phonon_read(phonon, method="Frederiksen", symmetrize=3, acoustic=True,
 
     # Number of unit cells
     N = np.prod(phonon.supercell)
-    print("Number of unit cells = ", N)
+    print("\nNumber of unit cells = ", N)
+    print("\nlatvec arrays = ")
+    print(phonon._lattice_vectors_array)
+    print("\nphonon.indices = ", phonon.indices) # atom indices
+    print("phonon.delta = ", phonon.delta)
+    print("phonon.supercell = ", phonon.supercell)
+    print("phonon.offset = ", phonon.offset)
 
     # Matrix of force constants as a function of unit cell index in units
     # of eV / Ang**2
     C_xNav = np.empty((natoms * 3, N, natoms, 3), dtype=float)
 
     # Loop over all atomic displacements and calculate force constants
-    for i, a in enumerate(phonon.indices):
-        for j, v in enumerate("xyz"):
+    for i, a in enumerate(phonon.indices): # loop over all moved atoms
+        for j, v in enumerate("xyz"): # loop over Cartesian dimension
             # Atomic forces for a displacement of atom a in direction v
             # basename = "%s.%d%s" % (phonon.name, a, v)
             basename = "%d%s" % (a, v)
+            print("\nbasename = ", basename)
             fminus_av = phonon.cache[basename + "-"]["forces"]
             fplus_av = phonon.cache[basename + "+"]["forces"]
 
@@ -48,14 +55,22 @@ def debug_phonon_read(phonon, method="Frederiksen", symmetrize=3, acoustic=True,
             # Finite difference derivative
             C_av = fminus_av - fplus_av
             C_av /= 2 * phonon.delta
+            print("C_av.shape = ", C_av.shape) # (N*Natoms,3)
 
             # Slice out included atoms
             C_Nav = C_av.reshape((N, len(phonon.atoms), 3))[:, phonon.indices]
-            index = 3 * i + j
+            print("C_Nav.shape = ", C_Nav.shape) # (N,Natoms,3)
+            index = 3 * i + j # the linear index, why this?
+            print("index of C_xNav = ", index)
             C_xNav[index] = C_Nav
 
     # Make unitcell index the first and reshape
+    # C_xNav shape = (natoms*3, N, natoms, 3) 
+    # transposed to
+    # C_N shape = (N, natoms*3, natoms, 3), before reshaped
     C_N = C_xNav.swapaxes(0, 1).reshape((N,) + (3 * natoms, 3 * natoms))
+    # after reshaped:
+    # C_N shape = (N, natoms*3, natoms*3)
 
     # Cut off before symmetry and acoustic sum rule are imposed
     if cutoff is not None:
@@ -64,7 +79,8 @@ def debug_phonon_read(phonon, method="Frederiksen", symmetrize=3, acoustic=True,
     # Symmetrize force constants
     print("symmetrize = ", symmetrize)
     if symmetrize:
-        for i in range(symmetrize):
+        print("Doing symmetrize = ", symmetrize)
+        for i in range(symmetrize): #XXX index i is not used?
             # Symmetrize
             C_N = ph_symmetrize(phonon, C_N)
             # Restore acoustic sum-rule
@@ -73,6 +89,8 @@ def debug_phonon_read(phonon, method="Frederiksen", symmetrize=3, acoustic=True,
                 #phonon.acoustic(C_N)
             else:
                 break
+    else:
+        print("Not doing symmetrization")
 
     # Store force constants and dynamical matrix
     phonon.C_N = C_N
@@ -84,6 +102,9 @@ def debug_phonon_read(phonon, method="Frederiksen", symmetrize=3, acoustic=True,
     M_inv = np.outer(phonon.m_inv_x, phonon.m_inv_x)
     for D in phonon.D_N:
         D *= M_inv
+
+    print("\n</div> EXIT debug_phonon_read\n")
+
 
 
 
@@ -118,11 +139,11 @@ def band_structure(phonon, path_kc, modes=False, born=False, verbose=True):
     # Unit cell volume in Bohr^3
     vol = abs(la.det(phonon.atoms.cell)) / units.Bohr**3
 
-    for q_c in path_kc:
+    for iq, q_c in enumerate(path_kc):
 
-        print("q_c = ", q_c)
+        print(f"\n iq={iq} q={q_c}")
 
-        # Add non-analytic part
+        # Add non-analytic part (XXX: what's this?)
         if born:
             # q-vector in cartesian coordinates
             q_v = np.dot(reci_vc, q_c)
@@ -136,12 +157,6 @@ def band_structure(phonon, path_kc, modes=False, born=False, verbose=True):
             D_na = C_na * M_inv / units.Bohr**2 * units.Hartree
             phonon.D_na = D_na
             D_N = phonon.D_N + D_na / np.prod(phonon.supercell)
-
-        # if np.prod(phonon.N_c) == 1:
-        #
-        #     q_av = np.tile(q_v, len(phonon.indices))
-        #     q_xx = np.vstack([q_av]*len(phonon.indices)*3)
-        #     D_m += q_xx
 
         # Evaluate fourier sum
         D_q = compute_dynamical_matrix(phonon, q_c, D_N)
@@ -160,6 +175,7 @@ def band_structure(phonon, path_kc, modes=False, born=False, verbose=True):
 
         # Sort eigenvalues in increasing order
         omega2_l.sort()
+        print("omega_l sorted = ", omega2_l)
         # Use dtype=complex to handle negative eigenvalues
         omega_l = np.sqrt(omega2_l.astype(complex))
 
@@ -189,7 +205,7 @@ def band_structure(phonon, path_kc, modes=False, born=False, verbose=True):
 
 def compute_dynamical_matrix(phonon, q_scaled: np.ndarray, D_N: np.ndarray):
     # Evaluate fourier sum
-    R_cN = phonon._lattice_vectors_array
+    R_cN = phonon._lattice_vectors_array # number of cells affects this
     phase_N = np.exp(-2.j * pi * np.dot(q_scaled, R_cN))
     D_q = np.sum(phase_N[:, np.newaxis, np.newaxis] * D_N, axis=0)
     return D_q

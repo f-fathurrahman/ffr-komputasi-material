@@ -7,7 +7,7 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.16.1
 #   kernelspec:
-#     display_name: python311
+#     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
@@ -32,6 +32,9 @@ phonon.run()
 # %%
 import numpy as np
 
+# %% [markdown]
+# Some hardcoded parameters:
+
 # %%
 method = "Frederiksen"
 symmetrize = 3
@@ -48,26 +51,21 @@ print("natoms = ", natoms)
 N = np.prod(phonon.supercell)
 print("Number of unit cells = ", N)
 
+# %% [markdown]
+# Number of unit cells comes from here:
+
+# %%
+7**3
+
+# %%
 # Matrix of force constants as a function of unit cell index in units
 # of eV / Ang**2
-C_xNav = np.empty((natoms * 3, N, natoms, 3), dtype=float)
+C_xNav = np.empty((natoms*3, N, natoms, 3), dtype=float)
 
-# %%
-C_xNav.shape
-
-# %%
-phonon.indices
-
-# %%
-phonon.name
-
-# %%
-phonon.cache
-
-# %%
 # Loop over all atomic displacements and calculate force constants
 for i, a in enumerate(phonon.indices): # loop for all atoms
     for j, v in enumerate("xyz"): # displacements
+        #
         # Atomic forces for a displacement of atom a in direction v
         basename = "%d%s" % (a, v)
         fminus_av = phonon.cache[basename + "-"]["forces"]
@@ -80,10 +78,11 @@ for i, a in enumerate(phonon.indices): # loop for all atoms
         # Finite difference derivative (central difference for 1st derivative)
         C_av = fminus_av - fplus_av
         C_av /= 2 * phonon.delta
-
+        print("shape of C_av = ", C_av.shape)
+        #
         # Slice out included atoms
         C_Nav = C_av.reshape((N, len(phonon.atoms), 3))[:, phonon.indices]
-        index = 3 * i + j
+        index = 3*i + j
         C_xNav[index] = C_Nav
 
 # %% [markdown]

@@ -13,7 +13,6 @@ atoms.set_cell([1.8, 20.0, 20.0])
 
 
 # Probably need to optimize the geometry or unit cell?
-
 N = 9
 ph = MyPhonons(atoms, MyEMT(), supercell=(N, 1, 1), delta=0.01)
 ph.run()
@@ -22,24 +21,24 @@ ph.run()
 from m_debug_phonon import *
 debug_phonon_read(ph, acoustic=False, symmetrize=0)
 print("ph.D_N.shape = ", ph.D_N.shape) # (N,3*Natoms,3*Natoms)
-ph.clean()
+ph.clean() # disable this for use with other calculation
 
 # Bandpath
 # special_points={AGMRXZ}
-path = atoms.cell.bandpath("GZ", npoints=100)
-omega_kl = band_structure(ph, path.kpts, modes=False, born=False)
-bs = ph.get_band_structure(path)
-
-import matplotlib.pyplot as plt
-qpts_x = path.kpts[:,0]
-Nbands = omega_kl.shape[1]
-for ibnd in range(Nbands):
-    all_pos = np.all(omega_kl[:,ibnd] >= 0)
-    if all_pos:
-        plt.plot(qpts_x, omega_kl[:,ibnd], label="ibnd-"+str(ibnd))
-plt.grid()
-plt.legend()
-plt.show()
+#path = atoms.cell.bandpath("GZ", npoints=100)
+#omega_kl = band_structure(ph, path.kpts, modes=False, born=False)
+#bs = ph.get_band_structure(path)
+#
+#import matplotlib.pyplot as plt
+#qpts_x = path.kpts[:,0]
+#Nbands = omega_kl.shape[1]
+#for ibnd in range(Nbands):
+#    all_pos = np.all(omega_kl[:,ibnd] >= 0)
+#    if all_pos:
+#        plt.plot(qpts_x, omega_kl[:,ibnd], label="ibnd-"+str(ibnd))
+#plt.grid()
+#plt.legend()
+#plt.show()
 
 
 
