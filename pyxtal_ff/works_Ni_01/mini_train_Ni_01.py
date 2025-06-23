@@ -3,7 +3,7 @@ sys.path.append('../')
 
 from mini_mlip import MiniMLIP
 
-train_data = "ALL_ATOMS.xyz"
+train_data = "ALL_ATOMS.xyz" # ALL_ATOMS_T500
 path_model = "LOGDIR_mini_Ni_fcc/" # need trailing /
 
 descriptor = {

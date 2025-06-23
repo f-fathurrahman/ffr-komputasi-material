@@ -338,7 +338,9 @@ class MiniMLIP():
             return (train_stat, test_stat)
         
         elif mode == "predict":
-            self._model["algorithm"] = torch.load(mliap)["algorithm"]
+            #self._model["algorithm"] = torch.load(mliap)["algorithm"]
+            # New in PyTorch 2.6 ?
+            self._model["algorithm"] = torch.load(mliap, weights_only=False)["algorithm"]
             self.algorithm = self._model["algorithm"]
             self._MODEL(self._model)
             self._descriptors = self.model.load_checkpoint(filename=mliap)
@@ -398,6 +400,166 @@ class MiniMLIP():
         for key in key_params:
             print("{:12s}: {:}".format(key, _descriptors["parameters"][key]))
         print("\n")
+
+
+
+
+
+#import numpy as np
+#from ase.optimize import LBFGS
+#from ase.optimize.fire import FIRE
+#from ase.constraints import ExpCellFilter
+#from ase.spacegroup.symmetrize import FixSymmetry, check_symmetry
+#np.set_printoptions(formatter={'float': '{: 8.4f}'.format})
+
+from ase import units
+from ase.calculators.calculator import Calculator, all_changes
+from ase.constraints import FixSymmetry
+from ase.filters import ExpCellFilter
+from ase.optimize.fire import FIRE
+
+class MiniMLIPCalculator(Calculator):
+    implemented_properties = ['energy', 'forces', 'stress']
+    nolabel = True
+
+    def __init__(self, style='ase', **kwargs):
+        self.style = style
+        Calculator.__init__(self, **kwargs)
+
+    def calculate(self, atoms=None,
+                  properties=['energy'],
+                  system_changes=all_changes):
+
+        Calculator.calculate(self, atoms, properties, system_changes)
+
+        #chem_symbols = list(set(atoms.get_chemical_symbols()))
+        #self.ff = PyXtal_FF(model={'system': chem_symbols}, logo=self.parameters.logo)
+        #self.ff.run(mode='predict', mliap=self.parameters.mliap)
+
+        # base potential
+        if self.parameters.ff._descriptors['base_potential']:
+            raise NotImplementedError("Not implemented")
+            #self.base_potential = ZBL(self.parameters.ff._descriptors['base_potential']['inner'],
+            #                          self.parameters.ff._descriptors['base_potential']['outer'],
+            #                          atomic_energy=True)
+            #base_results = self.base_potential.calculate(atoms)
+            #base_energy = base_results['energy']
+            #base_forces = base_results['force']
+            #base_stress = base_results['stress'] # eV/A^3
+            #base_energies = base_results['energies']
+        else:
+            base_energy = 0
+            base_forces = np.zeros([len(atoms), 3])
+            base_stress = np.zeros([6])
+            base_energies = 0.
+
+        desp = compute_descriptor(self.parameters.ff._descriptors, atoms)
+        energies, forces, stress = self.parameters.ff.model.calculate_properties(desp, bforce=True, bstress=True)
+
+        self.desp = desp
+        self.results['energies'] = energies + base_energies
+        self.results['energy'] = energies.sum() + base_energy
+        self.results['free_energy'] = energies.sum() + base_energy
+        self.results['forces'] = forces + base_forces
+
+        # pyxtal_ff and lammps uses: xx, yy, zz, xy, xz, yz
+        # ase uses: xx, yy, zz, yz, xz, xy
+        # vasp uses: xx, yy, zz, xy, yz, zx
+        # from eV/A^3 to GPa 
+        self.results['stress_zbl'] = base_stress/ase.units.GPa
+        self.results['energy_zbl'] = base_energy
+        self.results['forces_zbl'] = base_forces
+        self.results['stress_ml'] = stress 
+        self.results['energy_ml'] = energies.sum()
+        self.results['forces_ml'] = forces
+
+
+        # ase counts the stress differently
+        if self.style == 'ase':
+            self.results['stress'] = -(stress * units.GPa + base_stress)[[0, 1, 2, 5, 4, 3]]
+        else:
+            self.results['stress'] = self.results['stress_zbl'] + self.results['stress_ml']
+
+    def __str__(self):
+        s = "\nASE calculator with pyxtal_ff force field\n"
+        return s
+
+    def __repr__(self):
+        return str(self)
+
+    def print_stresses(self):
+        print("stress_ml (GPa, xx, yy, zz, xy, xz, yz):", self.results["stress_ml"])
+        print("stress_zbl(GPa, xx, yy, zz, xy, xz, yz):", self.results['stress_zbl'])
+
+    def print_energy(self):
+        print("energy_ml (eV):", self.results["energy_ml"])
+        print("energy_zbl(eV):", self.results['energy_zbl'])
+
+    def print_forces(self):
+        print("forces (eV/A)")
+        for f1, f2 in zip(self.results["forces_ml"], self.results['forces_zbl']):
+            print("{:8.3f} {:8.3f} {:8.3f} -> {:8.3f} {:8.3f} {:8.3f}".format(*f1, *f2))
+
+    def print_all(self):
+        self.print_energy()
+        self.print_forces()
+        self.print_stresses()
+
+
+def mini_mlip_elastic_properties(C):
+    Kv = C[:3,:3].mean()
+    Gv = (C[0,0]+C[1,1]+C[2,2] - (C[0,1]+C[1,2]+C[2,0]) + 3*(C[3,3]+C[4,4]+C[5,5]))/15
+    Ev = 1/((1/(3*Gv))+(1/(9*Kv)))
+    vv  = 0.5*(1-((3*Gv)/(3*Kv+Gv))); 
+
+    S = np.linalg.inv(C)
+    Kr = 1/((S[0,0]+S[1,1]+S[2,2])+2*(S[0,1]+S[1,2]+S[2,0])) 
+    Gr = 15/(4*(S[0,0]+S[1,1]+S[2,2])-4*(S[0,1]+S[1,2]+S[2,0])+3*(S[3,3]+S[4,4]+S[5,5])) 
+    Er = 1/((1/(3*Gr))+(1/(9*Kr))) 
+    vr = 0.5*(1-((3*Gr)/(3*Kr+Gr))) 
+
+    Kh = (Kv+Kr)/2    
+    Gh = (Gv+Gr)/2    
+    Eh = (Ev+Er)/2    
+    vh = (vv+vr)/2   
+    return Kv, Gv, Ev, vv, Kr, Gr, Er, vr, Kh, Gh, Eh, vh
+
+def mini_mlip_optimize(atoms, sym=True, box=False, P=0.0, method='FIRE', fmax=0.01, steps=1000, logfile='ase.log'):
+    """
+    Geometry relaxation
+
+    Args:
+        Atoms: ase atoms
+        sym: whether or not fix symmetry
+        box: whether or not relax box
+        P: external pressure in GPa
+        method: optimization method
+        fmax: toleration force
+        steps: maximum number of steps
+        logfile: output of the log file
+    """
+    if sym:
+        atoms.set_constraint(FixSymmetry(atoms))
+    if box:
+        ecf = ExpCellFilter(atoms, scalar_pressure=P*units.GPa)
+        if method == 'FIRE':
+            dyn = FIRE(ecf, logfile=logfile)
+        else:
+            dyn = LBFGS(ecf, logfile=logfile)
+    else:
+        if method == 'FIRE':
+            dyn = FIRE(atoms, logfile=logfile)
+        else:
+            dyn = FIRE(atoms, logfile=logfile)
+
+    dyn.run(fmax=fmax, steps=steps)
+    atoms.set_constraint()
+    return atoms
+
+
+
+
+
 
 
 
@@ -705,7 +867,7 @@ class PolynomialRegression():
 
     def load_checkpoint(self, filename=None):
         """ Load Polynomial Regression file from PyTorch. """
-        checkpoint = load(filename)
+        checkpoint = load(filename, weights_only=False) # New in PyTorch 2.6
 
         # Inconsistent algorithm.
         if checkpoint['algorithm'] != 'PR':
@@ -1874,8 +2036,9 @@ class Database():
         """ Map structures to descriptors and store them, including features, to database.
         If compute is False, print pre-computed descriptors message. """
         if function['base_potential']:
-            self.base_potential = ZBL(function['base_potential']['inner'],
-                                      function['base_potential']['outer'])
+            raise NotImplementedError("base_potential is not implemented")
+            #self.base_potential = ZBL(function['base_potential']['inner'],
+            #                          function['base_potential']['outer'])
         else:
             self.base_potential = None
 
