@@ -4,7 +4,7 @@ sys.path.append('../')
 from mini_mlip import MiniMLIP, MiniMLIPCalculator, mini_mlip_optimize
 
 train_data = "ALL_ATOMS.xyz"
-path_model = "LOGDIR_mini_Ni_fcc/" # need trailing /
+path_model = "LOGDIR_mini_Ni_fcc_352/" # need trailing /
 
 descriptor_dict = {
     "Rc": 4.0,

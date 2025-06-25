@@ -2058,20 +2058,12 @@ class Database():
         
             # extract the structures and energy, forces, and stress information.
             if os.path.exists(structure_file):
-                if fmt == 'json':
-                    data = parse_json(structure_file)
-                elif fmt == 'vasp-out':
-                    data = parse_OUTCAR_comp(structure_file)
-                elif fmt == 'xyz':
+                if fmt == 'xyz':
                     data = parse_xyz(structure_file)
                 elif fmt == 'db':
                     data = parse_ase_db(structure_file)
-                elif fmt == 'traj':
-                    data = parse_traj(structure_file)
-                elif fmt == 'dat':
-                    data = parse_dat(structure_file)
                 else:
-                    raise NotImplementedError('PyXtal_FF supports only json, vasp-out, and xyz formats')
+                    raise NotImplementedError
             else:
                 raise FileNotFoundError(structure_file + ' cannot be found from the given path.')
             print("{:d} structures have been loaded.".format(len(data)))

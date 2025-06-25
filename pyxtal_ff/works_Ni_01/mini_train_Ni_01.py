@@ -4,7 +4,11 @@ sys.path.append('../')
 from mini_mlip import MiniMLIP
 
 train_data = "ALL_ATOMS.xyz" # ALL_ATOMS_T500
-path_model = "LOGDIR_mini_Ni_fcc/" # need trailing /
+path_model = "LOGDIR_mini_Ni_fcc_352/" # need trailing /
+
+#train_data = "ALL_ATOMS_T500.xyz"
+#path_model = "LOGDIR_mini_Ni_fcc_T500/" # need trailing /
+
 
 descriptor = {
     "Rc": 4.0,
@@ -20,7 +24,8 @@ model = {
     "algorithm": "PR",
     "system" : ["Ni"],
     "path": path_model,
-    'force_coefficient': 0.001,
+    "force_coefficient": 0.001,
+    "stress_coefficient": 0.001
 }
 
 ff = MiniMLIP(descriptors=descriptor, model=model)
