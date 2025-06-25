@@ -2166,16 +2166,7 @@ class Database():
 def compute_descriptor(function, structure):
     """ Compute descriptor for one structure. """
 
-    if function['type'] in ['BehlerParrinello', 'ACSF']:
-        raise NotImplementedError
-
-    elif function['type'] in ['wACSF', 'wacsf']:
-        raise NotImplementedError
-
-    elif function['type'] in ['SO4', 'Bispectrum', 'bispectrum']:
-        raise NotImplementedError
-
-    elif function['type'] in ['SO3', 'SOAP', 'soap']:
+    if function['type'] in ['SO3', 'SOAP', 'soap']:
         d = DescriptorSO3(
                 function['parameters']['nmax'],
                 function['parameters']['lmax'],
@@ -2184,11 +2175,6 @@ def compute_descriptor(function, structure):
                 stress=True
             ).calculate(structure)
 
-    elif function['type'] in ['EAD', 'ead']:
-        raise NotImplementedError
-
-    elif function['type'] in ['SNAP', 'snap']:
-        raise NotImplementedError
     else:
         msg = f"{function['type']} is not implemented"
         raise NotImplementedError(msg)

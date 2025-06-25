@@ -28,3 +28,5 @@ ff = PyXtal_FF(descriptors=descriptor, model=model)
 ff.run(mode="train", TrainData=train_data)
 ```
 
+It seems that stress fitting is not supported.
+
