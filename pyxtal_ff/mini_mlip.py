@@ -377,6 +377,8 @@ class MiniMLIP():
                 d_max=_model["d_max"]
             )
             self.optimizer = None
+        else:
+            raise NotImplementedError
 
     def print_descriptors(self, _descriptors):
         """ Print the descriptors information. """
@@ -761,8 +763,14 @@ class PolynomialRegression():
         """ Perform linear regression. """
         
         m = X.shape[1] # The shape of the descriptors
+        #print("X.shape = ", X.shape)
+        #print("y.shape = ", y.shape)
+        #print("w.shape = ", w.shape)
+        #print("alpha = ", alpha)
 
+        # Feature matrix
         _X = X * np.sqrt(np.expand_dims(w, axis=1))
+        # Target
         _y = y * np.sqrt(w)
 
         if self.alpha:
@@ -991,7 +999,7 @@ class PolynomialRegression():
         rows = no_of_structures if train else no_of_atoms
         rows += no_of_atoms * 3 if fc else 0 # x, y, and z
         rows += stress_components if sc else 0 # xx, xy, xz, ..., zz
-        
+
         X = np.zeros([rows, columns])
 
         # Fill in X.
@@ -1219,8 +1227,9 @@ class PolynomialRegression():
             and stress.
         """
         db = shelve.open(self.path+data)
+        print("db filename = ", self.path + data)
         self.no_of_atoms = 0
-        self.stress_components = 0
+        self.stress_components = 0 # ffr: why?
 
         y = None # store the features (energy+forces+stress)
         w = None # weight of each sample
@@ -1238,7 +1247,7 @@ class PolynomialRegression():
                     stress = np.array(data['stress']).ravel()#.flat[[0,3,5,3,1,4,5,4,2]]
                     w_stress = np.array([self.stress_coefficient]*len(stress))
                     self.stress_components += 6
-                    
+
                     if y is None:
                         y = np.concatenate((energy, force, stress))
                         w = np.concatenate((w_energy, w_force, w_stress))
@@ -1277,6 +1286,7 @@ class PolynomialRegression():
                         y = np.concatenate((y, energy))
                         w = np.concatenate((w, w_energy))
         
+        print("in parse_features: self.stress_components: ", self.stress_components)
         db.close()
         gc.collect()
 
@@ -2204,6 +2214,7 @@ def sort_atoms(atoms):
     pbc = atoms.pbc
     forces = atoms.get_forces()
     energy = atoms.get_potential_energy()
+    stress = atoms.get_stress()
 
     idx_sorted = np.argsort(atsymbs)
 
@@ -2216,12 +2227,12 @@ def sort_atoms(atoms):
     atoms_copy.set_pbc(pbc)
 
     from ase.calculators.singlepoint import SinglePointCalculator
-    stress = None # not yet needed
     magmoms = None
     calc = SinglePointCalculator(
         atoms_copy,
-        energy=energy, forces=forces[idx_sorted]
+        energy=energy, forces=forces[idx_sorted], stress=stress,
     )
+    # No need to sort stress
     atoms_copy.calc = calc
     
     return atoms_copy
@@ -2239,7 +2250,7 @@ def parse_xyz(structure_file):
             'structure': atoms_p,
             'energy': atoms_p.get_potential_energy(),
             'force': atoms_p.get_forces(),
-            'stress': None,
+            'stress': atoms_p.get_stress(),
             'group': 'random'
         })
     return data
