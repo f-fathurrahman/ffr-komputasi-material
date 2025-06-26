@@ -960,7 +960,7 @@ class PolynomialRegression():
         """ Dump the evaluate results to text files. """
         absolute_diff = np.abs(np.subtract(predicted, true))
         combine = np.vstack((predicted, true, absolute_diff)).T
-        np.savetxt(self.path+filename, combine, header='Predicted True Diff', fmt='%.7e')
+        np.savetxt(self.path+filename, combine, header='Predicted True Diff', fmt='%15.7e')
 
 
     def parse_descriptors(self, data, fc=True, sc=False, train=True):

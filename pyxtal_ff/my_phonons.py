@@ -177,6 +177,7 @@ class Displacement:
         # Atoms in the supercell -- repeated in the lattice vector directions
         # beginning with the last
         atoms_N = self.atoms * self.supercell
+        print("len(atoms_N) = ", len(atoms_N))
 
         # Set calculator if provided
         assert self.calc is not None, "Provide calculator in __init__ method"
@@ -187,12 +188,15 @@ class Displacement:
         with self.cache.lock(eq_disp.name) as handle:
             if handle is not None:
                 output = self.calculate(atoms_N, eq_disp)
+                atoms_N.write("TEMP_atoms_eq.xyz", write_results=False)
                 handle.save(output)
 
         # Positions of atoms to be displaced in the reference cell
         natoms = len(self.atoms)
         offset = natoms * self.offset
+        print("offset = ", offset)
         pos = atoms_N.positions[offset: offset + natoms].copy()
+        print("pos = ", pos)
 
         # Loop over all displacements
         for a in self.indices:
@@ -201,11 +205,15 @@ class Displacement:
                     disp = self._disp(a, i, sign)
                     with self.cache.lock(disp.name) as handle:
                         if handle is None:
+                            print("handle is None, skipping this")
                             continue
                         try:
-                            atoms_N.positions[offset + a, i] = \
-                                pos[a, i] + sign * self.delta
-
+                            atoms_N.positions[offset + a, i] = pos[a, i] + sign * self.delta
+                            print(f"offset+a = {offset + a} i={i} sign = {sign}")
+                            if sign == -1:
+                                atoms_N.write(f"TEMP_atoms_{a}_{i}_m.xyz", write_results=False)
+                            else:
+                                atoms_N.write(f"TEMP_atoms_{a}_{i}_p.xyz", write_results=False)
                             result = self.calculate(atoms_N, disp)
                             handle.save(result)
                         finally:
