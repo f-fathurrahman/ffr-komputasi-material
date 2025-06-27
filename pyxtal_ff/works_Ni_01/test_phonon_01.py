@@ -47,6 +47,7 @@ ph.clean() # do not clean when tweaking plots
 
 path = atoms.cell.bandpath("GXULGK", npoints=100)
 #path = atoms.cell.bandpath("GX", npoints=40) # for cubic
+#path = atoms.cell.bandpath("GXKGL", npoints=100) # alternative for fcc
 bs = ph.get_band_structure(path)
 
 dos = ph.get_dos(kpts=(20, 20, 20)).sample_grid(npts=100, width=1e-3)
