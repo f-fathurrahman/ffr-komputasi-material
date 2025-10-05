@@ -199,10 +199,12 @@ def my_interacting_solve(
     # Construct the Hamiltonian.
     if H is None:
         H = my_interacting_hamiltonian(s)
+    print("Hamiltonian size = ", H.shape)
 
     # Estimate the level of excitation.
     if level is None:
         level = _estimate_level(s, k)
+    print("level = ", level)
 
     # Solve the many-body Schrodinger equation.
     print("iDEA.methods.interacting.solve: solving eigenproblem...")
