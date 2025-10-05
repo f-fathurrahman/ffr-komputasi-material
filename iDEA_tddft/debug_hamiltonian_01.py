@@ -42,27 +42,7 @@ generate_terms = lambda f, A, B, n: (
     fold_partial_operators(f, partial_operators(A, B, k, n)) for k in range(n)
 )
 
-
-def func_partial_operators(A, B, k, n):
-    ret_vals = []
-    for i in range(n):
-        if i + k == n - 1:
-            ret_vals.append("h")
-        else:
-            ret_vals.append("I")
-    return ret_vals
-
-
-func_partial_operators(h, I, 0, 2)
-
-Ntry = 4
-[ func_partial_operators(h, I, k, Ntry) for k in range(Ntry) ]
-
-terms = generate_terms(sps.kron, h, I, s.count)
-
-TERMS = []
-for term in terms:
-    TERMS.append(term)
+# size of H0 is (Npoints^Nelectrons, Npoints^Nelectrons)
 
 H0 = sps.dia_matrix((s.x.shape[0] ** s.count,) * 2, dtype=float)
 for term in terms:
@@ -84,8 +64,6 @@ if s.count > 1:
     U = sps.diags(U.reshape((H0.shape[0])), format="dia")
 else:
     U = 0.0
-
-indices + "->" + symbols[:s.count]
 
 for c in itertools.combinations(symbols[: 4], 4):
     print("c = ", c)
