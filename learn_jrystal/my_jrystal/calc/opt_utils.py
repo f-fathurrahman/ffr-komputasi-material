@@ -22,7 +22,7 @@ import optax
 from absl import logging
 from optax._src import alias
 
-import jrystal as jr
+import my_jrystal as jr
 
 from ..__init__ import get_pkg_path
 from .._src.crystal import Crystal
