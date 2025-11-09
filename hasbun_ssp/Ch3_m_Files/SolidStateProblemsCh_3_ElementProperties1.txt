@@ -1,0 +1,127 @@
+Z:     Atomic number
+Sy:    Symbol
+MP:    Melting point in Kelvin (K)
+BP:    Boiling point in Kelvin (K)
+BM:    Isothermal bulk modulus 10^11 (N/m^2) Source (1)
+CE:    Cohesive energy (eV/atom) at zero K. Note: 1 eV/atom=23.05 kcal/mole 
+IP1:   First ionization energy (eV)
+IP2:   Second ionization energy (eV)
+
+Sources 
+(1) Introduction to Solid State, Charles Kittel, 8th Ed. 13-19 (John Wiley, NY 2005).
+(2) Inorganic Crystal Structure Database (ICSD) online.
+(3) Curtesy of Matpack C++ Numerics and Graphics Library 
+   (online http://www.matpack.de/Info/Nuclear/Elements/lattice.html)
+(4) http://physics.nist.gov/data, http://www.nist.gov/pml/data/periodic.cfm
+
+Z   Sy Name          MP      BP        BM     CE     IP1     IP2
+1   H  Hydrogen      14.01   20.28     0.002         13.595       
+2   He Helium        0.95    4.216     0.00          24.58   78.98
+3   Li Lithium       453.69  1590      0.116  1.63   5.39    81.01
+4   Be Beryllium     1551    3243      1.003  3.32   9.32    27.53
+5   B  Boron         2573    2823      1.78   5.81   8.30    33.45
+6   C  Carbon        3823    5100      4.43   7.37   11.26   35.64
+7   N  Nitrogen(N2)  63.29   77.4      0.012  4.92   14.54   44.14
+8   O  Oxygen        54.75   90.188           2.60   13.61   48.76
+9   F  Fluorine      53.53   85.01            0.84   17.42   52.40
+10  Ne Neon          24.48   27.1      0.010  0.020  21.56   62.63
+11  Na Sodium        370.95  1165      0.068  1.113  5.14    52.43
+12  Mg Magnesium     921.95  1380      0.354  1.51   7.64    22.67
+13  Al Aluminium     933.52  2740      0.722  3.39   5.98    24.80
+14  Si Silicon       1683    2628      0.988  4.63   8.15    24.49
+15  P  Phosphorus    317.3   553       0.304  3.43   10.55   30.20
+16  S  Sulfur        386     717.824   0.178  2.85   10.36   34.0
+17  Cl Chlorine      172.17  238.55           1.40   13.01   36.81
+18  Ar Argon         83.78   87.29     0.013  0.080  15.76   43.38
+19  K  Potassium     336.8   1047      0.032  0.934  4.34    36.15 
+20  Ca Calcium       1112    1760      0.152  1.84   6.11    17.98
+21  Sc Scandium      1812    3105      0.435  3.90   6.56    19.45
+22  Ti Titanium      1933    3533      1.051  4.85   6.83    20.46
+23  V  Vanadium      2163    3653      1.619  5.31   6.74    21.39
+24  Cr Chromium      2130    2755      1.901  4.10   6.76    23.25
+25  Mn Manganese     1517    2370      0.596  2.92   7.43    23.07
+26  Fe Iron          1808    3023      1.683  4.28   7.90    24.08
+27  Co Cobalt        1768    3143      1.914  4.39   7.86    24.91
+28  Ni Nickel        1726    3005      1.86   4.44   7.63    25.78
+29  Cu Copper        1356.6  2868      1.37   3.49   7.72    27.93
+30  Zn Zinc          692.73  1180      0.598  1.35   9.39    27.35
+31  Ga Gallium       302.93  2676      0.569  2.81   6.00    26.51
+32  Ge Germanium     1210.55 3103      0.772  3.85   7.88    23.81
+33  As Arsenic       886     sublime   0.394  2.96   9.81    30.0
+34  Se Selenium      490     958.1     0.091  2.46   9.75    31.2
+35  Br Bromine       265.9   331.93           1.22   11.84   33.4
+36  Kr Krypton       116.55  120.85    0.018  0.116  14.00   38.56
+37  Rb Rubidium      312.2   961       0.031  0.852  4.18    31.7
+38  Sr Strontium     1042    1657      0.116  1.72   5.69    16.72
+39  Y  Yttrium       1796    3610      0.366  4.37   6.5     18.9
+40  Zr Zirconium     2125    4650      0.833  6.25   6.95    20.98
+41  Nb Niobium       2741    5200      1.702  7.57   6.77    21.22
+42  Mo Molybdenum    2890    5833      2.725  6.82   7.18    23.25
+43  Tc Technetium    2445    5303      2.97   6.85   7.28    22.54
+44  Ru Ruthenium     2583    4173      3.208  6.74   7.36    24.12
+45  Rh Rhodium       2239    4000      2.704  5.75   7.46    25.53
+46  Pd Palladium     1825    3413      1.808  3.89   8.33    27.75
+47  Ag Silver        1235.08 2485      1.007  2.95   7.57    29.05
+48  Cd Cadmium       594.1   1038      0.467  1.16   8.99    25.89
+49  In Indium        429.32  2353      0.411  2.52   5.78    24.64
+50  Sn Tin(\alpha)   505.118 2543      1.11   3.14   7.34    21.97
+51  Sb Antimony      903.89  2023      0.383  2.75   8.64    25.1
+52  Te Tellurium     722.7   1263      0.230  2.19   9.01    27.6
+53  I  Iodine        386.65  457.55           1.11   10.45   29.54
+54  Xe Xenon         161.3   166.1            0.16   12.13   33.3
+55  Cs Cesium        301.55  963       0.020  0.804  3.89    29.0
+56  Ba Barium        998     1913      0.103  1.90   5.21    15.21
+57  La Lanthanum     1193    3727      0.243  4.47   5.61    17.04
+58  Ce Cerium        1071    3530      0.239  4.32   6.91       
+59  Pr Praseodymium  1204    3485      0.306  3.70   5.76        
+60  Nd Neodymium     1283    3400      0.327  3.40   6.31        
+61  Pm Promethium    1353    3000      0.35                      
+62  Sm Samarium      1345    2051      0.294  2.14   5.6         
+63  Eu Europium      1095    1870      0.147  1.86   5.67        
+64  Gd Gadolinium    1584    3506      0.383  4.14   6.16        
+65  Tb Terbium       1633    3314      0.399  4.05   6.74        
+66  Dy Dysprosium    1682    2608      0.384  3.04   6.82        
+67  Ho Holmium       1743    2993      0.397  3.14               
+68  Er Erbium        1795    2783      0.411  3.29               
+69  Tm Thulium       1818    2000      0.397  2.42               
+70  Yb Ytterbium     1097    1466      0.133  1.60   6.2         
+71  Lu Lutetium      1929    3588      0.411  4.43   5.0         
+72  Hf Hafnium       2423    5673      1.09   6.44   7.      22.
+73  Ta Tantalum      3269    5698      2.00   8.10   7.88    24.1
+74  W  Tungsten      3680    6200      3.232  8.90   7.98    25.7
+75  Re Rhenium       3453    5900      3.72   8.03   7.87    24.5
+76  Os Osmium        3318    5300      4.18   8.17   8.7     26.
+77  Ir Iridium       2683    4403      3.55   6.94   9.         
+78  Pt Platinum      2045    4100      2.783  5.84   8.96    27.52
+79  Au Gold          1337.58 3213      1.732  3.81   9.22    29.7
+80  Hg Mercury       234.28  629.73    0.382  0.67   10.43   29.18
+81  Tl Thallium      576.7   1730      0.359  1.88   6.11    26.53
+82  Pb Lead          600.65  2013      0.430  2.03   7.41    22.44
+83  Bi Bismuth       544.5   1833      0.315  2.18   7.29    23.97
+84  Po Polonium      527     1235      0.26   1.50   8.43        
+85  At Astatine      575     610                                 
+86  Rn Radon         202     211.4            0.202  10.74       
+87  Fr Francium      300     950       0.020                     
+88  Ra Radium        973     1413      0.132  1.66   5.28    15.42
+89  Ac Actinium      1320    3470      0.25   4.25   6.9     19.0
+90  Th Thorium       2023    5060      0.543  6.20               
+91  Pa Protactinium  1827    4300      0.76                      
+92  U  Uranium       1405.5  4091      0.987  5.55               
+93  Np Neptunium     913     4175      0.68   4.73               
+94  Pu Plutonium     914     3600      0.54   3.60               
+95  Am Americium     1267    2880             2.73               
+96  Cm Curium        1613                     3.99               
+97  Bk Berkelium     1259                                        
+98  Cf Californium   1173                                        
+99  Es Einsteinium   1133                                        
+100 Fm Fermium                                                   
+101 Md Mendelevium                                               
+102 No Nobelium                                                  
+103 Lr Lawrencium                                                 
+104 Rf Rutherfordium                                             
+105 Db Dubnium                                                   
+106 Sg Seaborgium                                                 
+107 Bh Bohrium                                                   
+108 Hs Hassium                                                   
+109 Mt Meitnerium                                                
+
