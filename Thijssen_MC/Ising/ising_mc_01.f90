@@ -12,8 +12,8 @@ END
 
 
 SUBROUTINE initialize()
-  use m_globals
-  implicit none
+  USE m_globals
+  IMPLICIT NONE
   !
   INTEGER :: I, IX, IY
 
