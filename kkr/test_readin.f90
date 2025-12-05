@@ -119,30 +119,30 @@ write(*,*) 'nf = ', nf
 !
 ! Do some conversion (?)
 !
-allocate( anclr(ncmpx), rmt(ntyp), field(ntyp), conc(ncmpx), &
-          lmxtyp(ntyp), ncmp(ntyp), type(ntyp), atmtyp(natm), &
-          atmicv(3*natm) )
-
-call equarr(xrmt,rmt,ntyp)
-call equarr(xfield,field,ntyp)
-call equarr(xconc,conc,ncmpx)
-      
-    !call equarr(xtype,type,ntyp)
-    type(1:ntyp) = xtype(1:ntyp)
-
-    call equari(jncmp,ncmp,ntyp)
-    call equarr(xanclr,anclr,ncmpx)
-    call equari(jlmxtyp,lmxtyp,ntyp)
-      
-    !call equarr(xatmtyp,atmtyp,natm)
-    atmtyp(1:natm) = xatmtyp(1:natm)
-
-    !write(*,*) 'xatmicv = ', xatmicv
-    !write(*,*) 'atmicv = ', atmicv
-
-    call equarr(xatmicv,atmicv,9*natm)
-    !atmicv(1:9*natm) = xatmicv(1:9*natm)
-    !atmicv(:) = xatmicv(:)
+!allocate( anclr(ncmpx), rmt(ntyp), field(ntyp), conc(ncmpx), &
+!          lmxtyp(ntyp), ncmp(ntyp), type(ntyp), atmtyp(natm), &
+!          atmicv(3*natm) )
+!
+!call equarr(xrmt,rmt,ntyp)
+!call equarr(xfield,field,ntyp)
+!call equarr(xconc,conc,ncmpx)
+!      
+!    !call equarr(xtype,type,ntyp)
+!    type(1:ntyp) = xtype(1:ntyp)
+!
+!    call equari(jncmp,ncmp,ntyp)
+!    call equarr(xanclr,anclr,ncmpx)
+!    call equari(jlmxtyp,lmxtyp,ntyp)
+!      
+!    !call equarr(xatmtyp,atmtyp,natm)
+!    atmtyp(1:natm) = xatmtyp(1:natm)
+!
+!    !write(*,*) 'xatmicv = ', xatmicv
+!    !write(*,*) 'atmicv = ', atmicv
+!
+!    call equarr(xatmicv,atmicv,9*natm)
+!    !atmicv(1:9*natm) = xatmicv(1:9*natm)
+!    !atmicv(:) = xatmicv(:)
 
 
 
