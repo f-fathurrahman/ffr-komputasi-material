@@ -1,12 +1,26 @@
 using StaticArrays
 
+
+function redirect_to_files(dofunc, outfile, errfile)
+    open(outfile, "w") do out
+        open(errfile, "w") do err
+            redirect_stdout(out) do
+                redirect_stderr(err) do
+                    dofunc()
+                end
+            end
+        end
+    end
+end
+
 function show_fields(a)
     t = typeof(a)
-    println("\n Type of variable: ", t)
+    println("<div> ENTER Type of variable: ", t)
     for s in fieldnames(t)
         f = getfield(a, s)
         println("\n  fieldname = $s, type = $(typeof(f))")
     end
+    println("</div> EXIT Type of variable: ", t)
     return
 end
 
@@ -50,22 +64,24 @@ function show_fields_recursive(a_in; indent="  ")
     t = typeof(a)
     if t <: Number
         #@info "Stopped here because t=$t is a Number"
+        #println(indent * "EXIT type: $t")
         return
     end
     if t <: UnitRange
+        #println(indent * "EXIT type: $t")
         return
     end
     if t <: MyJuLIP.Potentials.SZList
+        #println(indent * "EXIT type: $t")
         return
     end
 
     println()
-    println(indent * "------------------------")
-    println(indent * "Parent type: $t")
-    println(indent * "------------------------")
+    println(indent * "<div> ENTER type: $t")
     
     if t <: Dict
-        println(indent * "!!! This is a Dict: we will skip it")
+        #println(indent * "!!! This is a Dict: we will skip it")
+        #println(indent * "EXIT type: $t")
         return
     end
 
@@ -75,5 +91,7 @@ function show_fields_recursive(a_in; indent="  ")
         println("\n" * indent * " - fieldname = $s, type = $(typeof(f))")
         show_fields_recursive(f, indent=indent*"  ")
     end
+
+    println(indent * "</div> EXIT type: $t")
     return
 end

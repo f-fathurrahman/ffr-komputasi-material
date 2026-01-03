@@ -1,3 +1,10 @@
+```
+prefix = "LOG_types";
+redirect_to_files(prefix, prefix) do
+  show_fields_recursive(model);
+end;
+```
+
 # Investigating ACE basis
 
 The function: `ACE1x.ace_basis`.

@@ -99,7 +99,7 @@ function acefit!(model::MyACE1Model, raw_data;
                   
    P = _make_prior(model, smoothness, prior)
    # We need this to allow control over new and old assembly
-   A, Y, W = _dispatch_to_assebly(
+   A, Y, W = _dispatch_to_assembly(
       data, 
       model.basis;
       energy_key= Symbol(energy_key),
@@ -121,15 +121,15 @@ function acefit!(model::MyACE1Model, raw_data;
           co_coeffs[:,i] = P \ co_coeffs[:,i]
        end
        IP_com = MyACE1.committee_potential(model.basis, coeffs, co_coeffs)
-       (model.Vref != nothing) && (IP_com = MyJuLIP.MLIPs.SumIP(model.Vref, IP_com))
+       !isnothing(model.Vref) && (IP_com = MyJuLIP.MLIPs.SumIP(model.Vref, IP_com))
        # possibly too drastic to overwrite potential with committee potential?
        model.potential = IP_com
    end
 
-   if export_lammps != nothing 
+   if !isnothing(export_lammps)
       export2lammps(export_lammps, model)
    end
-   if export_json != nothing 
+   if !isnothing(export_json)
       export2json(export_json, model)
    end
 
@@ -173,7 +173,7 @@ function _apply_weight(data; group_key=:config_type, kwargs...)
    )
 end
 
-function _dispatch_to_assebly(data::AbstractArray{AtomsData}, basis; kwargs...)
+function _dispatch_to_assembly(data::AbstractArray{AtomsData}, basis; kwargs...)
    if haskey(kwargs, :new_assembly) && kwargs[:new_assembly] == true
       return MyACEfit.assemble(data, basis; new_assembly=true)
    else
@@ -181,7 +181,7 @@ function _dispatch_to_assebly(data::AbstractArray{AtomsData}, basis; kwargs...)
    end
 end
 
-_dispatch_to_assebly(data, basis; kwargs...) = MyACEfit.assemble(data, basis; kwargs...)
+_dispatch_to_assembly(data, basis; kwargs...) = MyACEfit.assemble(data, basis; kwargs...)
 
 function linear_errors(raw_data::AbstractArray{<:MyJuLIP.Atoms}, model::MyACE1Model; 
                        energy_key = "energy", 

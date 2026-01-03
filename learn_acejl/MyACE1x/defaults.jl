@@ -262,9 +262,7 @@ end
 
 function _pair_basis(kwargs)
 
-   println("-------------------------")
-   println("ENTER MyACE1x._pair_basis")
-   println("-------------------------")
+   println("\n<div> ENTER MyACE1x._pair_basis\n")
 
    rbasis = kwargs[:pair_basis]
    elements = kwargs[:elements]
@@ -318,11 +316,8 @@ function _pair_basis(kwargs)
       end
    end
 
-   println("-------------------------")
-   println("EXIT MyACE1x._pair_basis")
    println("Will return PolyPairBasis")
-   println("-------------------------")
-
+   println("\n</div> EXIT MyACE1x._pair_basis\n")
 
    return PolyPairBasis(rbases, elements)
 end
@@ -331,9 +326,7 @@ end
 
 function mb_ace_basis(kwargs)
 
-   println("------------------")
-   println("ENTER mb_ace_basis")
-   println("------------------")
+   println("\n<div> ENTER mb_ace_basis")
 
    # Extract some information from kwargs
    elements = kwargs[:elements]
@@ -342,9 +335,7 @@ function mb_ace_basis(kwargs)
    pure2b = kwargs[:pure2b]
    
    println()
-   println("-------------------------")
    println("Initializing radial basis")
-   println("-------------------------")
    rbasis = _radial_basis(kwargs)
 
    if pure2b && kwargs[:pure]
@@ -355,9 +346,7 @@ function mb_ace_basis(kwargs)
 
    if pure2b
       println()
-      println("------------------")
       println("Using pure2b basis")
-      println("------------------")
       #
       println("Deg = ", Deg)
       println("maxdeg = ", maxdeg)
@@ -388,10 +377,8 @@ function mb_ace_basis(kwargs)
                                N = cor_order, )
    end
 
-   println("------------------")
-   println("EXIT mb_ace_basis")
    println("Will return rpibasis")
-   println("------------------")
+   println("\n</div> EXIT mb_ace_basis")
 
    return rpibasis
 end
@@ -401,9 +388,8 @@ end
 
 
 function ace_basis(; kwargs...)
-   println("---------------------------")
-   println("*** ENTER MyACE1x.ace_basis")
-   println("---------------------------")
+
+   println("\n<div> ENTER MyACE1x.ace_basis\n")
    #
    kwargs = _clean_args(kwargs) # convert to NamedTuple
    println("kwargs of ace_basis = ", kwargs)
@@ -411,11 +397,8 @@ function ace_basis(; kwargs...)
    rpiB = mb_ace_basis(kwargs)
    pairB = _pair_basis(kwargs)
    #
-   println("--------------------------")
-   println("*** EXIT MyACE1x.ace_basis")
-   println("***")
-   println("*** will return MyJuLIP.MLIPs.IPSuperBasis")
-   println("--------------------------")
+   println("ace_basis will return MyJuLIP.MLIPs.IPSuperBasis")
+   println("\n</div> EXIT MyACE1x.ace_basis\n")
 
    return MyJuLIP.MLIPs.IPSuperBasis([pairB, rpiB]);
 end
