@@ -1,0 +1,791 @@
+{
+  "JOB": {
+    "comment": {
+      "type": "str",
+      "default": "Control of the running job."
+    },
+    "task": {
+      "type": "cstr",
+      "default": "Optdensity",
+      "comment": "The task to be performed.",
+      "options": "Optdensity, Calculation, Propagate, Casida, Diagonalize, Inversion"
+    },
+    "calctype": {
+      "type": "cstrlist",
+      "default": "Energy",
+      "comment": "The property to be calculated.",
+      "options": "Energy, Potential, Both, Force, Stress"
+    }
+  },
+  "PATH": {
+    "comment": {
+      "type": "str",
+      "default": "Specify the path of needed files."
+    },
+    "pppath": {
+      "comment": "The path of pseudopotential.",
+      "options": "",
+      "type": "path",
+      "default": "./"
+    },
+    "cellpath": {
+      "comment": "The path of input structure.",
+      "options": "",
+      "type": "path",
+      "default": "./"
+    }
+  },
+  "MATH": {
+    "comment": {
+      "type": "str",
+      "default": "Some methods and techniques that make DFTpy really fast."
+    },
+    "linearii": {
+      "comment": "Linear-scaling method to deal with Ion-Ion interactions (PME).",
+      "options": "True, False",
+      "type": "bool",
+      "default": true
+    },
+    "linearie": {
+      "comment": "Linear-scaling method to deal with Ion-Electron interactions (PME).",
+      "options": "True, False",
+      "type": "bool",
+      "default": true
+    },
+    "twostep": {
+      "comment": "A two-step method for performing density optimizations. '`True`' is equivalent to :ref:`multistep<math-multistep>` = 2.",
+      "type": "bool",
+      "options": "True, False",
+      "default": false
+    },
+    "multistep": {
+      "comment": "A multi-step method for performing density optimizations.",
+      "options": "1,2,...",
+      "type": "int",
+      "default": 1
+    },
+    "reuse": {
+      "comment": "Except in the first step, the initial density is given by the optimized density of the previous step.",
+      "options": "True, False",
+      "type": "bool",
+      "default": true
+    }
+  },
+  "PP": {
+     "comment": "Pseudopotential files for each atomic species",
+     "type": "cdict",
+	 "default": {},
+     "example": "Al = Al_lda.oe01.recpot"
+  },
+  "CELL": {
+    "comment": {
+      "type": "str",
+      "default": "Information about the input structure."
+    },
+    "cellfile": {
+      "comment": "The file of input structure. ",
+      "options": "",
+      "type": "str",
+      "default": "POSCAR"
+    },
+    "elename": {
+      "comment": "The name of atom.",
+      "options": "",
+      "type": "cstrlist",
+      "default": null
+    },
+    "zval": {
+      "comment": "The charge of atomic species.",
+      "options": "",
+      "type": "floatlist",
+      "default": null
+    },
+    "format": {
+      "comment": "The format of structure file.",
+      "options": "pp, vasp, xsf, snpy, ...",
+      "note": "Only `snpy` format support parallel read and write",
+      "type": "str",
+      "default": null
+    }
+  },
+  "GRID": {
+    "comment": {
+      "type": "str",
+      "default": "Control the grid."
+    },
+    "ecut": {
+      "comment": "The kinetic energy cutoff.",
+      "options": "",
+      "type": "float",
+      "default": 600,
+      "unit": "eV"
+    },
+    "spacing": {
+      "comment": "The spacing (or gap) separating nearest real space grid points. If set this, :ref:`ecut<grid-ecut>` is disabled.",
+      "options": "",
+      "type": "float",
+      "default": null,
+      "unit": "Angstrom"
+    },
+    "gfull": {
+      "comment": "Determines oif the number of grid points in the reciprocal and real space grids are equal. If '`False`' only use half grid, which will be faster.",
+      "type": "bool",
+      "options": "True, False",
+      "default": false,
+      "note": "`gfull=False`' implies that the the number of points of reciprocal space is only half of real space."
+    },
+    "nr": {
+      "comment": "The number of grid points in the direction of the three lattice vectors.",
+      "options": "",
+      "type": "intlist",
+      "default": null,
+      "example": "nr = 32 32 32"
+    },
+    "maxprime": {
+      "comment": "The max prime of guess best number of grid points for FFT",
+      "options": "3, 5, 7, 11, 13, 17,..., 97",
+      "type": "int",
+      "default": 13
+    },
+    "scale": {
+      "comment": "The minimum scale for guess the best number of grid points",
+      "options": "",
+      "type": "float",
+      "default": 0.99
+    },
+    "cplx": {
+      "comment": "The type of real space value",
+      "options": "True, False",
+      "type": "bool",
+      "default": false
+    }
+  },
+  "DENSITY": {
+    "comment": {
+      "type": "str",
+      "default": "Control the charge density."
+    },
+    "nspin": {
+      "comment": "non/spin-polarized calculation",
+      "options": "1, 2",
+      "type": "int",
+      "default": 1
+    },
+    "magmom": {
+      "comment": "Total electronic magnetization.",
+      "options": "",
+      "type": "float",
+      "default": 0
+    },
+    "densityini": {
+      "comment": "The initial density is given by homogeneous electron gas (HEG) or read from :ref:`densityfile<density-densityfile>`. If set `Read`, must given the :ref:`densityfile<density-densityfile>`.",
+      "options": "heg, read",
+      "type": "lstr",
+      "default": "heg"
+    },
+    "densityfile": {
+      "comment": "The charge density for initial density, only works when if :ref:`densityini<density-densityini>` set `Read`.",
+      "options": "",
+      "type": "path",
+      "default": null
+    },
+    "densityoutput": {
+      "comment": "The output file of final density. The default is not output the density.",
+      "options": "",
+      "type": "path",
+      "default": null
+    }
+  },
+  "EXC": {
+    "comment": {
+      "type": "str",
+      "default": "Control the exchange-correlation functional."
+    },
+    "xc": {
+      "comment": "The kind of exchange-correlation functional. If not `LDA`, must have pylibxc_ installed. It has higher priority than :ref:`libxc<exc-libxc>`",
+      "options": "LDA, PBE",
+      "type": "str",
+      "default": null
+    },
+    "libxc": {
+      "comment": "The type of exchange-correlation functionals with pylibxc_. See `available functionals <https://www.tddft.org/programs/libxc/functionals/>`_.",
+      "options": "",
+      "type": "lstrlist",
+      "default": "lda_x lda_c_pz"
+    },
+    "x_str": {
+      "comment": "See `libxc's available exchange functionals <https://www.tddft.org/programs/libxc/functionals/>`_ (deprecated).",
+      "options": "",
+      "type": "str",
+      "default": null
+    },
+    "c_str": {
+      "comment": "See `libxc's available correlation functionals <https://www.tddft.org/programs/libxc/functionals/>`_ (deprecated).",
+      "options": "",
+      "type": "str",
+      "default": null
+    }
+  },
+  "KEDF": {
+    "comment": {
+      "type": "str",
+      "default": "Control the kinetic energy density functional (KEDF). DFTpy features most KEDFs, from GGAs to nonlocal to nonlocal with density dependent kernel."
+    },
+    "kedf": {
+      "comment": "The type of KEDF. GGA functionals are available with keywords GGA and LIBXC.",
+      "options": "TF, GGA, LIBXC, vW, TFvW, WT, SM, FP, MGP, MGPA, MGPG, LMGP, LMGPA, LMGPG, LWT, HC, revHC, WTE",
+      "type": "ustr",
+      "default": "WT"
+    },
+    "x": {
+      "comment": "The ratio of TF KEDF.",
+      "options": "",
+      "type": "float",
+      "default": 1
+    },
+    "y": {
+      "comment": "The ratio of vW KEDF.",
+      "options": "",
+      "type": "float",
+      "default": 1
+    },
+    "alpha": {
+      "comment": "The alpha parameter typical in  nonlocal KEDF :math:`\\rho^{\\alpha}`.",
+      "options": "",
+      "type": "float",
+      "default": null
+    },
+    "beta": {
+      "comment": "The beta parameter typical in  nonlocal KEDF :math:`\\rho^{\\beta}`.",
+      "options": "",
+      "type": "float",
+      "default": null
+    },
+    "sigma": {
+      "comment": "A parameter used to smooth with a Gaussian convolution FFTs of problematic functions (e.g., invfft of :math:`{G^2\\rho(G)}` ).",
+      "options": "",
+      "type": "float",
+      "default": null
+    },
+    "nsp": {
+      "comment": "The number of :math:`{k_{f}}` points for splining `LWT` like nonlocal KEDFs. There are three options to achieve the same goal, the priority is :ref:`nsp<kedf-nsp>` -> :ref:`delta<kedf-delta>` -> :ref:`ratio<kedf-ratio>`. Default is using :ref:`ratio<kedf-ratio>`.",
+      "options": "",
+      "type": "int",
+      "default": null
+    },
+    "interp": {
+      "comment": "The interpolation method for `LWT` KEDF's kernel from the kernel table.",
+      "options": "linear, newton, hermite",
+      "type": "str",
+      "default": "hermite"
+    },
+    "kerneltype": {
+      "comment": "The kernel for `LWT` KEDF.",
+      "options": "WT, MGP, MGPA, MGPG, HC",
+      "type": "str",
+      "default": null
+    },
+    "symmetrization": {
+      "comment": "The symmetrization way for `MGP` KEDF. See `MGP_paper <https://aip.scitation.org/doi/abs/10.1063/1.5023926>`_.",
+      "options": "None, Arithmetic, Geometric",
+      "type": "str",
+      "default": null
+    },
+    "lumpfactor": {
+      "comment": "The kinetic electron for `LWT` KEDF.",
+      "options": "",
+      "type": "floatlist",
+      "default": null
+    },
+    "neta": {
+      "comment": "The max number of discrete :math:`\\eta` for `LWT` KEDF.",
+      "options": "",
+      "type": "int",
+      "default": 50000
+    },
+    "etamax": {
+      "comment": "The max value of \\eta for kernel in `LWT` KEDF.",
+      "options": "",
+      "type": "float",
+      "default": 50
+    },
+    "order": {
+      "comment": "The order for the interpolation of the kernel in `LWT` KEDF. '0' means using the value of nearest-neighbor point is used.",
+      "options": "1, 2, 3, 4, 5",
+      "type": "int",
+      "default": 3
+    },
+    "ratio": {
+      "comment": "The ratio of :math:`{k_{f}}` for spline in `LWT` KEDF. There are three options to do same thing, the priority is :ref:`nsp<kedf-nsp>` -> :ref:`delta<kedf-delta>` -> :ref:`ratio<kedf-ratio>`. Default is using :ref:`ratio<kedf-ratio>`.",
+      "options": "",
+      "type": "float",
+      "default": 1.15
+    },
+    "maxpoints": {
+      "comment": "The max number of integration points for the evaluation of the `MGP` kernel.",
+      "options": "",
+      "type": "int",
+      "default": 1000
+    },
+    "delta": {
+      "type": "float",
+      "options": "",
+      "default": null,
+      "comment": "The gap of spline"
+    },
+    "kdd": {
+      "type": "int",
+      "default": 3,
+      "options": "1, 2, 3",
+      "comment": "The kernel density dependent for `LWT` KEDF: \\\\n\\\\t\\\\t+ 1 : The origin `LWT` KEDF. \\\\n\\\\t\\\\t+ 2 : Considers the :math:`\\rho^{\\beta}(r')\\omega(\\rho(r),r-r')` term in the potential.\\\\n\\\\t\\\\t+ 3 : Also considers the derivative of kernel which is neglected in LWT. See `LMGP_paper <https://journals.aps.org/prb/abstract/10.1103/PhysRevB.100.041105>`_.  "
+    },
+    "rho0": {
+      "comment": "The 'average' density used for the definition of the Fermi momentum. Default is None, which means it calculated based on the total charge and system volume.",
+      "type": "float",
+      "options": "",
+      "default": null
+    },
+    "k_str": {
+      "comment": "Functional type for GGA/LIBXC",
+      "type": "str",
+      "options": "LKT, DK, LLP, LLP91, OL1, OL, OL2, T92, THAK, B86A, B86, B86B, DK87, PW86, PW91O, PW91, PW91k, LG94, E00, P92, PBE2, PBE3, PBE4, P82, TW02, APBE, APBEK, REVAPBEK, REVAPBE, VJKS00, LC94, VT84F, SMP, TF, VW, X_TF_Y_VW, TFVW, STV, PBE2M, PG",
+      "default": null,
+      "warning": "GGA invokes DFTpy's implementation. LIBXC invokes libxc's implementation (discouraged)."
+    },
+    "params": {
+      "comment": "Parameters for GGA KEDF functionals",
+      "options": "",
+      "type": "floatlist",
+      "default": null
+    },
+    "kfmin": {
+      "comment": "Lower limit of kf",
+      "options": "",
+      "type": "float",
+      "default": null
+    },
+    "kfmax": {
+      "comment": "Upper limit of kf",
+      "type": "float",
+      "options": "",
+      "default": null
+    },
+    "rhomax": {
+      "comment": "Maximum/cutoff density",
+      "type": "float",
+      "options": "",
+      "default": null
+    },
+    "ldw": {
+      "comment": "local density weight",
+      "type": "float",
+      "options": "",
+      "default": null
+    },
+    "temperature": {
+      "comment": "The temperature of TF KEDF.",
+      "options": "",
+      "type": "float",
+      "unit": "eV",
+      "default": null
+    },
+    "temperature0": {
+      "comment": "The temperature of TF KEDF (analytical approximation).",
+      "options": "",
+      "type": "float",
+      "unit": "eV",
+      "default": null
+    }
+  },
+  "KEDF2": {
+    "copy": {
+      "type": "str",
+      "default": "KEDF"
+    },
+    "active": {
+      "type": "bool",
+      "default": false
+    },
+    "x": {
+      "comment": "The ratio of TF KEDF.",
+      "options": "",
+      "type": "float",
+      "default": 0
+    },
+    "y": {
+      "comment": "The ratio of vW KEDF.",
+      "options": "",
+      "type": "float",
+      "default": 0
+    }
+  },
+  "OUTPUT": {
+    "comment": {
+      "type": "str",
+      "default": "Control the output."
+    },
+    "time": {
+      "comment": "Output the time information of all parts.",
+      "options": "True, False",
+      "type": "bool",
+      "default": true
+    },
+    "stress": {
+      "comment": "Output the stress information of all terms.",
+      "options": "True, False",
+      "type": "bool",
+      "default": true
+    },
+    "electrostatic_potential": {
+      "comment": "Output of electrostatic potential",
+      "options": "",
+      "type": "str",
+      "default": null
+    }
+  },
+  "OPT": {
+    "comment": {
+      "type": "str",
+      "default": "Control the charge density optimization."
+    },
+    "method": {
+      "comment": "The density optimization method.",
+      "type": "ustr",
+      "options": "TN, LBFGS, CG-HS, CG-DY, CG-CD, CG-LS, CG-FR, CG-PR",
+      "default": "CG-HS"
+    },
+    "algorithm": {
+      "type": "ustr",
+      "default": "EMM",
+      "options": "EMM, RMM, OESCF",
+      "comment": "Direct energy minimization method (EMM), direct residual minimization method (RMM), and one-orbital ensemble self-consistent field (`OESCF <https://pubs.acs.org/doi/full/10.1021/acs.jpclett.1c00716>`_).",
+      "note": "In `OESCF` solver, the :ref:`kedf<kedf-kedf>` has to contains full `vW` functional."
+    },
+    "vector": {
+      "type": "str",
+      "default": "Orthogonalization",
+      "options": "Orthogonalization, Scaling",
+      "comment": "The scheme to deal with search direction."
+    },
+    "c1": {
+      "comment": "The wolfe parameters `c1`",
+      "options": "",
+      "type": "float",
+      "default": 0.0001
+    },
+    "c2": {
+      "comment": "The wolfe parameters `c2`",
+      "options": "",
+      "type": "float",
+      "default": 0.2
+    },
+    "maxls": {
+      "comment": "The max steps for line search. ",
+      "options": "",
+      "type": "int",
+      "default": 10
+    },
+    "econv": {
+      "type": "float",
+      "default": 1e-06,
+      "options": "",
+      "comment": "The energy convergence for last three steps (a.u./atom).",
+      "unit": "a.u./atom"
+    },
+    "maxfun": {
+      "type": "int",
+      "options": "",
+      "default": 50,
+      "comment": "The max steps for function calls. For `TN` density optimization method its the max steps for searching direction."
+    },
+    "maxiter": {
+      "type": "int",
+      "options": "",
+      "default": 100,
+      "comment": "The max steps for optimization"
+    },
+    "xtol": {
+      "comment": "Relative tolerance for an acceptable step.",
+      "options": "",
+      "type": "float",
+      "default": 1e-12
+    },
+    "h0": {
+      "type": "float",
+      "options": "",
+      "default": 1,
+      "comment": "The initial approximation for the inverse Hessian needed by `LBFGS`."
+    }
+  },
+  "MIX": {
+    "comment": {
+      "type": "str",
+      "default": "Control the charge density mixing."
+    },
+    "scheme": {
+      "type": "lstr",
+      "default": "pulay",
+      "comment": "Density mixing scheme.",
+      "options": "pulay, linear"
+    },
+    "predtype": {
+      "type": "str",
+      "comment": "The preconditioning method.",
+      "options": "kerker, inverse_kerker, resta",
+      "default": "kerker"
+    },
+    "predcoef": {
+      "type": "floatlist",
+      "comment": "The parameters for preconditioning.",
+      "options": "",
+      "default": "1.0 1.0 1.0"
+    },
+    "predecut": {
+      "type": "float",
+      "comment": "The preconditioning energy cutoff.",
+      "options": "",
+      "unit": "eV",
+      "default": null
+    },
+    "maxm": {
+      "type": "int",
+      "comment": "Maximum of iterations used for mixing.",
+      "options": "",
+      "default": 7
+    },
+    "coef": {
+      "type": "float",
+      "comment": "",
+      "options": "The mixing parameter.",
+      "default": "0.7"
+    },
+    "delay": {
+      "type": "int",
+      "comment": "Delay several step to mixing the density.",
+      "options": "",
+      "default": "2"
+    },
+    "restarted": {
+      "type": "bool",
+      "comment": "Restart the mixer after several step.",
+      "options": "True, False",
+      "default": false
+    },
+    "kf": {
+      "type": "str",
+      "comment": "Similar as predcoef, not use now.",
+      "options": "",
+      "default": "auto"
+    }
+  },
+  "PROPAGATOR": {
+    "comment": {
+      "type": "str",
+      "default": "Control of the propagator. `DFTpy` has an implementation of hydrodynamic TDDFT. This is essentially TDDFT with one orbital only, defined as :math:`{\\psi(r,t)=\\sqrt{\\rho(r,t)}e^{iS(r,t)}}`, and determined by the following time-dependent Schroedinger equation, \\\\n\\\\n\\\\t\\\\t :math:`{-\\frac{1}{2} \\nabla^2 \\psi(r,t) + v_s(r,t) \\psi(r,t) = i\\frac{d}{dt}\\psi(r,t)}`,\\\\n\\\\n\\\\twhere :math:`{v_s = v_{xc} + v_H + v_{T_s} - v_{vW} + v_{dyn}}`, See `paper <https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.111.175002>`_."
+    },
+    "propagator": {
+      "type": "str",
+      "default": "crank-nicholson",
+      "comment": "The type of propagator.",
+      "options": "crank-nicholson, taylor"
+    },
+    "order": {
+      "type": "int",
+      "default": 20,
+      "comment": "The order used for the Taylor expansion propagator."
+    },
+    "linearsolver": {
+      "type": "str",
+      "default": "cg",
+      "comment": "The linear solver used for the Crank-Nicolson propagator. The solvers with a name end with `_scipy` are from the `SciPy` package and should be used in serial calculations only. ",
+      "options": "bicg, bicgstab, cg, bicg_scipy, bicgstab_scipy, cg_scipy, cgs_scipy, gmres_scipy, lgmres_scipy, minres_scipy, qmr_scipy"
+    },
+    "tol": {
+      "type": "float",
+      "default": 1e-10,
+      "options": "",
+      "comment": "The relative tolerance for the linear solver used for the Crank-Nicolson propagator."
+    },
+    "maxiter": {
+      "type": "int",
+      "default": 100,
+      "options": "",
+      "comment": "The max amount of iteration steps for the linear solver used for the Crank-Nicolson propagator."
+    },
+    "atol": {
+      "type": "float",
+      "default": null,
+      "options": "",
+      "comment": "The absolute tolerance for the linear solver used for the Crank-Nicolson propagator."
+    }
+  },
+  "TD": {
+    "comment": {
+      "type": "str",
+      "default": "Control the TDDFT parameters that lie outside the propagator class."
+    },
+    "outfile": {
+      "type": "str",
+      "default": "td_out",
+      "options": "",
+      "comment": "The prefix of the output files."
+    },
+    "timestep": {
+      "type": "float",
+      "default": 0.001,
+      "options": "",
+      "comment": "The time step in atomic units."
+    },
+    "tmax": {
+      "type": "float",
+      "default": 1,
+      "options": "",
+      "comment": "The total amount of time in atomic units."
+    },
+    "max_pc": {
+      "type": "int",
+      "default": 2,
+      "options": "",
+      "comment": "The max amount of the predictor-corrector steps."
+    },
+    "tol_pc": {
+      "type": "float",
+      "default": 1e-08,
+      "options": "",
+      "comment": "The relative tolerance for the predictor-corrector."
+    },
+    "atol_pc": {
+      "type": "float",
+      "default": 1e-10,
+      "options": "",
+      "comment": "The absolute tolerance for the predictor-corrector."
+    },
+    "direc": {
+      "type": "direction",
+      "default": 0,
+      "comment": "The direction of the initial kick. 0, 1, 2 stands for x-, y-, z-direction, respectively.",
+      "options": "0 or x, 1 or y, 2 or z"
+    },
+    "strength": {
+      "type": "float",
+      "default": 0.001,
+      "comment": "The strength of the initial kick in atomic units."
+    },
+    "max_runtime": {
+      "type": "float",
+      "default": 0,
+      "options": "",
+      "comment": "Max amount of running time in seconds before the program saves the intermediate result and quitting."
+    },
+    "restart": {
+      "type": "bool",
+      "default": false,
+      "options": "True, False",
+      "comment": "Restart the propagation from a previously saved intermediate result."
+    },
+    "restart_input": {
+      "type": "str",
+      "default": "restart_data.npy",
+      "comment": "Input file for restart data."
+    },
+    "save_interval": {
+      "type": "int",
+      "default": 1000,
+      "comment": "The number of time step interval between two saves of states."
+    },
+    "correction": {
+      "type": "bool",
+      "default": false
+    },
+    "vector_potential": {
+      "type": "bool",
+      "default": false,
+      "comment": "If true, use vector potential for the initial kick."
+    },
+    "propagate_vector_potential": {
+      "type": "bool",
+      "default": true,
+      "comment": "Only matters if vector_potential is true. If true, propagate the vector potential."
+    },
+    "omega": {
+      "type": "float",
+      "default": 0
+    },
+    "z_split": {
+      "type": "float",
+      "default": 0
+    }
+  },
+  "CASIDA": {
+    "comment": {
+      "type": "str",
+      "default": "Control of the CASIDA."
+    },
+    "numeig": {
+      "type": "int",
+      "default": null,
+      "options": "",
+      "comment": "Number of eigenstates used in constructing casida matrix."
+    },
+    "diagonalize": {
+      "type": "bool",
+      "default": true,
+      "options": "True, False",
+      "comment": "If true, diagonalize the Hamiltonian before construct the Casida matrix. If false, read the eigenstates from a saved file."
+    },
+    "tda": {
+      "type": "bool",
+      "default": false,
+      "options": "True, False",
+      "comment": "Use Tamm-Dancoff approximation."
+    }
+  },
+  "NONADIABATIC": {
+    "nonadiabatic": {
+      "type": "str",
+      "default": null,
+      "comment": "Name of nonadiabatic Pauli potential."
+    },
+    "cutoff": {
+      "type": "float",
+      "default": 0.01,
+      "comment": "If :math:'k_F' is smaller than the cutoff, treat it equal to the cutoff."
+    },
+    "rho_cutoff": {
+      "type": "float",
+      "default": 0.001
+    },
+    "k": {
+      "type": "int",
+      "default": 2
+    }
+  },
+  "NONADIABATIC2": {
+    "copy": {
+      "type": "str",
+      "default": "NONADIABATIC"
+    },
+    "active": {
+      "type": "bool",
+      "default": false
+    }
+  },
+  "INVERSION": {
+    "comment": {
+      "type": "str",
+      "default": "Control of the INVERSION."
+    },
+    "rho_in": {
+      "type": "str",
+      "default": null,
+      "options": "",
+      "comment": "Input file for the density."
+    },
+    "v_out": {
+      "type": "str",
+      "default": null,
+      "options": "",
+      "comment": "Output file for the potential."
+    }
+  }
+}
