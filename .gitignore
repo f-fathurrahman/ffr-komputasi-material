@@ -1,4 +1,5 @@
-.vscode
+*.mem
+*.gz
 ORIG_*
 rundir_*
 STRUCT.xsf

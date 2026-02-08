@@ -4,6 +4,8 @@ using Printf
 import Random
 using Statistics
 
+include("my_vmc_stats.jl")
+
 const D = 0.5    # hbar^2/2m in a.u. 
 const Z = 2                  # charge number
 const Eexact = -2.903724377  # exact ground state energy (non-relativistic, fixed nucleus)
@@ -25,22 +27,6 @@ mutable struct Walker
     R::Vector{MVector{3,Float64}}
     psi_ansatz::Float64
     E::Float64
-end
-
-mutable struct t_StatData
-    n::Int64  
-    data::Vector{Float64}
-    data2::Vector{Float64}
-    input_σ2::Float64
-end
-
-mutable struct t_Stat    
-    nblocks::Int64
-    blocksize::Int64
-    finished::Bool
-    sample::t_StatData
-    datablock::Vector{t_StatData}
-    t_Stat() = new()
 end
 
 function rand_pos(Nelectrons::Int64)
@@ -119,7 +105,7 @@ function EL(R::Vector{MVector{3,Float64}}, wf_params)
     return EL
 end
 
-function get_unitvecs( R::Vector{MVector{3,Float64}} )
+@inline function get_unitvecs( R::Vector{MVector{3,Float64}} )
     vecr1 = R[1]
     vecr2 = R[2]
     vecr12 = R[1] - R[2]
@@ -137,6 +123,17 @@ function drift(R::Vector{MVector{3,Float64}}, wf_params)
     ∇S = [-α*hatr1 + α12/b^2*hatr12, -α*hatr2 - α12/b^2*hatr12]
     return 2*∇S
 end
+
+function drift_prealloc!(R::Vector{MVector{3,Float64}}, res, wf_params)
+    α, α12, β = wf_params
+    hatr1, hatr2, hatr12 = get_unitvecs(R)
+    r12 = dist2(R, 1, 2)
+    b = 1 + β*r12
+    res[1] = 2*(-α*hatr1 + α12/b^2*hatr12)
+    res[2] = 2*(-α*hatr2 - α12/b^2*hatr12)
+    return
+end
+
 
 #const buf = Vector{Float64}(undef, 1024*3) # max_N * max_dim
 #const d_buf = Vector{Float64}(undef, 3)
@@ -194,14 +191,16 @@ function vmc_step!(
             params.Naccept += 1
             Ψ2 = Ψ2_new     
         else
-            R[i] -= d
+            R[i][1] -= d[1]
+            R[i][2] -= d[2]
+            R[i][3] -= d[3]
         end        
     end
     return sqrt(Ψ2)
 end
 
 # adjust step to keep acceptance 50-60 %
-function adjust_step!(params ::VMC_Params)
+function adjust_step!(params::VMC_Params)
     minstep = 1e-5
     maxstep = 20.0
     acceptance = params.Naccept*100.0/params.Ntry
@@ -221,7 +220,6 @@ function adjust_step!(params ::VMC_Params)
 end
 
 function eval_V(R::Vector{MVector{3,Float64}})
-    #@views r12 = norm(R[:,1]-R[:,2])
     r12 = dist2(R, 1, 2)
     r1  = dist1(R, 1)
     r2  = dist1(R, 2)
@@ -314,135 +312,12 @@ function num_check_∇S(
     end
 end
 
-
-function init_stat(datasize ::Int64, blocksize ::Int64; numblocks::Int64=100)
-    stat = t_Stat()
-    stat.blocksize = blocksize
-    stat.nblocks = 0    
-    stat.sample = t_StatData(0, zeros(datasize), zeros(datasize), 0.0)
-    # data blocks    
-    stat.datablock = Vector{t_StatData}(undef, numblocks) # was []
-    stat.finished = false
-    return stat
-end
-
-
-function add_sample!(stat ::t_Stat, dat)
-    stat.finished  = false
-    @. stat.sample.data  += dat
-    @. stat.sample.data2 += dat^2
-    stat.sample.n += 1
-    if stat.sample.n == stat.blocksize
-        # one full block collected, move average to block data
-        # input data σ^2:
-        N = stat.sample.n
-        d2 = sum(stat.sample.data2)/N
-        d  = sum(stat.sample.data)/N
-        input_σ2 = d2-d^2
-        #
-        stat.nblocks += 1
-        if stat.nblocks > length(stat.datablock)
-            old_size =  length(stat.datablock)
-            resize!(stat.datablock, old_size + 100) # unintialized elements in the end
-        end 
-        stat.datablock[stat.nblocks] = t_StatData(0, stat.sample.data./N, zeros(length(stat.sample.data)), input_σ2)
-        # old, see "was" in init_stat
-        #push!(stat.datablock,t_StatData(0, stat.sample.data./N, zeros(length(stat.sample.data)), input_σ2))        
-        @. stat.sample.data = 0
-        @. stat.sample.data2 = 0
-        stat.sample.n = 0
-        stat.finished = true
-    end
-end
-
-
-function get_stats(stat ::t_Stat)
-    N = stat.nblocks
-    if N==0
-        println("get_stats: no data")
-        return 0, 0, 0, 0
-    end
-    if length(stat.datablock[1].data)==1
-        ave_1, std_1, input_σ2_1, N_1 = get_stats_1(stat ::t_Stat)
-        return ave_1, std_1, input_σ2_1, N_1,  stat.datablock[N].data[1] 
-    end
-    ave = similar(stat.datablock[1].data) 
-    ave2 = similar(ave)
-    ave .= 0
-    ave2 .= 0
-    input_σ2 = 0.0
-    for i = 1:N
-        d = stat.datablock[i].data
-        @. ave += d
-        @. ave2 += d^2
-        input_σ2 += stat.datablock[i].input_σ2 
-    end    
-    @. ave /= N
-    @. ave2 /= N
-    input_σ2 /= N
-    var = copy(ave)
-    var2 = copy(ave)
-    std = copy(ave)
-    @. var2 = abs(ave2 - ave^2)
-    @. var = sqrt(var2)
-    @. std = var/sqrt(N)    
-    return ave, std, input_σ2, N, stat.datablock[N].data 
-end
-
-function get_stats_1(stat ::t_Stat)
-    N = stat.nblocks
-    if N==0
-        println("get_stats: no data")
-        return nothing
-    end
-    ave = 0.0 
-    ave2 = 0.0
-    input_σ2 = 0.0 
-    for i = 1:N
-        d = stat.datablock[i].data[1]
-        ave += d
-        ave2 += d^2
-        input_σ2 += stat.datablock[i].input_σ2 
-    end 
-    ave /= N
-    ave2 /= N
-    input_σ2 /= N
-    var2 = abs(ave2 - ave^2)
-    var = sqrt(var2) 
-    std = var/sqrt(N)
-    return ave, std, input_σ2, N
-end
-
-function output_MCresult(value, error)
-    if isapprox(error,0.0)
-        acc =  floor(Int64, log10(1/1e-10)+2)        
-    else
-        acc = floor(Int64, log10(1/error)+2)
-    end
-    fmt = Printf.Format("%."*"$(acc)f"*" +/- "*"%."*"$(acc)f \n")
-    Printf.format(stdout, fmt, value, error)
-    # convert +/-  to 12345(8) notation
-    err = trunc(Int64,round(error*10^acc))
-    fmt = Printf.Format("%."*"$(acc)f"*"("*"$(err)"*")\n\n")
-    Printf.format(stdout, fmt, value)
-end
-
+# Main program 
 function main()
 
     Random.seed!(1234)
-
-    # Main program 
     Nelectrons = 2
-
-    # initialize
-    println("He atom VMC")
-    println("===========")
     walker, vmc_params = init()
-
-    println("Initial walker.R")
-    for iel in 1:Nelectrons
-        println(walker.R[iel])
-    end
 
     # choose trial wave function parameters defined in Model_Heatom.jl
     trial = :energy_optimized_parameters
@@ -469,8 +344,10 @@ function main()
     end    
     println("thermalization done")
     
+#=
     println("-"^20," extra checks ","-"^20)
-    println("Checking numerically local energy EL against trial wave function psi_ansatz to spot errors in derivatives")
+    println("Checking numerically local energy EL against trial wave function psi_ansatz")
+    println("to spot errors in derivatives")
     # Checks could be done more accurately using AD
     for i in 1:5
         vmc_step!(walker.R, vmc_params, psi_ansatz_par, rrs, d_buf)
@@ -480,8 +357,7 @@ function main()
     num_check_∇S(walker.R, psi_ansatz_par, drift_par)
     println("checks passed")
     println("-"^55)
-    println()
-    println()
+=#
 
     #
     # VMC
@@ -528,3 +404,7 @@ function main()
     return
 
 end
+
+
+#main()
+
