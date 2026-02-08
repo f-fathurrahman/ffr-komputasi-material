@@ -1,0 +1,14 @@
+{
+  "files.exclude": {
+    "ORIG_*": true,
+    "LOG_*": true,
+    "**.zip": true,
+    "**.pkl": true,
+    "pretrained": true,
+    "**/__pycache__": true,
+    "MPF_data": true,
+  }
+}
+
+
+

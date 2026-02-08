@@ -1,0 +1,13 @@
+{
+  "files.exclude": {
+    "ORIG_*": true,
+    "LOG_*": true,
+    "*.zip": true,
+    "*.pkl": true,
+    "jrystal-main": true,
+    "**/__pycache__": true,
+  }
+}
+
+
+

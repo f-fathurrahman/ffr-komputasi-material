@@ -1,0 +1,13 @@
+{
+  "files.exclude": {
+    "TEMP_*": true,
+    "IMG_*": true,
+    "ORIG_*": true,
+    "LOG_*": true,
+    "*.lyx": true,
+    "*.lyx~": true
+  }
+}
+
+
+

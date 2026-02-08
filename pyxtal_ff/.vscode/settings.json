@@ -1,0 +1,17 @@
+{
+  "files.exclude": {
+    "ORIG_*": true,
+    "LOG_*": true,
+    "*.zip": true,
+    "*.pkl": true,
+    "OUTCAR*": true,
+    "*.out": true,
+    "*.lyx": true,
+    "TEMP_*": true,
+    "DATASET_*": true,
+    "LOGDIR_*": true,
+  }
+}
+
+
+

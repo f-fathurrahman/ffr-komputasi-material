@@ -1,0 +1,13 @@
+{
+  "files.exclude": {
+    "*.npz": true,
+    "*.xyz": true,
+    "ORIG_*": true,
+    "PRETRAINED": true,
+    "LOG_*": true,
+    "*.npz": true
+  }
+}
+
+
+
