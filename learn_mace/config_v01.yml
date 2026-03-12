@@ -1,0 +1,21 @@
+model: "MACE"
+num_channels: 32
+max_L: 1
+r_max: 4.0
+name: "mace01"
+model_dir: "TEMP_MACE_models_v1"
+log_dir: "TEMP_MACE_models_v1"
+checkpoints_dir: "TEMP_MACE_models_v1"
+results_dir: "TEMP_MACE_models_v1"
+train_file: "data_Ni111_N2H4/train_data.xyz"
+valid_fraction: 0.10
+test_file: "data_Ni111_N2H4/test_data.xyz"
+energy_key: "energy"
+forces_key: "forces"
+E0s: "average"
+device: cpu
+batch_size: 10
+max_num_epochs: 2
+swa: True
+seed: 123
+
