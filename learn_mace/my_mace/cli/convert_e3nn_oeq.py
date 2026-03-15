@@ -4,8 +4,8 @@ import os
 
 import torch
 
-from mace.modules.wrapper_ops import OEQConfig
-from mace.tools.scripts_utils import extract_config_mace_model
+from my_mace.modules.wrapper_ops import OEQConfig
+from my_mace.tools.scripts_utils import extract_config_mace_model
 
 
 def run(

@@ -16,7 +16,7 @@ import ase.io
 import numpy as np
 import torch
 
-from mace.calculators import MACECalculator, mace_mp
+from my_mace.calculators import MACECalculator, mace_mp
 
 try:
     import fpsample  # type: ignore

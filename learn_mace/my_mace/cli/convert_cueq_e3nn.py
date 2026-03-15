@@ -5,11 +5,11 @@ from typing import Dict, List, Tuple, Union
 
 import numpy as np
 import torch
-from e3nn import o3
+from my_e3nn import o3
 
-from mace.tools.cg import O3_e3nn
-from mace.tools.cg_cueq_tools import symmetric_contraction_proj
-from mace.tools.scripts_utils import extract_config_mace_model
+from my_mace.tools.cg import O3_e3nn
+from my_mace.tools.cg_cueq_tools import symmetric_contraction_proj
+from my_mace.tools.scripts_utils import extract_config_mace_model
 
 try:
     import cuequivariance as cue

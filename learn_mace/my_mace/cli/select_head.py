@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 
 import torch
 
-from mace.tools.scripts_utils import remove_pt_head
+from my_mace.tools.scripts_utils import remove_pt_head
 
 
 def main():

@@ -4,7 +4,7 @@ from typing import Dict, List, Optional
 import torch
 from prettytable import PrettyTable
 
-from mace.tools import evaluate
+from my_mace.tools import evaluate
 
 
 def custom_key(key):

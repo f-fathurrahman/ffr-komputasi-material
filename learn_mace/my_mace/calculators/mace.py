@@ -18,16 +18,16 @@ import numpy as np
 import torch
 from ase.calculators.calculator import Calculator, all_changes
 from ase.stress import full_3x3_to_voigt_6_stress
-from e3nn import o3
+from my_e3nn import o3
 
-from mace import data
-from mace.modules.utils import extract_invariant
-from mace.tools import torch_geometric, torch_tools, utils
-from mace.tools.compile import prepare
-from mace.tools.scripts_utils import extract_model
+from my_mace import data
+from my_mace.modules.utils import extract_invariant
+from my_mace.tools import torch_geometric, torch_tools, utils
+from my_mace.tools.compile import prepare
+from my_mace.tools.scripts_utils import extract_model
 
 try:
-    from mace.cli.convert_e3nn_cueq import run as run_e3nn_to_cueq
+    from my_mace.cli.convert_e3nn_cueq import run as run_e3nn_to_cueq
 
     CUEQQ_AVAILABLE = True
 except (ImportError, ModuleNotFoundError):
@@ -35,7 +35,7 @@ except (ImportError, ModuleNotFoundError):
     run_e3nn_to_cueq = None
 
 try:
-    from mace.cli.convert_e3nn_oeq import run as run_e3nn_to_oeq
+    from my_mace.cli.convert_e3nn_oeq import run as run_e3nn_to_oeq
 
     OEQ_AVAILABLE = True
 except (ImportError, ModuleNotFoundError):

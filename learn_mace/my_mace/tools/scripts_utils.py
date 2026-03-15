@@ -16,12 +16,12 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 import torch
 import torch.distributed
-from e3nn import o3
+from my_e3nn import o3
 from torch.optim.swa_utils import SWALR, AveragedModel
 
-from mace import data, modules, tools
-from mace.data import KeySpecification
-from mace.tools.train import SWAContainer
+from my_mace import data, modules, tools
+from my_mace.data import KeySpecification
+from my_mace.tools.train import SWAContainer
 
 
 @dataclasses.dataclass

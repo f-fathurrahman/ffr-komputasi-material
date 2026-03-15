@@ -6,7 +6,7 @@ try:
     import torch._dynamo as dynamo
 except ImportError:
     dynamo = None
-from e3nn import get_optimization_defaults, set_optimization_defaults
+from my_e3nn import get_optimization_defaults, set_optimization_defaults
 from torch import autograd, nn
 from torch.fx import symbolic_trace
 
@@ -16,7 +16,7 @@ TypeTuple = Tuple[type, ...]
 
 @contextmanager
 def disable_e3nn_codegen():
-    """Context manager that disables the legacy PyTorch code generation used in e3nn."""
+    """Context manager that disables the legacy PyTorch code generation used in my_e3nn."""
     init_val = get_optimization_defaults()["jit_script_fx"]
     set_optimization_defaults(jit_script_fx=False)
     yield

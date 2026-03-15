@@ -1,0 +1,12 @@
+{
+  "files.exclude": {
+    "ORIG_*": true,
+    "LOG_*": true,
+    "TEMP_*": true,
+    "*.zip": true,
+    "*.pkl": true,
+  }
+}
+
+
+

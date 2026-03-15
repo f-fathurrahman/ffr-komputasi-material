@@ -1,7 +1,7 @@
 import logging
 import os
 
-from e3nn import o3
+from my_e3nn import o3
 
 
 def check_args(args):

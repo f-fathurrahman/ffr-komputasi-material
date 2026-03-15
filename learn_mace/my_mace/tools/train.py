@@ -22,7 +22,7 @@ from torch.utils.data.distributed import DistributedSampler
 from torch_ema import ExponentialMovingAverage
 from torchmetrics import Metric
 
-from mace.cli.visualise_train import TrainingPlotter
+from my_mace.cli.visualise_train import TrainingPlotter
 
 from . import torch_geometric
 from .checkpoint import CheckpointHandler, CheckpointState

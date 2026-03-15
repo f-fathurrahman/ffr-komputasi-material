@@ -4,9 +4,9 @@ from typing import List
 import h5py
 from torch.utils.data import ConcatDataset, Dataset
 
-from mace.data.atomic_data import AtomicData
-from mace.data.utils import Configuration
-from mace.tools.utils import AtomicNumberTable
+from my_mace.data.atomic_data import AtomicData
+from my_mace.data.utils import Configuration
+from my_mace.tools.utils import AtomicNumberTable
 
 
 class HDF5Dataset(Dataset):

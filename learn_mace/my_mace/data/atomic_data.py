@@ -9,7 +9,7 @@ from typing import Optional, Sequence
 
 import torch.utils.data
 
-from mace.tools import (
+from my_mace.tools import (
     AtomicNumberTable,
     atomic_numbers_to_indices,
     to_one_hot,

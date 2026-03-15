@@ -2,13 +2,13 @@ import ast
 import logging
 
 import numpy as np
-from e3nn import o3
+from my_e3nn import o3
 
-from mace import modules
-from mace.modules.wrapper_ops import CuEquivarianceConfig
-from mace.tools.finetuning_utils import load_foundations_elements
-from mace.tools.scripts_utils import extract_config_mace_model
-from mace.tools.utils import AtomicNumberTable
+from my_mace import modules
+from my_mace.modules.wrapper_ops import CuEquivarianceConfig
+from my_mace.tools.finetuning_utils import load_foundations_elements
+from my_mace.tools.scripts_utils import extract_config_mace_model
+from my_mace.tools.utils import AtomicNumberTable
 
 
 def configure_model(
@@ -268,7 +268,7 @@ def _build_model(
     if args.model == "FoundationMACE":
         return modules.ScaleShiftMACE(**model_config_foundation)
     if args.model == "FoundationMACELES":
-        from mace.modules.extensions import MACELES
+        from my_mace.modules.extensions import MACELES
 
         return MACELES(
             les_arguments=args.les_arguments,
@@ -332,7 +332,7 @@ def _build_model(
             MLP_irreps=o3.Irreps(args.MLP_irreps),
         )
     if args.model == "MACELES":
-        from mace.modules.extensions import MACELES
+        from my_mace.modules.extensions import MACELES
 
         return MACELES(
             les_arguments=args.les_arguments,

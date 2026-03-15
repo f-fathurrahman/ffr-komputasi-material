@@ -10,11 +10,11 @@ from typing import Dict, Optional, Union
 import opt_einsum_fx
 import torch
 import torch.fx
-from e3nn import o3
-from e3nn.util.codegen import CodeGenMixin
-from e3nn.util.jit import compile_mode
+from my_e3nn import o3
+from my_e3nn.util.codegen import CodeGenMixin
+from my_e3nn.util.jit import compile_mode
 
-from mace.tools.cg import U_matrix_real
+from my_mace.tools.cg import U_matrix_real
 
 BATCH_EXAMPLE = 10
 ALPHABET = ["w", "x", "v", "n", "z", "r", "t", "y", "u", "o", "p", "s"]

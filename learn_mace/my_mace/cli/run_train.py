@@ -14,25 +14,25 @@ from pathlib import Path
 from typing import List, Optional
 
 import torch.distributed
-from e3nn.util import jit
+from my_e3nn.util import jit
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.optim import LBFGS
 from torch.utils.data import ConcatDataset
 from torch_ema import ExponentialMovingAverage
 
-import mace
-from mace import data, tools
-from mace.calculators.foundations_models import mace_mp, mace_mp_names, mace_off
-from mace.cli.convert_cueq_e3nn import run as run_cueq_to_e3nn
-from mace.cli.convert_e3nn_cueq import run as run_e3nn_to_cueq
-from mace.cli.convert_e3nn_oeq import run as run_e3nn_to_oeq
-from mace.cli.convert_oeq_e3nn import run as run_oeq_to_e3nn
-from mace.cli.visualise_train import TrainingPlotter
-from mace.data import KeySpecification, update_keyspec_from_kwargs
-from mace.tools import torch_geometric
-from mace.tools.distributed_tools import init_distributed
-from mace.tools.model_script_utils import configure_model
-from mace.tools.multihead_tools import (
+import my_mace
+from my_mace import data, tools
+from my_mace.calculators.foundations_models import mace_mp, mace_mp_names, mace_off
+from my_mace.cli.convert_cueq_e3nn import run as run_cueq_to_e3nn
+from my_mace.cli.convert_e3nn_cueq import run as run_e3nn_to_cueq
+from my_mace.cli.convert_e3nn_oeq import run as run_e3nn_to_oeq
+from my_mace.cli.convert_oeq_e3nn import run as run_oeq_to_e3nn
+from my_mace.cli.visualise_train import TrainingPlotter
+from my_mace.data import KeySpecification, update_keyspec_from_kwargs
+from my_mace.tools import torch_geometric
+from my_mace.tools.distributed_tools import init_distributed
+from my_mace.tools.model_script_utils import configure_model
+from my_mace.tools.multihead_tools import (
     HeadConfig,
     apply_pseudolabels_to_pt_head_configs,
     assemble_replay_data,
@@ -40,12 +40,12 @@ from mace.tools.multihead_tools import (
     prepare_default_head,
     prepare_pt_head,
 )
-from mace.tools.run_train_utils import (
+from my_mace.tools.run_train_utils import (
     combine_datasets,
     load_dataset_for_path,
     normalize_file_paths,
 )
-from mace.tools.scripts_utils import (
+from my_mace.tools.scripts_utils import (
     LRScheduler,
     SubsetCollection,
     check_path_ase_read,
@@ -65,8 +65,8 @@ from mace.tools.scripts_utils import (
     remove_pt_head,
     setup_wandb,
 )
-from mace.tools.tables_utils import create_error_table
-from mace.tools.utils import AtomicNumberTable
+from my_mace.tools.tables_utils import create_error_table
+from my_mace.tools.utils import AtomicNumberTable
 
 
 def main() -> None:

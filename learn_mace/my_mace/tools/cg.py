@@ -1,5 +1,5 @@
 ###########################################################################################
-# Higher Order Real Clebsch Gordan (based on e3nn by Mario Geiger)
+# Higher Order Real Clebsch Gordan (based on my_e3nn by Mario Geiger)
 # Authors: Ilyes Batatia
 # This program is distributed under the MIT License (see MIT.md)
 ###########################################################################################
@@ -11,7 +11,7 @@ from typing import Iterator, List, Union
 
 import numpy as np
 import torch
-from e3nn import o3
+from my_e3nn import o3
 
 try:
     import cuequivariance as cue

@@ -4,7 +4,7 @@ import os
 
 import torch
 
-from mace.tools.scripts_utils import extract_config_mace_model
+from my_mace.tools.scripts_utils import extract_config_mace_model
 
 
 def run(input_model, output_model="_e3nn.model", device="cpu", return_model=True):

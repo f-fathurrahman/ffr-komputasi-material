@@ -13,7 +13,7 @@ import ase.io
 import h5py
 import numpy as np
 
-from mace.tools import AtomicNumberTable, DefaultKeys
+from my_mace.tools import AtomicNumberTable, DefaultKeys
 
 Positions = np.ndarray  # [..., 3]
 Cell = np.ndarray  # [3,3]

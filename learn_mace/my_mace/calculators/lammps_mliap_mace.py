@@ -7,7 +7,7 @@ from typing import Dict, Tuple
 
 import torch
 from ase.data import chemical_symbols
-from e3nn.util.jit import compile_mode
+from my_e3nn.util.jit import compile_mode
 
 try:
     from lammps.mliap.mliap_unified_abc import MLIAPUnified

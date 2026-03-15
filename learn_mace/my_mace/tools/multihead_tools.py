@@ -9,17 +9,17 @@ from typing import Any, Dict, List, Optional, Union
 
 import torch
 
-from mace.cli.fine_tuning_select import (
+from my_mace.cli.fine_tuning_select import (
     FilteringType,
     SelectionSettings,
     SubselectType,
     select_samples,
 )
-from mace.data import AtomicData, KeySpecification
-from mace.data.utils import Configuration
-from mace.tools import torch_geometric
-from mace.tools.scripts_utils import SubsetCollection, get_dataset_from_xyz
-from mace.tools.utils import AtomicNumberTable, get_cache_dir
+from my_mace.data import AtomicData, KeySpecification
+from my_mace.data.utils import Configuration
+from my_mace.tools import torch_geometric
+from my_mace.tools.scripts_utils import SubsetCollection, get_dataset_from_xyz
+from my_mace.tools.utils import AtomicNumberTable, get_cache_dir
 
 
 @dataclasses.dataclass

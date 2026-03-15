@@ -9,7 +9,7 @@ import torch
 import torch.distributed
 from torchmetrics import Metric
 
-from mace.tools.utils import filter_nonzero_weight
+from my_mace.tools.utils import filter_nonzero_weight
 
 plt.rcParams.update({"font.size": 8})
 mpl_logger = logging.getLogger("matplotlib")

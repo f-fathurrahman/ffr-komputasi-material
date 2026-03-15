@@ -7,11 +7,11 @@ import types
 from typing import List, Optional
 
 import torch
-from e3nn import o3
+from my_e3nn import o3
 
-from mace.modules.symmetric_contraction import SymmetricContraction
-from mace.tools.cg import O3_e3nn
-from mace.tools.scatter import scatter_sum
+from my_mace.modules.symmetric_contraction import SymmetricContraction
+from my_mace.tools.cg import O3_e3nn
+from my_mace.tools.scatter import scatter_sum
 
 try:
     import cuequivariance as cue

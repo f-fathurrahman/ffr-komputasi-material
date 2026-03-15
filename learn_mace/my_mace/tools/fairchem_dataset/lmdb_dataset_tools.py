@@ -633,7 +633,7 @@ class AtomsToGraphs:
         """
         Convert ASE atoms to graph data format with proper property handling.
         """
-        from mace.tools.torch_geometric.data import Data
+        from my_mace.tools.torch_geometric.data import Data
 
         # Create a minimal data object with required properties
         data = Data()

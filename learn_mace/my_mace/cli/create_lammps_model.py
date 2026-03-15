@@ -6,11 +6,11 @@ import os
 os.environ["TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD"] = "1"
 
 import torch
-from e3nn.util import jit
+from my_e3nn.util import jit
 
-from mace.calculators import LAMMPS_MACE
-from mace.calculators.lammps_mliap_mace import LAMMPS_MLIAP_MACE
-from mace.cli.convert_e3nn_cueq import run as run_e3nn_to_cueq
+from my_mace.calculators import LAMMPS_MACE
+from my_mace.calculators.lammps_mliap_mace import LAMMPS_MLIAP_MACE
+from my_mace.cli.convert_e3nn_cueq import run as run_e3nn_to_cueq
 
 
 def parse_args():

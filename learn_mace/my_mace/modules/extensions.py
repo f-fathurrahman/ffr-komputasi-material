@@ -1,13 +1,13 @@
 from typing import Dict, List, Optional
 
 import torch
-from e3nn.util.jit import compile_mode
+from my_e3nn.util.jit import compile_mode
 
-from mace.modules.blocks import LinearReadoutBlock, NonLinearReadoutBlock
-from mace.modules.models import ScaleShiftMACE
-from mace.modules.utils import get_atomic_virials_stresses, get_outputs, prepare_graph
-from mace.modules.wrapper_ops import CuEquivarianceConfig
-from mace.tools.scatter import scatter_sum
+from my_mace.modules.blocks import LinearReadoutBlock, NonLinearReadoutBlock
+from my_mace.modules.models import ScaleShiftMACE
+from my_mace.modules.utils import get_atomic_virials_stresses, get_outputs, prepare_graph
+from my_mace.modules.wrapper_ops import CuEquivarianceConfig
+from my_mace.tools.scatter import scatter_sum
 
 
 def _copy_mace_readout(

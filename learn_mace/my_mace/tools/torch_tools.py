@@ -10,7 +10,7 @@ from typing import Dict, Union
 
 import numpy as np
 import torch
-from e3nn.io import CartesianTensor
+from my_e3nn.io import CartesianTensor
 
 TensorDict = Dict[str, torch.Tensor]
 

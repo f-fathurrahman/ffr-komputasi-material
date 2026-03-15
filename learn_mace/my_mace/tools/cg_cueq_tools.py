@@ -18,9 +18,9 @@ from __future__ import annotations
 from typing import Optional
 
 import numpy as np
-from e3nn import o3
+from my_e3nn import o3
 
-from mace.tools.cg import U_matrix_real
+from my_mace.tools.cg import U_matrix_real
 
 try:
     import cuequivariance as cue

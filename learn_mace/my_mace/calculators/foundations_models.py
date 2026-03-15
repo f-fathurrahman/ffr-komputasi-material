@@ -7,7 +7,7 @@ import torch
 from ase import units
 from ase.calculators.mixing import SumCalculator
 
-from mace.tools.utils import get_cache_dir
+from my_mace.tools.utils import get_cache_dir
 
 from .mace import MACECalculator
 

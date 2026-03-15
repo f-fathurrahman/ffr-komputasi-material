@@ -13,7 +13,7 @@ def init_distributed(args):
 
     # ------------------------------------------------------------------ slurm
     if args.launcher == "slurm":
-        from mace.tools.slurm_distributed import DistributedEnvironment
+        from my_mace.tools.slurm_distributed import DistributedEnvironment
 
         env = DistributedEnvironment()
         rank, local_rank, world_size = env.rank, env.local_rank, env.world_size

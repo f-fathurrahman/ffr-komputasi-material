@@ -1,6 +1,6 @@
 import torch
 
-from mace.tools.utils import AtomicNumberTable
+from my_mace.tools.utils import AtomicNumberTable
 
 
 def load_foundations_elements(

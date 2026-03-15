@@ -8,13 +8,13 @@ from typing import Any, Callable, Dict, List, Optional, Type, Union
 
 import numpy as np
 import torch
-from e3nn import o3
-from e3nn.util.jit import compile_mode
+from my_e3nn import o3
+from my_e3nn.util.jit import compile_mode
 
-from mace.modules.embeddings import GenericJointEmbedding
-from mace.modules.radial import ZBLBasis
-from mace.tools.scatter import scatter_mean, scatter_sum
-from mace.tools.torch_tools import get_change_of_basis, spherical_to_cartesian
+from my_mace.modules.embeddings import GenericJointEmbedding
+from my_mace.modules.radial import ZBLBasis
+from my_mace.tools.scatter import scatter_mean, scatter_sum
+from my_mace.tools.torch_tools import get_change_of_basis, spherical_to_cartesian
 
 from .blocks import (
     AtomicEnergiesBlock,

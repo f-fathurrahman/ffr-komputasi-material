@@ -6,10 +6,10 @@ from typing import Any, List, Optional, Union
 import torch
 from torch.utils.data import ConcatDataset
 
-from mace import data
-from mace.tools.scripts_utils import check_path_ase_read
-from mace.tools.torch_geometric.dataset import Dataset
-from mace.tools.utils import AtomicNumberTable
+from my_mace import data
+from my_mace.tools.scripts_utils import check_path_ase_read
+from my_mace.tools.torch_geometric.dataset import Dataset
+from my_mace.tools.utils import AtomicNumberTable
 
 
 def normalize_file_paths(file_paths: Union[str, List[str]]) -> List[str]:
