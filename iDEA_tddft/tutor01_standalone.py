@@ -365,7 +365,7 @@ def antisymmetrize(s, spaces, spins, energies):
     |     energies: np.ndarray, Energies.
 
     | Returns:
-    |     fulls: np.ndarray, Full anantisymmetrized wavefunction.
+    |     fulls: np.ndarray, Full antisymmetrized wavefunction.
     |     spaces: np.ndarray, Spatial parts of the wavefunction.
     |     spins: np.ndarray, Spin parts of the wavefunction.
     |     energies: np.ndarray, Energies.
@@ -514,7 +514,7 @@ def my_interacting_solve(
     # Solve the many-body Schrodinger equation.
     print("my_interacting_solve: solving eigenproblem...")
     energies, spaces = spsla.eigsh(H.tocsr(), k=level, which="SA")
-    # GPU stuffs are removed
+    print("energies raw = ", energies)
 
     # Reshape and normalise the solutions.
     spaces = spaces.reshape((s.x.shape[0],) * s.count + (spaces.shape[-1],))
@@ -569,12 +569,29 @@ def softened_interaction_alternative(
     return v_int
 
 
-__x2 = np.linspace(-20, 20, 50)
-atom = System(
-    __x2, -2.0 / (abs(__x2) + 1.0), softened_interaction(__x2), "ud"
-)
+#__x2 = np.linspace(-20, 20, 50)
+#atom = System(
+#    __x2, -2.0 / (abs(__x2) + 1.0), softened_interaction(__x2), "ud"
+#)
 
+#ω = 1.0
+#x = np.linspace(-10, 10, 150)
+#v_ext = 0.5 * ω**2 * x**2
+#v_int = softened_interaction_alternative(x)
+#atom = System(x, v_ext, v_int, electrons='ud') # also test ud
+#
+#ground_state = my_interacting_solve(atom, k=0)
+#print("Total energy = ", ground_state.energy)
+
+
+
+ω = 1.0
+x = np.linspace(-8, 8, 20)
+v_ext = 0.5 * ω**2 * x**2
+v_int = softened_interaction_alternative(x)
+atom = System(x, v_ext, v_int, electrons='udu', stencil=3)
 
 ground_state = my_interacting_solve(atom, k=0)
 print("Total energy = ", ground_state.energy)
+
 

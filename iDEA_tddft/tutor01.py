@@ -12,16 +12,28 @@ import iDEA
 #)
 
 # Harmonic potential
+#x = np.linspace(-10, 10, 150)
+#v_ext = 0.5 * 0.25**2 * x**2
+#v_int = iDEA.interactions.softened_interaction(x)
+#atom = iDEA.system.System(x, v_ext, v_int, electrons='ud') # also test ud
+
+ω = 1.0
 x = np.linspace(-10, 10, 150)
-v_ext = 0.5 * 0.25**2 * x**2
-v_int = iDEA.interactions.softened_interaction(x)
+v_ext = 0.5 * ω**2 * x**2
+v_int = iDEA.interactions.softened_interaction_alternative(x)
 atom = iDEA.system.System(x, v_ext, v_int, electrons='ud') # also test ud
+
 
 #ground_state = iDEA.methods.interacting.solve(atom, k=0)
 #print("Total energy = ", ground_state.energy)
 #print(ground_state.space.shape)
 #print(ground_state.spin.shape)
 #print(ground_state.full.shape)
+
+current_method = iDEA.methods.non_interacting
+ground_state = current_method.solve(atom, k=0)
+Etot = current_method.total_energy(atom, ground_state)
+print("Total energy (non_interacting) = ", Etot)
 
 
 current_method = iDEA.methods.hartree_fock
@@ -34,10 +46,10 @@ print("Total energy (Hartree-Fock) = ", Etot)
 #Etot = current_method.total_energy(atom, ground_state)
 #print("Total energy (Hartree) = ", Etot)
 
-current_method = iDEA.methods.lda
-ground_state = current_method.solve(atom, k=0)
-Etot = current_method.total_energy(atom, ground_state)
-print("Total energy (LDA) = ", Etot)
+#current_method = iDEA.methods.lda
+#ground_state = current_method.solve(atom, k=0)
+#Etot = current_method.total_energy(atom, ground_state)
+#print("Total energy (LDA) = ", Etot)
 
 #vmax = np.max(ground_state.space.real)
 #vmin = -np.max(ground_state.space.real)
