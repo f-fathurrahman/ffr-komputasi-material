@@ -1,0 +1,13 @@
+{
+    "files.exclude": {
+        "ORIG_*": true,
+        "LOG_*": true,
+        "*.zip": true,
+        "**/*.so": true,
+        "*.pkl": true,
+        "TEMP_*": true,
+        "DATASET_*": true,
+        "**/__pycache__": true
+    }
+}
+
