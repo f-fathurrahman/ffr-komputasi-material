@@ -1,0 +1,8 @@
+# Be atom
+# ====================
+atom = "Be"
+N = 4      # numBer of electrons
+Nup = 2    # numBer of spin-up electrons
+Ndo = 2    # numBer of spin-down electrons
+Z = 4      # atom numBer
+Eexact = -14.667356486

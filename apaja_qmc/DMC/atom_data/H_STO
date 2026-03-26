@@ -1,0 +1,15 @@
+H STO
+*
+1 s
+   1.1    1.0000000000
+*
+# lc coefficients
+coeff =    1.0000000000 
+ orbitals = 10  
+# Jastrow params
+α =    0.0
+β1 =   0.0
+β2 =   0.0
+α12 =  0.0
+
+

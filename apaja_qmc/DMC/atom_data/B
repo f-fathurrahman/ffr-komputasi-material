@@ -1,0 +1,8 @@
+# B atom
+# ====================
+atom = "B"
+N = 5      # number of electrons
+Nup = 3    # number of spin-up electrons
+Ndo = 2    # number of spin-down electrons
+Z = 5      # atom number
+Eexact = -24.65391

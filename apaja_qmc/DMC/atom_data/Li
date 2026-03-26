@@ -1,0 +1,13 @@
+# Li atom
+# ====================
+atom = "li"
+N = 3      # number of electrons
+Nup = 2    # number of spin-up electrons
+Ndo = 1    # number of spin-down electrons
+Z = 3      # atom number
+Eexact = -7.478060323
+
+# default Jastrow params
+α = 0.0   # nonzero value relies on Slater determinant to keep electrons away from the nucleus
+β = 0.4
+α12 = 1.0 # keep as 1

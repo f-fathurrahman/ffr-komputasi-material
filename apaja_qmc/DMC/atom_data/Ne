@@ -1,0 +1,9 @@
+# Ne atom
+# ====================
+atom = "ne"
+N = 10      # number of electrons
+Nup = 5    # number of spin-up electrons
+Ndo = 5    # number of spin-down electrons
+Z = 10      # atom number
+Eexact = -128.899681
+# CISD

@@ -1,0 +1,8 @@
+# H atom
+# ====================
+atom = "H"
+N = 1      # number of electrons
+Nup = 1    # number of spin-up electrons
+Ndo = 0    # number of spin-down electrons
+Z = 1      # atom number
+Eexact = -0.5

@@ -1,0 +1,8 @@
+# He atom
+# ====================
+atom = "He"
+N = 2      # number of electrons
+Nup = 1    # number of spin-up electrons
+Ndo = 1    # number of spin-down electrons
+Z = 2      # atom number
+Eexact = -2.903724377
