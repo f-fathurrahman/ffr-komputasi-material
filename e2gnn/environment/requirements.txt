@@ -127,7 +127,7 @@ pooch @ file:///home/conda/feedstock_root/build_artifacts/pooch_1679580333621/wo
 pre-commit @ file:///home/conda/feedstock_root/build_artifacts/pre-commit_1612792543969/work
 prometheus-client @ file:///tmp/abs_d3zeliano1/croots/recipe/prometheus_client_1659455100375/work
 prompt-toolkit @ file:///home/conda/feedstock_root/build_artifacts/prompt-toolkit_1688565951714/work
-protobuf==4.23.4
+protobuf==5.29.6
 psutil @ file:///home/conda/feedstock_root/build_artifacts/psutil_1681775019467/work
 ptyprocess @ file:///home/conda/feedstock_root/build_artifacts/ptyprocess_1609419310487/work/dist/ptyprocess-0.7.0-py2.py3-none-any.whl
 pure-eval @ file:///home/conda/feedstock_root/build_artifacts/pure_eval_1642875951954/work
