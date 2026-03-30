@@ -131,7 +131,7 @@ protobuf==4.23.4
 psutil @ file:///home/conda/feedstock_root/build_artifacts/psutil_1681775019467/work
 ptyprocess @ file:///home/conda/feedstock_root/build_artifacts/ptyprocess_1609419310487/work/dist/ptyprocess-0.7.0-py2.py3-none-any.whl
 pure-eval @ file:///home/conda/feedstock_root/build_artifacts/pure_eval_1642875951954/work
-pyasn1==0.4.8
+pyasn1==0.6.3
 pyasn1-modules==0.2.7
 pybtex @ file:///home/conda/feedstock_root/build_artifacts/pybtex_1638467081712/work
 pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1636257122734/work
