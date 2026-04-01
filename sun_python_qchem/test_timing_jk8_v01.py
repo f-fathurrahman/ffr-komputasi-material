@@ -3,8 +3,7 @@ import numpy as np
 from ch12_analytical_integrals_v5.basis import Molecule
 from ch12_analytical_integrals_v5.eri_OS_rys import get_eri_tensor
 
-from ch13 import j8fold, k8fold
-from ch13 import j8fold_v2, k8fold_v2
+from ch13 import j8fold, k8fold, j8fold_v2, k8fold_v2
 
 benzene = '''
 C        0.0000     1.3990     0.0000
@@ -32,15 +31,15 @@ dm = np.ones((nao, nao))
 jref = np.einsum('ijkl,ji->kl', eri_tensor, dm)
 kref = np.einsum('ijkl,jk->il', eri_tensor, dm)
 t1 = time.perf_counter()
-print(t1 - t0)
+print(f"With einsum: {t1 - t0}")
 
 jmat = j8fold.build_j_8fold(gtos, dm)
 t2 = time.perf_counter()
 kmat = k8fold.build_k_8fold(gtos, dm)
 t3 = time.perf_counter()
-print(abs(jref - jmat).max())
-print(abs(kref - kmat).max())
-print(t2 - t1, t3 - t2)
+print("diff: ", abs(jref - jmat).max())
+print("diff: ", abs(kref - kmat).max())
+print(f"Folding without blocking, Jmat: {t2 - t1}, Kmat: {t3 - t2}")
 
 # Blocking
 t1 = time.perf_counter()
@@ -48,12 +47,14 @@ jmat = j8fold_v2.build_j_8fold(gtos, dm)
 t2 = time.perf_counter()
 kmat = k8fold_v2.build_k_8fold(gtos, dm)
 t3 = time.perf_counter()
-print(t2 - t1, t3 - t2)
+print(f"Folding with blocking, Jmat: {t2 - t1}, Kmat: {t3 - t2}")
 
+
+print("Calling PySCF")
 import pyscf
 from pyscf.scf.hf import get_jk
 mol = pyscf.M(atom=benzene, basis={'C': '6-31g*', 'H': '6-31g'}, cart=True)
 t0 = time.perf_counter()
 v = get_jk(mol, dm)
 t1 = time.perf_counter()
-print(t1 - t0)
+print(f"Using PySCF: : {t1 - t0}")
