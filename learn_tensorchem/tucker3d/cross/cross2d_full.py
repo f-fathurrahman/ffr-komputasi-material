@@ -1,5 +1,4 @@
 import numpy as np
-import copy
 import tucker3d as tuck
 
 def pinv(A):
@@ -14,8 +13,7 @@ def pinv(A):
             return np.linalg.pinv(A + 1e-8*np.linalg.norm(A, 1))
 
 def cross2d_full(func, eps, r0=4, rmax=100):
-    
-    
+
     #A = np.zeros((M1, M2), dtype = np.complex128)
     #for i in xrange(M1):
     #    for j in xrange(M2):

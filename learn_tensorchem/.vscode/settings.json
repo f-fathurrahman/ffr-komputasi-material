@@ -8,5 +8,5 @@
     "*.pkl": true,
     "*.out": true,
     "TEMP_*": true,
-  }
+  },
 }
