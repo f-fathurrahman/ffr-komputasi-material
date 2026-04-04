@@ -18,14 +18,14 @@ def hf(molecule, psi, E, eps, grid, T, ind, max_iter, poisson_solver='Fourier'):
     h = (b-a)/(N-1)
     
     x = np.zeros(N)
-    for i in xrange(N):
+    for i in range(N):
         x[i] = a + i*h
     
     Norb = molecule.orbitals
     num_atoms = molecule.num_atoms
     
     pot_coulomb = tuck.zeros((N,N,N))
-    for i in xrange(num_atoms):
+    for i in range(num_atoms):
         vec = molecule.atoms[i].rad
         charge = molecule.atoms[i].charge
         pot_coulomb = pot_coulomb - charge * qt.pots.coulomb(x, vec, ind, eps)
@@ -33,24 +33,24 @@ def hf(molecule, psi, E, eps, grid, T, ind, max_iter, poisson_solver='Fourier'):
     
     T0 = tuck.round(T, eps)
     k=0
-    for i in xrange(max_iter):
+    for i in range(max_iter):
         psi, E_new = hf1iter(molecule, psi, E, grid, T0, pot_coulomb, eps, poisson_solver)
         #print E
         if max(abs((E-E_new)/E))<eps:
             k += 1
             if k == 4:
-                print 'Process converged with', i, 'iterations'
+                print('Process converged with', i, 'iterations')
                 break
         
         E = E_new
-        print E
+        print(E)
 
     if i == max_iter - 1:
-        print 'Process did not converge with eps precision'
+        print('Process did not converge with eps precision')
 
     E_full = hf_full_energy(molecule, psi, E, grid, tuck.round(T, eps*1e-3), eps*1e-3)
     
-    print E_full
+    print(E_full)
     return psi, E, E_full
 
 
@@ -69,7 +69,7 @@ def hf1iter(molecule, psi, E, grid, T, pot_coulomb, eps, poisson_solver, num_ite
     h = (b-a)/(N-1)
     
     x = np.zeros(N)
-    for i in xrange(N):
+    for i in range(N):
         x[i] = a + i*h
     
     
@@ -84,15 +84,15 @@ def hf1iter(molecule, psi, E, grid, T, pot_coulomb, eps, poisson_solver, num_ite
     psi_new = [0]*Norb
 
 
-    prod = lambda A,B,C: tuck.cross.multifun([A,B], eps, lambda (a,b): a*b, y0=C)
+    prod = lambda A,B,C: tuck.cross.multifun([A,B], eps, lambda a_b: a_b[0]*a_b[1], y0=C)
     
     
     
-    for k in xrange(num_iter):
+    for k in range(num_iter):
 
         
         density = tuck.zeros((N,N,N))  # density calculation
-        for i in xrange(Norb):
+        for i in range(Norb):
             density = density + prod(tuck.conj(psi[i]), psi[i], psi[i]) # !can be faster!
             density = tuck.round(density, eps)
         pot_hartree = tuck.cross.conv(T, density, eps,pr=None)
@@ -100,7 +100,7 @@ def hf1iter(molecule, psi, E, grid, T, pot_coulomb, eps, poisson_solver, num_ite
 
     
         E_electr = 0
-        for i in xrange(Norb):
+        for i in range(Norb):
             V[i] =  prod(tuck.round(pot_coulomb + 2*pot_hartree, eps), psi[i], psi[i])
             exchange = qt.pots.exchange(psi, psi, i, eps_exchange, T, molecule)
             V[i] = tuck.round(V[i] - exchange, eps)
@@ -127,7 +127,7 @@ def hf1iter(molecule, psi, E, grid, T, pot_coulomb, eps, poisson_solver, num_ite
         # Fock matrix
         
         V_new = [0]*Norb
-        for i in xrange(Norb):
+        for i in range(Norb):
             V_new[i] = prod(tuck.round(pot_coulomb + 2*pot_hartree,eps), psi_Q[i],psi_Q[i])
             exchange_new = qt.pots.exchange(psi_Q, psi, i, eps_exchange, T, molecule)
             V_new[i] = tuck.round(V_new[i] - exchange_new, eps)
@@ -147,13 +147,13 @@ def hf1iter(molecule, psi, E, grid, T, pot_coulomb, eps, poisson_solver, num_ite
         
         
         psi = qt.prod(psi_Q, S.T, density, eps)
-        for i in xrange(Norb):
+        for i in range(Norb):
             psi[i] = qt.normalize(psi[i], h)
             psi[i] = tuck.round(psi[i], eps)
         
         E = E_new.copy()
         
-        for i in xrange(Norb):
+        for i in range(Norb):
             if E[i]>0:
                 E[i] = -0.0
     
@@ -177,10 +177,10 @@ def hf_full_energy(molecule, psi, E, grid, T, eps):
     Norb = molecule.orbitals
     num_atoms = molecule.num_atoms
     
-    prod = lambda A,B,C: tuck.cross.multifun([A,B], eps, lambda (a,b): a*b, y0=C)
+    prod = lambda A,B,C: tuck.cross.multifun([A,B], eps, lambda a_b1: a_b1[0]*a_b1[1], y0=C)
     
     density = tuck.zeros((N,N,N))  # density calculation
-    for i in xrange(Norb):
+    for i in range(Norb):
         density = density + prod(psi[i], psi[i], psi[i]) # !can be faster!
         density = tuck.round(density, eps)
     
@@ -189,22 +189,22 @@ def hf_full_energy(molecule, psi, E, grid, T, eps):
     pot_hartree = tuck.round(pot_hartree, eps)
     
     V = [0] * Norb
-    for i in xrange(Norb):
+    for i in range(Norb):
         V[i] =  (prod(tuck.round(2*pot_hartree, eps), psi[i], psi[i]) -
                  qt.pots.exchange(psi, psi, i, eps_exchange, T, molecule))
         V[i] = tuck.round(V[i], eps)
     
     
     E_electr = 0
-    for i in xrange(Norb):
+    for i in range(Norb):
         E_electr = E_electr + 2*E[i] - sf**2*tuck.dot(psi[i], V[i])
     
     
     E_nuc = 0
-    for i in xrange(num_atoms):
+    for i in range(num_atoms):
         vec_i = molecule.atoms[i].rad
         charge_i = molecule.atoms[i].charge
-        for j in xrange(i):
+        for j in range(i):
             vec_j = molecule.atoms[j].rad
             charge_j = molecule.atoms[j].charge
             E_nuc = (E_nuc + charge_i*charge_j/

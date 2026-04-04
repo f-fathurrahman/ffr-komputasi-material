@@ -20,23 +20,23 @@ def extrapolation(E, E_exact = 0.):
         raise Exception('Length of the input array must be greater than 1')
 
     res = [E]
-    if E_exact <> 0.:
-        err = [[abs(E_exact - E[i])/abs(E_exact ) for i in xrange(n)]]
+    if E_exact != 0.:
+        err = [[abs(E_exact - E[i])/abs(E_exact ) for i in range(n)]]
     else:
         err = [[]]
     Wlev = n
-    for i in xrange(1, Nlev+1):
+    for i in range(1, Nlev+1):
         Wlev -= 2
         res.append([None] * Wlev)
         err.append([None] * Wlev)
         
-        for j in xrange(Wlev):
+        for j in range(Wlev):
             x2 = res[i-1][j+2]
             x1 = res[i-1][j+1]
             x0 = res[i-1][j]
             
             res[i][j] = x2 - (x2-x1)**2 / (x2-2*x1+x0)
-            if E_exact <> 0.:
+            if E_exact != 0.:
                 err[i][j] = abs(res[i][j] - E_exact)/abs(E_exact)
 
 

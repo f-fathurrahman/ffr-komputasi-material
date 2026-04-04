@@ -29,7 +29,7 @@ def lda(molecule, psi_0, E_0, grid, T, num_iter, eps, ind):
     h = (b-a)/(N-1)
     
     x = np.zeros(N)
-    for i in xrange(N):
+    for i in range(N):
         x[i] = a + i*h
     
     accuracy = np.zeros(num_iter)
@@ -53,29 +53,29 @@ def lda(molecule, psi_0, E_0, grid, T, num_iter, eps, ind):
     psi_new = [0]*Norb
     ################## Coulomb potential calculation ####################
 
-    prod = lambda A,B,C: tuck.cross.multifun([A,B], eps, lambda (a,b): a*b, y0=C)
+    prod = lambda A,B,C: tuck.cross.multifun([A,B], eps, lambda a_b2: a_b2[0]*a_b2[1], y0=C)
     
     E_nuc = 0
-    for i in xrange(num_atoms):
+    for i in range(num_atoms):
         vec_i = molecule.atoms[i].rad
         charge_i = molecule.atoms[i].charge
-        for j in xrange(i):
+        for j in range(i):
             vec_j = molecule.atoms[j].rad
             charge_j = molecule.atoms[j].charge
             E_nuc = (E_nuc + charge_i*charge_j/
                      np.sqrt((vec_i[0] - vec_j[0])**2 + (vec_i[1] - vec_j[1])**2 + (vec_i[2] - vec_j[2])**2))
     
-    print "Coulomb potential..."
+    print("Coulomb potential...")
     
     pot_coulomb = tuck.zeros((N,N,N))
-    for i in xrange(num_atoms):
+    for i in range(num_atoms):
         vec = molecule.atoms[i].rad
         charge = molecule.atoms[i].charge
         pot_coulomb = pot_coulomb - charge * qt.pots.coulomb(x, vec, ind, eps)
         pot_coulomb = tuck.round(pot_coulomb, eps)
 
     ################## Iteration process ####################
-    print "Iteration process..."
+    print("Iteration process...")
     
     time_hartree = 0
     time_exchange = 0
@@ -91,10 +91,10 @@ def lda(molecule, psi_0, E_0, grid, T, num_iter, eps, ind):
     
     
     
-    for k in xrange(num_iter):
-        print "############################################ "
-        print "Iteration Number %s" % (k + 1)
-        print "############################################ "
+    for k in range(num_iter):
+        print("############################################ ")
+        print("Iteration Number %s" % (k + 1))
+        print("############################################ ")
         
         time_hartree_iter = 0
         time_exchange_iter = 0
@@ -102,7 +102,7 @@ def lda(molecule, psi_0, E_0, grid, T, num_iter, eps, ind):
         
         start_hartree_iter = time.time()
         density = tuck.zeros((N,N,N))  # density calculation
-        for i in xrange(Norb):
+        for i in range(Norb):
             density = density + prod(tuck.conj(psi[i]), psi[i], psi[i]) # !can be faster!
             density = tuck.round(density, eps)
         density = 2*density
@@ -117,8 +117,8 @@ def lda(molecule, psi_0, E_0, grid, T, num_iter, eps, ind):
 
     
         E_electr = 0
-        e_xc = tuck.cross.multifun([density, density], 3*eps, lambda (a, b): ((cen_fun(np.abs(np.real(a))) + xen_fun(np.abs(np.real(a))))*np.abs(b)), y0 = density, pr = pr)
-        de_xc = tuck.cross.multifun([density, density],  3*eps, lambda (a, b): ((cpot_fun(np.abs(np.real(a))) + xpot_fun(np.abs(np.real(a))))*(b)), y0 = density, pr=pr)
+        e_xc = tuck.cross.multifun([density, density], 3*eps, lambda a_b: ((cen_fun(np.abs(np.real(a_b[0]))) + xen_fun(np.abs(np.real(a_b[0]))))*np.abs(a_b[1])), y0 = density, pr = pr)
+        de_xc = tuck.cross.multifun([density, density],  3*eps, lambda a_b1: ((cpot_fun(np.abs(np.real(a_b1[0]))) + xpot_fun(np.abs(np.real(a_b1[0]))))*(a_b1[1])), y0 = density, pr=pr)
         e_h = 0.5 * prod(pot_hartree, density, density)
         
         E_h = sf**2*tuck.dot(e_h, tuck.ones(e_xc.n))
@@ -127,16 +127,16 @@ def lda(molecule, psi_0, E_0, grid, T, num_iter, eps, ind):
         #print E_xc, dE_xc, E_h
         
         
-        for i in xrange(Norb):
+        for i in range(Norb):
             V[i] =  prod(tuck.round(pot_coulomb + pot_hartree, eps), psi[i], psi[i])
             psi[i] = tuck.real(psi[i])
             psi[i] = tuck.round(psi[i], eps)
         
         list = [None]*(Norb+1)
         list[1:] = psi
-        for i in xrange(Norb):
+        for i in range(Norb):
             list[0] = psi[i]
-            Vxc = tuck.cross.multifun(list, 10*eps, lambda (a): ((cpot_fun(density_fun(a[1:])) + xpot_fun(density_fun(a[1:])))*(a[0])), y0 = density, pr=pr) # Somehow it can not converge if precision eps. That is why 3*eps is used
+            Vxc = tuck.cross.multifun(list, 10*eps, lambda a: ((cpot_fun(density_fun(a[1:])) + xpot_fun(density_fun(a[1:])))*(a[0])), y0 = density, pr=pr) # Somehow it can not converge if precision eps. That is why 3*eps is used
             V[i] = tuck.round(V[i] + Vxc, eps)
             
             # Full energy computation
@@ -148,10 +148,10 @@ def lda(molecule, psi_0, E_0, grid, T, num_iter, eps, ind):
         E_full_0 = E_full
         E_full = E_electr - E_h + E_nuc + E_xc - dE_xc
         E_full_1 = E_full
-        print 'Full Energy = %s' % (E_full)
-        print 'Correct Energy = %s' %(E_correct)
+        print('Full Energy = %s' % (E_full))
+        print('Correct Energy = %s' %(E_correct))
         accuracy[k] =  ((E_correct - E_full)/abs(E_correct))
-        print 'Relative Precision of the full Energy = %s' % (accuracy[k])
+        print('Relative Precision of the full Energy = %s' % (accuracy[k]))
                 
 
         
@@ -163,16 +163,16 @@ def lda(molecule, psi_0, E_0, grid, T, num_iter, eps, ind):
         # Fock matrix
         
         V_new = [0]*Norb
-        for i in xrange(Norb):
+        for i in range(Norb):
             V_new[i] = prod(tuck.round(pot_coulomb + pot_hartree,eps), psi_Q[i], psi_Q[i])
             psi_Q[i] = tuck.real(psi_Q[i])
             psi_Q[i] = tuck.round(psi_Q[i], eps)
     
         list = [None]*(Norb+1)
         list[1:] = psi_Q
-        for i in xrange(Norb):
+        for i in range(Norb):
             list[0] = psi_Q[i]
-            Vxc_new = tuck.cross.multifun(list, eps*10, lambda (a): ((cpot_fun(density_fun(a[1:])) + xpot_fun(density_fun(a[1:])))*(a[0])), y0 = density, pr = pr)
+            Vxc_new = tuck.cross.multifun(list, eps*10, lambda a: ((cpot_fun(density_fun(a[1:])) + xpot_fun(density_fun(a[1:])))*(a[0])), y0 = density, pr = pr)
             V_new[i] = tuck.round(V_new[i] + Vxc_new, eps)
     
     
@@ -181,8 +181,8 @@ def lda(molecule, psi_0, E_0, grid, T, num_iter, eps, ind):
         Energ2 = np.dot(np.linalg.inv(L), Energ2)
         Energ = np.dot(Energ2, Energ1)
         F = qt.bilinear(psi_Q, V_new)*sf**2 - np.dot(qt.bilinear(psi_Q, V)*sf**2, H(np.linalg.inv(L))) + Energ
-        print 'Fock Matrix:'
-        print F
+        print('Fock Matrix:')
+        print(F)
         #F = np.real((F + F.T)/2)
         
         E_new = np.zeros(Norb, dtype = np.float64)
@@ -193,23 +193,23 @@ def lda(molecule, psi_0, E_0, grid, T, num_iter, eps, ind):
         output_r[:,k] = density.r
         np.save('experiments/'+fname, [output_E[:,:k], output_r[:,:k]])
         
-        print 'Orbital Energies:'
-        print np.array(E_new)
+        print('Orbital Energies:')
+        print(np.array(E_new))
         
         psi = qt.prod(psi_Q, S.T, density, eps)
-        for i in xrange(Norb):
+        for i in range(Norb):
             psi[i] = qt.normalize(psi[i], h)
             psi[i] = tuck.round(psi[i], eps)
         
         E = E_new.copy()
         
-        for i in xrange(Norb):
+        for i in range(Norb):
             if E[i]>0:
                 E[i] = -0.0
     
         end_iter = time.time()
-        print '1 Iteration Time: %s' % (end_iter - start_iter)
-        print 'Hartree Time on this Iteration: %s' % (time_hartree_iter)
+        print('1 Iteration Time: %s' % (end_iter - start_iter))
+        print('Hartree Time on this Iteration: %s' % (time_hartree_iter))
                     #print 'Exchange Time on this Iteration: %s' % (time_exchange_iter)
         time_whole += (end_iter - start_iter)
         timing[k] = end_iter - start_iter
@@ -219,7 +219,7 @@ def lda(molecule, psi_0, E_0, grid, T, num_iter, eps, ind):
             if check == 3:
                 break
 
-    print 'The Whole Time: %s' % (time_whole)                
+    print('The Whole Time: %s' % (time_whole))                
     return psi, E, accuracy, timing, E_full
 
 
@@ -232,19 +232,23 @@ def cen_fun(a):
 def cpot_fun(a):
     return -(3./pi)**(1./3) * a**(1./3)
 
-def xen_high_fun(rho, (A,B,C,D) = (A,B,C,D)):
+def xen_high_fun(rho, xxx_todo_changeme = (A,B,C,D)):
+    (A,B,C,D) = xxx_todo_changeme
     rs = (3./(4*pi*rho))**(1./3)
     return A*np.log(rs) + B + C*rs*np.log(rs) + D*rs
 
-def xen_low_fun(rho, (gamma, beta1, beta2) = (gamma, beta1, beta2)):
+def xen_low_fun(rho, xxx_todo_changeme3 = (gamma, beta1, beta2)):
+    (gamma, beta1, beta2) = xxx_todo_changeme3
     rs = (3./(4*pi*rho))**(1./3) #rho = 1/(4/3 * pi * rs^3)  1/rho = 4/3 pi R^3 R = (3/(4*pi*rho))^(1/3)
     return gamma/(1. + beta1 * np.sqrt(rs) + beta2 * rs)
 
-def xpot_high_fun(rho, (A,B,C,D) = (A,B,C,D)):
+def xpot_high_fun(rho, xxx_todo_changeme4 = (A,B,C,D)):
+    (A,B,C,D) = xxx_todo_changeme4
     rs = (3./(4*pi*rho))**(1./3)
     return A*np.log(rs) + (B-A/3) + 2./3*C*rs*np.log(rs) + 1./3*(2*D-C)*rs
 
-def xpot_low_fun(rho, (gamma, beta1, beta2) = (gamma, beta1, beta2)):
+def xpot_low_fun(rho, xxx_todo_changeme5 = (gamma, beta1, beta2)):
+    (gamma, beta1, beta2) = xxx_todo_changeme5
     rs = (3./(4*pi*rho))**(1./3)
     return gamma*(1. + 7./6 * beta1 * np.sqrt(rs) + 4./3 * beta2 * rs)/(1. + beta1 * np.sqrt(rs) + beta2 * rs)**2
 #1./rs * gamma*(1./rs + 7./6 * beta1 * 1./np.sqrt(rs) + 4./3 * beta2 )/(1./rs + beta1 * 1./np.sqrt(rs) + beta2 )**2

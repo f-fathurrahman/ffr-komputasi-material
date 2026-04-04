@@ -4,55 +4,55 @@ class Molecule(object):
 
     # Warning: rad must be in angstrem
     # possible molecules: H2O,
-    # if name = '' => manual setting of charge and rad
+    # if name = "" => manual setting of charge and rad
     def __init__(self, name, charge = 0, rad = 0):
 
         const = 1./0.52917721092  # angstrom to bohr constant    
         
-        if name == 'He':
+        if name == "He":
 
             charge = [2.]
             rad = np.array([0.000000,  0.000000,  0.000000])
             self.energy = -2.861679995612
 
-        if name == 'Li':
+        if name == "Li":
             charge = [3.]
             rad = np.array([0.000000,  0.000000,  0.000000])
             self.energy = -7.236384
 
-        elif name == 'H2':
+        elif name == "H2":
             charge = [1., 1.]
             rad = np.array([0.7/const,  0.000000,  0.0,
                             -0.7/const,  0.000000, 0.0])
             self.energy = -1.1336286746
 
-        elif name == 'HeH+':
+        elif name == "HeH+":
             charge = [2., 1.]
             rad = np.array([0.000000,  0.000000,  0.2567,
                             0.000000,  0.000000,  -0.5134])
             self.energy = -2.932879
 
-        elif name == 'Be':
+        elif name == "Be":
             charge = [4.]
             rad = np.array([0.000000,  0.000000,  0.000000])
             self.energy = -14.57302317
 
-        elif name == 'Ne':
+        elif name == "Ne":
             charge = [10.]
             rad = np.array([0.000000,  0.000000,  0.000000])
             self.energy = -128.5470981
 
-        elif name == 'Mg':
+        elif name == "Mg":
             charge = [12.]
             rad = np.array([0.000000,  0.000000,  0.000000])
             self.energy = -199.6146364
 
-        elif name == 'Ar':
+        elif name == "Ar":
             charge = [18.]
             rad = np.array([0.000000,  0.000000,  0.000000])
             self.energy = -526.8175128
 
-        elif name == 'H2O':
+        elif name == "H2O":
             charge = [8., 1., 1.]
             #rad = np.array([0.000000,  0.000000,  0.000000,
             #                0.758602,  0.000000,  0.504284,
@@ -62,7 +62,7 @@ class Molecule(object):
                             0.000,	-0.752,	-0.451])
             self.energy = -76.066676
 
-        elif name == 'CH4':
+        elif name == "CH4":
             charge = [6., 1., 1., 1., 1.]
             rad = np.array([0.0000, 0.0000, 0.0000,
                             0.6248,	0.6248,	0.6248,
@@ -71,7 +71,7 @@ class Molecule(object):
                              0.6248, -0.6248, -0.6248])
             self.energy = -40.216345
 
-        elif name == 'C2H6':
+        elif name == "C2H6":
             charge = [6., 6., 1., 1., 1., 1., 1., 1.]
             rad = np.array([0.0000,	0.0000,	0.7623,
                             0.0000,	0.0000,	-0.7623,
@@ -83,7 +83,7 @@ class Molecule(object):
                             0.8754,	0.5054,	-1.1544])
             self.energy = -79.265431
 
-        elif name == 'C6H6':
+        elif name == "C6H6":
             charge = [6., 6., 6., 6., 6., 6., 1., 1., 1., 1., 1., 1.]
             rad = np.array([ 0.0, 2.61474609375, 0.0,
                             0.0, -2.61474609375, 0.0,
@@ -101,7 +101,7 @@ class Molecule(object):
             rad = rad /const
             self.energy = -230.2017048
 
-        elif name == 'C2H5OH':
+        elif name == "C2H5OH":
             charge = [6., 6., 8., 1., 1., 1., 1., 1., 1]
             rad = np.array([1.1657,	-0.4170, 0.0000,
                             0.0000,	0.5466,	0.0000,
@@ -116,11 +116,11 @@ class Molecule(object):
 
 
         else:   # manual setting of molecule
-            self.name = 'manual setting'
+            self.name = "manual setting"
 
 
         if 3*len(charge) != len(rad):
-            raise Exception('charge and coordinate arrays do not coincide each other')
+            raise Exception("charge and coordinate arrays do not coincide each other")
 
         num_atoms = len(charge)
         self.num_atoms = num_atoms

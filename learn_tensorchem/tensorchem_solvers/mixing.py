@@ -1,11 +1,7 @@
 import numpy as np
-import time
-from math import pi
 import copy
-from scipy.special import erf
 import tucker3d as tuck
 import qtools as qt
-import solvers
 
 # m is number of mixed vectors
 
@@ -20,14 +16,14 @@ def mixing(solver, molecule, psi_0, E_0, eps, grid, T, ind, max_iter, m, max_ite
     h = (b-a)/(N-1)
     
     x = np.zeros(N)
-    for i in xrange(N):
+    for i in range(N):
         x[i] = a + i*h
     
     Norb = molecule.orbitals
     num_atoms = molecule.num_atoms
     
     pot_coulomb = tuck.zeros((N,N,N))
-    for i in xrange(num_atoms):
+    for i in range(num_atoms):
         vec = molecule.atoms[i].rad
         charge = molecule.atoms[i].charge
         pot_coulomb = pot_coulomb - charge * qt.pots.coulomb(x, vec, ind, eps)
@@ -56,7 +52,7 @@ def mixing(solver, molecule, psi_0, E_0, eps, grid, T, ind, max_iter, m, max_ite
     rho = Grho_m[0]
 
     err_and = np.zeros(max_iter)
-    for k in xrange(1, max_iter):
+    for k in range(1, max_iter):
         mk = min(k, m)
     
         f = np.zeros(mk + 1)
@@ -66,8 +62,8 @@ def mixing(solver, molecule, psi_0, E_0, eps, grid, T, ind, max_iter, m, max_ite
         A[mk, mk] = 0.
     
     
-        for p in xrange(mk):
-            for q in xrange(mk):
+        for p in range(mk):
+            for q in range(mk):
                 A[p, q] += 2 * qt.inner(D_m[p], D_m[q], h)
 
     
@@ -84,7 +80,7 @@ def mixing(solver, molecule, psi_0, E_0, eps, grid, T, ind, max_iter, m, max_ite
                 alpha[1] = .9
 
         rho_temp = tuck.zeros((N, N, N))
-        for p in xrange(mk):
+        for p in range(mk):
             rho_temp += tuck.round(alpha[p] * Grho_m[p], eps/10)
         rho = tuck.round(rho_temp, eps/10)
 
@@ -107,18 +103,18 @@ def mixing(solver, molecule, psi_0, E_0, eps, grid, T, ind, max_iter, m, max_ite
         solver.psi = psi
         solver.orb_energies = E_new
 
-        print solver.psi[0].r, solver.psi[-1].r
-        print E_new
+        print(solver.psi[0].r, solver.psi[-1].r)
+        print(E_new)
         err = abs((E-E_new)/E)
         E = copy.copy(E_new)
         #solver.iterative.orb_energies.append(E_new)
         #solver.iterative.convergence.append(err)
-        print 'Iteration', k, 'accuracy = %.2e' % max(err)
+        print("Iteration", k, "accuracy = %.2e" % max(err))
 
         if max(err) < 4 * eps:
             count += 1
             if count == 4:
-                print 'Process converged with', i, 'iterations'
+                print("Process converged with", i, "iterations")
                 break
 
 
@@ -128,9 +124,9 @@ def mixing(solver, molecule, psi_0, E_0, eps, grid, T, ind, max_iter, m, max_ite
         D_m.append(tuck.round(Grho_m[-1] - rho_m[-1], eps))
         D_m = D_m[-min(k + 1, m):]
 
-    Eel = solvers.dft_dens.lda(molecule, psi, E, rho, grid, T, eps*1e-2, pot_coulomb, max_iter = max_iter_inscf, pr=pr)[1]
-    Efull = solvers.dft_dens.lda_full_energy(molecule, psi, E, rho, grid, T, eps*1e-2, ind, pr = None) + 2*np.sum(Eel)
-    print Efull
+    Eel = dft_dens.lda(molecule, psi, E, rho, grid, T, eps*1e-2, pot_coulomb, max_iter = max_iter_inscf, pr=pr)[1]
+    Efull = dft_dens.lda_full_energy(molecule, psi, E, rho, grid, T, eps*1e-2, ind, pr = None) + 2*np.sum(Eel)
+    print(Efull)
     solver.energy = Efull
             
     return psi, E, rho, Efull, err_and
@@ -141,8 +137,8 @@ def mixing(solver, molecule, psi_0, E_0, eps, grid, T, ind, max_iter, m, max_ite
 def psi2dens(psi, eps):
     
     density = tuck.zeros(psi[0].n)
-    for i in xrange(len(psi)):
-        density = density + tuck.cross.multifun([psi[i], psi[i]], eps/10, lambda (a,b): a*b, y0 = psi[i])
+    for i in range(len(psi)):
+        density = density + tuck.cross.multifun([psi[i], psi[i]], eps/10, lambda a_b: a_b[0]*a_b[1], y0 = psi[i])
         density = tuck.round(density, eps)
     density = 2*density
     

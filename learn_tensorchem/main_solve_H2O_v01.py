@@ -1,7 +1,7 @@
 from qtools.molecules import Molecule
 from tensorchem_solvers.solver import Solver
 
-name = "H2"
+name = "H2O"
 mol = Molecule(name)
 
 n = 2**11; print("n = ", n)

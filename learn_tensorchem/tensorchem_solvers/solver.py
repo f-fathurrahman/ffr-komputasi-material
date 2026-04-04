@@ -4,6 +4,7 @@ import tucker3d as tuck
 from qtools import galerkin, pots
 
 from .solver_hf import solver_hf
+from .solver_lda import solver_lda
 
 from .pyquante_wrapper import run_pyquante
 
@@ -91,7 +92,7 @@ class Solver:
 
     def get_coulomb(self):
 
-        file_coulomb = "TEMP_file_coulomb"
+        file_coulomb = "TEMP_file_coulomb.pkl"
         try:
             with open(file_coulomb, "rb") as f:
                 self.pots.coulomb = pickle.load(f)
@@ -162,7 +163,7 @@ class Solver:
 def smoothed_coulomb_derivative(r):
     if r >= 6:
         return -1.0/r**2
-    elif r<6 and r>=0.1:
+    elif r < 6 and r >= 0.1:
         return 2*np.exp(-r**2)/np.sqrt(np.pi)/r - erf(r)/r**2 - 1.0/3/np.sqrt(np.pi) * (2*r*np.exp(-r**2) + 128*r*np.exp(-4*r**2))
     else:
         return -4.0/3*r + 4.0/5*r**3 - 2.0/7*r**5 + 2.0/27*r**7 - 1.0/66*r**9 - 1.0/3/np.sqrt(np.pi) * (2*r*np.exp(-r**2) + 128*r*np.exp(-4*r**2))

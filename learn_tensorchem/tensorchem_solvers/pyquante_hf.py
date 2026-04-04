@@ -22,13 +22,13 @@ def pyquante_hf(mol, x, eps, basis = "sto-3g"):
 
     
     atoms = [None]*mol.num_atoms
-    for i in xrange(mol.num_atoms):
+    for i in range(mol.num_atoms):
         atoms[i] = (mol.atoms[i].charge,
                     (mol.atoms[i].rad[0],mol.atoms[i].rad[1],mol.atoms[i].rad[2]))
         
     mol_pq = Molecule(mol.name, atoms, units='Bohr')
     solver = SCF(mol_pq,method="HF",ConvCriteria=1e-7,MaxIter=40,basis=basis)
-    print 'SCF iteration - done'
+    print('SCF iteration - done')
 
 
     solver.iterate()
@@ -39,12 +39,12 @@ def pyquante_hf(mol, x, eps, basis = "sto-3g"):
     cf=solver.solver.orbs[:,0:norb]
 
     psi = [None]*norb
-    for i in xrange(norb):
+    for i in range(norb):
         psi[i] = gto2tuck(w,cf[:,i],x)
-        print psi[i].r
+        print(psi[i].r)
         psi[i] = local(psi[i],1e-14)
         psi[i] = tuck.round(psi[i],eps)
-        print psi[i].r
+        print(psi[i].r)
 
     E = solver.solver.orbe[:norb]
 
@@ -86,7 +86,7 @@ def svd_trunc(A, eps = 1e-14):
     
     eps_svd = eps*s[0]/np.sqrt(3)
     r = min(N1, N2)
-    for i in xrange(min(N1, N2)):
+    for i in range(min(N1, N2)):
         if s[i] <= eps_svd:
             r = i
             break
@@ -105,7 +105,7 @@ def gto2tuck(w,cf,x):
     r = len(cf)
     
     k=0
-    for alpha in xrange(r):
+    for alpha in range(r):
         k += len(w[alpha].prims)
     
     U1 = np.zeros((n,k*r))
@@ -114,8 +114,8 @@ def gto2tuck(w,cf,x):
     c = np.zeros(k*r)
     
     nG = 0
-    for alpha in xrange(r):
-        for beta in xrange(len(w[alpha].prims)):
+    for alpha in range(r):
+        for beta in range(len(w[alpha].prims)):
             prim = w[alpha].prims[beta]
             i,j,k = prim.powers
             x0,y0,z0 = prim.origin
