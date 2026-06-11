@@ -1,0 +1,701 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{babel}
+% Added by lyx2lyx
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children no
+\language american
+\language_package default
+\inputencoding iso8859-15
+\fontencoding T1
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 2
+\use_package amssymb 2
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip halfline
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+1.
+ The Physical System
+\end_layout
+
+\begin_layout Standard
+We consider 
+\begin_inset Formula $N_{\text{el}}$
+\end_inset
+
+ spin-1/2 fermions moving in one dimension.
+ The Hamiltonian (in atomic units,
+ 
+\begin_inset Formula $\hbar=m=1$
+\end_inset
+
+) is
+\begin_inset Formula 
+\[
+\hat{H}=\sum_{i=1}^{N_{\text{el}}}\left[-\frac{1}{2}\frac{d^{2}}{dx_{i}^{2}}+V_{\text{ext}}(x_{i})\right]+\sum_{1\le i<j\le N_{\text{el}}}v_{\text{ee}}(x_{i}-x_{j}),
+\]
+
+\end_inset
+
+where
+\end_layout
+
+\begin_layout Standard
+- 
+\begin_inset Formula $V_{\text{ext}}(x)=\frac{1}{2}\omega^{2}x^{2}$
+\end_inset
+
+ (harmonic trap),
+ 
+\end_layout
+
+\begin_layout Standard
+- 
+\begin_inset Formula $v_{\text{ee}}(r)=1/\sqrt{r^{2}+a_{\text{soft}}^{2}}$
+\end_inset
+
+ (soft-Coulomb interaction).
+\end_layout
+
+\begin_layout Standard
+The total wavefunction 
+\begin_inset Formula $\Psi(x_{1},\sigma_{1},\dots,x_{N_{\text{el}}},\sigma_{N_{\text{el}}})$
+\end_inset
+
+ must be antisymmetric under exchange of any two particles (including their spins).
+\end_layout
+
+\begin_layout Standard
+2.
+ Discretization on a Spatial Grid
+\end_layout
+
+\begin_layout Standard
+We restrict the spatial domain to 
+\begin_inset Formula $x\in[-L,L]$
+\end_inset
+
+ and discretize it into 
+\begin_inset Formula $N$
+\end_inset
+
+ equally spaced points:
+\begin_inset Formula 
+\[
+x_{j}=-L+(j-1)\Delta x,\qquad\Delta x=\frac{2L}{N-1},\qquad j=1,\dots,N.
+\]
+
+\end_inset
+
+The single-particle Hamiltonian (kinetic + external) is represented as an 
+\begin_inset Formula $N\times N$
+\end_inset
+
+ matrix in this grid basis.
+ The kinetic term 
+\begin_inset Formula $-\frac{1}{2}\dfrac{d^{2}}{dx^{2}}$
+\end_inset
+
+ is approximated by a finite-difference stencil of order 
+\begin_inset Formula $m$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+\left(-\frac{1}{2}\frac{d^{2}}{dx^{2}}\psi\right)(x_{j})\approx-\frac{1}{2}\sum_{k=-s}^{s}c_{k}\frac{\psi(x_{j+k})}{\Delta x^{2}},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $s=(m-1)/2$
+\end_inset
+
+ and the coefficients 
+\begin_inset Formula $c_{k}$
+\end_inset
+
+ are standard finite-difference weights for the second derivative (e.g.,
+ for 
+\begin_inset Formula $m=3$
+\end_inset
+
+:
+ 
+\begin_inset Formula $c_{-1}=1,c_{0}=-2,c_{1}=1$
+\end_inset
+
+).
+ This yields a sparse symmetric matrix 
+\begin_inset Formula $T$
+\end_inset
+
+ with elements
+\begin_inset Formula 
+\[
+T_{j,j+k}=-\frac{1}{2}\frac{c_{k}}{\Delta x^{2}}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The external potential is diagonal:
+ 
+\begin_inset Formula $V_{j,j}=V_{\text{ext}}(x_{j})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Thus the single-particle matrix is
+\begin_inset Formula 
+\[
+\mathbf{h}=\mathbf{T}+\mathbf{V}_{\text{ext}}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+3.
+ Many-Body Hamiltonian in the Product Basis
+\end_layout
+
+\begin_layout Standard
+For distinguishable particles,
+ we take the basis states as simple products of single-particle grid states:
+\begin_inset Formula 
+\[
+|i_{1},i_{2},\dots,i_{N_{\text{el}}}\rangle=|i_{1}\rangle\otimes|i_{2}\rangle\otimes\cdots\otimes|i_{N_{\text{el}}}\rangle,
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where each 
+\begin_inset Formula $i_{p}$
+\end_inset
+
+ runs from 
+\begin_inset Formula $1$
+\end_inset
+
+ to 
+\begin_inset Formula $N$
+\end_inset
+
+.
+ The corresponding wavefunction is 
+\begin_inset Formula 
+\[
+\phi_{i_{1},\dots,i_{N_{\text{el}}}}(x_{1},\dots,x_{N_{\text{el}}})=\prod_{p=1}^{N_{\text{el}}}\delta_{x_{p},x_{i_{p}}}
+\]
+
+\end_inset
+
+This basis has dimension 
+\begin_inset Formula $N^{N_{\text{el}}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+3.1 Non-interacting part
+\end_layout
+
+\begin_layout Standard
+The single-particle operator
+\begin_inset Formula 
+\[
+\sum_{p=1}^{N_{\text{el}}}\left(-\frac{1}{2}\frac{d^{2}}{dx_{p}^{2}}+V_{\text{ext}}(x_{p})\right)
+\]
+
+\end_inset
+
+ acts on each particle independently.
+ In the product basis,
+ it becomes a sum of Kronecker products:
+\begin_inset Formula 
+\[
+\mathbf{H}_{0}=\sum_{p=1}^{N_{\text{el}}}\underbrace{\mathbf{I}\otimes\cdots\otimes\mathbf{h}}_{\text{position }p}\otimes\cdots\otimes\mathbf{I}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If we order the basis such that the first particle index varies fastest (column-major order),
+ the linear index corresponding to 
+\begin_inset Formula $(i_{1},i_{2},\dots,i_{N_{\text{el}}})$
+\end_inset
+
+ is
+\begin_inset Formula 
+\[
+\text{idx}=1+\sum_{p=1}^{N_{\text{el}}}(i_{p}-1)N^{p-1}.
+\]
+
+\end_inset
+
+Then the term for particle 
+\begin_inset Formula $p$
+\end_inset
+
+ can be constructed by taking the Kronecker product in 
+\series bold
+reverse order
+\series default
+:
+ start with the factor for particle 1,
+ then multiply from the left by the factor for particle 2,
+ etc.
+ The Julia function build_term(p) implements this.
+\end_layout
+
+\begin_layout Standard
+3.2 Interaction part
+\end_layout
+
+\begin_layout Standard
+The two-body interaction 
+\begin_inset Formula $\sum_{i<j}v_{\text{ee}}(x_{i}-x_{j})$
+\end_inset
+
+ is diagonal in the product basis because the basis states are localized at grid points.
+ Its matrix elements are
+\begin_inset Formula 
+\[
+\langle i_{1},\dots,i_{N_{\text{el}}}|\hat{V}_{\text{int}}|j_{1},\dots,j_{N_{\text{el}}}\rangle=\delta_{i_{1},j_{1}}\cdots\delta_{i_{N_{\text{el}}},j_{N_{\text{el}}}}\sum_{p<q}v_{\text{ee}}(x_{i_{p}}-x_{i_{q}}).
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus the interaction contributes a diagonal matrix 
+\begin_inset Formula $\mathbf{U}$
+\end_inset
+
+ with entries
+\begin_inset Formula 
+\[
+U_{\text{idx}}=\sum_{1\le p<q\le N_{\text{el}}}v_{\text{ee}}(x_{i_{p}}-x_{i_{q}}).
+\]
+
+\end_inset
+
+The total many-body Hamiltonian in the product basis is 
+\begin_inset Formula 
+\[
+\mathbf{H}=\mathbf{H}_{0}+\mathbf{U}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+4.
+ Exact Diagonalization
+\end_layout
+
+\begin_layout Standard
+We use ARPACK to compute the lowest few eigenvalues and eigenvectors of the sparse matrix 
+\begin_inset Formula $\mathbf{H}$
+\end_inset
+
+ (real,
+ symmetric).
+ For a given number of computed states 
+\begin_inset Formula $M$
+\end_inset
+
+,
+ we obtain eigenvalues 
+\begin_inset Formula $E^{(n)}$
+\end_inset
+
+ and corresponding eigenvectors 
+\begin_inset Formula $\mathbf{c}^{(n)}$
+\end_inset
+
+ in the product basis.
+ Each eigenvector can be reshaped into a tensor 
+\begin_inset Formula $\Psi^{(n)}(i_{1},\dots,i_{N_{\text{el}}})$
+\end_inset
+
+ of size 
+\begin_inset Formula $N\times\cdots\times N$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+5.
+ Antisymmetrization
+\end_layout
+
+\begin_layout Standard
+The eigenvectors from the product basis correspond to distinguishable particles.
+ To obtain physical fermionic states,
+ we must antisymmetrize the wavefunction including spin.
+\end_layout
+
+\begin_layout Standard
+5.1 Spin part
+\end_layout
+
+\begin_layout Standard
+For a given spin configuration specified by the string `electrons` (e.g.,
+ `"uud"`),
+ we construct the spin tensor as a product of spinors:
+\begin_inset Formula 
+\[
+\chi(\sigma_{1},\dots,\sigma_{N_{\text{el}}})=\bigotimes_{p=1}^{N_{\text{el}}}\begin{cases}
+\begin{pmatrix}1\\
+0
+\end{pmatrix} & \text{if spin up},\\
+\begin{pmatrix}0\\
+1
+\end{pmatrix} & \text{if spin down}.
+\end{cases}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This yields a tensor of shape 
+\begin_inset Formula $(2,2,\dots,2)$
+\end_inset
+
+ (dimension 
+\begin_inset Formula $2^{N_{\text{el}}}$
+\end_inset
+
+) with a single non-zero entry at the index corresponding to the given spin configuration.
+\end_layout
+
+\begin_layout Standard
+5.2 Full wavefunction (spatial + spin)
+\end_layout
+
+\begin_layout Standard
+We combine spatial and spin degrees of freedom into a single tensor with alternating dimensions:
+\begin_inset Formula 
+\[
+\Phi(x_{1},\sigma_{1},x_{2},\sigma_{2},\dots,x_{N_{\text{el}}},\sigma_{N_{\text{el}}})=\Psi(x_{1},\dots,x_{N_{\text{el}}})\cdot\chi(\sigma_{1},\dots,\sigma_{N_{\text{el}}}).
+\]
+
+\end_inset
+
+In the discretized representation,
+ this is an array of size 
+\begin_inset Formula $(N,2,N,2,\dots,N,2)$
+\end_inset
+
+.
+ The element at indices 
+\begin_inset Formula $(i_{1},s_{1},i_{2},s_{2},\dots,i_{N_{\text{el}}},s_{N_{\text{el}}})$
+\end_inset
+
+ equals 
+\begin_inset Formula $\Psi(i_{1},\dots,i_{N_{\text{el}}})\cdot\chi(s_{1},\dots,s_{N_{\text{el}}})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+5.3 Permutation sum
+\end_layout
+
+\begin_layout Standard
+To enforce antisymmetry,
+ we sum over all permutations 
+\begin_inset Formula $P$
+\end_inset
+
+ of the 
+\begin_inset Formula $N_{\text{el}}$
+\end_inset
+
+ particles,
+ each weighted by the sign of the permutation:
+\begin_inset Formula 
+\[
+\Phi_{\text{anti}}=\sum_{P}\mathrm{sgn}(P)\;\Phi^{(P)},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\Phi^{(P)}$
+\end_inset
+
+ is the wavefunction with the coordinates of particle 
+\begin_inset Formula $p$
+\end_inset
+
+ replaced by those of particle 
+\begin_inset Formula $P(p)$
+\end_inset
+
+.
+ In tensor terms,
+ we permute the particle dimensions accordingly.
+ For example,
+ for 
+\begin_inset Formula $N_{\text{el}}=2$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+\Phi_{\text{anti}}(x_{1},\sigma_{1},x_{2},\sigma_{2})=\Phi(x_{1},\sigma_{1},x_{2},\sigma_{2})-\Phi(x_{2},\sigma_{2},x_{1},\sigma_{1}).
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The sign 
+\begin_inset Formula $\mathrm{sgn}(P)$
+\end_inset
+
+ is 
+\begin_inset Formula $+1$
+\end_inset
+
+ for even permutations,
+ 
+\begin_inset Formula $-1$
+\end_inset
+
+ for odd ones.
+ In the implementation,
+ we loop over all permutations,
+ compute the required dimension permutation using `permutedims`,
+ and accumulate the result.
+\end_layout
+
+\begin_layout Standard
+5.4 Normalization
+\end_layout
+
+\begin_layout Standard
+After summation,
+ we normalize:
+\begin_inset Formula 
+\[
+\Phi_{\text{anti}}\leftarrow\frac{\Phi_{\text{anti}}}{\sqrt{\sum_{\text{all indices}}|\Phi_{\text{anti}}|^{2}\;(\Delta x)^{N_{\text{el}}}}},
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where the factor 
+\begin_inset Formula $(\Delta x)^{N_{\text{el}}}$
+\end_inset
+
+ accounts for the volume element in the continuous inner product.
+\end_layout
+
+\begin_layout Standard
+6.
+ Final States
+\end_layout
+
+\begin_layout Standard
+The antisymmetrized states 
+\begin_inset Formula $\Phi_{\text{anti}}$
+\end_inset
+
+ now represent proper fermionic wavefunctions.
+ Duplicate states (identical up to a global phase) are removed.
+ The ground state (or any desired state) is extracted,
+ and its energy is the corresponding eigenvalue from the diagonalization.
+\end_layout
+
+\begin_layout Standard
+7.
+ Remarks on the Implementation
+\end_layout
+
+\begin_layout Standard
+- Memory and performance:
+ The dimension 
+\begin_inset Formula $N^{N_{\text{el}}}$
+\end_inset
+
+ grows quickly.
+ For 
+\begin_inset Formula $N=60$
+\end_inset
+
+ and 
+\begin_inset Formula $N_{\text{el}}=2$
+\end_inset
+
+ it is 3600;
+ for 
+\begin_inset Formula $N=40$
+\end_inset
+
+ and 
+\begin_inset Formula $N_{\text{el}}=3$
+\end_inset
+
+ it is 64,000.
+ Sparse matrices and ARPACK make such sizes feasible.
+\end_layout
+
+\begin_layout Standard
+- Basis ordering:
+ The code carefully uses column-major indexing (particle 1 varies fastest) to match the `reshape` and `LinearIndices` conventions.
+\end_layout
+
+\begin_layout Standard
+- Antisymmetrization loop:
+ The permutation loop uses `permutedims` with a `Tuple` of the new dimension order.
+ This is efficient for small 
+\begin_inset Formula $N_{\text{el}}$
+\end_inset
+
+ (the number of permutations is 
+\begin_inset Formula $N_{\text{el}}!$
+\end_inset
+
+,
+ which is manageable for 
+\begin_inset Formula $N_{\text{el}}\le4$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+- Spin:
+ The spin part is constructed as a tensor product of spinors.
+ For configurations with more than one electron of the same spin,
+ the resulting spin tensor may have multiple non-zero entries,
+ but the antisymmetrization automatically mixes them to yield the correct spin multiplets.
+\end_layout
+
+\begin_layout Standard
+This approach directly implements the many-body Schrödinger equation on a real-space grid,
+ without approximating the interaction by a basis of non-interacting orbitals.
+ It is conceptually straightforward and yields exact (up to discretization) results for the given grid.
+\end_layout
+
+\end_body
+\end_document
