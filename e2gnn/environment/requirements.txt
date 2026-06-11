@@ -189,7 +189,7 @@ testpath @ file:///opt/conda/conda-bld/testpath_1655908557405/work
 threadpoolctl @ file:///home/conda/feedstock_root/build_artifacts/threadpoolctl_1689261241048/work
 toml @ file:///home/conda/feedstock_root/build_artifacts/toml_1604308577558/work
 tomli @ file:///home/conda/feedstock_root/build_artifacts/tomli_1644342247877/work
-torch==2.8.0
+torch==2.12.0
 torch-cluster @ file:///usr/share/miniconda/envs/test/conda-bld/pytorch-cluster_1668419514913/work
 torch-geometric @ file:///usr/share/miniconda/envs/test/conda-bld/pyg_1669879381602/work
 torch-scatter @ file:///usr/share/miniconda/envs/test/conda-bld/pytorch-scatter_1669298942895/work
