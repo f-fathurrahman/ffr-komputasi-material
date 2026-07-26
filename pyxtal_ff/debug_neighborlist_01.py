@@ -2,8 +2,8 @@ import ase.io
 from ase.neighborlist import NeighborList
 import numpy as np
 
-atoms_list = ase.io.read("DATASET_OTHERS/TiAl_gabung.xyz@:")
-#atoms_list = ase.io.read("DATASET_N2H4_v2/N2H4_2mol_1data.xyz@:")
+#atoms_list = ase.io.read("DATASET_OTHERS/TiAl_gabung.xyz@:")
+atoms_list = ase.io.read("DATASET_N2H4_v2/N2H4_2mol_1data.xyz@:")
 #atoms_list = ase.io.read("DATASET_N2H4_v1/TEMP_ATOMS_TRAIN.xyz@:")
 atoms = atoms_list[0]
 for a in atoms:
@@ -15,7 +15,7 @@ print(atoms.get_cell())
 rcut = 3.5
 
 # default
-weight_on = False
+weight_on = False # what's this?
 
 atom_ids = range(len(atoms))
 
