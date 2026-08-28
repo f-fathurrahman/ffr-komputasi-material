@@ -113,7 +113,7 @@ end
 # ============================
 # Example usage
 # ============================
-filename = "DATASET_N2H4_v2/N2H4_2mol_1data.xyz"
+filename = "../DATASET_N2H4_v2/N2H4_2mol_1data.xyz"
 system = read_first_frame(filename)
 
 # Print atoms and lattice (matching the Python output)

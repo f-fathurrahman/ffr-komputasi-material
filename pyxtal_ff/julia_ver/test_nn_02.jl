@@ -7,7 +7,7 @@ function read_first_frame(filename::String)
 end
 
 function debug_main()
-    filename = "DATASET_N2H4_v2/N2H4_2mol_1data.xyz"
+    filename = "../DATASET_N2H4_v2/N2H4_2mol_1data.xyz"
     system = load_system(filename, 1) # first frame
 
     # Print atoms and lattice (matching the Python output)
