@@ -354,6 +354,9 @@ Port of BoltzTraP2/fite.py fitde3D function.
 - `coeffs`: Fourier coefficients (nbands × neq)
 =#
 function fitde3D(kpoints, energies, equivalences, lattvec)
+
+    @info "Pass here 358 in fitde3d"
+
     nk = size(kpoints, 1)
     nbands = size(energies, 1)
     neq = length(equivalences)

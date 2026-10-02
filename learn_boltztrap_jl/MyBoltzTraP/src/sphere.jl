@@ -344,7 +344,9 @@ function get_spacegroup_info(
     types::AbstractVector{<:Integer};
     symprec::Real = 1e-5,
 )
-    pos_vec = [SVector{3,Float64}(positions[i, :]) for i = 1:size(positions, 1)]
+    @info "Pass here 347 in get_spacegroup_info"
+    Natoms = size(positions, 1)
+    pos_vec = [SVector{3,Float64}(positions[i, :]) for i = 1:Natoms]
     return get_spacegroup_info(lattvec, pos_vec, types; symprec)
 end
 
@@ -354,6 +356,7 @@ function get_spacegroup_info(
     types::AbstractVector{<:Integer};
     symprec::Real = 1e-5,
 )
+    @info "Pass here 359 in get_spacegroup_info"
     cell = Spglib.Cell(lattvec, positions, types)
     dataset = Spglib.get_dataset(cell, symprec)
     return (
@@ -455,7 +458,8 @@ function get_unique_rotations(
     magmom;
     symprec::Real = 1e-5,
 )
-    pos_vec = [SVector{3,Float64}(positions[i, :]) for i = 1:size(positions, 1)]
+    Natoms = size(positions, 1)
+    pos_vec = [SVector{3,Float64}(positions[i, :]) for i = 1:Natoms]
     return get_unique_rotations(lattvec, pos_vec, types, magmom; symprec)
 end
 
@@ -485,7 +489,8 @@ function calc_tensor_basis(
     magmom;
     symprec::Real = 1e-5,
 )
-    pos_vec = [SVector{3,Float64}(positions[i, :]) for i = 1:size(positions, 1)]
+    Natoms = size(positions, 1)
+    pos_vec = [SVector{3,Float64}(positions[i, :]) for i = 1:Natoms]
     return calc_tensor_basis(lattvec, pos_vec, types, magmom; symprec)
 end
 

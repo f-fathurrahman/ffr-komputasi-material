@@ -16,8 +16,10 @@ function debug_interpolate()
     stem = "TEMP_DATA"
 
     # Step 1: Interpolate band structure
+    data = load_vasp(datadir)
     println("Step 1: Interpolating band structure...")
-    interp = run_interpolate(datadir; kpoints = 5000, verbose = true)
+    interp = run_interpolate(data; kpoints = 5000, verbose = true)
+    #interp = run_interpolate(datadir; kpoints = 5000, verbose = true)
     save_interpolation(joinpath(@__DIR__, stem * "_interp.jld2"), interp)
 
     println("  Equivalence classes: $(length(interp.equivalences))")

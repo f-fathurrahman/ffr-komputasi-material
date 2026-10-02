@@ -35,6 +35,9 @@ function get_equivalences(
     nkpt_target::Integer;
     symprec::Real = 1e-5,
 )
+
+    @info "Pass here 39 in get_equivalences"
+
     # Ensure positions are natoms×3
     if size(positions, 1) == 3 && size(positions, 2) != 3
         positions = positions'
@@ -99,6 +102,7 @@ function run_interpolate(
         fermi = data.fermi,
         nelect = data.nelect,
     )
+    @info "Pass here 102"
     return run_interpolate(
         data_nt;
         source,
@@ -147,6 +151,7 @@ function run_interpolate(
     symprec::Real = 1e-5,
     dosweight::Union{Float64,Nothing} = nothing,
 )
+
     # Concatenate spin channels (Python BoltzTraP2 convention)
     # ebands: (nbands, nkpts, 2) → (2*nbands, nkpts, 1)
     ebands_spin1 = data.ebands[:, :, 1]
@@ -257,6 +262,9 @@ function run_interpolate(
     symprec::Real = 1e-5,
     dosweight::Union{Float64,Nothing} = nothing,
 )
+
+    @info "Pass here 263"
+
     # Log received arguments for debugging
     @debug "run_interpolate called" source output kpoints multiplier emin emax absolute verbose symprec
 
