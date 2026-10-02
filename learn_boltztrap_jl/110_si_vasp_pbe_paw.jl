@@ -1,7 +1,7 @@
-using BoltzTraP
-using BoltzTraP: FourierInterpolator, getBTPbands, BTPDOS
-using BoltzTraP: KB_AU, BOHR_TO_ANG, HA_TO_EV
-using BoltzTraP: solve_for_mu, fermi_dirac!, dfermi_dirac_de!, calc_onsager_coefficients
+using MyBoltzTraP
+using MyBoltzTraP: FourierInterpolator, getBTPbands, BTPDOS
+using MyBoltzTraP: KB_AU, BOHR_TO_ANG, HA_TO_EV
+using MyBoltzTraP: solve_for_mu, fermi_dirac!, dfermi_dirac_de!, calc_onsager_coefficients
 using StaticArrays
 using LinearAlgebra: det
 using Plots
