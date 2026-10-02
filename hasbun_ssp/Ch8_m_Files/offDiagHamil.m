@@ -5,13 +5,13 @@ function offDiagHamil(bx,by,bz,dasb,ess,esp,exx,exy)
 %builds the off-diagonal part of the 8x8 Harrison hamiltonian
 %bx,by,bz are the wavevector directions
 global H zim NB
-do=dasb/4.;   %scale for anion positions is lattice contant/4
-cx=cos(bx*do);
-cy=cos(by*do);
-cz=cos(bz*do);
-sx=sin(bx*do);
-sy=sin(by*do);
-sz=sin(bz*do);
+doo=dasb/4.0;   %scale for anion positions is lattice contant/4
+cx=cos(bx*doo);
+cy=cos(by*doo);
+cz=cos(bz*doo);
+sx=sin(bx*doo);
+sy=sin(by*doo);
+sz=sin(bz*doo);
 go=4.*(cx*cy*cz-zim*(sx*sy*sz));
 g1=4.*(-cx*sy*sz+zim*(sx*cy*cz));
 g2=4.*(-sx*cy*sz+zim*(cx*sy*cz));
