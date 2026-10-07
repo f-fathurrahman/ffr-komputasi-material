@@ -1,0 +1,5197 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{babel}
+% Added by lyx2lyx
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children no
+\language american
+\language_package default
+\inputencoding iso8859-15
+\fontencoding T1
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 2
+\use_package amssymb 2
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip halfline
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Consider an isolated atom with atomic number $Z$ and $N_e$ electrons.
+ Exploiting spherical symmetry and neglecting spin polarization,
+ the generalized Kohn--Sham DFT energy functional in radial coordinates takes the form 
+\backslash
+cite{vcertik2024high,bhowmik2025spectral,
+ trivedi2026spectral}:
+\begin_inset Formula 
+\[
+E[\widetilde{R}_{nl},\lambda_{nl}]=T_{s}[\widetilde{R}_{nl}]+E_{xc}[\rho,\nabla\rho,\tau,\widetilde{R}_{nl},\lambda_{nl}]+E_{H}[\rho]+E_{nuc}[\rho]\,,
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where $T_s$ is the electronic kinetic energy;
+ $E_{xc}$ is the exchange-correlation energy,
+ which can be split into exchange ($E_x$) and correlation ($E_c$) components;
+ $E_{H}$ is the Hartree energy corresponding to Coulomb interaction between the electrons;
+ and $E_{nuc}$ is the energy corresponding to the Coulomb interaction between the nucleus and electrons;
+ $n$,
+ $l$,
+ and $m$ are the principal,
+ azimuthal,
+ and magnetic quantum numbers,
+ respectively;
+ $
+\backslash
+widetilde{R}_{nl}/r$ are the radial components of the Kohn--Sham orbitals,
+ with corresponding eigenvalues $
+\backslash
+lambda_{nl}$ and occupations $g_{nl} = 2(2l+1)f_{nl}$,
+ where $f_{nl} 
+\backslash
+in [0,1]$ and $
+\backslash
+sum_{nl} g_{nl} = N_e$;
+ $
+\backslash
+rho$ is the electron density:
+\begin_inset Formula 
+\[
+\begin{align}\rho=\frac{1}{4\pi r^{2}}\sum_{nl}g_{nl}(\widetilde{R}_{nl})^{2}\,;\end{align}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align} 
+\backslash
+label{density} 
+\backslash
+rho = 
+\backslash
+frac{1}{4
+\backslash
+pi r^2}
+\backslash
+sum_{nl} g_{nl} (
+\backslash
+widetilde{R}_{nl})^2 
+\backslash
+,;
+ 
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+$
+\backslash
+nabla 
+\backslash
+rho$ is the density gradient,
+ which in radial coordinates reduces to $
+\backslash
+nabla
+\backslash
+rho = d
+\backslash
+rho/dr$;
+ and $
+\backslash
+tau$ is the positive-definite kinetic energy density:
+ $ 
+\backslash
+tau = 
+\backslash
+frac{1}{2}
+\backslash
+sum_{nl}
+\backslash
+frac{g_{nl}}{4
+\backslash
+pi}
+\backslash
+left[ 
+\backslash
+left( 
+\backslash
+frac{1}{r}
+\backslash
+frac{d 
+\backslash
+widetilde{R}_{nl}}{d r} - 
+\backslash
+frac{
+\backslash
+widetilde{R}_{nl}}{r^2}
+\backslash
+right)^2 + 
+\backslash
+frac{l(l+1)}{r^4}(
+\backslash
+widetilde{R}_{nl})^2
+\backslash
+right]$.
+ The electronic kinetic energy and electrostatic energy components take the form 
+\backslash
+cite{bhowmik2025spectral,
+ trivedi2026spectral}:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+T_{s}[
+\backslash
+widetilde{R}_{nl}] &= 
+\backslash
+frac{1}{2} 
+\backslash
+sum_{nl} g_{nl} 
+\backslash
+int 
+\backslash
+left[ 
+\backslash
+left( 
+\backslash
+frac{d 
+\backslash
+widetilde{R}_{nl}(r)}{d r}
+\backslash
+right)^2 + 
+\backslash
+widetilde{R}_{nl}(r) 
+\backslash
+frac{l(l+1)}{r^2} 
+\backslash
+widetilde{R}_{nl}(r) 
+\backslash
+right] d r 
+\backslash
+,,
+ 
+\backslash
+label{KE_eq} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+E_{H}[
+\backslash
+rho] &= 
+\backslash
+max_{
+\backslash
+widetilde{V}_{H}} 
+\backslash
+left[ -
+\backslash
+frac{1}{2} 
+\backslash
+int 
+\backslash
+left( 
+\backslash
+frac{d 
+\backslash
+widetilde{V}_{H}(r)}{d r} 
+\backslash
+right)^2 d r + 4
+\backslash
+pi 
+\backslash
+int 
+\backslash
+rho(r) 
+\backslash
+,
+\backslash
+widetilde{V}_{H}(r) 
+\backslash
+,
+ r 
+\backslash
+,
+ d r 
+\backslash
+right] 
+\backslash
+,,
+ 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+E_{nuc}[
+\backslash
+rho] &= 4
+\backslash
+pi 
+\backslash
+int 
+\backslash
+rho(r) 
+\backslash
+,
+ V_{nuc}(r) 
+\backslash
+,
+ r^2 
+\backslash
+,
+ d r 
+\backslash
+,,
+ 
+\backslash
+label{HartreeEnergy}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+where $
+\backslash
+widetilde{V}_{H}(r)/r$ is the Hartree potential and $V_{nuc}(r) = -Z/r$ is the Coulomb potential of the nucleus.
+ For local and semilocal exchange-correlation functionals,
+ namely LDA,
+ GGA,
+ and mGGA,
+ the exchange-correlation energy takes the form:
+\begin_inset Formula 
+\[
+E_{xc}^{{\rm LDA}}[\rho]=4\pi\int\rho(r)\,\varepsilon_{xc}^{{\rm LDA}}(\rho)\,r^{2}\,dr
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+E_{xc}^{{\rm GGA}}[\rho,\nabla\rho]=4\pi\int\rho(r)\,\varepsilon_{xc}^{{\rm GGA}}(\rho,\nabla\rho)\,r^{2}\,dr
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+E_{xc}^{{\rm mGGA}}[\rho,\nabla\rho,\tau]=4\pi\int\rho(r)\,\varepsilon_{xc}^{{\rm mGGA}}(\rho,\nabla\rho,\tau)\,r^{2}\,dr
+\]
+
+\end_inset
+
+where $
+\backslash
+varepsilon_{xc}$ is the exchange-correlation energy per electron.
+ For hybrid functionals,
+ the correlation energy takes a local or semilocal form as above,
+ while the exchange energy includes a fraction of the exact (Fock) exchange energy 
+\backslash
+cite{cinal2020highly,
+ bhowmik2025spectral,
+ trivedi2026spectral}:
+\begin_inset Formula 
+\[
+E_{x}^{{\rm HF}}[\widetilde{R}_{nl}]=-\frac{1}{4}\sum_{\substack{nl\\
+n'l'
+}
+}g_{nl}g_{n'l'}\sum_{l'\!'=|l-l'|}^{l+l'}\left[\begin{pmatrix}l & l' & l'\!'\\
+0 & 0 & 0
+\end{pmatrix}^{2}\iint\widetilde{R}_{nl}(r)\widetilde{R}_{n'l'}(r)\nu_{l'\!'}(r,r')\widetilde{R}_{nl}(r')\widetilde{R}_{n'l'}(r')\,drdr'\right]
+\]
+
+\end_inset
+
+where
+\begin_inset Formula 
+\[
+\begin{pmatrix}l & l' & l'\!'\\
+0 & 0 & 0
+\end{pmatrix}
+\]
+
+\end_inset
+
+is the Wigner-3j symbol and 
+\begin_inset Formula $\nu_{l'\!'}$
+\end_inset
+
+ is the radial Coulomb operator:
+\begin_inset Formula 
+\[
+\nu_{l'\!'}(r,r')=\frac{r_{<}^{l'\!'}}{r_{>}^{l'\!'+1}}\,,\qquad r_{<}=\min(r,r')\,,\quad r_{>}=\max(r,r')
+\]
+
+\end_inset
+
+The exact exchange energy can be equivalently written as:
+\begin_inset Formula 
+\[
+E_{x}^{{\rm HF}}[\widetilde{R}_{nl}]=-\frac{1}{4}\sum_{\substack{nl\\
+n'l'
+}
+}g_{nl}g_{n'l'}\sum_{l'\!'=|l-l'|}^{l+l'}\left[\begin{pmatrix}l & l' & l'\!'\\
+0 & 0 & 0
+\end{pmatrix}^{2}\int\widetilde{R}_{nl}(r)\frac{Y_{nln'l'}^{l'\!'}(r)}{r}\widetilde{R}_{n'l'}(r)\,dr\right]
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $Y_{nln'l'}^{l'\!'}(r)$
+\end_inset
+
+ satisfies the following differential equation 
+\backslash
+cite{fischerHFatoms,
+ cinal2020highly}:
+\begin_inset Formula 
+\[
+\Bigg[\frac{d^{2}}{dr^{2}}-\frac{l'\!'(l'\!'+1)}{r^{2}}\Bigg]Y_{nln'l'}^{l'\!'}(r)=-\frac{(2l'\!'+1)}{r}\widetilde{R}_{nl}(r)\widetilde{R}_{n'l'}(r)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+Y_{nln'l'}^{l'\!'}(r=0)=0,\quad\Bigg(\frac{dY_{nln'l'}^{l'\!'}(r)}{dr}+l'\!'\frac{Y_{nln'l'}^{l'\!'}(r)}{r}\Bigg)\Bigg\vert_{r\to\infty}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In so doing,
+ the application of the radial Coulomb operator is formulated as the solution of a differential equation.
+ 
+\end_layout
+
+\begin_layout Standard
+The electronic ground state is determined by the variational problem 
+\backslash
+cite{bhowmik2025spectral,
+ trivedi2026spectral}:
+\begin_inset Formula 
+\[
+\min_{\widetilde{R}_{nl}}E[\widetilde{R}_{nl},\lambda_{nl}]\quad\text{s.t.}\quad\int\widetilde{R}_{nl}(r)\widetilde{R}_{n'l'}(r)\,\mathrm{d}r=\delta_{nn'}\delta_{ll'}
+\]
+
+\end_inset
+
+with the corresponding Euler--Lagrange equations and boundary conditions:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\backslash
+label{ground_state}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+left[ 
+\backslash
+mathcal{H}_{l} 
+\backslash
+equiv -
+\backslash
+frac{1}{2}
+\backslash
+frac{d^2}{d r^2} + 
+\backslash
+frac{l(l+1)}{2 r^2} + V_{nuc} + 
+\backslash
+frac{
+\backslash
+widetilde{V}_{
+\backslash
+mathrm{H}}}{r} + 
+\backslash
+hat{V}_{xc}
+\backslash
+right] 
+\backslash
+widetilde{R}_{nl} = 
+\backslash
+lambda_{nl}
+\backslash
+widetilde{R}_{nl} 
+\backslash
+,,
+ 
+\backslash
+label{EL:Eigenproblem} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{R}_{nl}(r=0) = 0 
+\backslash
+,,
+ 
+\backslash
+quad 
+\backslash
+widetilde{R}_{nl}(r 
+\backslash
+rightarrow 
+\backslash
+infty) = 0 
+\backslash
+,,
+ 
+\backslash
+label{EL:R-boundary} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+frac{d^2 
+\backslash
+widetilde{V}_{
+\backslash
+mathrm{H}}(r)}{d r^2} = -4
+\backslash
+pi r 
+\backslash
+rho(r) 
+\backslash
+,,
+ 
+\backslash
+quad 
+\backslash
+widetilde{V}_{
+\backslash
+mathrm{H}}(r=0) = 0 
+\backslash
+,,
+ 
+\backslash
+quad 
+\backslash
+widetilde{V}_{
+\backslash
+mathrm{H}}(r 
+\backslash
+rightarrow 
+\backslash
+infty) = N_e 
+\backslash
+,.
+ 
+\backslash
+label{EL:Poisson}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+where $
+\backslash
+hat{V}_{xc}$ is the exchange-correlation potential operator and $
+\backslash
+mathcal{H}_{l}$ is the radial,
+ angular-momentum-dependent Hamiltonian.
+ For LDA,
+ GGA,
+ and mGGA,
+ the exchange-correlation potential operator takes the form 
+\backslash
+cite{bhowmik2025spectral}:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+hat{V}_{xc}^{
+\backslash
+mathrm{LDA}} 
+\backslash
+widetilde{R}_{nl} & = 
+\backslash
+left[ 
+\backslash
+varepsilon_{xc} + 
+\backslash
+rho
+\backslash
+frac{
+\backslash
+partial 
+\backslash
+varepsilon_{xc}}{
+\backslash
+partial 
+\backslash
+rho} 
+\backslash
+right] 
+\backslash
+widetilde{R}_{nl} 
+\backslash
+,,
+ 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+hat{V}_{xc}^{
+\backslash
+mathrm{GGA}} 
+\backslash
+widetilde{R}_{nl} &= 
+\backslash
+hat{V}_{xc}^{
+\backslash
+mathrm{LDA}} 
+\backslash
+widetilde{R}_{nl} + 
+\backslash
+left[ - 
+\backslash
+frac{d}{d r}
+\backslash
+left( 
+\backslash
+rho
+\backslash
+,
+\backslash
+frac{
+\backslash
+partial 
+\backslash
+varepsilon_{xc}}{
+\backslash
+partial (
+\backslash
+nabla
+\backslash
+rho)}
+\backslash
+right) - 
+\backslash
+frac{2
+\backslash
+rho}{r}
+\backslash
+frac{
+\backslash
+partial 
+\backslash
+varepsilon_{xc}}{
+\backslash
+partial (
+\backslash
+nabla
+\backslash
+rho)} 
+\backslash
+right] 
+\backslash
+widetilde{R}_{nl} 
+\backslash
+,,
+ 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+hat{V}_{xc}^{
+\backslash
+mathrm{mGGA}} 
+\backslash
+widetilde{R}_{nl} &= 
+\backslash
+hat{V}_{xc}^{
+\backslash
+mathrm{GGA}} 
+\backslash
+widetilde{R}_{nl} + 
+\backslash
+frac{1}{2}
+\backslash
+left
+\backslash
+{-
+\backslash
+frac{d}{d r}
+\backslash
+left[
+\backslash
+rho 
+\backslash
+frac{
+\backslash
+partial 
+\backslash
+varepsilon_{xc}}{
+\backslash
+partial 
+\backslash
+tau} 
+\backslash
+frac{d
+\backslash
+widetilde{R}_{nl}}{d r}
+\backslash
+right]+
+\backslash
+frac{1}{r} 
+\backslash
+frac{d}{d r}
+\backslash
+left[
+\backslash
+rho 
+\backslash
+frac{
+\backslash
+partial 
+\backslash
+varepsilon_{xc}}{
+\backslash
+partial 
+\backslash
+tau}
+\backslash
+right] 
+\backslash
+widetilde{R}_{nl}+
+\backslash
+rho 
+\backslash
+frac{
+\backslash
+partial 
+\backslash
+varepsilon_{xc}}{
+\backslash
+partial 
+\backslash
+tau} 
+\backslash
+frac{l(l+1)}{r^2} 
+\backslash
+widetilde{R}_{nl}
+\backslash
+right
+\backslash
+} 
+\backslash
+,.
+ 
+\backslash
+label{eq:vkxc-mgga-continuous}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+For exact exchange,
+ the potential operator takes the form:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{equation}
+\backslash
+label{Vxx}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+hat{V}_x^{
+\backslash
+rm HF} 
+\backslash
+widetilde{R}_{nl} (r) = -
+\backslash
+frac{1}{2} 
+\backslash
+sum_{n'l'} g_{n'l'} 
+\backslash
+sum_{l'
+\backslash
+!'=|l-l'|}^{l+l'} 
+\backslash
+left[
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{pmatrix}
+\end_layout
+
+\begin_layout Standard
+l & l' & l'
+\backslash
+!' 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+0 & 0 & 0
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{pmatrix}^2
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{R}_{n'l'}(r) 
+\backslash
+int 
+\backslash
+nu_{l'
+\backslash
+!'}(r,r') 
+\backslash
+widetilde{R}_{n'l'}(r') 
+\backslash
+widetilde{R}_{nl}(r') 
+\backslash
+,
+ d r' 
+\backslash
+right] 
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{equation}
+\end_layout
+
+\begin_layout Standard
+which can be rewritten,
+ analogously to the exact exchange energy,
+ as:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\backslash
+label{Vxx2}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+hat{V}_x^{
+\backslash
+rm HF} 
+\backslash
+widetilde{R}_{nl} (r) = -
+\backslash
+frac{1}{2} 
+\backslash
+sum_{n'l'} g_{n'l'} 
+\backslash
+sum_{l'
+\backslash
+!'=|l-l'|}^{l+l'} 
+\backslash
+left[
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{pmatrix}
+\end_layout
+
+\begin_layout Standard
+l & l' & l'
+\backslash
+!' 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+0 & 0 & 0
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{pmatrix}^2
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{R}_{n'l'}(r) 
+\backslash
+frac{Y_{nln'l'}^{l'
+\backslash
+!'}(r)}{r} 
+\backslash
+right] 
+\backslash
+,.
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+Overall,
+ the electronic ground state is determined by solving the Kohn--Sham eigenproblems in Eqn.~
+\backslash
+eqref{ground_state} self-consistently.
+\end_layout
+
+\begin_layout Standard
+%%%%%%%%%%%%%%%%%%%%%%%%
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+paragraph{RPA-OEP formalism}
+\end_layout
+
+\begin_layout Standard
+For RPA,
+ the exchange energy is taken as the exact exchange,
+ while the correlation energy takes the form 
+\backslash
+cite{jiang2007random,
+ trivedi2026spectral}:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{equation}
+\backslash
+label{eq:Erpa-trace}
+\end_layout
+
+\begin_layout Standard
+E_c^{
+\backslash
+rm RPA} = 
+\backslash
+frac{1}{2
+\backslash
+pi} 
+\backslash
+sum_{l'
+\backslash
+!'} (2l'
+\backslash
+!'+1)
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+int 
+\backslash
+operatorname{Tr}
+\backslash
+!
+\backslash
+left[
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{
+\backslash
+chi}_{0,l'
+\backslash
+!'}(
+\backslash
+iu
+\backslash
+omega)
+\backslash
+,
+\backslash
+nu_{l'
+\backslash
+!'}
+\end_layout
+
+\begin_layout Standard
++ 
+\backslash
+log
+\backslash
+!
+\backslash
+left(I - 
+\backslash
+widetilde{
+\backslash
+chi}_{0,l'
+\backslash
+!'}(
+\backslash
+iu
+\backslash
+omega)
+\backslash
+,
+\backslash
+nu_{l'
+\backslash
+!'}
+\backslash
+right)
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+right] d
+\backslash
+omega 
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{equation}
+\end_layout
+
+\begin_layout Standard
+where $I$ is the identity operator and $
+\backslash
+widetilde{
+\backslash
+chi}_{0,l'
+\backslash
+!'}(r,r';
+\backslash
+iu
+\backslash
+omega)$ is the radial density response function at imaginary frequency $
+\backslash
+iu
+\backslash
+omega$:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{equation}
+\backslash
+label{eq:chi0-imag}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{gathered}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{
+\backslash
+chi}_{0,l'
+\backslash
+!'}(r,r';
+\backslash
+iu
+\backslash
+omega)
+\end_layout
+
+\begin_layout Standard
+= 2 
+\backslash
+sum_{nl,
+\backslash
+,
+ n'l'}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+bigl(f_{nl}-f_{n'l'}
+\backslash
+bigr)
+\backslash
+,
+\end_layout
+
+\begin_layout Standard
+C_{l'
+\backslash
+!';ll'}
+\backslash
+,
+\end_layout
+
+\begin_layout Standard
+D_{nl,
+\backslash
+,
+ n'l'}(i
+\backslash
+omega)
+\backslash
+,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{R}_{nl}(r)
+\backslash
+,
+\backslash
+widetilde{R}_{n'l'}(r)
+\backslash
+,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{R}_{nl}(r')
+\backslash
+,
+\backslash
+widetilde{R}_{n'l'}(r') 
+\backslash
+,,
+ 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+C_{l'
+\backslash
+!';ll'} = 
+\backslash
+frac{(2l+1)(2l'+1)}{2l'
+\backslash
+!'+1}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{pmatrix} l & l' & l'
+\backslash
+!' 
+\backslash
+
+\backslash
+ 0 & 0 & 0 
+\backslash
+end{pmatrix}^{2} 
+\backslash
+,,
+ 
+\backslash
+quad
+\end_layout
+
+\begin_layout Standard
+D_{nl,
+\backslash
+,
+ n'l'}(i
+\backslash
+omega) = 
+\backslash
+frac{
+\backslash
+lambda_{nl}-
+\backslash
+lambda_{n'l'}}{
+\backslash
+omega^{2}+(
+\backslash
+lambda_{nl}-
+\backslash
+lambda_{n'l'})^{2}} 
+\backslash
+,.
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{gathered}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{equation}
+\end_layout
+
+\begin_layout Standard
+Here and henceforth,
+ we will use the notation:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{equation}
+\backslash
+label{eq:rpa-operator-convention}
+\end_layout
+
+\begin_layout Standard
+(AB)(r,r'
+\backslash
+!') = 
+\backslash
+int A(r,r')
+\backslash
+,B(r',r'
+\backslash
+!')
+\backslash
+,d r' 
+\backslash
+,,
+ 
+\backslash
+qquad
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+operatorname{Tr}[AB] = 
+\backslash
+iint A(r,r')
+\backslash
+,B(r,r')
+\backslash
+,d r
+\backslash
+,d r' 
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{equation}
+\end_layout
+
+\begin_layout Standard
+for integral operators $A$ and $B$.
+\end_layout
+
+\begin_layout Standard
+The RPA correlation potential operator depends on both the orbitals and the eigenvalues,
+\end_layout
+
+\begin_layout Standard
+making the electronic ground calculation particularly challenging.
+\end_layout
+
+\begin_layout Standard
+To address this,
+ the OEP formalism~
+\backslash
+cite{oepjdtalman,
+ oepkummelperdew,
+\end_layout
+
+\begin_layout Standard
+oepgorlinglevy,
+ engel_dreizler_2011} can be employed,
+ in which the nonlocal
+\end_layout
+
+\begin_layout Standard
+potential operator is replaced by a local,
+ multiplicative potential,
+ as
+\end_layout
+
+\begin_layout Standard
+determined by the variational problem~
+\backslash
+cite{oepjdtalman,
+ engel_dreizler_2011}:
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+min_{V_{s}^{
+\backslash
+rm OEP}} 
+\backslash
+;
+ &E[
+\backslash
+widetilde{R}_{nl},
+ 
+\backslash
+lambda_{nl}] 
+\backslash
+quad
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+mathrm{s.t.} 
+\backslash
+quad
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+Bigg[
+\end_layout
+
+\begin_layout Standard
+-
+\backslash
+frac{1}{2}
+\backslash
+frac{d^2}{dr^2}
+\end_layout
+
+\begin_layout Standard
++
+\backslash
+frac{l(l+1)}{2r^2}
+\end_layout
+
+\begin_layout Standard
++ V_{s}^{
+\backslash
+rm OEP}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+Bigg]
+\backslash
+widetilde{R}_{nl} = 
+\backslash
+lambda_{nl}
+\backslash
+widetilde{R}_{nl} 
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:EOEPmin}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+where $V_s^{
+\backslash
+rm OEP} = V_{nuc} + 
+\backslash
+widetilde{V}_{H}/r + V_{xc}^{
+\backslash
+rm OEP}$.
+\end_layout
+
+\begin_layout Standard
+The solution of Eqn.~
+\backslash
+ref{eq:EOEPmin} yields the OEP equation for the local
+\end_layout
+
+\begin_layout Standard
+multiplicative potential $V_{xc}^{
+\backslash
+rm OEP}$:
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{equation}
+\backslash
+label{eq:oep-equation}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+int 
+\backslash
+widetilde{
+\backslash
+chi}_{0,0}(r,r';0)
+\backslash
+,
+ V_{xc}^{
+\backslash
+rm OEP}(r') 
+\backslash
+,dr'
+\end_layout
+
+\begin_layout Standard
+= 
+\backslash
+Lambda_{x}^{
+\backslash
+rm HF}(r) + 
+\backslash
+Lambda_{c}^{
+\backslash
+mathrm{RPA}}(r) 
+\backslash
+,.
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{equation}
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+Here,
+ $
+\backslash
+widetilde{
+\backslash
+chi}_{0,0}(r,r';0)$ is the static radial density response
+\end_layout
+
+\begin_layout Standard
+function,
+ which along with the right-hand-side terms $
+\backslash
+Lambda_{x}^{
+\backslash
+mathrm{HF}}$ and
+\end_layout
+
+\begin_layout Standard
+$
+\backslash
+Lambda_{c}^{
+\backslash
+mathrm{RPA}}$ are given by 
+\backslash
+cite{trivedi2026spectral}:
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{
+\backslash
+chi}_{0,0}(r,r';0)
+\end_layout
+
+\begin_layout Standard
+&= -2
+\backslash
+sum_{nl} g_{nl}
+\backslash
+,
+\backslash
+widetilde{R}_{nl}(r)
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+sum_{n'
+\backslash
+neq n}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+frac{
+\backslash
+widetilde{R}_{n'l}(r)
+\backslash
+,
+\backslash
+widetilde{R}_{n'l}(r')}
+\end_layout
+
+\begin_layout Standard
+{
+\backslash
+lambda_{n'l}-
+\backslash
+lambda_{nl}}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+,
+\backslash
+widetilde{R}_{nl}(r') 
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:chi0static} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+Lambda_{x}^{
+\backslash
+rm HF}(r)
+\end_layout
+
+\begin_layout Standard
+&= 
+\backslash
+sum_{nl}
+\backslash
+left[
+\end_layout
+
+\begin_layout Standard
+2
+\backslash
+,g_{nl}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+int
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+frac{
+\backslash
+delta 
+\backslash
+widetilde{R}_{nl}(r')}{
+\backslash
+delta V_{s}(r)}
+\backslash
+,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+hat{V}_x^{
+\backslash
+rm HF}
+\backslash
+widetilde{R}_{nl}(r')
+\backslash
+,
+\end_layout
+
+\begin_layout Standard
+dr'
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+right] 
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:oep-driving-term-exact-exchange} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+Lambda_{c}^{
+\backslash
+mathrm{RPA}}(r)
+\end_layout
+
+\begin_layout Standard
+&= 
+\backslash
+sum_{nl}
+\backslash
+left[
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+int
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+frac{
+\backslash
+delta 
+\backslash
+widetilde{R}_{nl}(r')}{
+\backslash
+delta V_{s}(r)}
+\backslash
+,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+hat{V}_{c}^{
+\backslash
+mathrm{RPA}}
+\backslash
+widetilde{R}_{nl}(r')
+\backslash
+,
+\end_layout
+
+\begin_layout Standard
+dr'
+\end_layout
+
+\begin_layout Standard
++ 
+\backslash
+frac{
+\backslash
+delta E_{c}^{
+\backslash
+mathrm{RPA}}}{
+\backslash
+delta 
+\backslash
+lambda_{nl}}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+frac{
+\backslash
+delta 
+\backslash
+lambda_{nl}}{
+\backslash
+delta V_{s}(r)}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+right] 
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:oep-driving-term-general}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{equation}
+\backslash
+label{eq:oep-second-term-simplified}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{aligned}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+hat{V}_{c}^{
+\backslash
+mathrm{RPA}}
+\backslash
+widetilde{R}_{n l}(r')
+\end_layout
+
+\begin_layout Standard
+& = -
+\backslash
+frac{4}{
+\backslash
+pi} 
+\backslash
+sum_{n' l'} 
+\backslash
+left(f_{n l}-f_{n' l'}
+\backslash
+right)
+\backslash
+sum_{l'
+\backslash
+!'} (2l'
+\backslash
+!'+1) C_{l'
+\backslash
+!';l l'}
+\backslash
+widetilde{R}_{n' l'}(r') 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+& 
+\backslash
+quad 
+\backslash
+times 
+\backslash
+int
+\backslash
+!
+\backslash
+left(D_{n l,
+\backslash
+,n' l'}(i
+\backslash
+omega)
+\backslash
+,
+ 
+\backslash
+int 
+\backslash
+widetilde{R}_{n' l'}(r'
+\backslash
+!')
+\backslash
+,
+\backslash
+widetilde{R}_{n l}(r'
+\backslash
+!')
+\backslash
+,W_{l'
+\backslash
+!'}(r'
+\backslash
+!',r';
+\backslash
+iu
+\backslash
+omega)
+\backslash
+,dr'
+\backslash
+!'
+\backslash
+right)d
+\backslash
+omega 
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{aligned}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{equation}
+\end_layout
+
+\begin_layout Standard
+with the correlation part of the screened Coulomb interaction given by
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{equation}
+\backslash
+label{eq:w-screened}
+\end_layout
+
+\begin_layout Standard
+W_{l'
+\backslash
+!'}(
+\backslash
+iu
+\backslash
+omega) = 
+\backslash
+nu_{l'
+\backslash
+!'}
+\backslash
+left[
+\backslash
+left(I-
+\backslash
+widetilde{
+\backslash
+chi}_{0,l'
+\backslash
+!'}(
+\backslash
+iu
+\backslash
+omega)
+\backslash
+,
+\backslash
+nu_{l'
+\backslash
+!'}
+\backslash
+right)^{-1}-I
+\backslash
+right] 
+\backslash
+,.
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{equation}
+\end_layout
+
+\begin_layout Standard
+In addition,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+frac{
+\backslash
+delta 
+\backslash
+widetilde{R}_{nl}(r')}{
+\backslash
+delta V_s(r)}
+\end_layout
+
+\begin_layout Standard
+&= -
+\backslash
+sum_{n' 
+\backslash
+neq n}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+frac{
+\backslash
+widetilde{R}_{n'l}(r)
+\backslash
+,
+\backslash
+widetilde{R}_{n'l}(r')}
+\end_layout
+
+\begin_layout Standard
+{
+\backslash
+lambda_{n'l}-
+\backslash
+lambda_{nl}}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+,
+\backslash
+widetilde{R}_{nl}(r) 
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:dR-dVs-expanded} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+frac{
+\backslash
+delta E_{c}^{
+\backslash
+mathrm{RPA}}}{
+\backslash
+delta 
+\backslash
+lambda_{n l}}
+\end_layout
+
+\begin_layout Standard
+&= 
+\backslash
+frac{2}{
+\backslash
+pi} 
+\backslash
+sum_{n' l'} 
+\backslash
+left(f_{n l}-f_{n' l'}
+\backslash
+right)
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+sum_{l'
+\backslash
+!'} (2l'
+\backslash
+!'+1) C_{l'
+\backslash
+!';l l'}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+nonumber 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+&
+\backslash
+quad 
+\backslash
+times 
+\backslash
+!
+\backslash
+int
+\backslash
+!
+\backslash
+Bigg(D^{(2)}_{n l,
+\backslash
+,
+ n' l'}(i
+\backslash
+omega) 
+\backslash
+!
+\backslash
+iint
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{R}_{n l}(r')
+\backslash
+,
+\backslash
+widetilde{R}_{n' l'}(r')
+\backslash
+,
+\backslash
+widetilde{R}_{n l}(r'
+\backslash
+!')
+\backslash
+,
+\backslash
+widetilde{R}_{n' l'}(r'
+\backslash
+!')
+\end_layout
+
+\begin_layout Standard
+W_{l'
+\backslash
+!'}(r'
+\backslash
+!',r';
+\backslash
+iu
+\backslash
+omega)
+\backslash
+,dr'
+\backslash
+,dr'
+\backslash
+!'
+\backslash
+Bigg)d
+\backslash
+omega 
+\backslash
+,,
+ 
+\backslash
+label{eq:dExc-dlambda-expanded} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+frac{
+\backslash
+delta 
+\backslash
+lambda_{nl}}{
+\backslash
+delta V_s(r)}
+\end_layout
+
+\begin_layout Standard
+&= 
+\backslash
+widetilde{R}_{nl}^{2}(r) 
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:dlambda-dVs}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+D^{(2)}_{nl,
+\backslash
+,n'l'}(i
+\backslash
+omega)
+\end_layout
+
+\begin_layout Standard
+&= 
+\backslash
+frac{(
+\backslash
+lambda_{nl}-
+\backslash
+lambda_{n'l'})^{2}-
+\backslash
+omega^{2}}
+\end_layout
+
+\begin_layout Standard
+{
+\backslash
+left[(
+\backslash
+lambda_{nl}-
+\backslash
+lambda_{n'l'})^{2}+
+\backslash
+omega^{2}
+\backslash
+right]^{2}} 
+\backslash
+,.
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:D2}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+Here,
+ the OEP method has been applied to both the exchange and
+\end_layout
+
+\begin_layout Standard
+correlation components of RPA.
+ The OEP formalism is not limited to RPA --- it can
+\end_layout
+
+\begin_layout Standard
+equally be applied to Hartree--Fock and hybrid calculations,
+ or to
+\end_layout
+
+\begin_layout Standard
+any functional whose potential operator is nonlocal.
+ In the limiting case of a
+\end_layout
+
+\begin_layout Standard
+local potential operator,
+ as in LDA or GGA,
+ the OEP formalism reduces to the
+\end_layout
+
+\begin_layout Standard
+standard Kohn--Sham equations described previously.
+\end_layout
+
+\begin_layout Standard
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+paragraph{Pseudopotential approximation} 
+\end_layout
+
+\begin_layout Standard
+In the pseudopotential approximation,
+ the core electrons are eliminated and the
+\end_layout
+
+\begin_layout Standard
+singular Coulomb potential is replaced by an effective potential.
+\end_layout
+
+\begin_layout Standard
+Consider an atom with $N_v$ valence electrons and a norm-conserving
+\end_layout
+
+\begin_layout Standard
+pseudopotential expressed in Kleinman--Bylander form~
+\backslash
+cite{kleinman1980relativistic}.
+\end_layout
+
+\begin_layout Standard
+The energy functional now takes the form~
+\backslash
+cite{bhowmik2025spectral}:
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{equation} 
+\backslash
+label{eq:app-energy-psp}
+\end_layout
+
+\begin_layout Standard
+E[
+\backslash
+widetilde{R}_{nl},
+\backslash
+lambda_{nl}] = T_s[
+\backslash
+widetilde{R}_{nl}]
+\end_layout
+
+\begin_layout Standard
++ E_{xc}[
+\backslash
+rho,
+ 
+\backslash
+nabla
+\backslash
+rho,
+ 
+\backslash
+tau,
+ 
+\backslash
+widetilde{R}_{nl},
+\backslash
+lambda_{nl}]
+\end_layout
+
+\begin_layout Standard
++ E_{H}[
+\backslash
+rho] + E_{loc}[
+\backslash
+rho] + K[
+\backslash
+widetilde{R}_{nl}] 
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{equation}
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+where $
+\backslash
+rho$ is the valence electron density,
+ $E_{loc}$ is the ion--electron
+\end_layout
+
+\begin_layout Standard
+interaction energy,
+ and $K$ is the nonlocal pseudopotential energy:
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+E_{loc}[
+\backslash
+rho] &= 4
+\backslash
+pi 
+\backslash
+int 
+\backslash
+rho(r) 
+\backslash
+,
+ V_{loc}(r) 
+\backslash
+,
+ r^2 
+\backslash
+,
+ dr 
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:app-Eloc} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+K[
+\backslash
+widetilde{R}_{nl}] &= 
+\backslash
+sum_{nl} g_{nl} 
+\backslash
+sum_{p} 
+\backslash
+gamma_{lp}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+left( 
+\backslash
+int 
+\backslash
+widetilde{
+\backslash
+chi}_{lp}(r)
+\backslash
+,
+ 
+\backslash
+widetilde{R}_{nl}(r) 
+\backslash
+,
+ dr 
+\backslash
+right)^2 
+\backslash
+,.
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:app-K}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+Here,
+ $V_{loc}$ denotes the local ionic potential,
+ $
+\backslash
+chi_{lp} = 
+\backslash
+widetilde{
+\backslash
+chi}_{lp}/r$
+\end_layout
+
+\begin_layout Standard
+is the radial component of the nonlocal projectors,
+ $
+\backslash
+gamma_{lp}$ are the
+\end_layout
+
+\begin_layout Standard
+corresponding normalization constants,
+ and $p$ indexes the projectors for
+\end_layout
+
+\begin_layout Standard
+each angular momentum channel $l$.
+ The Euler--Lagrange equations take the
+\end_layout
+
+\begin_layout Standard
+form~
+\backslash
+cite{bhowmik2025spectral}:
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\backslash
+label{eq:app-el}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+left[ -
+\backslash
+frac{1}{2}
+\backslash
+frac{d^2}{dr^2} + 
+\backslash
+frac{l(l+1)}{2r^2}
+\end_layout
+
+\begin_layout Standard
++ V_{loc} + 
+\backslash
+frac{
+\backslash
+widetilde{V}_{H}}{r} + V_{xc}
+\end_layout
+
+\begin_layout Standard
++ 
+\backslash
+hat{V}_{NL} 
+\backslash
+right] 
+\backslash
+widetilde{R}_{nl}
+\end_layout
+
+\begin_layout Standard
+&= 
+\backslash
+lambda_{nl}
+\backslash
+widetilde{R}_{nl} 
+\backslash
+,,
+ 
+\backslash
+nonumber 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{R}_{nl}(0) = 0 
+\backslash
+,,
+ 
+\backslash
+quad
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{R}_{nl}(r 
+\backslash
+rightarrow 
+\backslash
+infty) &= 0 
+\backslash
+,;
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:app-eigen} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+frac{d^2 
+\backslash
+widetilde{V}_{H}(r)}{dr^2} = -4
+\backslash
+pi r 
+\backslash
+rho(r) 
+\backslash
+,,
+ 
+\backslash
+quad
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{V}_{H}(0) = 0 
+\backslash
+,,
+ 
+\backslash
+quad
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{V}_{H}(r 
+\backslash
+rightarrow 
+\backslash
+infty) &= N_v 
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:app-poisson-psp}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+where the nonlocal pseudopotential operator:
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{equation}
+\backslash
+label{eq:app-Vnl}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+hat{V}_{NL}
+\backslash
+widetilde{R}_{nl}(r)
+\end_layout
+
+\begin_layout Standard
+= 
+\backslash
+sum_{p} 
+\backslash
+gamma_{lp}
+\backslash
+,
+\backslash
+widetilde{
+\backslash
+chi}_{lp}(r)
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+int 
+\backslash
+widetilde{
+\backslash
+chi}_{lp}(r')
+\backslash
+,
+ 
+\backslash
+widetilde{R}_{nl}(r') 
+\backslash
+,
+ dr' 
+\backslash
+,.
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{equation}
+\end_layout
+
+\begin_layout Standard
+%
+\end_layout
+
+\begin_layout Standard
+All other components of the energy functional and the Euler--Lagrange equations
+\end_layout
+
+\begin_layout Standard
+remain identical to the all-electron case.
+\end_layout
+
+\begin_layout Standard
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+section{Spectral finite element framework}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{Sec:FEM}
+\end_layout
+
+\begin_layout Standard
+We now describe the spectral finite-element framework employed in SPARC-atomSFE.
+ The finite-element method is chosen for its systematic improvability,
+ support for high-order approximations,
+ and flexibility in accommodating adaptive grids,
+ properties that together yield an accurate and accurate scheme in the present context.
+ Here,
+ the term 
+\backslash
+emph{spectral} refers to the use of high-order polynomial approximations in conjunction with appropriately chosen quadrature rules,
+ consistent with its usage in the finite-element literature~
+\backslash
+cite{PATERA1984468}.
+ The framework,
+ schematically illustrated in Fig.~
+\backslash
+ref{Fig:FEM},
+ is described in detail next.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{figure}[h!]
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+centering
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+includegraphics[width=0.9
+\backslash
+textwidth]{Overview.pdf}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+caption{Illustration of the spectral finite-element framework employed in SPARC-atomSFE.
+ Left:
+ domain of $
+\backslash
+Omega = [0,
+ R_{
+\backslash
+max}]$ partitioned into uniform,
+ polynomial,
+ and exponential meshes with $R_{
+\backslash
+max} = 10$~Bohr and $N_{fe} = 5$ elements.
+ Right:
+ reference element $
+\backslash
+Omega^{(ref)} = [-1,
+ 1]$,
+ the Legendre--Gauss--Lobatto interpolation nodes of degree $p = 4$,
+ the corresponding Lagrange basis functions,
+ and the Gauss--Legendre quadrature nodes of order $q = 16$.}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{Fig:FEM}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{figure}
+\end_layout
+
+\begin_layout Standard
+The radial domain is truncated to $
+\backslash
+Omega = [0,
+ R_{
+\backslash
+max}]$,
+ justified by the exponential decay of the orbitals,
+ and partitioned into non-overlapping subdomains $
+\backslash
+{
+\backslash
+Omega^{(e)}
+\backslash
+}_{e=1}^{N_
+\backslash
+text{fe}}$,
+ referred to as finite elements.
+ Within each element $
+\backslash
+Omega^{(e)}$,
+ we adopt the basis set expansions:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{R}_{nl}(r) &= 
+\backslash
+sum_{j=0}^{p_1} [
+\backslash
+mathbf{
+\backslash
+widetilde{R}}_{nl}]^{(e)}_{j} L^{p_1(e)}_{j}(r) 
+\backslash
+,,
+ 
+\backslash
+label{eq:Rtildediscretization} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{V}_{H}(r) &= 
+\backslash
+sum_{j=0}^{p_2} [
+\backslash
+mathbf{
+\backslash
+widetilde{V}}_{H}]^{(e)}_{j} L^{p_2(e)}_{j}(r) 
+\backslash
+,,
+ 
+\backslash
+label{eq:Vhtildediscretization}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+where $[
+\backslash
+,
+\backslash
+cdot
+\backslash
+,]^{(e)}_{j}$ denotes the value of the quantity at the $j$-th node of element $e$,
+ and $p_1$ and $p_2$ denote the polynomial degrees of the Lagrange basis functions $L^{p_1(e)}_{j}$ and $L^{p_2(e)}_{j}$,
+ respectively.
+ Each basis function is compactly supported on $
+\backslash
+Omega^{(e)}$ and satisfies the Kronecker delta property,
+ so that there are $p_1+1$ and $p_2+1$ nodes per element for $
+\backslash
+widetilde{R}_{nl}$ and $
+\backslash
+widetilde{V}_{H}$,
+ respectively.
+ The use of different polynomial degrees for $
+\backslash
+widetilde{R}_{nl}$ and $
+\backslash
+widetilde{V}_{H}$ is motivated by efficiency:
+ $
+\backslash
+widetilde{V}_{H}$ has higher frequency content than $
+\backslash
+widetilde{R}_{nl}$ and benefits from a higher-degree approximation,
+ while the cost of solving the associated linear system is minor compared to that of the eigenproblem for $
+\backslash
+widetilde{R}_{nl}$.
+ Throughout,
+ lowercase indices denote local node numbering within each element and uppercase indices denote global numbering.
+ The mapping from local to global indices for the elements used for $
+\backslash
+widetilde{R}_{nl}$ and $
+\backslash
+widetilde{V}_{H}$ is denoted by $
+\backslash
+mathcal{M}^{p_1}$ and $
+\backslash
+mathcal{M}^{p_2}$,
+ respectively,
+ with $
+\backslash
+mathcal{M}^{p_1(e)}_{k}$ and $
+\backslash
+mathcal{M}^{p_2(e)}_{k}$ providing the global index of the node with local index $k$ in element $e$.
+ Below,
+ we present the discrete weak form of the governing equations presented in the previous section.
+ All integrals so appearing are evaluated numerically via quadrature of order $q$ on the reference element $
+\backslash
+Omega^{(ref)}$,
+ to which each element is mapped.
+ 
+\end_layout
+
+\begin_layout Standard
+The discrete form of the angular-momentum-dependent eigenproblem in Eq.~
+\backslash
+ref{EL:Eigenproblem} takes the form:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+Hm_{l} 
+\backslash
+!
+ 
+\backslash
+br_{nl} = 
+\backslash
+lambda_{nl} 
+\backslash
+!
+ 
+\backslash
+mathbf{M} 
+\backslash
+!
+ 
+\backslash
+br_{nl} 
+\backslash
+,,
+ 
+\backslash
+quad 
+\backslash
+Hm_{l} = 
+\backslash
+hat{
+\backslash
+mathbf{H}}_{l} + 
+\backslash
+bvxc 
+\backslash
+,,
+ 
+\backslash
+label{eq:discreteGenEigenProblem}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+where the global matrices $
+\backslash
+hat{
+\backslash
+mathbf{H}}_{l}$ and $
+\backslash
+mathbf{M}$,
+ and the global vector $
+\backslash
+br_{nl}$ are assembled from their element-level counterparts as:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+hat{
+\backslash
+mathbf{H}}_{l}]_{IJ} &= 
+\backslash
+sum_{e=1}^{N_{fe}}
+\backslash
+sum_{i,
+ j = 0}^{p_1}[
+\backslash
+hat{
+\backslash
+mathbf{H}}_{l}]^{(e)}_{ij} 
+\backslash
+delta_{I
+\backslash
+mathcal{M}^{p_1(e)}_{i}}
+\backslash
+delta_{J
+\backslash
+mathcal{M}^{p_1(e)}_{j}} 
+\backslash
+,,
+ 
+\backslash
+label{eq:assembled_hatHl}
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+mathbf{M}]_{IJ} &= 
+\backslash
+sum_{e=1}^{N_{fe}}
+\backslash
+sum_{i,
+ j = 0}^{p_1}[
+\backslash
+mathbf{M}]^{(e)}_{ij} 
+\backslash
+delta_{I
+\backslash
+mathcal{M}^{p_1(e)}_{i}}
+\backslash
+delta_{J
+\backslash
+mathcal{M}^{p_1(e)}_{j}} 
+\backslash
+,,
+ 
+\backslash
+label{eq:assembled_overlap} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+br_{nl}]_{I} &= 
+\backslash
+sum_{e=1}^{N_{fe}}
+\backslash
+sum_{i = 0}^{p_1}g_i^{(e)}[
+\backslash
+br_{nl}]^{(e)}_{i} 
+\backslash
+delta_{I
+\backslash
+mathcal{M}^{p_1(e)}_{i}} 
+\backslash
+,,
+ 
+\backslash
+label{eq:assembled_Rnl}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+with the element-level matrices given by:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+hat{
+\backslash
+mathbf{H}}_{l}]^{(e)}_{ij} = & 
+\backslash
+int 
+\backslash
+Bigg[
+\backslash
+frac{1}{2}
+\backslash
+frac{dL^{p_1(e)}_{i}(r)}{dr} 
+\backslash
+frac{d L^{p_1(e)}_{j}(r)}{d r} + L^{p_1(e)}_{i}(r)
+\backslash
+Bigg(
+\backslash
+!
+\backslash
+frac{l(l+1)}{2r^2}
+\backslash
+Bigg)L^{p_1(e)}_{j}(r) 
+\backslash
+nonumber 
+\backslash
+
+\backslash
+ 
+\end_layout
+
+\begin_layout Standard
+& +L^{p_1(e)}_{i}(r)
+\backslash
+Bigg(
+\backslash
+!V_{nuc}(r) + 
+\backslash
+!
+\backslash
+frac{
+\backslash
+widetilde{V}_H(r)}{r}
+\backslash
+!
+\backslash
+Bigg)L^{p_1(e)}_{j}(r)
+\backslash
+Bigg]
+\backslash
+,
+ dr 
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:element_hatHl}
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+mathbf{M}]^{(e)}_{ij} = & 
+\backslash
+int L^{p_1(e)}_{i}(r) L^{p_1(e)}_{j}(r) 
+\backslash
+,
+ dr 
+\backslash
+,
+ .
+ 
+\backslash
+label{eq:element_overlap}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+Above,
+ $
+\backslash
+delta$ denotes the Kronecker delta,
+ $g_i^{(e)} = 1$ for interior nodes,
+ and $g_i^{(e)} = 0.5$ for nodes shared between adjacent elements.
+ For LDA,
+ GGA,
+ and mGGA,
+ the global matrix $
+\backslash
+bvxc$ can be assembled as:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+bvxclgm]_{IJ} &= 
+\backslash
+sum_{e=1}^{N_{fe}}
+\backslash
+sum_{i,
+ j = 0}^{p_1}[
+\backslash
+bvxclgm]^{(e)}_{ij} 
+\backslash
+delta_{I
+\backslash
+mathcal{M}^{p_1(e)}_{i}}
+\backslash
+delta_{J
+\backslash
+mathcal{M}^{p_1(e)}_{j}} 
+\backslash
+,,
+ 
+\backslash
+label{eq:assembled_VxcLDAGGAmGGA}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+with the element-level matrices given by:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+bvxclgmm]^{(e)}_{ij} =& 
+\backslash
+int L_i^{p_1(e)}(r) 
+\backslash
+Big(
+\backslash
+hat{V}_{xc}^{
+\backslash
+mathrm{LDA/GGA}}
+\backslash
+Big)L_j^{p_1(e)}(r) 
+\backslash
+,
+ dr 
+\backslash
+,,
+ 
+\backslash
+label{eq:element_VxcLDAGGAmGGA} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+bvxcm]^{(e)}_{ij} =& 
+\backslash
+int L_i^{p_1(e)}(r) 
+\backslash
+hat{V}_{xc}^{
+\backslash
+mathrm{GGA}}L_j^{p_1(e)}(r) 
+\backslash
+,
+ dr + 
+\backslash
+int 
+\backslash
+frac{1}{2}
+\backslash
+frac{dL^{p_1(e)}_{i}(r)}{dr}
+\backslash
+rho(r)
+\backslash
+frac{d
+\backslash
+varepsilon_{xc}}{d
+\backslash
+tau}(r) 
+\backslash
+frac{d L^{p_1(e)}_{j}(r)}{d r} 
+\backslash
+,
+ dr 
+\backslash
+nonumber 
+\backslash
+
+\backslash
+ &+ 
+\backslash
+frac{1}{2}
+\backslash
+int L_i^{p_1(e)}(r)
+\backslash
+Bigg(
+\backslash
+frac{1}{r}
+\backslash
+frac{d}{dr}
+\backslash
+Big[
+\backslash
+rho(r)
+\backslash
+frac{d
+\backslash
+varepsilon_{xc}}{d
+\backslash
+tau}(r)
+\backslash
+Big]
+\backslash
+Bigg) L_{j}^{p_1(e)}
+\backslash
+,
+ dr 
+\backslash
+nonumber 
+\backslash
+
+\backslash
+ &+ 
+\backslash
+int L_i^{p_1(e)}(r) 
+\backslash
+Bigg(
+\backslash
+rho(r)
+\backslash
+frac{d
+\backslash
+varepsilon_{xc}}{d
+\backslash
+tau}(r)
+\backslash
+frac{l(l+1)}{2r^2}
+\backslash
+Bigg) L_j^{p_1(e)}(r) 
+\backslash
+,
+ dr 
+\backslash
+,,
+ 
+\backslash
+label{eq:element_VxcmGGA}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+where the density $
+\backslash
+rho$ and its derivatives are evaluated at the quadrature nodes via Eqn.~
+\backslash
+ref{density},
+ using the basis expansion for $
+\backslash
+widetilde{R}_{nl}$ given in Eqn.~
+\backslash
+ref{eq:Rtildediscretization}.
+ For exact exchange,
+ the global matrix $
+\backslash
+bvxhf$ is assembled as:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+bvxhf]_{IK} &= 
+\backslash
+sum_{e,
+ e'=1}^{N_{fe}}
+\backslash
+sum_{i,
+ k = 0}^{p_1}[
+\backslash
+bvxhf]^{(e,
+ e')}_{ik} 
+\backslash
+delta_{I
+\backslash
+mathcal{M}^{p_1(e)}_{i}}
+\backslash
+delta_{K
+\backslash
+mathcal{M}^{p_1(e')}_{k}} 
+\backslash
+,,
+ 
+\backslash
+label{eq:assembled_Vxhf}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+with the element-level matrices given by:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+bvxhf]^{(e,
+ e')}_{ik} &= 
+\backslash
+int L_i^{p_1(e)}(r) 
+\backslash
+Bigg(-
+\backslash
+frac{1}{2} 
+\backslash
+sum_{n'l'} g_{n'l'} 
+\backslash
+sum_{l'
+\backslash
+!'=|l-l'|}^{l+l'} 
+\backslash
+left[
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{pmatrix}
+\end_layout
+
+\begin_layout Standard
+l & l' & l'
+\backslash
+!' 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+0 & 0 & 0
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{pmatrix}^2
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+widetilde{R}_{n'l'}(r) 
+\backslash
+frac{Y_{kn'l'}^{l'
+\backslash
+!' (e')}(r)}{r} 
+\backslash
+right]
+\backslash
+Bigg) 
+\backslash
+,
+ dr 
+\backslash
+,.
+ 
+\backslash
+label{eq:element_Vxhf}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+Above,
+ $Y_{kn'l'}^{l'
+\backslash
+!' (e')}$ is given by the basis set expansion:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+Y_{kn'l'}^{l'
+\backslash
+!' (e')}(r) &= 
+\backslash
+sum_{j=0}^{p_2}[
+\backslash
+bY_{kn'l'}^{l'
+\backslash
+!' (e')}]^{(e)}_{j}L_j^{p_2(e)}(r) 
+\backslash
+,
+ ,
+ 
+\backslash
+label{Ydiscretization}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+whose coefficients are determined by solving the linear system:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+bD_{l'
+\backslash
+!'}
+\backslash
+bY_{kn'l'}^{l'
+\backslash
+!' (e')} &= 
+\backslash
+bP_{kn'l'}^{l'
+\backslash
+!' (e')} 
+\backslash
+,,
+ 
+\backslash
+label{eq:discreteYdiff}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+where the global matrices/vectors are assembled as:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+bD_{l'
+\backslash
+!'}]_{IJ} &= 
+\backslash
+sum_{e=1}^{N_{fe}}
+\backslash
+sum_{i,j=0}^{p_2}[
+\backslash
+bD_{l'
+\backslash
+!'}]^{(e)}_{ij} 
+\backslash
+delta_{I
+\backslash
+mathcal{M}^{p_2(e)}_{i}}
+\backslash
+delta_{J
+\backslash
+mathcal{M}^{p_2(e)}_{j}} 
+\backslash
+,,
+ 
+\backslash
+label{eq:assembled_D} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+bP_{kn'l'}^{l'
+\backslash
+!' (e')}]_{I} &= 
+\backslash
+sum_{e=1}^{N_{fe}}
+\backslash
+sum_{i =0}^{p_2}[
+\backslash
+bP_{kn'l'}^{l'
+\backslash
+!' (e')}]^{(e)}_{i} 
+\backslash
+delta_{I
+\backslash
+mathcal{M}^{p_2(e)}_{i}} 
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:assembled_P}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+bY_{kn'l'}^{l'
+\backslash
+!' (e')}]_{I} &= 
+\backslash
+sum_{e=1}^{N_{fe}}
+\backslash
+sum_{i = 0}^{p_2}g_i^{(e)}[
+\backslash
+bY_{kn'l'}^{l'
+\backslash
+!' (e')}]^{(e)}_{i} 
+\backslash
+delta_{I
+\backslash
+mathcal{M}^{p_2(e)}_{i}}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:assembled_Y}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+with the element-level matrices/vectors given by:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+bD_{l'
+\backslash
+!'}]^{(e)}_{ij} &= - 
+\backslash
+int 
+\backslash
+Bigg(
+\backslash
+frac{dL_{i}^{p_2(e)}(r)}{dr} 
+\backslash
+frac{dL_{j}^{p_2(e)}(r)}{d r} + L_{i}^{p_2(e)}(r)
+\backslash
+frac{l'
+\backslash
+!'(l'
+\backslash
+!'+1)}{r^2}L_{j}^{p_2(e)}(r) 
+\backslash
+Bigg)
+\backslash
+,dr
+\backslash
+,,
+ 
+\backslash
+label{eq:element_D}
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+bP_{kn'l'}^{l'
+\backslash
+!' (e')}]^{(e)}_{i} &= -(2l'
+\backslash
+!'+1)
+\backslash
+int L_{i}^{p_2(e)}(r) 
+\backslash
+frac{
+\backslash
+widetilde{R}_{n'l'}(r)}{r} L_k^{p_1(e')}(r) 
+\backslash
+,
+ dr
+\backslash
+,
+ .
+ 
+\backslash
+label{eq:element_P}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+The Dirichlet boundary condition at $r=0$ is enforced by removing the first row and column of matrix $
+\backslash
+bD_{l'
+\backslash
+!'}$,
+ along with the first entries of vectors $
+\backslash
+bY_{kn'l'}^{l'
+\backslash
+!' (e')}$ and $
+\backslash
+bP_{n'l'}^{l'
+\backslash
+!' (e')}$.
+ The Robin boundary condition at $r=R_{max}$ is enforced by adding $-l'
+\backslash
+!'/R_{max}$ to the diagonal entry corresponding to the last row and column of $
+\backslash
+bD_{l'
+\backslash
+!'}$.
+ It is worth noting that we employ the differential-equation form of the exact exchange operator (Eq.~
+\backslash
+ref{Vxx2}) rather than its integral counterpart (Eq.~
+\backslash
+ref{Vxx}),
+ as the former requires a significantly lower quadrature order.
+ Once the Hamiltonian matrix $
+\backslash
+Hm_{l}$ is constructed as described above,
+ homogeneous Dirichlet boundary conditions on $
+\backslash
+widetilde{R}_{nl}(r)$ are enforced by removing the first and last rows and columns of both $
+\backslash
+Hm_l$ and $
+\backslash
+mathbf{M}$,
+ together with the first and last entries of $
+\backslash
+br_{nl}$.
+\end_layout
+
+\begin_layout Standard
+The discrete form of the Poisson problem in Eqn.~
+\backslash
+ref{EL:Poisson} takes the form:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+mathbf{L}
+\backslash
+bvh & = 
+\backslash
+F 
+\backslash
+,
+ ,
+ 
+\backslash
+label{eq:FEPossion} 
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+where the global matrix/vectors are assembled from their element-level counterparts as:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+mathbf{L}]_{IJ} &= 
+\backslash
+sum_{e=1}^{N_{fe}}
+\backslash
+sum_{i,j=0}^{p_2}[
+\backslash
+mathbf{L}]^{(e)}_{ij} 
+\backslash
+delta_{I
+\backslash
+mathcal{M}^{p_2(e)}_{i}}
+\backslash
+delta_{J
+\backslash
+mathcal{M}^{p_2(e)}_{j}} 
+\backslash
+,,
+ 
+\backslash
+label{eq:assembled_Laplacian} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+F]_{I} &= 
+\backslash
+sum_{e=1}^{N_{fe}}
+\backslash
+sum_{i=0}^{p_2}[
+\backslash
+F]^{(e)}_{i} 
+\backslash
+delta_{I
+\backslash
+mathcal{M}^{p_2(e)}_{i}} 
+\backslash
+,,
+ 
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:assembled_PoissonRHS} 
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+bvh]_{I} &= 
+\backslash
+sum_{e=1}^{N_{fe}}
+\backslash
+sum_{i = 0}^{p_2}g_i^{(e)}[
+\backslash
+bvh]^{(e)}_{i} 
+\backslash
+delta_{I
+\backslash
+mathcal{M}^{p_2(e)}_{i}} 
+\backslash
+,,
+ 
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:assembled_Vh}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+with the element matrices/vectors given by:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+mathbf{L}]^{(e)}_{ij} &= 
+\backslash
+int 
+\backslash
+frac{dL_{i}^{p_2(e)}(r)}{dr} 
+\backslash
+frac{dL_{j}^{p_2(e)}(r)}{d r} 
+\backslash
+,dr
+\backslash
+,,
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:element_Laplacian}
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+F]^{(e)}_{i} &= 4
+\backslash
+pi 
+\backslash
+int r 
+\backslash
+rho(r) L_{i}^{p_2(e)}(r) 
+\backslash
+,dr
+\backslash
+,.
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:element_PoissonRHS}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+Here,
+ the density $
+\backslash
+rho$ is evaluated at the quadrature nodes via Eqn.~
+\backslash
+ref{density},
+ using the basis expansion for $
+\backslash
+widetilde{R}_{nl}$ given in Eqn.~
+\backslash
+ref{eq:Rtildediscretization}.
+ The homogeneous Dirichlet boundary condition on $
+\backslash
+widetilde{V}_{H}$ at $r=0$ is enforced by removing the first row and column of matrix $
+\backslash
+mathbf{L}$ (Eq.~
+\backslash
+ref{eq:assembled_Laplacian}),
+ along with the first entries of vectors $
+\backslash
+bvh$ and $
+\backslash
+F$.
+ The nonhomogeneous Dirichlet boundary condition at $r=R_{max}$ is imposed by removing the last row and column of $
+\backslash
+mathbf{L}$ (Eq.~
+\backslash
+ref{eq:assembled_Laplacian}) and the last entries of $
+\backslash
+bvh$ and $
+\backslash
+F$,
+ with $
+\backslash
+F$ updated accordingly to account for the boundary value,
+ and the last entry of $
+\backslash
+bvh$ set to the number of electrons $N_e$.
+\end_layout
+
+\begin_layout Standard
+%%%%%%%%%%%%%%%%%%%%%
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+paragraph{RPA--OEP} We adopt the following basis set expansion for the OEP potential:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+V_{xc}^{
+\backslash
+rm OEP}(r) &= 
+\backslash
+sum_{j=0}^{p_3} [
+\backslash
+mathbf{
+\backslash
+bvxcoep}]^{(e)}_{j} L^{p_3(e)}_{j}(r) 
+\backslash
+,,
+ 
+\backslash
+label{eq:Vxcoepdiscretization}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+where the polynomial degree $p_3$ is typically chosen to be smaller than $p_1$,
+ the degree used for $
+\backslash
+widetilde{R}_{nl}$,
+ for numerical stability 
+\backslash
+cite{scRPAgorlingpaper,
+ trivedi2026spectral}.
+ The discrete form of the linear system for the OEP potential,
+ Eqn.~
+\backslash
+ref{eq:oep-equation},
+ takes the form:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+chizero 
+\backslash
+bvxcoep & = 
+\backslash
+blambdaxhf + 
+\backslash
+blambdacrpa
+\backslash
+,
+ ,
+ 
+\backslash
+label{eq:discreteOEP}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+where the global matrix/vectors are assembled from the element-level counterparts as:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+chizero]_{IJ} &= 
+\backslash
+sum_{e,
+ e'=1}^{N_{fe}}
+\backslash
+sum_{i,
+ j=0}^{p_3}[
+\backslash
+chizero]^{(e,
+ e')}_{ij} 
+\backslash
+delta_{I
+\backslash
+mathcal{M}^{p_3(e)}_{i}}
+\backslash
+delta_{J
+\backslash
+mathcal{M}^{p_3(e')}_{j}} 
+\backslash
+,,
+ 
+\backslash
+label{eq:assembled_chi0}
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+blambdaxhf]_{I} &= 
+\backslash
+sum_{e=1}^{N_{fe}}
+\backslash
+sum_{i=0}^{p_3}[
+\backslash
+blambdaxhf]^{(e)}_{i} 
+\backslash
+delta_{I
+\backslash
+mathcal{M}^{p_3(e)}_{i}} 
+\backslash
+,,
+ 
+\backslash
+label{eq:assembled_OEPxRHS}
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+blambdacrpa]_{I} &= 
+\backslash
+sum_{e=1}^{N_{fe}}
+\backslash
+sum_{i=0}^{p_3}[
+\backslash
+blambdacrpa]^{(e)}_{i} 
+\backslash
+delta_{I
+\backslash
+mathcal{M}^{p_3(e)}_{i}} 
+\backslash
+,,
+ 
+\backslash
+label{eq:assembled_OEPcRHS}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+with the element matrices/vectors given by:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+chizero]^{(e,
+ e')}_{i,
+ j} =& 
+\backslash
+iint L_{i}^{p_3(e)}(r) 
+\backslash
+chi_{0,0}(r,r';0)L_{j}^{p_3(e')}(r')
+\backslash
+,
+ drdr' 
+\backslash
+,
+ ,
+\backslash
+label{eq:element_chi0} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+blambdaxhf]^{(e)}_{i} =& 
+\backslash
+int L_{i}^{p_3(e)}(r)
+\backslash
+Lambda_{x}^{
+\backslash
+mathrm{HF}}(r)
+\backslash
+,
+ dr 
+\backslash
+,
+ .
+ 
+\backslash
+label{eq:element_OEPxRHS}
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+[
+\backslash
+blambdacrpa]^{(e)}_{i} =& 
+\backslash
+int L_{i}^{p_3(e)}(r)
+\backslash
+Lambda_{c}^{
+\backslash
+mathrm{RPA}}(r)
+\backslash
+,
+ dr 
+\backslash
+,
+ .
+ 
+\backslash
+label{eq:element_OEPcRPA}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+Here,
+ the static response function $
+\backslash
+widetilde{
+\backslash
+chi}_{0,0}$ is calculated on the quadrature nodes using Eqn.~
+\backslash
+eqref{eq:chi0static},
+ with the basis expansion of $
+\backslash
+widetilde{R}_{nl}$ given in Eqn.~
+\backslash
+eqref{eq:Rtildediscretization}.
+ Similarly,
+ $
+\backslash
+Lambda_{x}^{
+\backslash
+mathrm{HF}}$ and $
+\backslash
+Lambda_{c}^{
+\backslash
+mathrm{RPA}}$ are calculated using Eqns.~
+\backslash
+eqref{eq:oep-driving-term-exact-exchange} and~
+\backslash
+eqref{eq:oep-driving-term-general},
+ again employing the basis expansion of $
+\backslash
+widetilde{R}_{nl}$.
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+paragraph{Pseudopotential approximation} In forming the Hamiltonian matrix $
+\backslash
+Hm_{l}$,
+ the above formalism is applicable,
+ except that $V_{nuc}$ is replaced by $V_{loc}$.
+ In addition,
+ the global nonlocal pseudopotential matrix must be added to the Hamiltonian,
+ and is assembled from its element-level counterparts as:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+[{
+\backslash
+bvnl}]_{IJ} &= 
+\backslash
+sum_{e,
+ e'=1}^{N_{fe}}
+\backslash
+sum_{i,
+ j=0}^{p_1}[{
+\backslash
+bvnl}]^{(e,
+ e')}_{ij} 
+\backslash
+delta_{I
+\backslash
+mathcal{M}^{p_1(e)}_{i}}
+\backslash
+delta_{J
+\backslash
+mathcal{M}^{p_1(e')}_{j}} 
+\backslash
+,,
+ 
+\backslash
+label{eq:assembled_hatHlpsp}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+where the element matrices are given by:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+[{
+\backslash
+bvnl}]^{(e,
+ e')}_{ij} = 
+\backslash
+int L_{i}^{p_1(e)}(r) 
+\backslash
+hat{V}_{NL}L_{j}^{p_1(e')}(r)
+\backslash
+,
+ dr 
+\backslash
+,.
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+label{eq:element_hatHlpsp}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+Also,
+ in solving the Poisson equation for the Hartree potential,
+ the boundary condition must be updated from $N_e$ to $N_v$.
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+paragraph{Energy} Once the electronic ground state has been determined,
+ the total energy can be evaluated using numerical quadrature and the basis set expansions for the various quantities presented above.
+\end_layout
+
+\begin_layout Standard
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+section{Implementation} 
+\backslash
+label{Sec:Implementation}
+\end_layout
+
+\begin_layout Standard
+The SPARC-atomSFE code is implemented in Python,
+ making it well-suited to rapid 
+\end_layout
+
+\begin_layout Standard
+prototyping and seamless integration with modern machine learning frameworks 
+\end_layout
+
+\begin_layout Standard
+and workflows.
+ Three mesh types are supported for 
+\end_layout
+
+\begin_layout Standard
+the placement of finite-element nodes:
+ uniform,
+ polynomial~
+\backslash
+cite{gwasphericalatomshellgren},
+ 
+\end_layout
+
+\begin_layout Standard
+and exponential~
+\backslash
+cite{vcertik2024high,
+ lehtola2019fully}:
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{subequations}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+begin{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+text{uniform:}
+\backslash
+quad
+\end_layout
+
+\begin_layout Standard
+r_i &= 
+\backslash
+frac{i}{N_{fe}}R_{max} 
+\backslash
+,,
+ 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+text{polynomial:}
+\backslash
+quad
+\end_layout
+
+\begin_layout Standard
+r_i &= R_{
+\backslash
+max}
+\backslash
+left(
+\backslash
+frac{i}{N_{fe}}
+\backslash
+right)^s 
+\backslash
+,,
+ 
+\backslash
+qquad s>0 
+\backslash
+,,
+ 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+text{exponential:}
+\backslash
+quad
+\end_layout
+
+\begin_layout Standard
+r_i &= c + 
+\backslash
+alpha
+\backslash
+!
+\backslash
+left(e^{
+\backslash
+beta i}-1
+\backslash
+right) 
+\backslash
+,,
+ 
+\backslash
+quad
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+beta=
+\backslash
+frac{
+\backslash
+ln a}{N_{fe}-1} 
+\backslash
+,,
+ 
+\backslash
+quad
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+alpha=
+\backslash
+frac{R_{max}-c}{e^{
+\backslash
+beta N_{fe}}-1} 
+\backslash
+,,
+ 
+\backslash
+label{eq:mesh-exponential}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{align}
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+end{subequations}
+\end_layout
+
+\begin_layout Standard
+where $i=0,
+\backslash
+ldots,N_{fe}$.
+ For polynomial meshes,
+ $s>1$ clusters nodes near the origin;
+ 
+\end_layout
+
+\begin_layout Standard
+for exponential meshes,
+ $c
+\backslash
+geq 0$ is the shift and $a>0$ is the concentration parameter.
+ 
+\end_layout
+
+\begin_layout Standard
+Independent polynomial degrees can be chosen for the orbitals ($p_1$) and the OEP 
+\end_layout
+
+\begin_layout Standard
+potential ($p_3$);
+ the polynomial degree for the Hartree potential is set to 
+\end_layout
+
+\begin_layout Standard
+$p_2 = 2p_1 + 1$,
+ and typically $p_3 
+\backslash
+approx p_1/4$ is chosen.
+ Arbitrary polynomial degrees are supported,
+ though in practice $p_1 
+\backslash
+geq 40$ 
+\end_layout
+
+\begin_layout Standard
+tends to lead to numerical instability.
+ Spatial integrals are evaluated using Gauss-Legendre quadrature.
+ In RPA-OEP,
+ $
+\backslash
+omega$-frequency integration is performed using Gauss-Legendre 
+\end_layout
+
+\begin_layout Standard
+quadrature,
+ whose order is denoted by $N_{
+\backslash
+omega}$,
+ and the summation over angular momentum is truncated at a maximum 
+\end_layout
+
+\begin_layout Standard
+value $l_{max}$.
+\end_layout
+
+\begin_layout Standard
+SPARC-atomSFE supports both all-electron and pseudopotential calculations,
+ with the latter employing Optimized Norm-Conserving Vanderbilt (ONCV) pseudopotentials~
+\backslash
+cite{hamann2013optimized} in the 
+\backslash
+texttt{.psp8} format,
+ optionally including nonlinear core corrections.
+ The package provides a broad range of exchange-correlation approximations,
+ including LDA with Slater exchange and Vosko--Wilk--Nusair~
+\backslash
+cite{LDA_VWN},
+ Perdew--Zunger~
+\backslash
+cite{perdew1981self},
+ or Perdew--Wang~
+\backslash
+cite{perdew1992accurate} correlation;
+ GGA with the Perdew--Burke--Ernzerhof (PBE) functional~
+\backslash
+cite{perdew1996generalized};
+ meta-GGA with the Strongly Constrained and Appropriately Normed (SCAN)~
+\backslash
+cite{sun2015strongly},
+ rSCAN~
+\backslash
+cite{bartok2019regularized},
+ and r$^2$SCAN~
+\backslash
+cite{r2SCAN} functionals;
+ hybrid functionals,
+ including PBE0~
+\backslash
+cite{adamo1999toward} and a generalized PBE0 form with variable exact-exchange mixing;
+ Hartree--Fock (HF) theory~
+\backslash
+cite{Fock1930126};
+ and RPA-OEP.
+ Charged atoms and fractional occupations are supported across all these cases.
+\end_layout
+
+\begin_layout Standard
+The electronic ground state is obtained using the self-consistent field (SCF) method.
+\end_layout
+
+\begin_layout Standard
+For functionals involving nonlocal exchange-correlation potentials,
+ such as HF and PBE0,
+ an outer--inner loop structure is employed:
+ the outer loop performs a fixed-point iteration with respect to the nonlocal potential operator,
+ which is held fixed during each inner loop,
+ while the inner loop performs a fixed-point iteration with respect to the electron density.
+\end_layout
+
+\begin_layout Standard
+For RPA-OEP calculations,
+ the same outer--inner loop strategy is used,
+ with the outer loop performing a fixed-point iteration with respect to the OEP exchange-correlation potential.
+ The initial guess for the orbitals in the outer loop is taken from a fully converged 
+\end_layout
+
+\begin_layout Standard
+PBE calculation or from the first PBE iteration,
+ while the initial electron density 
+\end_layout
+
+\begin_layout Standard
+is obtained from the Thomas-Fermi approximation or from PBE when available.
+ Inner-loop convergence is accelerated using the the periodic Pulay mixing scheme~
+\backslash
+cite{banerjee2016periodic},
+ with the option of the RPA dielectric matrix as a preconditioner.
+ Direct linear solvers are employed for the Poisson,
+ exact exchange,
+ and OEP equations.
+\end_layout
+
+\begin_layout Standard
+Direct eigensolvers are used for all functionals except SCAN and r$^2$SCAN,
+ for which an iterative eigensolver is employed through Hamiltonian-vector products,
+ as this was found to be more stable.
+\end_layout
+
+\begin_layout Standard
+The OEP equation for the local exchange-correlation potential 
+\end_layout
+
+\begin_layout Standard
+is solved up to an indeterminate constant.
+ The RPA-OEP potential is therefore 
+\end_layout
+
+\begin_layout Standard
+shifted by a constant to match $-1/r$ at a specified distance 
+\backslash
+cite{vacondiopaper},
+ e.g.,
+ $9$~bohr in 
+\end_layout
+
+\begin_layout Standard
+practice,
+ and the potential beyond this distance is set to 
+\end_layout
+
+\begin_layout Standard
+$-1/r$,
+ consistent with the asymptotic decay of the exact exchange potential that 
+\end_layout
+
+\begin_layout Standard
+dominates at large $r$.
+ This correction is applied 
+\end_layout
+
+\begin_layout Standard
+to avoid numerical instabilities that can manifest as oscillations near the boundary 
+\end_layout
+
+\begin_layout Standard
+for large domain sizes,
+ a consequence of the singular nature of the density response matrix.
+ The quantities $
+\backslash
+Lambda_c^{
+\backslash
+mathrm{RPA}}$,
+ $E_c^{
+\backslash
+mathrm{RPA}}$,
+ 
+\end_layout
+
+\begin_layout Standard
+and the corresponding energy density are computed via a thread-based embarrassingly 
+\end_layout
+
+\begin_layout Standard
+parallel implementation over the frequency quadrature points,
+ using Python's 
+\end_layout
+
+\begin_layout Standard
+built-in 
+\backslash
+texttt{concurrent.futures} module.
+ To prevent thread oversubscription,
+ 
+\end_layout
+
+\begin_layout Standard
+the 
+\backslash
+texttt{threadpoolctl} library can be used,
+ which restricts NumPy's 
+\end_layout
+
+\begin_layout Standard
+BLAS calls to a single thread during the parallel section.
+\end_layout
+
+\end_body
+\end_document
