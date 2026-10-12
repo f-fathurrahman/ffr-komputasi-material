@@ -1,0 +1,1 @@
+gfortran -fdefault-real-8 prog01.f90 -o prog01.x 2> TEMP_errors.log
